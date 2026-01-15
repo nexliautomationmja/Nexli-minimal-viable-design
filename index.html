@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina | Unify Your Finances</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary-font: 'Inter', system-ui, sans-serif;
+      }
+      body {
+        font-family: var(--primary-font);
+        background-color: #05010d;
+        color: #ffffff;
+        margin: 0;
+        overflow-x: hidden;
+      }
+      
+      /* Custom font sizes from user requirements */
+      h1 { font-size: 60px !important; line-height: 1.1; }
+      h2 { font-size: 52px !important; line-height: 1.2; }
+      p { font-size: 16px !important; }
+
+      @media (max-width: 768px) {
+        h1 { font-size: 40px !important; }
+        h2 { font-size: 36px !important; }
+      }
+
+      /* Animated Coins Styling */
+      .coin-stack {
+        perspective: 1000px;
+      }
+      .coin {
+        position: absolute;
+        width: 180px;
+        height: 20px;
+        background: linear-gradient(135deg, #f7b1a3, #f73b20);
+        border-radius: 50%;
+        transform-style: preserve-3d;
+        animation: float 4s ease-in-out infinite;
+        box-shadow: 0 10px 30px rgba(247, 59, 32, 0.3);
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotateX(65deg) rotateY(0deg); }
+        50% { transform: translateY(-40px) rotateX(65deg) rotateY(10deg); }
+      }
+
+      .coin:nth-child(2) { animation-delay: 0.2s; margin-top: 15px; }
+      .coin:nth-child(3) { animation-delay: 0.4s; margin-top: 30px; }
+      .coin:nth-child(4) { animation-delay: 0.6s; margin-top: 45px; }
+      .coin:nth-child(5) { animation-delay: 0.8s; margin-top: 60px; }
+      .coin:nth-child(6) { animation-delay: 1.0s; margin-top: 75px; }
+      .coin:nth-child(7) { animation-delay: 1.2s; margin-top: 90px; }
+      .coin:nth-child(8) { animation-delay: 1.4s; margin-top: 105px; }
+
+      /* Floating Menu Styles */
+      .floating-nav {
+        backdrop-filter: blur(16px);
+        background: rgba(248, 77, 53, 0.9);
+        border-radius: 9999px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Glassmorphism Props */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.26.2"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
