@@ -443,8 +443,8 @@ const Services: React.FC = () => {
             </section>
 
             {/* Existing Closing Section */}
-            <section className="px-6 mt-32 text-center">
-                <div className="max-w-4xl mx-auto p-12 md:p-20 rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden group">
+            <section className="px-4 md:px-6 mt-16 md:mt-32 text-center">
+                <div className="max-w-4xl mx-auto p-6 md:p-20 rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none" />
 
                     <motion.div
@@ -452,19 +452,19 @@ const Services: React.FC = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-3xl md:text-5xl font-bold mb-8 tracking-tight leading-tight">
+                        <h2 className="text-xl md:text-5xl font-bold mb-4 md:mb-8 tracking-tight leading-tight">
                             Build Your Vision. <br className="hidden md:block" /> <span className="text-blue-500">Automate Your Firm.</span>
                         </h2>
-                        <p className="text-lg md:text-xl text-[var(--text-muted)] mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
+                        <p className="text-sm md:text-xl text-[var(--text-muted)] mb-6 md:mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
                             Most firms bundle all three for a complete digital transformation. But if you need to start with just one — that works too. Let's talk about what makes sense for your firm.
                         </p>
 
                         <a
                             href="https://nexli.net/#book"
-                            className="inline-flex items-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-full text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
+                            className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
                         >
                             Book a Consultation
-                            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight size={16} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                         </a>
                     </motion.div>
                 </div>
