@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Palette, Layout, Cpu, CheckCircle2, Zap, MessageSquare } from 'lucide-react';
 import { useTheme } from '../App';
 import ResultsShowcase from './ResultsShowcase';
+import { SparklesCore } from './Sparkles';
+import { Vortex } from './Vortex';
 
 const Services: React.FC = () => {
     const { theme } = useTheme();
@@ -75,27 +77,112 @@ const Services: React.FC = () => {
         setProgress(0);
     };
 
+    const heroContent = (
+        <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                className={`inline-block px-4 py-1.5 mb-8 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-sm ${
+                    theme === 'dark'
+                        ? 'bg-blue-500/10 border border-blue-500/20 text-blue-400'
+                        : 'bg-white/50 border border-blue-500/30 text-blue-600'
+                }`}
+            >
+                Our Services
+            </motion.div>
+
+            <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 leading-[1.1] ${
+                    theme === 'dark' ? 'text-white' : 'text-slate-900'
+                }`}
+            >
+                Stop Chasing Clients.{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">
+                    Start Attracting Them.
+                </span>
+            </motion.h1>
+
+            <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className={`text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10 ${
+                    theme === 'dark' ? 'text-neutral-400' : 'text-slate-600'
+                }`}
+            >
+                High-net-worth prospects are searching for an advisor right now. With the right digital presence, they'll find you, trust you, and book a call — before you ever pick up the phone.
+            </motion.p>
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+            >
+                <a
+                    href="https://nexli.net/#book"
+                    className="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
+                >
+                    Book a Consultation
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+            </motion.div>
+
+            {/* Decorative line with glow */}
+            <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
+                className="w-48 md:w-64 h-[2px] mx-auto mt-12 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+                style={{ boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }}
+            />
+        </div>
+    );
+
     return (
-        <div className="pt-24 md:pt-32 pb-20 overflow-hidden">
-            {/* Hero Section */}
-            <section className="px-6 mb-12 md:mb-20 text-center">
-                <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6 }}
-                        className="inline-block px-4 py-1.5 mb-6 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 text-xs font-bold uppercase tracking-widest"
-                    >
-                        Our Services
-                    </motion.div>
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1] max-w-4xl mx-auto">
-                        Everything Your Firm Needs to <span className="text-blue-500">Stand Out Online</span>
-                    </h1>
-                    <p className="text-lg md:text-xl text-[var(--text-muted)] leading-relaxed max-w-2xl mx-auto">
-                        Brand identity. Web presence. Intelligent automation. Mimicking the precision and speed of the industry's leaders.
-                    </p>
-                </div>
-            </section>
+        <div className="pb-20 overflow-hidden">
+            {/* Hero Section - Sparkles for Dark, Vortex for Light */}
+            {theme === 'dark' ? (
+                <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-black">
+                    {/* Sparkles Background */}
+                    <div className="absolute inset-0 w-full h-full">
+                        <SparklesCore
+                            id="services-sparkles"
+                            background="transparent"
+                            minSize={0.6}
+                            maxSize={1.4}
+                            particleCount={120}
+                            particleColor="#FFFFFF"
+                            speed={0.8}
+                            className="w-full h-full"
+                        />
+                    </div>
+
+                    {/* Gradient overlays for depth */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50 pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg-main)] to-transparent pointer-events-none z-10" />
+
+                    {heroContent}
+                </section>
+            ) : (
+                <Vortex
+                    backgroundColor="#ffffff"
+                    baseHue={217}
+                    particleCount={800}
+                    rangeY={120}
+                    baseRadius={1}
+                    rangeRadius={2}
+                    containerClassName="min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center"
+                    className="flex flex-col items-center justify-center w-full"
+                >
+                    {/* Bottom fade for light mode */}
+                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent pointer-events-none z-10" />
+                    {heroContent}
+                </Vortex>
+            )}
 
             {/* Results Showcase - Sell the destination */}
             <ResultsShowcase />

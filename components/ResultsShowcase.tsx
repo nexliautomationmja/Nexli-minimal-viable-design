@@ -115,7 +115,7 @@ const ResultsShowcase: React.FC = () => {
   return (
     <section className="px-6 mb-16 md:mb-24">
       <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left: Copy */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -131,7 +131,7 @@ const ResultsShowcase: React.FC = () => {
               attracting qualified prospects, booking calls, and building trust before you ever
               pick up the phone.
             </p>
-            <p className="text-base text-[var(--text-muted)] leading-relaxed">
+            <p className="text-base text-[var(--text-muted)] leading-relaxed hidden md:block">
               These aren't vanity metrics. These are the results that compound into
               <span className="text-[var(--text-main)] font-semibold"> real AUM growth</span> and a
               practice that runs itself.
@@ -149,9 +149,12 @@ const ResultsShowcase: React.FC = () => {
             {/* Glow effect behind the list */}
             <div className="absolute inset-0 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
 
-            {/* The animated list */}
-            <div className="relative max-w-md mx-auto lg:mx-0 lg:ml-auto">
-              <AnimatedList delay={2500}>
+            {/* The animated list - constrained height on mobile */}
+            <div className="relative max-w-md mx-auto lg:mx-0 lg:ml-auto max-h-[280px] md:max-h-none overflow-hidden">
+              {/* Fade out gradient at bottom for mobile */}
+              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--bg-main)] to-transparent z-10 md:hidden pointer-events-none" />
+
+              <AnimatedList delay={2500} maxVisible={3}>
                 {notifications.map((notification, index) => (
                   <NotificationCard key={index} item={notification} />
                 ))}

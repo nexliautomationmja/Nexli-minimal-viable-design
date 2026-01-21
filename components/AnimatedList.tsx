@@ -4,11 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface AnimatedListProps {
   children: React.ReactNode[];
   delay?: number;
+  maxVisible?: number;
 }
 
 export const AnimatedList: React.FC<AnimatedListProps> = ({
   children,
-  delay = 2000
+  delay = 2000,
+  maxVisible = 5
 }) => {
   const [visibleItems, setVisibleItems] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -20,10 +22,9 @@ export const AnimatedList: React.FC<AnimatedListProps> = ({
 
         // Add new item to visible list
         setVisibleItems((items) => {
-          // Keep only the last 5 items visible for performance
           const newItems = [...items, nextIndex % children.length];
-          if (newItems.length > 5) {
-            return newItems.slice(-5);
+          if (newItems.length > maxVisible) {
+            return newItems.slice(-maxVisible);
           }
           return newItems;
         });
@@ -36,7 +37,7 @@ export const AnimatedList: React.FC<AnimatedListProps> = ({
     setVisibleItems([0]);
 
     return () => clearInterval(interval);
-  }, [children.length, delay]);
+  }, [children.length, delay, maxVisible]);
 
   return (
     <div className="flex flex-col gap-3 overflow-hidden">
