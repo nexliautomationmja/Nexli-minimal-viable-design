@@ -174,6 +174,23 @@
       animation: moveInCircle 20s ease infinite;
     }
 
+    /* Aurora Text Animation */
+    @keyframes aurora {
+      0% {
+        background-position: 0% center;
+      }
+      50% {
+        background-position: 100% center;
+      }
+      100% {
+        background-position: 0% center;
+      }
+    }
+
+    .animate-aurora {
+      animation: aurora 3s ease-in-out infinite;
+    }
+
     /* Marquee Animations */
     @keyframes scroll {
       0% {

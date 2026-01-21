@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Marquee } from './ui/Marquee';
 import { cn } from '../lib/utils';
 import { useTheme } from '../App';
+import { AuroraText } from './ui/AuroraText';
 
 interface Complaint {
   name: string;
@@ -14,77 +15,80 @@ interface Complaint {
 }
 
 const complaints: Complaint[] = [
+  // Web Development Complaints
   {
-    name: "Jennifer M.",
-    username: "@jen_investor",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jennifer&backgroundColor=c0aede",
-    text: "Left 3 voicemails for my advisor this week. Still no callback. Starting to wonder if they even remember I exist."
+    name: "Margaret L.",
+    username: "@margaret_investor",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=margaret&backgroundColor=c0aede",
+    text: "Their site is confusing and cumbersome. Ended up making a mistake and signed up for a 5 yr CD instead of 1."
   },
   {
-    name: "Robert K.",
-    username: "@robk_finance",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=robert&backgroundColor=b6e3f4",
-    text: "My advisor sends me the same generic market update every quarter. Nothing personalized. I could get this from Google."
+    name: "Richard H.",
+    username: "@richard_wealth",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=richard&backgroundColor=b6e3f4",
+    text: "Worse website, always errors. My cash transfer failed and it's been a month — still not solved."
   },
   {
-    name: "Susan T.",
-    username: "@susan_wealth",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=susan&backgroundColor=ffd5dc",
-    text: "Their client portal is stuck in 2010. Can't even see my holdings without calling someone. Ridiculous."
+    name: "Sandra K.",
+    username: "@sandra_cpa",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sandra&backgroundColor=ffd5dc",
+    text: "I got errors every time I logged into the account. Unable to add banking info. Their e-sign process did not work."
   },
   {
-    name: "Michael D.",
-    username: "@mike_d_money",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=michael&backgroundColor=d1d4f9",
-    text: "Transferred to a new firm and it took 6 WEEKS to move my accounts. Zero communication the entire time."
+    name: "Industry Research",
+    username: "@wealthstudy2024",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=research&backgroundColor=d1d4f9",
+    text: "68% of clients expect digital experiences to match those of leading technology companies."
+  },
+  // Brand Identity Complaints
+  {
+    name: "Thomas W.",
+    username: "@thomas_10yr_client",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=thomas&backgroundColor=c1f0dc",
+    text: "They are just another cookie cutter company. They provide you with a plan based on age that just divides up your portfolio in set allocations."
   },
   {
-    name: "Lisa P.",
-    username: "@lisa_planning",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=lisa&backgroundColor=c1f0dc",
-    text: "My advisor missed our annual review meeting. No reschedule, no apology. Just ghosted."
+    name: "Barbara M.",
+    username: "@barbara_estate",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=barbara&backgroundColor=ffdfbf",
+    text: "When I liquidated my late mother's last IRA the assistant said 'oh this is just such a small amount.'"
   },
+  // AI Automation Complaints
   {
-    name: "David W.",
-    username: "@davidw_retire",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=david&backgroundColor=ffdfbf",
-    text: "Asked about crypto exposure 8 months ago. Still waiting on 'research.' Meanwhile the market moved without me."
-  },
-  {
-    name: "Karen H.",
-    username: "@karen_hnw",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=karen&backgroundColor=f0c1e1",
-    text: "Paying 1.2% in fees for what? Quarterly phone calls and cookie-cutter advice I could get from a robo-advisor."
-  },
-  {
-    name: "Thomas R.",
-    username: "@tom_realestate",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=thomas&backgroundColor=bde0fe",
-    text: "My advisor doesn't understand my business. Keeps recommending strategies that make zero sense for entrepreneurs."
-  },
-  {
-    name: "Amanda S.",
-    username: "@amanda_cfo",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=amanda&backgroundColor=e2c1f0",
-    text: "Had to explain my own portfolio allocation TO my advisor. Why am I paying for expertise they don't have?"
-  },
-  {
-    name: "James L.",
-    username: "@jamesl_exec",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=james&backgroundColor=c1e0f0",
-    text: "Every time I call, I get a different person. No continuity. Have to re-explain everything each time."
+    name: "William R.",
+    username: "@william_trust",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=william&backgroundColor=f0c1e1",
+    text: "I transferred over $3M to their trust and there is ABSOLUTELY NO CUSTOMER SERVICE. The trust officer does not communicate AT ALL."
   },
   {
     name: "Patricia N.",
-    username: "@pat_nestEgg",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=patricia&backgroundColor=f0e1c1",
-    text: "My advisor only reaches out when they want to sell me something. Never just to check in."
+    username: "@patricia_hnw",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=patricia&backgroundColor=bde0fe",
+    text: "Unanswered emails, calls that never get returned, and weeks of radio silence when I just need a simple answer."
   },
   {
-    name: "Steven B.",
-    username: "@steve_biz",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=steven&backgroundColor=c1f0e6",
-    text: "Their 'personalized financial plan' was clearly a template with my name copy-pasted in. Embarrassing."
+    name: "YCharts Survey",
+    username: "@ycharts_2024",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ycharts&backgroundColor=e2c1f0",
+    text: "75% of clients considered leaving or actually left their advisor in 2023, with lack of communication as the primary driver."
+  },
+  {
+    name: "James C.",
+    username: "@james_market",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=james&backgroundColor=c1e0f0",
+    text: "Once the market turned downward, the broker ignored me. No proactive outreach whatsoever."
+  },
+  {
+    name: "Robert F.",
+    username: "@robert_vanguard",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=robertf&backgroundColor=f0e1c1",
+    text: "I took an available time slot for our call. When he didn't call at the scheduled time, I found out he wasn't even in the office that day."
+  },
+  {
+    name: "Catherine D.",
+    username: "@catherine_closing",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=catherine&backgroundColor=c1f0e6",
+    text: "I've been trying to close my account for over a year now. Every time I call, I get conflicting information, transferred, disconnected..."
   }
 ];
 
@@ -154,7 +158,7 @@ const ClientComplaints: React.FC = () => {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-[#1d9bf0]/10 border border-[#1d9bf0]/20"
           >
-            <span className="text-[#1d9bf0] text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Industry Pain Points</span>
+            <span className="text-[#1d9bf0] text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Sound Familiar?</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -163,7 +167,7 @@ const ClientComplaints: React.FC = () => {
             transition={{ delay: 0.1, ease: "circOut" }}
             className="text-[var(--text-main)] mb-4 md:mb-6 text-2xl md:text-5xl font-bold"
           >
-            The <span className="text-[#1d9bf0]">Frustrations</span> Advisors Hear Daily
+            Your Clients Are <AuroraText>Talking</AuroraText>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -172,7 +176,7 @@ const ClientComplaints: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
           >
-            Real complaints from investors across the wealth management industry. These are the gaps Nexli helps you close.
+            Clunky portals. Unanswered calls. Generic experiences. These are real complaints driving clients away from advisors every day. <span className="text-[var(--text-main)] font-semibold">We make sure they're never said about you.</span>
           </motion.p>
         </div>
       </div>
