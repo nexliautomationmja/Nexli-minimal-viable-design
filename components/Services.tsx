@@ -8,6 +8,8 @@ import { Vortex } from './Vortex';
 import { ThreeDMarquee } from './ui/ThreeDMarquee';
 import { NexliSparklesCard } from './ui/NexliSparklesCard';
 import { VortexCard } from './ui/VortexCard';
+import AIToolsShowcase from './ui/AIToolsShowcase';
+import { BackgroundGradientAnimation } from './ui/BackgroundGradientAnimation';
 
 const Services: React.FC = () => {
     const { theme } = useTheme();
@@ -263,24 +265,116 @@ const Services: React.FC = () => {
                                         transition={{ duration: 0.5, ease: "easeOut" }}
                                         className="w-full h-full aspect-square md:aspect-auto md:h-[400px] rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md relative overflow-hidden flex items-center justify-center shadow-inner"
                                     >
-                                        {/* Branding Scene Content */}
+                                        {/* Branding Scene Content - Background Gradient Animation */}
                                         {activeIndex === 0 && (
-                                            <div className="flex flex-col items-center gap-6 p-8">
-                                                <motion.div
-                                                    animate={{ rotate: 360 }}
-                                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                                                    className="w-32 h-32 rounded-full border-2 border-dashed border-blue-500/30 flex items-center justify-center"
-                                                >
-                                                    <div className="w-24 h-24 rounded-3xl bg-blue-600 flex items-center justify-center shadow-blue-600/40 shadow-2xl">
-                                                        <Palette size={40} className="text-white" />
-                                                    </div>
-                                                </motion.div>
-                                                <div className="flex gap-3">
-                                                    {[1, 2, 3, 4].map(i => (
-                                                        <div key={i} className="w-6 h-6 rounded-md bg-blue-500/20 border border-blue-500/30" />
-                                                    ))}
+                                            <BackgroundGradientAnimation
+                                                gradientBackgroundStart="rgb(0, 17, 82)"
+                                                gradientBackgroundEnd="rgb(2, 6, 23)"
+                                                firstColor="59, 130, 246"
+                                                secondColor="6, 182, 212"
+                                                thirdColor="99, 102, 241"
+                                                fourthColor="139, 92, 246"
+                                                fifthColor="14, 165, 233"
+                                                pointerColor="59, 130, 246"
+                                                size="90%"
+                                                blendingValue="hard-light"
+                                                interactive={true}
+                                                containerClassName="absolute inset-0 rounded-2xl"
+                                            >
+                                                <div className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-6 px-4 py-6 text-center">
+                                                    {/* Top: Headline */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 20 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ duration: 0.8 }}
+                                                        className="space-y-1"
+                                                    >
+                                                        <h3 className="text-lg md:text-xl font-bold text-white drop-shadow-lg">
+                                                            Your Identity,{' '}
+                                                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                                                                Elevated.
+                                                            </span>
+                                                        </h3>
+                                                    </motion.div>
+
+                                                    {/* Middle: Typography Showcase */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 20 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ duration: 0.8, delay: 0.15 }}
+                                                        className="w-full"
+                                                    >
+                                                        <p className="text-[10px] md:text-xs text-white/50 uppercase tracking-widest mb-2 font-semibold">
+                                                            Typography
+                                                        </p>
+                                                        <div className="flex items-center justify-center gap-4 md:gap-6">
+                                                            {[
+                                                                { font: "'Plus Jakarta Sans', sans-serif", label: 'Plus Jakarta Sans', weight: 800 },
+                                                                { font: "'Outfit', sans-serif", label: 'Outfit', weight: 700 },
+                                                                { font: "'Syne', sans-serif", label: 'Syne', weight: 800 },
+                                                            ].map((typo, i) => (
+                                                                <motion.div
+                                                                    key={typo.label}
+                                                                    initial={{ opacity: 0, scale: 0.8 }}
+                                                                    animate={{ opacity: 1, scale: 1 }}
+                                                                    transition={{ duration: 0.4, delay: 0.25 + i * 0.1 }}
+                                                                    className="flex flex-col items-center gap-1 group"
+                                                                >
+                                                                    <span
+                                                                        style={{ fontFamily: typo.font, fontWeight: typo.weight }}
+                                                                        className="text-xl md:text-2xl text-white tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-cyan-400 transition-all duration-300"
+                                                                    >
+                                                                        Nexli
+                                                                    </span>
+                                                                    <span className="text-[8px] md:text-[10px] text-white/40 font-medium">
+                                                                        {typo.label}
+                                                                    </span>
+                                                                </motion.div>
+                                                            ))}
+                                                        </div>
+                                                    </motion.div>
+
+                                                    {/* Bottom: Logo Showcase */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 20 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ duration: 0.8, delay: 0.3 }}
+                                                        className="w-full"
+                                                    >
+                                                        <p className="text-[10px] md:text-xs text-white/50 uppercase tracking-widest mb-2 font-semibold">
+                                                            Logo Variations
+                                                        </p>
+                                                        <div className="flex items-center justify-center gap-2 md:gap-3">
+                                                            {[
+                                                                { src: '/logos/nexli-icon-gradient.png', label: 'Gradient' },
+                                                                { src: '/logos/nexli-icon-deepblue.png', label: 'Deep Blue' },
+                                                                { src: '/logos/nexli-icon-dark.png', label: 'Dark' },
+                                                                { src: '/logos/nexli-icon-blue.png', label: 'Blue' },
+                                                                { src: '/logos/nexli-icon-white.png', label: 'White' },
+                                                            ].map((logo, i) => (
+                                                                <motion.div
+                                                                    key={logo.label}
+                                                                    initial={{ opacity: 0, scale: 0.8 }}
+                                                                    animate={{ opacity: 1, scale: 1 }}
+                                                                    transition={{ duration: 0.4, delay: 0.4 + i * 0.08 }}
+                                                                    className="flex flex-col items-center gap-1 group"
+                                                                >
+                                                                    <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-white/20 group-hover:scale-110 transition-all duration-300">
+                                                                        <img
+                                                                            src={logo.src}
+                                                                            alt={`Nexli ${logo.label}`}
+                                                                            className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                                                                        />
+                                                                    </div>
+                                                                    <span className="text-[7px] md:text-[9px] text-white/40 font-medium hidden md:block">
+                                                                        {logo.label}
+                                                                    </span>
+                                                                </motion.div>
+                                                            ))}
+                                                        </div>
+                                                    </motion.div>
                                                 </div>
-                                            </div>
+                                            </BackgroundGradientAnimation>
                                         )}
 
                                         {/* Web Scene Content - 3D Marquee Showcase */}
@@ -305,21 +399,9 @@ const Services: React.FC = () => {
                                             </div>
                                         )}
 
-                                        {/* AI Scene Content */}
+                                        {/* AI Scene Content - AI Tools Showcase */}
                                         {activeIndex === 2 && (
-                                            <div className="w-full h-full flex flex-col justify-center items-center gap-8 p-12">
-                                                <div className="relative">
-                                                    <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse" />
-                                                    <div className="relative w-20 h-20 rounded-2xl bg-[#050505] border border-blue-500/30 flex items-center justify-center">
-                                                        <Cpu size={32} className="text-blue-500" />
-                                                    </div>
-                                                </div>
-                                                <div className="w-full space-y-2 font-mono text-[10px] text-blue-400 opacity-60">
-                                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }}>{">"} initializing firm_logic...</motion.div>
-                                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}>{">"} automated outreach active.</motion.div>
-                                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: 1 }}>{">"} sync established.</motion.div>
-                                                </div>
-                                            </div>
+                                            <AIToolsShowcase />
                                         )}
                                     </motion.div>
                                 </AnimatePresence>

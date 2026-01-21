@@ -17,10 +17,17 @@ export const NexliSparklesCard: React.FC = () => {
         />
       </div>
 
-      {/* Text */}
-      <h1 className="text-2xl font-bold text-center text-white relative z-20">
-        NEXLI
-      </h1>
+      {/* Logo + Text */}
+      <div className="flex items-center gap-2 relative z-20">
+        <img
+          src="/logos/nexli-icon-gradient.png"
+          alt="Nexli"
+          className="w-8 h-8 object-contain"
+        />
+        <h1 className="text-2xl font-bold text-center text-white">
+          NEXLI
+        </h1>
+      </div>
 
       {/* Gradient line below text */}
       <div className="w-16 h-4 relative mt-1">
