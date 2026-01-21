@@ -78,25 +78,42 @@ const Services: React.FC = () => {
     };
 
     const heroContent = (
-        <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
+        <div className="relative z-10 max-w-5xl mx-auto text-center px-6 pt-24 md:pt-0">
+            {/* Shimmer Badge */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className={`inline-block px-4 py-1.5 mb-8 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-sm ${
-                    theme === 'dark'
-                        ? 'bg-blue-500/10 border border-blue-500/20 text-blue-400'
-                        : 'bg-white/50 border border-blue-500/30 text-blue-600'
-                }`}
+                className="inline-block mb-6 md:mb-8"
             >
-                Our Services
+                <div className={`relative inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest overflow-hidden ${
+                    theme === 'dark' ? 'text-blue-400' : 'text-blue-600'
+                }`}>
+                    {/* Shimmer border effect */}
+                    <span className="absolute inset-0 overflow-hidden rounded-full">
+                        <span
+                            className="absolute inset-[-100%] animate-[shimmer_3s_linear_infinite]"
+                            style={{
+                                background: theme === 'dark'
+                                    ? 'conic-gradient(from 90deg at 50% 50%, #3b82f6 0%, transparent 50%, transparent 75%, #06b6d4 100%)'
+                                    : 'conic-gradient(from 90deg at 50% 50%, #2563eb 0%, transparent 50%, transparent 75%, #0891b2 100%)'
+                            }}
+                        />
+                    </span>
+                    {/* Inner background */}
+                    <span className={`absolute inset-[1.5px] rounded-full ${
+                        theme === 'dark' ? 'bg-black' : 'bg-white'
+                    }`} />
+                    {/* Text */}
+                    <span className="relative z-10">Our Services</span>
+                </div>
             </motion.div>
 
             <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 leading-[1.1] ${
+                className={`text-3xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 md:mb-8 leading-[1.15] md:leading-[1.1] ${
                     theme === 'dark' ? 'text-white' : 'text-slate-900'
                 }`}
             >
@@ -110,7 +127,7 @@ const Services: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className={`text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10 ${
+                className={`text-base md:text-xl leading-relaxed max-w-2xl mx-auto mb-8 md:mb-10 ${
                     theme === 'dark' ? 'text-neutral-400' : 'text-slate-600'
                 }`}
             >
@@ -136,7 +153,7 @@ const Services: React.FC = () => {
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: 1, delay: 0.5 }}
-                className="w-48 md:w-64 h-[2px] mx-auto mt-12 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+                className="w-48 md:w-64 h-[2px] mx-auto mt-10 md:mt-12 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
                 style={{ boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }}
             />
         </div>
