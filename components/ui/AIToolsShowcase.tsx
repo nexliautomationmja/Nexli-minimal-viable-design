@@ -11,7 +11,7 @@ const Circle = forwardRef<
     <div
       ref={ref}
       className={cn(
-        "z-10 flex size-12 items-center justify-center rounded-full border-2 bg-white p-3 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)]",
+        "z-10 flex size-9 md:size-12 items-center justify-center rounded-full border-2 bg-white p-2 md:p-3 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)]",
         className
       )}
     >
@@ -35,24 +35,24 @@ const AIToolsShowcase: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div
       className={cn(
-        "relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/20 p-10",
+        "relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/20 p-4 md:p-10",
         className
       )}
       ref={containerRef}
     >
       <BorderBeam duration={8} size={100} colorFrom="#3b82f6" colorTo="#06b6d4" />
-      <div className="flex size-full max-w-lg flex-row items-stretch justify-between gap-10">
+      <div className="flex size-full max-w-lg flex-row items-stretch justify-between gap-4 md:gap-10">
         <div className="flex flex-col justify-center">
           <Circle ref={div7Ref}>
             <Icons.user />
           </Circle>
         </div>
         <div className="flex flex-col justify-center">
-          <Circle ref={div6Ref} className="size-16">
+          <Circle ref={div6Ref} className="size-11 md:size-16">
             <Icons.openai />
           </Circle>
         </div>
-        <div className="flex flex-col justify-center gap-2">
+        <div className="flex flex-col justify-center gap-1 md:gap-2">
           <Circle ref={div1Ref}>
             <Icons.googleDrive />
           </Circle>
