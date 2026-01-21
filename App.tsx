@@ -5,7 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ValueProposition from './components/ValueProposition';
-import Testimonials from './components/Testimonials';
+import ClientComplaints from './components/ClientComplaints';
 import ContactForm from './components/ContactForm';
 import BookingSection from './components/BookingSection';
 import PrivacyPolicy from './components/PrivacyPolicy';
@@ -104,7 +104,7 @@ const App: React.FC = () => {
           <>
             <Hero />
             <ValueProposition />
-            <Testimonials />
+            <ClientComplaints />
             <ContactForm />
             <BookingSection />
             <Navbar setView={navigate} currentView={view} />
