@@ -212,13 +212,13 @@ const Services: React.FC = () => {
             {/* Interactive Showcase Section (ClickUp Mimicry) */}
             <section className="px-6 relative">
                 <div className="max-w-6xl mx-auto">
-                    <div className={`relative rounded-[2rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden flex flex-col min-h-[650px] transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+                    <div className={`relative rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden flex flex-col min-h-[550px] md:min-h-[650px] transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
 
                         {/* Glowing Atmosphere */}
                         <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-blue-500/5 opacity-100' : 'bg-blue-500/10 opacity-50'}`} />
 
                         {/* Display Area */}
-                        <div className="flex-grow grid lg:grid-cols-2 gap-8 md:gap-12 p-8 md:p-16 items-center">
+                        <div className="flex-grow grid lg:grid-cols-2 gap-5 md:gap-12 p-5 md:p-16 items-center">
 
                             {/* Left Side: Content Reveal */}
                             <div className="relative z-10 order-2 lg:order-1">
@@ -230,22 +230,22 @@ const Services: React.FC = () => {
                                         exit={{ opacity: 0, y: -20 }}
                                         transition={{ duration: 0.4 }}
                                     >
-                                        <div className="mb-6 flex items-center gap-3 text-blue-500">
-                                            <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                        <div className="mb-4 md:mb-6 flex items-center gap-2 md:gap-3 text-blue-500">
+                                            <div className="p-1.5 md:p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
                                                 {services[activeIndex].icon}
                                             </div>
-                                            <span className="font-bold tracking-widest uppercase text-xs">{services[activeIndex].label}</span>
+                                            <span className="font-bold tracking-widest uppercase text-[10px] md:text-xs">{services[activeIndex].label}</span>
                                         </div>
-                                        <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
+                                        <h2 className="text-2xl md:text-5xl font-bold mb-4 md:mb-6 tracking-tight leading-tight">
                                             {services[activeIndex].title}
                                         </h2>
-                                        <p className="text-[var(--text-muted)] text-lg md:text-xl leading-relaxed mb-8">
+                                        <p className="text-[var(--text-muted)] text-sm md:text-xl leading-relaxed mb-5 md:mb-8">
                                             {services[activeIndex].description}
                                         </p>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 md:gap-4">
                                             {services[activeIndex].benefits.map((benefit, i) => (
-                                                <div key={i} className="flex items-start gap-2.5 text-sm font-semibold">
-                                                    <CheckCircle2 size={16} className="text-blue-500 shrink-0 mt-0.5" />
+                                                <div key={i} className="flex items-start gap-2 md:gap-2.5 text-xs md:text-sm font-semibold">
+                                                    <CheckCircle2 size={14} className="text-blue-500 shrink-0 mt-0.5 md:w-4 md:h-4" />
                                                     <span className="text-[var(--text-main)] opacity-90">{benefit}</span>
                                                 </div>
                                             ))}
@@ -255,7 +255,7 @@ const Services: React.FC = () => {
                             </div>
 
                             {/* Right Side: Animated Scene Frame */}
-                            <div className="relative z-10 order-1 lg:order-2 h-full min-h-[300px] flex items-center justify-center">
+                            <div className="relative z-10 order-1 lg:order-2 h-full min-h-[220px] md:min-h-[300px] flex items-center justify-center">
                                 <AnimatePresence mode="wait">
                                     <motion.div
                                         key={activeIndex}
@@ -263,7 +263,7 @@ const Services: React.FC = () => {
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 1.1 }}
                                         transition={{ duration: 0.5, ease: "easeOut" }}
-                                        className="w-full h-full aspect-square md:aspect-auto md:h-[400px] rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md relative overflow-hidden flex items-center justify-center shadow-inner"
+                                        className="w-full h-full aspect-[4/3] md:aspect-auto md:h-[400px] rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md relative overflow-hidden flex items-center justify-center shadow-inner"
                                     >
                                         {/* Branding Scene Content - Background Gradient Animation */}
                                         {activeIndex === 0 && (
