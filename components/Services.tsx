@@ -311,7 +311,6 @@ const Services: React.FC = () => {
                                                             {[
                                                                 { font: "'Plus Jakarta Sans', sans-serif", label: 'Plus Jakarta Sans', weight: 800 },
                                                                 { font: "'Outfit', sans-serif", label: 'Outfit', weight: 700 },
-                                                                { font: "'Syne', sans-serif", label: 'Syne', weight: 800 },
                                                             ].map((typo, i) => (
                                                                 <motion.div
                                                                     key={typo.label}
