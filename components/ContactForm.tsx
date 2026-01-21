@@ -1,73 +1,106 @@
-
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Calculator, Clock, Users, TrendingUp, Send, ArrowRight, CheckCircle } from 'lucide-react';
+import { Send, CheckCircle } from 'lucide-react';
+import { useTheme } from '../App';
 
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState({
-    clientMeetings: 15,
-    adminHoursPerMeeting: 25,
-    missedFollowups: 3,
     name: '',
     email: '',
-    firm: '',
-    message: ''
+    websiteUrl: '',
+    firmType: '',
+    phone: '',
+    smsOptIn: false
   });
 
-  const [showResults, setShowResults] = useState(false);
-  const [showContactForm, setShowContactForm] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const calculations = useMemo(() => {
-    const weeklyAdminHours = (formData.clientMeetings * formData.adminHoursPerMeeting) / 60;
-    const monthlyAdminHours = weeklyAdminHours * 4;
-    const hoursSavedWeekly = weeklyAdminHours * 0.8; // 80% reduction with automation
-    const hoursSavedMonthly = hoursSavedWeekly * 4;
-    const recapturedLeads = formData.missedFollowups * 0.6; // 60% of missed follow-ups converted
-    const potentialNewClients = Math.round(recapturedLeads * 4 * 0.25); // 25% close rate monthly
-
-    return {
-      weeklyAdminHours: weeklyAdminHours.toFixed(1),
-      monthlyAdminHours: monthlyAdminHours.toFixed(0),
-      hoursSavedWeekly: hoursSavedWeekly.toFixed(1),
-      hoursSavedMonthly: hoursSavedMonthly.toFixed(0),
-      recapturedLeadsMonthly: Math.round(recapturedLeads * 4),
-      potentialNewClients
-    };
-  }, [formData.clientMeetings, formData.adminHoursPerMeeting, formData.missedFollowups]);
-
-  const handleCalculate = () => {
-    setShowResults(true);
+  const handleUrlBlur = () => {
+    let url = formData.websiteUrl.trim();
+    if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+      setFormData(prev => ({ ...prev, websiteUrl: `https://${url}` }));
+    }
   };
 
+  const handleAuditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch('https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c08ab845-6f7c-4016-bdf0-bbcb6b5782e6', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        console.error('Webhook submission failed');
+        // Still show success to user for better UX, or could add an error state
+        setSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitted(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const { theme } = useTheme();
+
   return (
-    <section className="py-32 bg-[#020617]" id="calculator">
+    <section className="py-16 md:py-32 bg-[var(--bg-main)] transition-colors duration-300" id="brand-audit">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 md:mb-20">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20"
+            className="inline-flex items-center gap-3 mb-4 md:mb-6 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20"
           >
-            <span className="text-blue-400 text-xs font-black tracking-[0.2em] uppercase">The Opportunity Cost</span>
+            {theme === 'dark' ? (
+              <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 48 48" fill="none">
+                <defs>
+                  <linearGradient id="logo-grad-audit" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#2563EB"></stop>
+                    <stop offset="100%" stopColor="#06B6D4"></stop>
+                  </linearGradient>
+                </defs>
+                <path d="M4 36L20 24L4 12L4 20L12 24L4 28L4 36Z" fill="#2563EB"></path>
+                <path d="M12 36L28 24L12 12L12 18L18 24L12 30L12 36Z" fill="url(#logo-grad-audit)"></path>
+                <path d="M20 36L44 24L20 12L20 18L32 24L20 30L20 36Z" fill="#06B6D4"></path>
+              </svg>
+            ) : (
+              <img
+                src="/logos/icon-light.svg"
+                alt="Nexli"
+                className="w-5 h-5 md:w-6 md:h-6"
+              />
+            )}
+            <span className="text-blue-400 text-[10px] md:text-sm font-black tracking-[0.2em] uppercase">Nexli Brand Audit</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, ease: "circOut" }}
-            className="text-white mb-6"
+            className="text-[var(--text-main)] mb-4 md:mb-6 text-2xl md:text-5xl font-bold"
           >
-            Quantify the <span className="text-blue-500">Inefficiency</span>
+            What's Your Website's <span className="text-blue-500">Real Score?</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-white/40 max-w-2xl mx-auto text-lg"
+            className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
           >
-            Discover the exact hours being drained by admin work—and the hidden revenue being lost to manual systems.
+            Most businesses fail this audit. Find out what's driving high-quality prospects away.
           </motion.p>
         </div>
 
@@ -75,154 +108,143 @@ const ContactForm: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-card p-10 md:p-16 rounded-[48px] border border-white/10 shadow-3xl"
+          className="glass-card p-6 md:p-16 rounded-3xl md:rounded-[48px] border border-[var(--glass-border)] shadow-3xl"
         >
-          {!showContactForm ? (
-            <>
-              {/* Calculator Inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-                {[
-                  { label: "Client meetings / week", val: formData.clientMeetings, min: 5, max: 40, key: 'clientMeetings', icon: <Users size={20} />, color: 'blue' },
-                  { label: "Admin mins / meeting", val: formData.adminHoursPerMeeting, min: 10, max: 45, key: 'adminHoursPerMeeting', step: 5, icon: <Clock size={20} />, color: 'blue' },
-                  { label: "Leads lost / week", val: formData.missedFollowups, min: 0, max: 10, key: 'missedFollowups', icon: <TrendingUp size={20} />, color: 'blue' }
-                ].map((input, i) => (
-                  <div key={i} className="space-y-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                        <span className="text-blue-400">{input.icon}</span>
-                      </div>
-                      <label className="text-white font-bold text-sm uppercase tracking-wider">{input.label}</label>
-                    </div>
-                    <input
-                      type="range"
-                      min={input.min}
-                      max={input.max}
-                      step={input.step || 1}
-                      value={input.val}
-                      onChange={(e) => setFormData({ ...formData, [input.key]: parseInt(e.target.value) })}
-                      className="w-full h-1.5 bg-white/5 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                    />
-                    <div className="flex justify-between items-end">
-                      <span className="text-white/20 text-[10px] font-black uppercase tracking-widest">{input.min}</span>
-                      <span className="text-blue-400 font-black text-2xl">{input.val}{input.key === 'adminHoursPerMeeting' ? 'm' : ''}</span>
-                      <span className="text-white/20 text-[10px] font-black uppercase tracking-widest">{input.max}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {!showResults ? (
-                <button
-                  onClick={handleCalculate}
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-6 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-2xl shadow-blue-600/20 active:scale-[0.98] uppercase tracking-widest text-sm"
-                >
-                  <Calculator size={18} />
-                  Run Impact Audit
-                </button>
-              ) : (
-                <>
-                  {/* Results Display */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
-                  >
-                    {[
-                      { val: calculations.hoursSavedMonthly, label: "Hours Reclaimed", sub: `${calculations.hoursSavedWeekly} hrs/week`, color: 'blue' },
-                      { val: calculations.recapturedLeadsMonthly, label: "Leads Rescued", sub: "Via Smart Follow-ups", color: 'blue' },
-                      { val: `+${calculations.potentialNewClients}`, label: "Projected Growth", sub: "Add'l Clients / Mo", color: 'blue' }
-                    ].map((res, i) => (
-                      <div key={i} className="glass-card p-10 rounded-[32px] border border-white/5 text-center group hover:border-blue-500/30 transition-colors">
-                        <div className="text-5xl font-black text-white mb-3 group-hover:text-blue-500 transition-colors">
-                          {res.val}
-                        </div>
-                        <div className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-2">{res.label}</div>
-                        <div className="text-white/20 text-[10px] font-bold italic">
-                          {res.sub}
-                        </div>
-                      </div>
-                    ))}
-                  </motion.div>
-
-                  <button
-                    onClick={() => setShowContactForm(true)}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-6 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-2xl shadow-blue-600/20 active:scale-[0.98] uppercase tracking-widest text-sm"
-                  >
-                    Build My Efficiency Roadmap
-                    <ArrowRight size={18} />
-                  </button>
-                </>
-              )}
-            </>
-          ) : (
-            /* Contact Form */
+          {!submitted ? (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
             >
-              <div className="text-center mb-12">
-                <h3 className="text-3xl font-black text-white mb-4">Request Your Custom Strategy</h3>
-                <p className="text-white/40">Our team will review your calculator results and prep a personalized performance plan.</p>
+              <div className="text-center mb-10 md:mb-16">
+                <h3 className="text-xl md:text-3xl font-black text-[var(--text-main)] mb-3 md:mb-4">Request Your Website & Brand Audit</h3>
+                <p className="text-[var(--text-muted)] text-sm md:text-base">Get an expert evaluation of your digital presence and a performance roadmap tailored to your practice.</p>
               </div>
 
-              <form className="space-y-8 max-w-2xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-2">Full Name</label>
+              <form onSubmit={handleAuditSubmit} className="space-y-6 md:space-y-8 max-w-2xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                  <div className="space-y-2 md:space-y-3">
+                    <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Full Name</label>
                     <input
                       type="text"
+                      required
                       placeholder="John Smith"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-white focus:outline-none focus:border-blue-500 transition-all font-medium"
+                      className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                     />
                   </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-2">Work Email</label>
+                  <div className="space-y-2 md:space-y-3">
+                    <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Work Email</label>
                     <input
                       type="email"
+                      required
                       placeholder="john@yourfirm.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-white focus:outline-none focus:border-blue-500 transition-all font-medium"
+                      className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-2">Firm or Practice Name</label>
+                <div className="space-y-2 md:space-y-3">
+                  <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Firm Type</label>
+                  <select
+                    required
+                    value={formData.firmType}
+                    onChange={(e) => setFormData({ ...formData, firmType: e.target.value })}
+                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled>Select your firm type</option>
+                    <option value="Wealth Management">Wealth Management</option>
+                    <option value="CPA Firm">CPA Firm</option>
+                    <option value="Financial Advisor">Financial Advisor</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2 md:space-y-3">
+                  <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Firm Website URL</label>
                   <input
-                    type="text"
-                    placeholder="Smith Wealth Management"
-                    value={formData.firm}
-                    onChange={(e) => setFormData({ ...formData, firm: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-white focus:outline-none focus:border-blue-500 transition-all font-medium"
+                    type="url"
+                    required
+                    placeholder="https://www.yourfirm.com"
+                    value={formData.websiteUrl}
+                    onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
+                    onBlur={handleUrlBlur}
+                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                   />
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-2">Current Biggest Scaling Bottleneck</label>
-                  <textarea
-                    rows={4}
-                    placeholder="E.g., Website is outdated, admin is overwhelming, or lead follow-up is manual..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-3xl px-6 py-5 text-white focus:outline-none focus:border-blue-500 transition-all resize-none font-medium text-sm"
+                <div className="space-y-2 md:space-y-3">
+                  <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Mobile Phone Number (Optional)</label>
+                  <input
+                    type="tel"
+                    placeholder="+1 (555) 000-0000"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                   />
+                </div>
+
+                <div className="space-y-4">
+                  <div
+                    className={`flex items-start gap-3 p-4 glass-card rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer ${formData.phone ? 'hover:border-blue-500/30' : 'opacity-40 cursor-not-allowed'}`}
+                    onClick={() => {
+                      if (formData.phone) {
+                        setFormData(prev => ({ ...prev, smsOptIn: !prev.smsOptIn }));
+                      }
+                    }}
+                  >
+                    <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.smsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
+                      {formData.smsOptIn && <CheckCircle className="text-white" size={14} />}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[var(--text-main)] text-[10px] md:text-sm font-bold leading-relaxed">
+                        I agree to receive SMS updates about my audit (optional)
+                      </p>
+                    </div>
+                  </div>
+                  <p className="px-2 text-[var(--text-muted)] opacity-50 text-[8px] md:text-[9px] leading-relaxed italic text-center">
+                    By checking this box, you agree to receive automated messages. Message frequency varies. Message & data rates may apply. Text HELP for help. Reply STOP to unsubscribe.
+                  </p>
                 </div>
 
                 <button
-                  type="button"
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-6 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-2xl shadow-blue-600/20 active:scale-[0.98] uppercase tracking-widest text-sm"
+                  type="submit"
+                  disabled={loading}
+                  className={`w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 md:py-6 rounded-xl md:rounded-2xl flex items-center justify-center gap-3 transition-all shadow-2xl shadow-blue-600/20 active:scale-[0.98] uppercase tracking-widest text-xs md:text-sm ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
-                  <Send size={18} />
-                  Secure Your Strategy Session
+                  {loading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Send size={16} />
+                  )}
+                  {loading ? 'Sending...' : 'Get My Free Audit'}
                 </button>
 
-                <p className="text-center text-white/20 text-[10px] font-black uppercase tracking-[0.1em]">
+                <p className="text-center text-[var(--text-muted)] opacity-30 text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em]">
                   Elite Partners Only • NDA Guaranteed • RESPONSE IN 24H
                 </p>
               </form>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="py-12 md:py-20 text-center"
+            >
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-green-500/10 border border-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 text-green-500">
+                <CheckCircle size={40} />
+              </div>
+              <h3 className="text-2xl md:text-4xl font-bold text-[var(--text-main)] mb-4 md:mb-6">Thanks!</h3>
+              <p className="text-[var(--text-muted)] text-base md:text-xl max-w-md mx-auto leading-relaxed px-4">
+                Your Website & Brand Audit is on the way. Check your inbox.
+              </p>
+              <button
+                onClick={() => setSubmitted(false)}
+                className="mt-8 md:mt-12 text-blue-500 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs hover:text-blue-400 transition-colors"
+              >
+                Back to form
+              </button>
             </motion.div>
           )}
         </motion.div>

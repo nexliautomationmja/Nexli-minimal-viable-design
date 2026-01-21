@@ -1,9 +1,11 @@
-
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Video } from 'lucide-react';
 
+import { useTheme } from '../App';
+
 const BookingSection: React.FC = () => {
+  const { theme } = useTheme();
   useEffect(() => {
     // Load Cal.com embed script
     (function (C: any, A: string, L: string) {
@@ -38,31 +40,31 @@ const BookingSection: React.FC = () => {
 
     Cal.ns["nexli-demo"]("inline", {
       elementOrSelector: "#my-cal-inline-nexli-demo",
-      config: { "layout": "month_view", "theme": "dark" },
+      config: { "layout": "month_view", "theme": theme },
       calLink: "nexli-automation-6fgn8j/nexli-demo",
     });
 
-    Cal.ns["nexli-demo"]("ui", { "theme": "dark", "hideEventTypeDetails": false, "layout": "month_view" });
-  }, []);
+    Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": "month_view" });
+  }, [theme]);
 
   return (
-    <section className="py-32 bg-[#020617]" id="book">
+    <section className="py-12 md:py-32 bg-[var(--bg-main)] transition-colors duration-300" id="book">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 md:mb-20">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20"
+            className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20"
           >
-            <span className="text-blue-400 text-xs font-black tracking-[0.2em] uppercase">The First Step</span>
+            <span className="text-blue-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">The First Step</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, ease: "circOut" }}
-            className="text-white mb-6"
+            className="text-[var(--text-main)] mb-4 md:mb-6 text-2xl md:text-5xl font-bold"
           >
             Book Your <span className="text-blue-500">Strategy Session</span>
           </motion.h2>
@@ -71,7 +73,7 @@ const BookingSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-white/40 max-w-2xl mx-auto text-lg"
+            className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
           >
             In 30 minutes, we'll audit your current systems and map out a high-performance roadmap tailored to your RIA or practice.
           </motion.p>
@@ -82,20 +84,20 @@ const BookingSection: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+          className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8 mb-10 md:mb-16"
         >
           {[
             { icon: <Video className="text-blue-400" size={20} />, title: "Digital Governance", sub: "Secure Face-to-Face" },
             { icon: <Clock className="text-blue-400" size={20} />, title: "30-Min Audit", sub: "Focused & Strategic" },
             { icon: <Calendar className="text-blue-400" size={20} />, title: "Direct Calendar", sub: "Zero Friction" }
           ].map((item, i) => (
-            <div key={i} className="flex items-center gap-5 p-6 glass-card rounded-3xl border border-white/5 group hover:border-blue-500/20 transition-all">
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:bg-blue-500/20 transition-all">
-                {item.icon}
+            <div key={i} className="flex items-center gap-4 md:gap-5 p-4 md:p-6 glass-card rounded-xl md:rounded-3xl border border-[var(--glass-border)] group hover:border-blue-500/20 transition-all">
+              <div className="w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:bg-blue-500/20 transition-all">
+                {React.cloneElement(item.icon as React.ReactElement, { size: 16 })}
               </div>
               <div>
-                <div className="text-white font-bold text-base">{item.title}</div>
-                <div className="text-white/30 text-[10px] font-black uppercase tracking-widest">{item.sub}</div>
+                <div className="text-[var(--text-main)] font-bold text-xs md:text-base">{item.title}</div>
+                <div className="text-[var(--text-muted)] opacity-50 text-[8px] md:text-[10px] font-black uppercase tracking-widest">{item.sub}</div>
               </div>
             </div>
           ))}
@@ -106,10 +108,10 @@ const BookingSection: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-card rounded-[48px] overflow-hidden border border-white/10 shadow-3xl"
+          className="glass-card rounded-2xl md:rounded-[48px] overflow-hidden border border-[var(--glass-border)] shadow-3xl"
         >
           <div
-            style={{ width: '100%', height: '700px', overflow: 'auto' }}
+            style={{ width: '100%', height: 'calc(100vh - 300px)', minHeight: '500px', maxHeight: '800px', overflow: 'auto' }}
             id="my-cal-inline-nexli-demo"
           />
         </motion.div>
@@ -118,7 +120,7 @@ const BookingSection: React.FC = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center text-white/20 text-[10px] font-black uppercase tracking-[0.2em] mt-12"
+          className="text-center text-[var(--text-muted)] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mt-8 md:mt-12"
         >
           Confidentiality Guaranteed • High-Net-Worth Specialist
         </motion.p>

@@ -10,6 +10,8 @@ import ContactForm from './components/ContactForm';
 import BookingSection from './components/BookingSection';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
+import FreeGuide from './components/FreeGuide';
+import Services from './components/Services';
 
 type Theme = 'light' | 'dark';
 
@@ -35,7 +37,45 @@ const App: React.FC = () => {
     return 'dark';
   });
 
-  const [view, setView] = useState<'home' | 'privacy' | 'terms'>('home');
+  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services'>('home');
+
+  // Handle URL to State synchronization
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname;
+      if (path === '/free-guide') {
+        setView('guide');
+      } else if (path === '/services') {
+        setView('services');
+      } else if (path === '/privacy') {
+        setView('privacy');
+      } else if (path === '/terms') {
+        setView('terms');
+      } else {
+        setView('home');
+      }
+    };
+
+    // Initial check
+    handleLocationChange();
+
+    // Listen for back/forward buttons
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  // Function to navigate and update URL
+  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services') => {
+    const path = newView === 'guide' ? '/free-guide' :
+      newView === 'services' ? '/services' :
+        newView === 'privacy' ? '/privacy' :
+          newView === 'terms' ? '/terms' : '/';
+
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, '', path);
+      setView(newView);
+    }
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -66,18 +106,29 @@ const App: React.FC = () => {
             <Testimonials />
             <ContactForm />
             <BookingSection />
-            <Navbar />
+            <Navbar setView={navigate} currentView={view} />
           </>
         ) : view === 'privacy' ? (
-          <PrivacyPolicy onBack={() => setView('home')} />
+          <PrivacyPolicy onBack={() => navigate('home')} />
+        ) : view === 'services' ? (
+          <>
+            <Services />
+            <Navbar setView={navigate} currentView={view} />
+          </>
         ) : (
-          <TermsAndConditions onBack={() => setView('home')} />
+          <>
+            <FreeGuide />
+            <Navbar setView={navigate} currentView={view} />
+          </>
         )}
         <footer className="py-20 border-t border-[var(--glass-border)] bg-[var(--footer-bg)] relative overflow-hidden transition-colors duration-300">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,var(--accent-glow)_0%,transparent_50%)]" />
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="flex flex-col md:flex-row justify-between items-center gap-12">
-              <a href="#hero" className="flex items-center gap-3 no-underline group cursor-pointer">
+              <button
+                onClick={() => navigate('home')}
+                className="flex items-center gap-3 no-underline group cursor-pointer bg-transparent border-none p-0"
+              >
                 {theme === 'dark' ? (
                   <svg className="w-10 h-10" viewBox="0 0 48 48" fill="none">
                     <defs>
@@ -98,16 +149,16 @@ const App: React.FC = () => {
                   />
                 )}
                 <span className="text-3xl font-black tracking-tighter text-[var(--text-main)]" style={{ fontFamily: "'Syne', sans-serif" }}>NEXLI</span>
-              </a>
+              </button>
               <div className="flex gap-10 text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
                 <button
-                  onClick={() => setView('privacy')}
+                  onClick={() => navigate('privacy')}
                   className="hover:text-blue-500 transition-colors bg-transparent border-none p-0 uppercase tracking-[0.2em]"
                 >
                   Privacy Policy
                 </button>
                 <button
-                  onClick={() => setView('terms')}
+                  onClick={() => navigate('terms')}
                   className="hover:text-blue-500 transition-colors bg-transparent border-none p-0 uppercase tracking-[0.2em]"
                 >
                   Terms and Conditions

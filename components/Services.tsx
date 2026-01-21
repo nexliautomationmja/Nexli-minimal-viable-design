@@ -1,0 +1,290 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Palette, Layout, Cpu, CheckCircle2, Zap, MessageSquare } from 'lucide-react';
+import { useTheme } from '../App';
+import ResultsShowcase from './ResultsShowcase';
+
+const Services: React.FC = () => {
+    const { theme } = useTheme();
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [progress, setProgress] = useState(0);
+
+    const services = [
+        {
+            id: 'branding',
+            icon: <Palette className="w-6 h-6" />,
+            title: "Brand Kit & Logo Design",
+            label: "Identity",
+            description: "Your brand is the first impression prospects get — make it count. We craft a complete visual identity system including logo design, color palette, typography, and brand guidelines.",
+            benefits: [
+                "Professional logo with variations",
+                "Complete color & typography system",
+                "Official brand guidelines document",
+                "Ready-to-use digital assets"
+            ]
+        },
+        {
+            id: 'web-design',
+            icon: <Layout className="w-6 h-6" />,
+            title: "Web Design",
+            label: "Presence",
+            description: "Your website should work as hard as you do. We design and build premium, conversion-focused websites specifically for financial advisors — clean, fast, and high-performance.",
+            benefits: [
+                "Custom design tailored to your firm",
+                "Mobile-responsive & lightning fast",
+                "SEO-optimized structure",
+                "Integrated booking systems"
+            ]
+        },
+        {
+            id: 'ai-automation',
+            icon: <Cpu className="w-6 h-6" />,
+            title: "AI Automations",
+            label: "Intelligence",
+            description: "Stop losing hours to repetitive tasks. We implement intelligent automations that handle appointment reminders, client onboarding, follow-ups, and re-engagement.",
+            benefits: [
+                "Automated reminders & onboarding",
+                "Dormant client re-engagement",
+                "24/7 AI chat assistant",
+                "Zero-touch lead qualification"
+            ]
+        }
+    ];
+
+    // Auto-progression logic (ClickUp style progress bar)
+    useEffect(() => {
+        const duration = 10000; // 10 seconds per tab
+        const interval = 100;
+        const step = (interval / duration) * 100;
+
+        const timer = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 100) {
+                    setActiveIndex((current) => (current + 1) % services.length);
+                    return 0;
+                }
+                return prev + step;
+            });
+        }, interval);
+
+        return () => clearInterval(timer);
+    }, [activeIndex, services.length]);
+
+    const handleTabClick = (index: number) => {
+        setActiveIndex(index);
+        setProgress(0);
+    };
+
+    return (
+        <div className="pt-24 md:pt-32 pb-20 overflow-hidden">
+            {/* Hero Section */}
+            <section className="px-6 mb-12 md:mb-20 text-center">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6 }}
+                        className="inline-block px-4 py-1.5 mb-6 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 text-xs font-bold uppercase tracking-widest"
+                    >
+                        Our Services
+                    </motion.div>
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1] max-w-4xl mx-auto">
+                        Everything Your Firm Needs to <span className="text-blue-500">Stand Out Online</span>
+                    </h1>
+                    <p className="text-lg md:text-xl text-[var(--text-muted)] leading-relaxed max-w-2xl mx-auto">
+                        Brand identity. Web presence. Intelligent automation. Mimicking the precision and speed of the industry's leaders.
+                    </p>
+                </div>
+            </section>
+
+            {/* Results Showcase - Sell the destination */}
+            <ResultsShowcase />
+
+            {/* Interactive Showcase Section (ClickUp Mimicry) */}
+            <section className="px-6 relative">
+                <div className="max-w-6xl mx-auto">
+                    <div className={`relative rounded-[2rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden flex flex-col min-h-[650px] transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+
+                        {/* Glowing Atmosphere */}
+                        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-blue-500/5 opacity-100' : 'bg-blue-500/10 opacity-50'}`} />
+
+                        {/* Display Area */}
+                        <div className="flex-grow grid lg:grid-cols-2 gap-8 md:gap-12 p-8 md:p-16 items-center">
+
+                            {/* Left Side: Content Reveal */}
+                            <div className="relative z-10 order-2 lg:order-1">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={activeIndex}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{ duration: 0.4 }}
+                                    >
+                                        <div className="mb-6 flex items-center gap-3 text-blue-500">
+                                            <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                                {services[activeIndex].icon}
+                                            </div>
+                                            <span className="font-bold tracking-widest uppercase text-xs">{services[activeIndex].label}</span>
+                                        </div>
+                                        <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
+                                            {services[activeIndex].title}
+                                        </h2>
+                                        <p className="text-[var(--text-muted)] text-lg md:text-xl leading-relaxed mb-8">
+                                            {services[activeIndex].description}
+                                        </p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {services[activeIndex].benefits.map((benefit, i) => (
+                                                <div key={i} className="flex items-start gap-2.5 text-sm font-semibold">
+                                                    <CheckCircle2 size={16} className="text-blue-500 shrink-0 mt-0.5" />
+                                                    <span className="text-[var(--text-main)] opacity-90">{benefit}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Right Side: Animated Scene Frame */}
+                            <div className="relative z-10 order-1 lg:order-2 h-full min-h-[300px] flex items-center justify-center">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={activeIndex}
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 1.1 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                        className="w-full h-full aspect-square md:aspect-auto md:h-[400px] rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md relative overflow-hidden flex items-center justify-center shadow-inner"
+                                    >
+                                        {/* Branding Scene Content */}
+                                        {activeIndex === 0 && (
+                                            <div className="flex flex-col items-center gap-6 p-8">
+                                                <motion.div
+                                                    animate={{ rotate: 360 }}
+                                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                                    className="w-32 h-32 rounded-full border-2 border-dashed border-blue-500/30 flex items-center justify-center"
+                                                >
+                                                    <div className="w-24 h-24 rounded-3xl bg-blue-600 flex items-center justify-center shadow-blue-600/40 shadow-2xl">
+                                                        <Palette size={40} className="text-white" />
+                                                    </div>
+                                                </motion.div>
+                                                <div className="flex gap-3">
+                                                    {[1, 2, 3, 4].map(i => (
+                                                        <div key={i} className="w-6 h-6 rounded-md bg-blue-500/20 border border-blue-500/30" />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Web Scene Content */}
+                                        {activeIndex === 1 && (
+                                            <div className="w-full h-full p-6 flex flex-col pt-10">
+                                                <div className="w-full h-full bg-[#0a0a0a] rounded-t-xl border-x border-t border-[var(--glass-border)] overflow-hidden">
+                                                    <div className="h-7 w-full bg-neutral-900 border-b border-[var(--glass-border)] flex items-center gap-2 px-3">
+                                                        <div className="flex gap-1.5">
+                                                            <div className="w-2 h-2 rounded-full bg-red-500/40" />
+                                                            <div className="w-2 h-2 rounded-full bg-yellow-500/40" />
+                                                            <div className="w-2 h-2 rounded-full bg-green-500/40" />
+                                                        </div>
+                                                        <div className="h-3 w-32 bg-neutral-800 rounded-full mx-auto" />
+                                                    </div>
+                                                    <div className="p-6 space-y-4">
+                                                        <div className="h-4 w-1/2 bg-blue-500/20 rounded" />
+                                                        <div className="grid grid-cols-3 gap-3">
+                                                            <div className="h-16 bg-blue-500/5 rounded-lg border border-blue-500/10" />
+                                                            <div className="h-16 bg-blue-500/5 rounded-lg border border-blue-500/10" />
+                                                            <div className="h-16 bg-blue-500/5 rounded-lg border border-blue-500/10" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* AI Scene Content */}
+                                        {activeIndex === 2 && (
+                                            <div className="w-full h-full flex flex-col justify-center items-center gap-8 p-12">
+                                                <div className="relative">
+                                                    <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse" />
+                                                    <div className="relative w-20 h-20 rounded-2xl bg-[#050505] border border-blue-500/30 flex items-center justify-center">
+                                                        <Cpu size={32} className="text-blue-500" />
+                                                    </div>
+                                                </div>
+                                                <div className="w-full space-y-2 font-mono text-[10px] text-blue-400 opacity-60">
+                                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }}>{">"} initializing firm_logic...</motion.div>
+                                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}>{">"} automated outreach active.</motion.div>
+                                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: 1 }}>{">"} sync established.</motion.div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
+                        </div>
+
+                        {/* Interaction Tabs (Footer of frame) */}
+                        <div className={`border-t border-[var(--glass-border)] backdrop-blur-md grid grid-cols-3 transition-colors duration-500 ${theme === 'dark' ? 'bg-black/40' : 'bg-slate-50/50'}`}>
+                            {services.map((service, index) => (
+                                <button
+                                    key={service.id}
+                                    onClick={() => handleTabClick(index)}
+                                    className={`relative p-5 md:p-8 transition-all border-r border-[var(--glass-border)] last:border-r-0 text-left group hover:bg-white/5 ${activeIndex === index ? (theme === 'dark' ? 'bg-white/[0.03]' : 'bg-blue-500/5') : ''}`}
+                                >
+                                    {/* Active Highlight Line & Progress */}
+                                    <div className={`absolute top-0 left-0 h-[2px] w-full ${theme === 'dark' ? 'bg-white/10' : 'bg-blue-500/10'}`}>
+                                        {activeIndex === index && (
+                                            <motion.div
+                                                className="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+                                                initial={{ width: "0%" }}
+                                                animate={{ width: `${progress}%` }}
+                                                transition={{ ease: "linear", duration: 0.1 }}
+                                            />
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-col gap-1.5">
+                                        <span className={`text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] transition-colors ${activeIndex === index ? 'text-blue-500' : (theme === 'dark' ? 'text-neutral-500 group-hover:text-neutral-300' : 'text-slate-400 group-hover:text-slate-600')}`}>
+                                            {service.label}
+                                        </span>
+                                        <span className={`text-[11px] md:text-sm font-semibold transition-colors truncate ${activeIndex === index ? (theme === 'dark' ? 'text-white' : 'text-slate-900') : (theme === 'dark' ? 'text-neutral-400 group-hover:text-neutral-200' : 'text-slate-500 group-hover:text-slate-700')}`}>
+                                            {service.title}
+                                        </span>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Existing Closing Section */}
+            <section className="px-6 mt-32 text-center">
+                <div className="max-w-4xl mx-auto p-12 md:p-20 rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none" />
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <h2 className="text-3xl md:text-5xl font-bold mb-8 tracking-tight leading-tight">
+                            Build Your Vision. <br className="hidden md:block" /> <span className="text-blue-500">Automate Your Firm.</span>
+                        </h2>
+                        <p className="text-lg md:text-xl text-[var(--text-muted)] mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
+                            Most firms bundle all three for a complete digital transformation. But if you need to start with just one — that works too. Let's talk about what makes sense for your firm.
+                        </p>
+
+                        <a
+                            href="https://nexli.net/#book"
+                            className="inline-flex items-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-full text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
+                        >
+                            Book a Consultation
+                            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        </a>
+                    </motion.div>
+                </div>
+            </section>
+        </div>
+    );
+};
+
+export default Services;
