@@ -12,6 +12,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import FreeGuide from './components/FreeGuide';
 import Services from './components/Services';
+import SocialDock from './components/SocialDock';
 
 type Theme = 'light' | 'dark';
 
@@ -152,6 +153,11 @@ const App: React.FC = () => {
                 )}
                 <span className="text-3xl font-black tracking-tighter text-[var(--text-main)]" style={{ fontFamily: "'Syne', sans-serif" }}>NEXLI</span>
               </button>
+              <SocialDock
+                tiktokUrl="#"
+                instagramUrl="#"
+                xUrl="#"
+              />
               <div className="flex gap-10 text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
                 <button
                   onClick={() => navigate('privacy')}
