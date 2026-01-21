@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Video } from 'lucide-react';
+import { Calendar, Clock, Video, ArrowRight } from 'lucide-react';
 
 import { useTheme } from '../App';
 
@@ -48,24 +48,36 @@ const BookingSection: React.FC = () => {
     })(window, "https://app.cal.com/embed/embed.js", "init");
 
     const Cal = (window as any).Cal;
-    // Use column_view for mobile (more touch-friendly), month_view for desktop
-    const layout = isMobile ? "column_view" : "month_view";
 
     Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
 
-    Cal.ns["nexli-demo"]("inline", {
-      elementOrSelector: "#my-cal-inline-nexli-demo",
-      config: { "layout": layout, "theme": theme },
-      calLink: "nexli-automation-6fgn8j/nexli-demo",
-    });
+    // Only create inline embed for desktop
+    if (!isMobile) {
+      Cal.ns["nexli-demo"]("inline", {
+        elementOrSelector: "#my-cal-inline-nexli-demo",
+        config: { "layout": "month_view", "theme": theme },
+        calLink: "nexli-automation-6fgn8j/nexli-demo",
+      });
 
-    Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": layout });
+      Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": "month_view" });
+    }
   }, [theme, isMobile]);
+
+  // Function to open Cal.com popup on mobile
+  const openCalPopup = () => {
+    const Cal = (window as any).Cal;
+    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
+      Cal.ns["nexli-demo"]("modal", {
+        calLink: "nexli-automation-6fgn8j/nexli-demo",
+        config: { "layout": "month_view", "theme": theme },
+      });
+    }
+  };
 
   return (
     <section className="py-12 md:py-32 bg-[var(--bg-main)] transition-colors duration-300" id="book">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-12 md:mb-20">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-8 md:mb-20">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -88,7 +100,7 @@ const BookingSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
+            className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-2"
           >
             In 30 minutes, we'll audit your current systems and map out a high-performance roadmap tailored to your RIA or practice.
           </motion.p>
@@ -99,7 +111,7 @@ const BookingSection: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8 mb-10 md:mb-16"
+          className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8 mb-8 md:mb-16"
         >
           {[
             { icon: <Video className="text-blue-400" size={20} />, title: "Digital Governance", sub: "Secure Face-to-Face" },
@@ -118,31 +130,59 @@ const BookingSection: React.FC = () => {
           ))}
         </motion.div>
 
-        {/* Cal.com Embed Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="glass-card rounded-xl md:rounded-[48px] overflow-hidden border border-[var(--glass-border)] shadow-3xl"
-          style={isMobile ? { transform: 'scale(0.9)', transformOrigin: 'top center' } : {}}
-        >
-          <div
-            style={{
-              width: '100%',
-              height: isMobile ? '550px' : 'calc(100vh - 300px)',
-              minHeight: isMobile ? '550px' : '500px',
-              maxHeight: isMobile ? '550px' : '800px',
-              overflow: 'hidden'
-            }}
-            id="my-cal-inline-nexli-demo"
-          />
-        </motion.div>
+        {/* Mobile: Booking Card with Button */}
+        {isMobile && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass-card rounded-2xl overflow-hidden border border-[var(--glass-border)] p-6 text-center"
+          >
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+              <Calendar className="text-blue-400" size={28} />
+            </div>
+            <h3 className="text-[var(--text-main)] text-lg font-bold mb-2">
+              Ready to Get Started?
+            </h3>
+            <p className="text-[var(--text-muted)] text-sm mb-6">
+              Tap below to select a time that works for you.
+            </p>
+            <button
+              onClick={openCalPopup}
+              className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-4 rounded-xl text-base font-bold hover:bg-blue-500 active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group"
+            >
+              Select a Time
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </motion.div>
+        )}
+
+        {/* Desktop: Cal.com Inline Embed */}
+        {!isMobile && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass-card rounded-[48px] overflow-hidden border border-[var(--glass-border)] shadow-3xl"
+          >
+            <div
+              style={{
+                width: '100%',
+                height: 'calc(100vh - 300px)',
+                minHeight: '500px',
+                maxHeight: '800px',
+                overflow: 'auto'
+              }}
+              id="my-cal-inline-nexli-demo"
+            />
+          </motion.div>
+        )}
 
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center text-[var(--text-muted)] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mt-8 md:mt-12"
+          className="text-center text-[var(--text-muted)] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mt-6 md:mt-12"
         >
           Confidentiality Guaranteed • High-Net-Worth Specialist
         </motion.p>
