@@ -115,6 +115,8 @@ const App: React.FC = () => {
             <Services />
             <Navbar setView={navigate} currentView={view} />
           </>
+        ) : view === 'terms' ? (
+          <TermsAndConditions onBack={() => navigate('home')} />
         ) : (
           <>
             <FreeGuide />
