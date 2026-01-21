@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Video } from 'lucide-react';
 
@@ -6,6 +6,18 @@ import { useTheme } from '../App';
 
 const BookingSection: React.FC = () => {
   const { theme } = useTheme();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     // Load Cal.com embed script
     (function (C: any, A: string, L: string) {
@@ -36,16 +48,19 @@ const BookingSection: React.FC = () => {
     })(window, "https://app.cal.com/embed/embed.js", "init");
 
     const Cal = (window as any).Cal;
+    // Use column_view for mobile (more touch-friendly), month_view for desktop
+    const layout = isMobile ? "column_view" : "month_view";
+
     Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
 
     Cal.ns["nexli-demo"]("inline", {
       elementOrSelector: "#my-cal-inline-nexli-demo",
-      config: { "layout": "month_view", "theme": theme },
+      config: { "layout": layout, "theme": theme },
       calLink: "nexli-automation-6fgn8j/nexli-demo",
     });
 
-    Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": "month_view" });
-  }, [theme]);
+    Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": layout });
+  }, [theme, isMobile]);
 
   return (
     <section className="py-12 md:py-32 bg-[var(--bg-main)] transition-colors duration-300" id="book">
@@ -108,10 +123,17 @@ const BookingSection: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-card rounded-2xl md:rounded-[48px] overflow-hidden border border-[var(--glass-border)] shadow-3xl"
+          className="glass-card rounded-xl md:rounded-[48px] overflow-hidden border border-[var(--glass-border)] shadow-3xl"
+          style={isMobile ? { transform: 'scale(0.9)', transformOrigin: 'top center' } : {}}
         >
           <div
-            style={{ width: '100%', height: 'calc(100vh - 300px)', minHeight: '500px', maxHeight: '800px', overflow: 'auto' }}
+            style={{
+              width: '100%',
+              height: isMobile ? '550px' : 'calc(100vh - 300px)',
+              minHeight: isMobile ? '550px' : '500px',
+              maxHeight: isMobile ? '550px' : '800px',
+              overflow: 'hidden'
+            }}
             id="my-cal-inline-nexli-demo"
           />
         </motion.div>
