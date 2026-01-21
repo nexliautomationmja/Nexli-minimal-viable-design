@@ -5,6 +5,9 @@ import { useTheme } from '../App';
 import ResultsShowcase from './ResultsShowcase';
 import { SparklesCore } from './Sparkles';
 import { Vortex } from './Vortex';
+import { ThreeDMarquee } from './ui/ThreeDMarquee';
+import { NexliSparklesCard } from './ui/NexliSparklesCard';
+import { VortexCard } from './ui/VortexCard';
 
 const Services: React.FC = () => {
     const { theme } = useTheme();
@@ -280,27 +283,25 @@ const Services: React.FC = () => {
                                             </div>
                                         )}
 
-                                        {/* Web Scene Content */}
+                                        {/* Web Scene Content - 3D Marquee Showcase */}
                                         {activeIndex === 1 && (
-                                            <div className="w-full h-full p-6 flex flex-col pt-10">
-                                                <div className="w-full h-full bg-[#0a0a0a] rounded-t-xl border-x border-t border-[var(--glass-border)] overflow-hidden">
-                                                    <div className="h-7 w-full bg-neutral-900 border-b border-[var(--glass-border)] flex items-center gap-2 px-3">
-                                                        <div className="flex gap-1.5">
-                                                            <div className="w-2 h-2 rounded-full bg-red-500/40" />
-                                                            <div className="w-2 h-2 rounded-full bg-yellow-500/40" />
-                                                            <div className="w-2 h-2 rounded-full bg-green-500/40" />
-                                                        </div>
-                                                        <div className="h-3 w-32 bg-neutral-800 rounded-full mx-auto" />
-                                                    </div>
-                                                    <div className="p-6 space-y-4">
-                                                        <div className="h-4 w-1/2 bg-blue-500/20 rounded" />
-                                                        <div className="grid grid-cols-3 gap-3">
-                                                            <div className="h-16 bg-blue-500/5 rounded-lg border border-blue-500/10" />
-                                                            <div className="h-16 bg-blue-500/5 rounded-lg border border-blue-500/10" />
-                                                            <div className="h-16 bg-blue-500/5 rounded-lg border border-blue-500/10" />
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div className="w-full h-full overflow-hidden rounded-2xl bg-gray-950/5 dark:bg-neutral-800">
+                                                <ThreeDMarquee
+                                                    images={[
+                                                        <NexliSparklesCard key="nexli" />,
+                                                        "https://assets.aceternity.com/cloudinary_bkp/3d-card.png",
+                                                        "https://assets.aceternity.com/animated-modal.png",
+                                                        "https://assets.aceternity.com/github-globe.png",
+                                                        "https://assets.aceternity.com/glare-card.png",
+                                                        "https://assets.aceternity.com/hero-highlight.png",
+                                                        <VortexCard key="vortex2" />,
+                                                        "https://assets.aceternity.com/spotlight-new.webp",
+                                                        "https://assets.aceternity.com/tabs.png",
+                                                        "https://assets.aceternity.com/vortex.png",
+                                                        "https://assets.aceternity.com/wobble-card.png",
+                                                        "https://assets.aceternity.com/world-map.webp",
+                                                    ]}
+                                                />
                                             </div>
                                         )}
 
