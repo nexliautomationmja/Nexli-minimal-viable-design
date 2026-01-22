@@ -143,7 +143,7 @@ const ValueProposition: React.FC = () => {
 
               {/* Image/Video Side */}
               <div className={`relative ${idx % 2 === 1 ? 'lg:order-1' : ''} group`}>
-                <div className="relative rounded-2xl md:rounded-[40px] overflow-hidden aspect-[4/5] md:aspect-video lg:aspect-[4/3] border border-[var(--glass-border)] shadow-3xl">
+                <div className={`relative rounded-2xl md:rounded-[40px] overflow-hidden border border-[var(--glass-border)] shadow-3xl ${(point as any).video ? 'aspect-square md:aspect-video lg:aspect-[4/3]' : 'aspect-[4/5] md:aspect-video lg:aspect-[4/3]'}`}>
                   {(point as any).video ? (
                     /* Video */
                     <video
@@ -152,7 +152,7 @@ const ValueProposition: React.FC = () => {
                       loop
                       muted
                       playsInline
-                      className="w-full h-full object-contain md:object-cover bg-[var(--bg-main)]"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <>
