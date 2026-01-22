@@ -17,77 +17,77 @@ interface Complaint {
 const complaints: Complaint[] = [
   // Web Development Complaints
   {
-    name: "Margaret L.",
-    username: "@margaret_investor",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=margaret&backgroundColor=c0aede",
+    name: "Peyton L.",
+    username: "@peyton_investor",
+    avatar: "/avatars/peyton-l.png",
     text: "Their site is confusing and cumbersome. Ended up making a mistake and signed up for a 5 yr CD instead of 1."
   },
   {
-    name: "Richard H.",
-    username: "@richard_wealth",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=richard&backgroundColor=b6e3f4",
+    name: "Jian Z.",
+    username: "@jian_wealth",
+    avatar: "/avatars/jian-z.png",
     text: "Worse website, always errors. My cash transfer failed and it's been a month — still not solved."
   },
   {
     name: "Sandra K.",
     username: "@sandra_cpa",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sandra&backgroundColor=ffd5dc",
+    avatar: "/avatars/sandra-k.png",
     text: "I got errors every time I logged into the account. Unable to add banking info. Their e-sign process did not work."
   },
   {
-    name: "Industry Research",
-    username: "@wealthstudy2024",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=research&backgroundColor=d1d4f9",
+    name: "Peyton R.",
+    username: "@peyton_research",
+    avatar: "/avatars/peyton-r.png",
     text: "68% of clients expect digital experiences to match those of leading technology companies."
   },
   // Brand Identity Complaints
   {
-    name: "Thomas W.",
-    username: "@thomas_10yr_client",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=thomas&backgroundColor=c1f0dc",
+    name: "Roberto W.",
+    username: "@roberto_client",
+    avatar: "/avatars/roberto-w.png",
     text: "They are just another cookie cutter company. They provide you with a plan based on age that just divides up your portfolio in set allocations."
   },
   {
-    name: "Barbara M.",
-    username: "@barbara_estate",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=barbara&backgroundColor=ffdfbf",
+    name: "Keyonna M.",
+    username: "@keyonna_estate",
+    avatar: "/avatars/keyonna-m.png",
     text: "When I liquidated my late mother's last IRA the assistant said 'oh this is just such a small amount.'"
   },
   // AI Automation Complaints
   {
     name: "William R.",
     username: "@william_trust",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=william&backgroundColor=f0c1e1",
+    avatar: "/avatars/william-r.png",
     text: "I transferred over $3M to their trust and there is ABSOLUTELY NO CUSTOMER SERVICE. The trust officer does not communicate AT ALL."
   },
   {
     name: "Patricia N.",
     username: "@patricia_hnw",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=patricia&backgroundColor=bde0fe",
+    avatar: "/avatars/patricia-n.png",
     text: "Unanswered emails, calls that never get returned, and weeks of radio silence when I just need a simple answer."
   },
   {
-    name: "YCharts Survey",
-    username: "@ycharts_2024",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ycharts&backgroundColor=e2c1f0",
+    name: "Bernice P.",
+    username: "@bernice_advisor",
+    avatar: "/avatars/bernice-p.png",
     text: "75% of clients considered leaving or actually left their advisor in 2023, with lack of communication as the primary driver."
   },
   {
     name: "James C.",
     username: "@james_market",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=james&backgroundColor=c1e0f0",
+    avatar: "/avatars/james-c.png",
     text: "Once the market turned downward, the broker ignored me. No proactive outreach whatsoever."
   },
   {
     name: "Robert F.",
     username: "@robert_vanguard",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=robertf&backgroundColor=f0e1c1",
+    avatar: "/avatars/robert-f.png",
     text: "I took an available time slot for our call. When he didn't call at the scheduled time, I found out he wasn't even in the office that day."
   },
   {
     name: "Catherine D.",
     username: "@catherine_closing",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=catherine&backgroundColor=c1f0e6",
+    avatar: "/avatars/catherine-d.png",
     text: "I've been trying to close my account for over a year now. Every time I call, I get conflicting information, transferred, disconnected..."
   }
 ];
@@ -114,7 +114,7 @@ const ComplaintCard = ({ name, username, avatar, text, isDark }: Complaint & { i
       </div>
       <div className="flex flex-row items-center gap-3 pr-8">
         <img
-          className="rounded-full w-10 h-10 md:w-12 md:h-12"
+          className="rounded-full w-10 h-10 md:w-12 md:h-12 object-cover"
           alt={name}
           src={avatar}
         />

@@ -13,8 +13,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
   const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
-    { label: 'Solutions', id: 'solutions', view: 'home' as const },
-    { label: 'Results', id: 'testimonials', view: 'home' as const },
+    { label: 'Client Feedback', id: 'complaints', view: 'home' as const },
     { label: 'Brand Audit', id: 'brand-audit', view: 'home' as const },
     { label: 'Services', view: 'services' as const },
     { label: 'Free Guide', view: 'guide' as const },
