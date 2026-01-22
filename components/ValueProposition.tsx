@@ -37,6 +37,7 @@ const painPoints = [
     ],
     icon: <Bot className="text-blue-500" size={32} />,
     color: "from-blue-500/20",
+    video: "/videos/value-prop-2.mp4",
     image: "/logos/Nexli Value Prop 2.png",
     mobileImage: "/logos/Nexli Value Prop 2-mobile.png"
   },
