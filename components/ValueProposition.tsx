@@ -152,7 +152,7 @@ const ValueProposition: React.FC = () => {
                       loop
                       muted
                       playsInline
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain md:object-cover bg-[var(--bg-main)]"
                     />
                   ) : (
                     <>
