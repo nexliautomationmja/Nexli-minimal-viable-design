@@ -18,6 +18,7 @@ const painPoints = [
     ],
     icon: <Monitor className="text-orange-500" size={32} />,
     color: "from-orange-500/20",
+    video: "/videos/value-prop-1.mp4",
     image: "/logos/Nexli Value Prop 1 .png",
     mobileImage: "/logos/Nexli Value Prop 1-mobile.png"
   },
@@ -140,21 +141,35 @@ const ValueProposition: React.FC = () => {
                 </div>
               </div>
 
-              {/* Image Side */}
+              {/* Image/Video Side */}
               <div className={`relative ${idx % 2 === 1 ? 'lg:order-1' : ''} group`}>
                 <div className="relative rounded-2xl md:rounded-[40px] overflow-hidden aspect-[4/5] md:aspect-video lg:aspect-[4/3] border border-[var(--glass-border)] shadow-3xl">
-                  {/* Desktop Image */}
-                  <img
-                    src={point.image}
-                    alt={point.solutionTitle}
-                    className="hidden md:block w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                  {/* Mobile Image */}
-                  <img
-                    src={(point as any).mobileImage}
-                    alt={point.solutionTitle}
-                    className="block md:hidden w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
+                  {(point as any).video ? (
+                    /* Video */
+                    <video
+                      src={(point as any).video}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <>
+                      {/* Desktop Image */}
+                      <img
+                        src={point.image}
+                        alt={point.solutionTitle}
+                        className="hidden md:block w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      />
+                      {/* Mobile Image */}
+                      <img
+                        src={(point as any).mobileImage}
+                        alt={point.solutionTitle}
+                        className="block md:hidden w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      />
+                    </>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-transparent to-transparent opacity-60 dark:opacity-60" />
                 </div>
                 {/* Visual Flair */}
