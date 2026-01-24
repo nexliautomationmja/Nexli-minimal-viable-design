@@ -16,6 +16,50 @@ const Services: React.FC = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [progress, setProgress] = useState(0);
 
+    // Load Cal.com embed script
+    useEffect(() => {
+        (function (C: any, A: string, L: string) {
+            let p = function (a: any, ar: any) { a.q.push(ar); };
+            let d = C.document;
+            C.Cal = C.Cal || function () {
+                let cal = C.Cal;
+                let ar = arguments;
+                if (!cal.loaded) {
+                    cal.ns = {};
+                    cal.q = cal.q || [];
+                    d.head.appendChild(d.createElement("script")).src = A;
+                    cal.loaded = true;
+                }
+                if (ar[0] === L) {
+                    const api = function () { p(api, arguments); };
+                    const namespace = ar[1];
+                    api.q = api.q || [];
+                    if (typeof namespace === "string") {
+                        cal.ns[namespace] = cal.ns[namespace] || api;
+                        p(cal.ns[namespace], ar);
+                        p(cal, ["initNamespace", namespace]);
+                    } else p(cal, ar);
+                    return;
+                }
+                p(cal, ar);
+            };
+        })(window, "https://app.cal.com/embed/embed.js", "init");
+
+        const Cal = (window as any).Cal;
+        Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
+    }, []);
+
+    // Function to open Cal.com popup
+    const openCalPopup = () => {
+        const Cal = (window as any).Cal;
+        if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
+            Cal.ns["nexli-demo"]("modal", {
+                calLink: "nexli-automation-6fgn8j/nexli-demo",
+                config: { "layout": "month_view", "theme": theme },
+            });
+        }
+    };
+
     const services = [
         {
             id: 'branding',
@@ -144,13 +188,13 @@ const Services: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
             >
-                <a
-                    href="https://nexli.net/#book"
+                <button
+                    onClick={openCalPopup}
                     className="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
                 >
                     Book a Consultation
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </a>
+                </button>
             </motion.div>
 
             {/* Decorative line with glow */}
@@ -459,13 +503,13 @@ const Services: React.FC = () => {
                             Most firms bundle all three for a complete digital transformation. But if you need to start with just one — that works too. Let's talk about what makes sense for your firm.
                         </p>
 
-                        <a
-                            href="https://nexli.net/#book"
+                        <button
+                            onClick={openCalPopup}
                             className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
                         >
                             Book a Consultation
                             <ArrowRight size={16} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
-                        </a>
+                        </button>
                     </motion.div>
                 </div>
             </section>
