@@ -51,7 +51,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={onBack}
-          className="absolute top-24 md:top-32 left-6 md:left-12 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10"
+          className="absolute top-24 md:top-32 left-6 md:left-12 z-50 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 cursor-pointer"
         >
           <ArrowLeft size={18} />
           <span className="text-sm font-semibold">Back to Blog</span>
