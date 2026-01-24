@@ -13,6 +13,7 @@ import TermsAndConditions from './components/TermsAndConditions';
 import FreeGuide from './components/FreeGuide';
 import Services from './components/Services';
 import Blog from './components/Blog';
+import BlogPost from './components/BlogPost';
 import SocialDock from './components/SocialDock';
 
 type Theme = 'light' | 'dark';
@@ -39,7 +40,8 @@ const App: React.FC = () => {
     return 'dark';
   });
 
-  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog'>('home');
+  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost'>('home');
+  const [blogSlug, setBlogSlug] = useState<string | null>(null);
 
   // Handle URL to State synchronization
   useEffect(() => {
@@ -47,16 +49,26 @@ const App: React.FC = () => {
       const path = window.location.pathname;
       if (path === '/free-guide') {
         setView('guide');
+        setBlogSlug(null);
       } else if (path === '/services') {
         setView('services');
+        setBlogSlug(null);
+      } else if (path.startsWith('/blog/')) {
+        const slug = path.replace('/blog/', '');
+        setView('blogPost');
+        setBlogSlug(slug);
       } else if (path === '/blog') {
         setView('blog');
+        setBlogSlug(null);
       } else if (path === '/privacy') {
         setView('privacy');
+        setBlogSlug(null);
       } else if (path === '/terms') {
         setView('terms');
+        setBlogSlug(null);
       } else {
         setView('home');
+        setBlogSlug(null);
       }
     };
 
@@ -69,17 +81,28 @@ const App: React.FC = () => {
   }, []);
 
   // Function to navigate and update URL
-  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog') => {
-    const path = newView === 'guide' ? '/free-guide' :
-      newView === 'services' ? '/services' :
-        newView === 'blog' ? '/blog' :
-          newView === 'privacy' ? '/privacy' :
-            newView === 'terms' ? '/terms' : '/';
+  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost', slug?: string) => {
+    let path: string;
+    if (newView === 'blogPost' && slug) {
+      path = `/blog/${slug}`;
+    } else {
+      path = newView === 'guide' ? '/free-guide' :
+        newView === 'services' ? '/services' :
+          newView === 'blog' ? '/blog' :
+            newView === 'privacy' ? '/privacy' :
+              newView === 'terms' ? '/terms' : '/';
+    }
 
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path);
       setView(newView);
+      setBlogSlug(slug || null);
     }
+  };
+
+  // Function to navigate to a blog post
+  const navigateToBlogPost = (slug: string) => {
+    navigate('blogPost', slug);
   };
 
   useEffect(() => {
@@ -122,8 +145,17 @@ const App: React.FC = () => {
           </>
         ) : view === 'blog' ? (
           <>
-            <Blog />
+            <Blog onNavigateToBlogPost={navigateToBlogPost} />
             <Navbar setView={navigate} currentView={view} />
+          </>
+        ) : view === 'blogPost' && blogSlug ? (
+          <>
+            <BlogPost
+              slug={blogSlug}
+              onBack={() => navigate('blog')}
+              onNavigate={navigateToBlogPost}
+            />
+            <Navbar setView={navigate} currentView="blog" />
           </>
         ) : view === 'terms' ? (
           <TermsAndConditions onBack={() => navigate('home')} />

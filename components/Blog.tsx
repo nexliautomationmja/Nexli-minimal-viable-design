@@ -1,209 +1,43 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../App';
-import { Carousel, Card } from './ui/AppleCardsCarousel';
 import { SparklesCore } from './Sparkles';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { blogPosts } from '../data/blogPosts';
 
-const BlogContent = ({
-  title,
-  excerpt,
-  sections
-}: {
-  title: string;
-  excerpt: string;
-  sections: { heading: string; content: string; image?: string }[];
-}) => {
-  return (
-    <>
-      <div className="bg-[var(--glass-bg)] dark:bg-neutral-900 p-8 md:p-14 rounded-3xl mb-4 border border-[var(--glass-border)]">
-        <p className="text-[var(--text-muted)] text-base md:text-xl font-medium max-w-3xl mx-auto leading-relaxed">
-          {excerpt}
-        </p>
-      </div>
-      {sections.map((section, index) => (
-        <div
-          key={index}
-          className="bg-[var(--glass-bg)] dark:bg-neutral-900 p-8 md:p-14 rounded-3xl mb-4 border border-[var(--glass-border)]"
-        >
-          <h3 className="text-xl md:text-2xl font-bold text-[var(--text-main)] mb-4">
-            {section.heading}
-          </h3>
-          <p className="text-[var(--text-muted)] text-base md:text-lg font-medium max-w-3xl mx-auto leading-relaxed">
-            {section.content}
-          </p>
-          {section.image && (
-            <img
-              src={section.image}
-              alt={section.heading}
-              className="md:w-3/4 w-full mx-auto object-contain mt-8 rounded-2xl"
-            />
-          )}
-        </div>
-      ))}
-    </>
-  );
-};
+interface BlogProps {
+  onNavigateToBlogPost: (slug: string) => void;
+}
 
-const blogPosts = [
-  {
-    category: "AI & Automation",
-    title: "How AI is Transforming Wealth Management in 2026",
-    src: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=3432&auto=format&fit=crop",
-    content: (
-      <BlogContent
-        title="How AI is Transforming Wealth Management in 2026"
-        excerpt="Artificial intelligence is no longer a futuristic concept—it's reshaping how financial advisors operate today. From automated client onboarding to predictive analytics, AI tools are helping advisors serve more clients with better outcomes."
-        sections={[
-          {
-            heading: "The Rise of AI-Powered Client Communication",
-            content: "Modern AI chatbots can handle initial client inquiries 24/7, qualify leads, and even schedule appointments. This means advisors can focus on high-value conversations while automation handles the routine tasks that used to eat up hours each week.",
-          },
-          {
-            heading: "Predictive Analytics for Client Retention",
-            content: "AI can analyze client behavior patterns to identify those at risk of leaving before they even consider it. By spotting early warning signs, advisors can proactively reach out and strengthen relationships.",
-          },
-          {
-            heading: "The Human Touch Still Matters",
-            content: "While AI handles the operational heavy lifting, the personal relationship between advisor and client remains irreplaceable. The best practices use AI to enhance human connection, not replace it.",
-          },
-        ]}
-      />
-    ),
-  },
-  {
-    category: "Digital Marketing",
-    title: "Why Your Website is Your Most Important Employee",
-    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop",
-    content: (
-      <BlogContent
-        title="Why Your Website is Your Most Important Employee"
-        excerpt="Your website works 24 hours a day, 7 days a week, never takes vacation, and is often the first impression prospects have of your practice. Yet most advisors treat it as an afterthought."
-        sections={[
-          {
-            heading: "First Impressions Are Everything",
-            content: "Studies show that visitors form an opinion about your website in just 50 milliseconds. That's faster than a blink. If your site looks outdated or unprofessional, prospects will click away before reading a single word.",
-          },
-          {
-            heading: "Mobile-First is No Longer Optional",
-            content: "Over 60% of high-net-worth individuals research financial services on their phones. If your website isn't optimized for mobile, you're invisible to the majority of your potential clients.",
-          },
-          {
-            heading: "Conversion is the Goal",
-            content: "A beautiful website means nothing if it doesn't convert visitors into consultations. Every element should guide visitors toward taking action—whether that's booking a call or requesting more information.",
-          },
-        ]}
-      />
-    ),
-  },
-  {
-    category: "Client Experience",
-    title: "The Art of Client Onboarding That Creates Raving Fans",
-    src: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=3540&auto=format&fit=crop",
-    content: (
-      <BlogContent
-        title="The Art of Client Onboarding That Creates Raving Fans"
-        excerpt="The first 90 days of a client relationship set the tone for everything that follows. Get it right, and you'll have a client for life who refers friends and family. Get it wrong, and you'll struggle to retain them."
-        sections={[
-          {
-            heading: "Set Expectations Early",
-            content: "Clear communication about what clients can expect—from meeting frequency to response times—prevents disappointment and builds trust from day one.",
-          },
-          {
-            heading: "Automate Without Losing the Personal Touch",
-            content: "Welcome sequences, document collection, and scheduling can all be automated while still feeling personal. The key is thoughtful design that anticipates client needs.",
-          },
-          {
-            heading: "Create Quick Wins",
-            content: "Deliver value early in the relationship. Whether it's a quick insight, a useful resource, or simply exceptional responsiveness, early wins cement client confidence in their decision to work with you.",
-          },
-        ]}
-      />
-    ),
-  },
-  {
-    category: "Growth Strategy",
-    title: "Scaling Your Practice Without Sacrificing Quality",
-    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=3387&auto=format&fit=crop",
-    content: (
-      <BlogContent
-        title="Scaling Your Practice Without Sacrificing Quality"
-        excerpt="Every advisor hits a ceiling. There are only so many hours in a day, and personal service can only stretch so far. The question isn't whether to scale, but how to do it without diluting what makes you special."
-        sections={[
-          {
-            heading: "Systems Create Freedom",
-            content: "Documented processes and automated workflows aren't about becoming robotic—they're about ensuring consistency. When your systems are solid, you can confidently delegate or expand.",
-          },
-          {
-            heading: "Technology as a Force Multiplier",
-            content: "The right tech stack lets one advisor accomplish what used to require a team. From CRM automation to AI-powered research, technology amplifies your capabilities.",
-          },
-          {
-            heading: "Know Your Ideal Client",
-            content: "Not every client is worth taking. The clearer you are about who you serve best, the more efficiently you can market, onboard, and deliver exceptional service.",
-          },
-        ]}
-      />
-    ),
-  },
-  {
-    category: "Industry Trends",
-    title: "What High-Net-Worth Clients Really Want in 2026",
-    src: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=3542&auto=format&fit=crop",
-    content: (
-      <BlogContent
-        title="What High-Net-Worth Clients Really Want in 2026"
-        excerpt="The expectations of wealthy clients have evolved dramatically. They've experienced seamless digital experiences from companies like Apple and Amazon, and they expect the same from their financial advisor."
-        sections={[
-          {
-            heading: "Instant Access, Anytime",
-            content: "Gone are the days of waiting for quarterly reports in the mail. Today's HNW clients want real-time access to their portfolio, documents, and their advisor—all from their phone.",
-          },
-          {
-            heading: "Proactive Communication",
-            content: "Clients don't want to hear from you only when something goes wrong. They value advisors who reach out with insights, opportunities, and personalized updates before being asked.",
-          },
-          {
-            heading: "Values Alignment",
-            content: "Increasingly, wealthy clients want their money managed in ways that align with their values. ESG considerations and impact investing aren't just nice-to-haves anymore.",
-          },
-        ]}
-      />
-    ),
-  },
-  {
-    category: "Productivity",
-    title: "Reclaim 10 Hours a Week with Smart Automation",
-    src: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=3544&auto=format&fit=crop",
-    content: (
-      <BlogContent
-        title="Reclaim 10 Hours a Week with Smart Automation"
-        excerpt="Time is your most valuable asset, yet most advisors spend countless hours on tasks that could be automated. Here's how to identify and eliminate the time-wasters holding you back."
-        sections={[
-          {
-            heading: "Audit Your Calendar",
-            content: "Spend one week tracking exactly where your time goes. You'll likely find that administrative tasks, scheduling, and follow-ups consume far more hours than you realized.",
-          },
-          {
-            heading: "Automate the Repetitive",
-            content: "If you do something more than twice, it's a candidate for automation. Meeting reminders, document requests, birthday messages, and review scheduling can all run on autopilot.",
-          },
-          {
-            heading: "Protect Your High-Value Time",
-            content: "Block time for client conversations and strategic thinking. Let automation handle everything else so your best hours go toward your highest-impact activities.",
-          },
-        ]}
-      />
-    ),
-  },
-];
-
-const Blog: React.FC = () => {
+const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
   const { theme } = useTheme();
+  const carouselRef = React.useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(true);
 
-  const cards = blogPosts.map((post, index) => (
-    <Card key={post.src} card={post} index={index} />
-  ));
+  const checkScrollability = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
+    }
+  };
+
+  React.useEffect(() => {
+    checkScrollability();
+  }, []);
+
+  const scrollLeft = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)] transition-colors duration-300">
@@ -295,7 +129,70 @@ const Blog: React.FC = () => {
           >
             Latest Articles
           </motion.h2>
-          <Carousel items={cards} />
+
+          {/* Carousel */}
+          <div className="relative w-full">
+            <div
+              className="flex w-full overflow-x-scroll overscroll-x-auto py-10 md:py-20 scroll-smooth [scrollbar-width:none]"
+              ref={carouselRef}
+              onScroll={checkScrollability}
+            >
+              <div className="flex flex-row justify-start gap-4 pl-4 max-w-7xl mx-auto">
+                {blogPosts.map((post, index) => (
+                  <motion.div
+                    key={post.slug}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        duration: 0.5,
+                        delay: 0.2 * index,
+                        ease: "easeOut",
+                      },
+                    }}
+                    className="last:pr-[5%] md:last:pr-[33%] rounded-3xl"
+                  >
+                    <button
+                      onClick={() => onNavigateToBlogPost(post.slug)}
+                      className="rounded-3xl bg-[var(--glass-bg)] dark:bg-[#0f0f0f] border border-[var(--glass-border)] h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10 hover:scale-[1.02] transition-transform text-left"
+                    >
+                      <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/50 via-transparent to-transparent z-30 pointer-events-none" />
+                      <div className="relative z-40 p-8">
+                        <p className="text-blue-400 text-sm md:text-base font-bold uppercase tracking-widest text-left">
+                          {post.category}
+                        </p>
+                        <p className="text-white text-xl md:text-3xl font-bold max-w-xs text-left [text-wrap:balance] mt-2">
+                          {post.title}
+                        </p>
+                      </div>
+                      <img
+                        src={post.src}
+                        alt={post.title}
+                        className="object-cover absolute z-10 inset-0 w-full h-full"
+                      />
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mr-10">
+              <button
+                className="relative z-40 h-10 w-10 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center disabled:opacity-50 hover:bg-blue-500/10 transition-colors"
+                onClick={scrollLeft}
+                disabled={!canScrollLeft}
+              >
+                <ChevronLeft className="h-6 w-6 text-[var(--text-muted)]" />
+              </button>
+              <button
+                className="relative z-40 h-10 w-10 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center disabled:opacity-50 hover:bg-blue-500/10 transition-colors"
+                onClick={scrollRight}
+                disabled={!canScrollRight}
+              >
+                <ChevronRight className="h-6 w-6 text-[var(--text-muted)]" />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
