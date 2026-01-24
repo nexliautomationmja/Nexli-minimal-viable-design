@@ -15,6 +15,17 @@ const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
 
+  // Function to open Cal.com popup
+  const openCalPopup = () => {
+    const Cal = (window as any).Cal;
+    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
+      Cal.ns["nexli-demo"]("modal", {
+        calLink: "nexli-automation-6fgn8j/nexli-demo",
+        config: { "layout": "month_view", "theme": theme },
+      });
+    }
+  };
+
   const checkScrollability = () => {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
@@ -158,11 +169,11 @@ const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
                       className="rounded-3xl bg-[var(--glass-bg)] dark:bg-[#0f0f0f] border border-[var(--glass-border)] h-48 w-72 md:h-80 md:w-[28rem] overflow-hidden flex flex-col items-start justify-start relative z-10 hover:scale-[1.02] transition-transform text-left"
                     >
                       <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/50 via-transparent to-transparent z-30 pointer-events-none" />
-                      <div className="relative z-40 p-4 md:p-8">
-                        <p className="text-blue-400 text-xs md:text-base font-bold uppercase tracking-widest text-left">
+                      <div className="relative z-40 p-4 md:p-6">
+                        <p className="text-blue-400 text-xs md:text-sm font-bold uppercase tracking-widest text-left">
                           {post.category}
                         </p>
-                        <p className="text-white text-sm md:text-3xl font-bold max-w-xs text-left [text-wrap:balance] mt-1 md:mt-2">
+                        <p className="text-white text-sm md:text-xl font-bold max-w-xs text-left [text-wrap:balance] mt-1 md:mt-2">
                           {post.title}
                         </p>
                       </div>
@@ -213,13 +224,13 @@ const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
             <p className="text-sm md:text-lg text-[var(--text-muted)] mb-6 md:mb-10 max-w-2xl mx-auto">
               Stop reading about success and start experiencing it. Book a consultation to see how Nexli can help you attract better clients and reclaim your time.
             </p>
-            <a
-              href="/#book"
+            <button
+              onClick={openCalPopup}
               className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
             >
               Book a Consultation
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </a>
+            </button>
           </div>
         </motion.div>
       </section>

@@ -14,6 +14,17 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
   const { theme } = useTheme();
   const post = getBlogPostBySlug(slug);
 
+  // Function to open Cal.com popup
+  const openCalPopup = () => {
+    const Cal = (window as any).Cal;
+    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
+      Cal.ns["nexli-demo"]("modal", {
+        calLink: "nexli-automation-6fgn8j/nexli-demo",
+        config: { "layout": "month_view", "theme": theme },
+      });
+    }
+  };
+
   if (!post) {
     return (
       <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center">
@@ -135,13 +146,13 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
           <p className="text-[var(--text-muted)] mb-6 max-w-xl mx-auto">
             See how Nexli can help you implement these strategies and grow your firm.
           </p>
-          <a
-            href="/#book"
+          <button
+            onClick={openCalPopup}
             className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-lg shadow-blue-600/25"
           >
             Book a Consultation
             <ArrowRight size={18} />
-          </a>
+          </button>
         </motion.div>
 
         {/* Post Navigation */}
