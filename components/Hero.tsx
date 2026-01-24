@@ -112,10 +112,10 @@ const Hero: React.FC = () => {
             <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
           </a>
           <a
-            href="#solutions"
+            href="#brand-audit"
             className="flex items-center justify-center gap-2 md:gap-3 bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-main)] px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold md:font-bold hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-md"
           >
-            Our Solutions
+            Brand Audit
             <ArrowRight size={16} className="md:size-[18px]" />
           </a>
         </motion.div>

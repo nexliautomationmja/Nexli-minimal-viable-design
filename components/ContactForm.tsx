@@ -54,9 +54,9 @@ const ContactForm: React.FC = () => {
   const { theme } = useTheme();
 
   return (
-    <section className="py-16 md:py-32 bg-[var(--bg-main)] transition-colors duration-300" id="brand-audit">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-12 md:mb-20">
+    <section className="py-10 md:py-32 bg-[var(--bg-main)] transition-colors duration-300" id="brand-audit">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-6 md:mb-20">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -108,51 +108,51 @@ const ContactForm: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-card p-6 md:p-16 rounded-3xl md:rounded-[48px] border border-[var(--glass-border)] shadow-3xl"
+          className="glass-card p-4 md:p-16 rounded-2xl md:rounded-[48px] border border-[var(--glass-border)] shadow-3xl"
         >
           {!submitted ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <div className="text-center mb-10 md:mb-16">
-                <h3 className="text-xl md:text-3xl font-black text-[var(--text-main)] mb-3 md:mb-4">Request Your Website & Brand Audit</h3>
-                <p className="text-[var(--text-muted)] text-sm md:text-base">Get an expert evaluation of your digital presence and a performance roadmap tailored to your practice.</p>
+              <div className="text-center mb-5 md:mb-16">
+                <h3 className="text-lg md:text-3xl font-black text-[var(--text-main)] mb-2 md:mb-4">Request Your Website & Brand Audit</h3>
+                <p className="text-[var(--text-muted)] text-xs md:text-base">Get an expert evaluation of your digital presence and a performance roadmap tailored to your practice.</p>
               </div>
 
-              <form onSubmit={handleAuditSubmit} className="space-y-6 md:space-y-8 max-w-2xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  <div className="space-y-2 md:space-y-3">
-                    <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Full Name</label>
+              <form onSubmit={handleAuditSubmit} className="space-y-4 md:space-y-8 max-w-2xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8">
+                  <div className="space-y-1 md:space-y-3">
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Full Name</label>
                     <input
                       type="text"
                       required
                       placeholder="John Smith"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
+                      className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                     />
                   </div>
-                  <div className="space-y-2 md:space-y-3">
-                    <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Work Email</label>
+                  <div className="space-y-1 md:space-y-3">
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Work Email</label>
                     <input
                       type="email"
                       required
                       placeholder="john@yourfirm.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
+                      className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2 md:space-y-3">
-                  <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Firm Type</label>
+                <div className="space-y-1 md:space-y-3">
+                  <label className="text-[8px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Firm Type</label>
                   <select
                     required
                     value={formData.firmType}
                     onChange={(e) => setFormData({ ...formData, firmType: e.target.value })}
-                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base appearance-none cursor-pointer"
+                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base appearance-none cursor-pointer"
                   >
                     <option value="" disabled>Select your firm type</option>
                     <option value="Wealth Management">Wealth Management</option>
@@ -161,8 +161,8 @@ const ContactForm: React.FC = () => {
                   </select>
                 </div>
 
-                <div className="space-y-2 md:space-y-3">
-                  <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Firm Website URL</label>
+                <div className="space-y-1 md:space-y-3">
+                  <label className="text-[8px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Firm Website URL</label>
                   <input
                     type="url"
                     required
@@ -170,40 +170,40 @@ const ContactForm: React.FC = () => {
                     value={formData.websiteUrl}
                     onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
                     onBlur={handleUrlBlur}
-                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
+                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                   />
                 </div>
 
-                <div className="space-y-2 md:space-y-3">
-                  <label className="text-[9px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Mobile Phone Number (Optional)</label>
+                <div className="space-y-1 md:space-y-3">
+                  <label className="text-[8px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2">Mobile Phone Number (Optional)</label>
                   <input
                     type="tel"
                     placeholder="+1 (555) 000-0000"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-5 md:px-6 py-4 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
+                    className="w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-blue-500 transition-all font-medium text-sm md:text-base"
                   />
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-2 md:space-y-4">
                   <div
-                    className={`flex items-start gap-3 p-4 glass-card rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer ${formData.phone ? 'hover:border-blue-500/30' : 'opacity-40 cursor-not-allowed'}`}
+                    className={`flex items-start gap-2 md:gap-3 p-3 md:p-4 glass-card rounded-xl md:rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer ${formData.phone ? 'hover:border-blue-500/30' : 'opacity-40 cursor-not-allowed'}`}
                     onClick={() => {
                       if (formData.phone) {
                         setFormData(prev => ({ ...prev, smsOptIn: !prev.smsOptIn }));
                       }
                     }}
                   >
-                    <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.smsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
-                      {formData.smsOptIn && <CheckCircle className="text-white" size={14} />}
+                    <div className={`mt-0.5 w-4 h-4 md:w-5 md:h-5 rounded border-2 flex items-center justify-center transition-all flex-shrink-0 ${formData.smsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
+                      {formData.smsOptIn && <CheckCircle className="text-white" size={12} />}
                     </div>
                     <div className="flex-1">
-                      <p className="text-[var(--text-main)] text-[10px] md:text-sm font-bold leading-relaxed">
+                      <p className="text-[var(--text-main)] text-[9px] md:text-sm font-bold leading-tight md:leading-relaxed">
                         I agree to receive SMS updates about my audit (optional)
                       </p>
                     </div>
                   </div>
-                  <p className="px-2 text-[var(--text-muted)] opacity-50 text-[8px] md:text-[9px] leading-relaxed italic text-center">
+                  <p className="px-2 text-[var(--text-muted)] opacity-50 text-[7px] md:text-[9px] leading-relaxed italic text-center">
                     By checking this box, you agree to receive automated messages. Message frequency varies. Message & data rates may apply. Text HELP for help. Reply STOP to unsubscribe.
                   </p>
                 </div>
@@ -211,17 +211,17 @@ const ContactForm: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 md:py-6 rounded-xl md:rounded-2xl flex items-center justify-center gap-3 transition-all shadow-2xl shadow-blue-600/20 active:scale-[0.98] uppercase tracking-widest text-xs md:text-sm ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 md:py-6 rounded-xl md:rounded-2xl flex items-center justify-center gap-2 md:gap-3 transition-all shadow-2xl shadow-blue-600/20 active:scale-[0.98] uppercase tracking-widest text-[10px] md:text-sm ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
                   {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
-                    <Send size={16} />
+                    <Send size={14} className="md:w-4 md:h-4" />
                   )}
                   {loading ? 'Sending...' : 'Get My Free Audit'}
                 </button>
 
-                <p className="text-center text-[var(--text-muted)] opacity-30 text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em]">
+                <p className="text-center text-[var(--text-muted)] opacity-30 text-[7px] md:text-[10px] font-black uppercase tracking-[0.1em]">
                   Elite Partners Only • NDA Guaranteed • RESPONSE IN 24H
                 </p>
               </form>
