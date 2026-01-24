@@ -93,7 +93,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-client-onboarding-process",
     category: "Client Experience",
     title: "Financial Advisor Client Onboarding: How to Create a 5-Star Experience That Drives Referrals",
-    src: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=3540&auto=format&fit=crop",
+    src: "/blog-images/5-star-experience.jpeg",
     excerpt: "The first 90 days of a client relationship determine everything—retention, referrals, and lifetime value. Learn how to build an onboarding process that transforms new clients into enthusiastic advocates for your practice.",
     sections: [
       {
@@ -143,7 +143,7 @@ export const blogPosts: BlogPost[] = [
     slug: "email-marketing-financial-advisors-templates",
     category: "Email Marketing",
     title: "Email Marketing for Financial Advisors: Templates, Strategies & Compliance Best Practices",
-    src: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?q=80&w=3540&auto=format&fit=crop",
+    src: "/blog-images/email-marketing.jpeg",
     excerpt: "Email remains the most effective digital channel for financial advisors—when done right. Discover proven email strategies, ready-to-use templates, and compliance-safe approaches to nurturing prospects and engaging clients.",
     sections: [
       {
@@ -168,7 +168,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-branding-personal-brand",
     category: "Branding",
     title: "Financial Advisor Branding: How to Build a Personal Brand That Attracts Ideal Clients",
-    src: "https://images.unsplash.com/photo-1493612276216-ee3925520721?q=80&w=3464&auto=format&fit=crop",
+    src: "/blog-images/branding-gradient.png",
     excerpt: "In a crowded market, your personal brand is what makes prospects choose you over competitors with similar credentials. Learn how to craft an authentic, differentiated brand that resonates with high-net-worth clients.",
     sections: [
       {
