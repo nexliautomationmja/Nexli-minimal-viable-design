@@ -113,10 +113,24 @@ const Hero: React.FC = () => {
           </a>
           <a
             href="#brand-audit"
-            className="flex items-center justify-center gap-2 md:gap-3 bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-main)] px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold md:font-bold hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-md"
+            className="relative flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-blue-400 overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-transform group"
           >
-            Brand Audit
-            <ArrowRight size={16} className="md:size-[18px]" />
+            {/* Shimmer border effect */}
+            <span className="absolute inset-0 overflow-hidden rounded-full">
+              <span
+                className="absolute inset-[-100%] animate-[shimmer_3s_linear_infinite]"
+                style={{
+                  background: 'conic-gradient(from 90deg at 50% 50%, #3b82f6 0%, transparent 50%, transparent 75%, #06b6d4 100%)'
+                }}
+              />
+            </span>
+            {/* Inner background */}
+            <span className="absolute inset-[1.5px] rounded-full bg-black/80 backdrop-blur-md" />
+            {/* Content */}
+            <span className="relative z-10 flex items-center gap-2 md:gap-3">
+              Brand Audit
+              <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
+            </span>
           </a>
         </motion.div>
       </div>
