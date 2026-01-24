@@ -413,7 +413,7 @@ const Services: React.FC = () => {
                                 <button
                                     key={service.id}
                                     onClick={() => handleTabClick(index)}
-                                    className={`relative p-5 md:p-8 transition-all border-r border-[var(--glass-border)] last:border-r-0 text-left group hover:bg-white/5 ${activeIndex === index ? (theme === 'dark' ? 'bg-white/[0.03]' : 'bg-blue-500/5') : ''}`}
+                                    className={`relative px-3 py-4 md:p-8 transition-all border-r border-[var(--glass-border)] last:border-r-0 text-left group hover:bg-white/5 ${activeIndex === index ? (theme === 'dark' ? 'bg-white/[0.03]' : 'bg-blue-500/5') : ''}`}
                                 >
                                     {/* Active Highlight Line & Progress */}
                                     <div className={`absolute top-0 left-0 h-[2px] w-full ${theme === 'dark' ? 'bg-white/10' : 'bg-blue-500/10'}`}>
@@ -427,11 +427,11 @@ const Services: React.FC = () => {
                                         )}
                                     </div>
 
-                                    <div className="flex flex-col gap-1.5">
-                                        <span className={`text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] transition-colors ${activeIndex === index ? 'text-blue-500' : (theme === 'dark' ? 'text-neutral-500 group-hover:text-neutral-300' : 'text-slate-400 group-hover:text-slate-600')}`}>
+                                    <div className="flex flex-col gap-1">
+                                        <span className={`text-[9px] md:text-sm font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] transition-colors ${activeIndex === index ? 'text-blue-500' : (theme === 'dark' ? 'text-neutral-500 group-hover:text-neutral-300' : 'text-slate-400 group-hover:text-slate-600')}`}>
                                             {service.label}
                                         </span>
-                                        <span className={`text-[11px] md:text-sm font-semibold transition-colors truncate ${activeIndex === index ? (theme === 'dark' ? 'text-white' : 'text-slate-900') : (theme === 'dark' ? 'text-neutral-400 group-hover:text-neutral-200' : 'text-slate-500 group-hover:text-slate-700')}`}>
+                                        <span className={`text-[10px] md:text-sm font-semibold transition-colors leading-tight ${activeIndex === index ? (theme === 'dark' ? 'text-white' : 'text-slate-900') : (theme === 'dark' ? 'text-neutral-400 group-hover:text-neutral-200' : 'text-slate-500 group-hover:text-slate-700')}`}>
                                             {service.title}
                                         </span>
                                     </div>
