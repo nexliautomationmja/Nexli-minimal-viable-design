@@ -56,6 +56,7 @@ const painPoints = [
     ],
     icon: <Zap className="text-green-500" size={32} />,
     color: "from-green-500/20",
+    video: "/videos/value-prop-3.mp4",
     image: "/logos/Nexli Value Prop Section 3.png",
     mobileImage: "/logos/Nexli Value Prop 3-mobile.png"
   }
