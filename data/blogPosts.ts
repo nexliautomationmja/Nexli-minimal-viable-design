@@ -18,7 +18,7 @@ export const blogPosts: BlogPost[] = [
     slug: "best-financial-advisor-websites-examples-design",
     category: "Web Design",
     title: "Best Financial Advisor Websites in 2026: 10 Examples That Convert Prospects Into Clients",
-    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop",
+    src: "/blog-images/blog-web-design-photo.png",
     excerpt: "Your website is often the first impression high-net-worth prospects have of your practice. In this comprehensive guide, we analyze the top-performing financial advisor websites and reveal exactly what makes them convert visitors into booked consultations.",
     sections: [
       {
@@ -43,7 +43,7 @@ export const blogPosts: BlogPost[] = [
     slug: "ai-automation-financial-advisors-wealth-management",
     category: "AI & Automation",
     title: "AI Automation for Financial Advisors: The Complete Guide to Scaling Your Practice",
-    src: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=3432&auto=format&fit=crop",
+    src: "/blog-images/blog-ai-automation-photo.jpeg",
     excerpt: "Artificial intelligence is revolutionizing how elite financial advisors operate. Learn how to leverage AI automation to serve more clients, reduce administrative burden, and reclaim 10+ hours per week—without sacrificing the personal touch that defines your practice.",
     sections: [
       {
@@ -68,7 +68,7 @@ export const blogPosts: BlogPost[] = [
     slug: "wealth-management-lead-generation-strategies",
     category: "Lead Generation",
     title: "Wealth Management Lead Generation: 12 Proven Strategies for Attracting High-Net-Worth Clients",
-    src: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=3542&auto=format&fit=crop",
+    src: "/blog-images/blog-growth-strategy.jpeg",
     excerpt: "Generating a consistent flow of qualified high-net-worth leads is the difference between advisors who grow and those who stagnate. Discover the exact strategies top-performing wealth managers use to attract affluent clients in 2026.",
     sections: [
       {
@@ -318,7 +318,7 @@ export const blogPosts: BlogPost[] = [
     slug: "high-net-worth-client-acquisition-strategies",
     category: "Client Acquisition",
     title: "How to Attract High-Net-Worth Clients: Proven Strategies for Wealth Advisors",
-    src: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=3542&auto=format&fit=crop",
+    src: "/blog-images/client-acquisition-photo.jpeg",
     excerpt: "High-net-worth clients transform a practice. But attracting them requires different strategies than mass-market client acquisition. Learn the specific approaches that resonate with affluent investors and open doors to significant relationships.",
     sections: [
       {
@@ -368,7 +368,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-referral-program-template",
     category: "Referrals",
     title: "Financial Advisor Referral Programs: Templates and Strategies That Generate Introductions",
-    src: "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=3540&auto=format&fit=crop",
+    src: "/blog-images/blog-referrals-photo.jpeg",
     excerpt: "Referrals remain the most effective client acquisition channel for financial advisors. But hoping for referrals isn't a strategy. Learn how to build a systematic referral program that consistently generates warm introductions.",
     sections: [
       {
