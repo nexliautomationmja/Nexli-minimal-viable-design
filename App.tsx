@@ -12,6 +12,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import FreeGuide from './components/FreeGuide';
 import Services from './components/Services';
+import Blog from './components/Blog';
 import SocialDock from './components/SocialDock';
 
 type Theme = 'light' | 'dark';
@@ -38,7 +39,7 @@ const App: React.FC = () => {
     return 'dark';
   });
 
-  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services'>('home');
+  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog'>('home');
 
   // Handle URL to State synchronization
   useEffect(() => {
@@ -48,6 +49,8 @@ const App: React.FC = () => {
         setView('guide');
       } else if (path === '/services') {
         setView('services');
+      } else if (path === '/blog') {
+        setView('blog');
       } else if (path === '/privacy') {
         setView('privacy');
       } else if (path === '/terms') {
@@ -66,11 +69,12 @@ const App: React.FC = () => {
   }, []);
 
   // Function to navigate and update URL
-  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services') => {
+  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog') => {
     const path = newView === 'guide' ? '/free-guide' :
       newView === 'services' ? '/services' :
-        newView === 'privacy' ? '/privacy' :
-          newView === 'terms' ? '/terms' : '/';
+        newView === 'blog' ? '/blog' :
+          newView === 'privacy' ? '/privacy' :
+            newView === 'terms' ? '/terms' : '/';
 
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path);
@@ -114,6 +118,11 @@ const App: React.FC = () => {
         ) : view === 'services' ? (
           <>
             <Services />
+            <Navbar setView={navigate} currentView={view} />
+          </>
+        ) : view === 'blog' ? (
+          <>
+            <Blog />
             <Navbar setView={navigate} currentView={view} />
           </>
         ) : view === 'terms' ? (

@@ -4,8 +4,8 @@ import { Menu, X, ChevronRight, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../App';
 
 interface NavbarProps {
-  setView: (view: 'home' | 'privacy' | 'terms' | 'guide' | 'services') => void;
-  currentView: 'home' | 'privacy' | 'terms' | 'guide' | 'services';
+  setView: (view: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog') => void;
+  currentView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog';
 }
 
 const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
@@ -16,6 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
     { label: 'Client Feedback', id: 'complaints', view: 'home' as const },
     { label: 'Brand Audit', id: 'brand-audit', view: 'home' as const },
     { label: 'Services', view: 'services' as const },
+    { label: 'Blog', view: 'blog' as const },
     { label: 'Free Guide', view: 'guide' as const },
   ];
 
