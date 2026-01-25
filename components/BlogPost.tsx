@@ -54,6 +54,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
           src={post.src}
           alt={post.title}
           className="w-full h-full object-cover"
+          style={post.imagePosition ? { objectPosition: post.imagePosition } : undefined}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/60 to-transparent" />
 

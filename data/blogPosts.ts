@@ -3,6 +3,7 @@ export interface BlogPost {
   category: string;
   title: string;
   src: string;
+  imagePosition?: string; // CSS object-position value, e.g., "center top", "center 30%"
   excerpt: string;
   sections: {
     heading: string;
@@ -193,7 +194,8 @@ export const blogPosts: BlogPost[] = [
     slug: "client-retention-strategies-financial-advisors",
     category: "Client Retention",
     title: "Client Retention Strategies for Financial Advisors: Keeping Your Best Clients for Life",
-    src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=3474&auto=format&fit=crop",
+    src: "/Founder Photos/Founder 3.PNG",
+    imagePosition: "center 25%",
     excerpt: "Acquiring a new client costs 5-7x more than retaining an existing one. Yet many advisors focus relentlessly on acquisition while neglecting the clients already on their books. Master client retention and build a practice on a foundation of loyal, growing relationships.",
     sections: [
       {
@@ -268,7 +270,8 @@ export const blogPosts: BlogPost[] = [
     slug: "ria-marketing-strategies-registered-investment-advisor",
     category: "RIA Marketing",
     title: "RIA Marketing Strategies: How Registered Investment Advisors Can Compete and Win",
-    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=3387&auto=format&fit=crop",
+    src: "/blog-images/peyton-l-headshot.png",
+    imagePosition: "center 30%",
     excerpt: "As an independent RIA, you're competing against wirehouses with massive marketing budgets. But nimble, strategic marketing can outperform brute-force spending. Learn the marketing strategies that give independent advisors an edge.",
     sections: [
       {
@@ -293,7 +296,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-content-marketing-strategy",
     category: "Content Marketing",
     title: "Content Marketing for Financial Advisors: Creating Content That Attracts Wealthy Clients",
-    src: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=3473&auto=format&fit=crop",
+    src: "/blog-images/content-marketing.png",
     excerpt: "Content marketing establishes expertise, builds trust, and attracts prospects before you ever speak. Learn how to create a content strategy that positions you as the obvious choice for high-net-worth clients in your market.",
     sections: [
       {
@@ -343,7 +346,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-video-marketing-youtube",
     category: "Video Marketing",
     title: "Video Marketing for Financial Advisors: YouTube, LinkedIn Video & Beyond",
-    src: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=3542&auto=format&fit=crop",
+    src: "/blog-images/san-fran-studio.png",
     excerpt: "Video is the most engaging content format, and financial advisors who embrace it are building massive trust advantages. Learn how to create professional video content that attracts clients and establishes your authority.",
     sections: [
       {
@@ -393,7 +396,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-website-copy-writing",
     category: "Copywriting",
     title: "Financial Advisor Website Copy That Converts: Writing Tips and Examples",
-    src: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=3473&auto=format&fit=crop",
+    src: "/blog-images/copywriting.png",
     excerpt: "Your website copy is your silent salesperson—working around the clock to convince prospects to book consultations. Learn how to write website copy that speaks to affluent clients' concerns and motivates action.",
     sections: [
       {
@@ -418,7 +421,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-niche-marketing-specialization",
     category: "Niche Marketing",
     title: "Niche Marketing for Financial Advisors: How Specialization Attracts Premium Clients",
-    src: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=3540&auto=format&fit=crop",
+    src: "/blog-images/office-vibe.jpeg",
     excerpt: "Generalist advisors compete on price. Specialists command premium fees. Learn how to identify, develop, and market a profitable niche that positions you as the obvious choice for specific high-value client segments.",
     sections: [
       {
@@ -443,7 +446,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-google-ads-ppc-advertising",
     category: "Paid Advertising",
     title: "Google Ads for Financial Advisors: PPC Strategies That Generate Qualified Leads",
-    src: "https://images.unsplash.com/photo-1553484771-047a44eee27a?q=80&w=3540&auto=format&fit=crop",
+    src: "/blog-images/paid-ads.jpeg",
     excerpt: "Pay-per-click advertising can deliver qualified leads on demand—or waste thousands on unqualified clicks. Learn how to build Google Ads campaigns that attract high-net-worth prospects while maintaining positive ROI.",
     sections: [
       {
@@ -468,7 +471,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-client-communication-best-practices",
     category: "Client Communication",
     title: "Client Communication Best Practices for Financial Advisors: Building Trust and Loyalty",
-    src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=3474&auto=format&fit=crop",
+    src: "/blog-images/business-call-2.jpeg",
     excerpt: "How you communicate with clients determines whether they stay, refer, and grow their relationship with you. Master the art and science of client communication to build a practice defined by loyal, appreciative clients.",
     sections: [
       {

@@ -166,14 +166,14 @@ const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
                   >
                     <button
                       onClick={() => onNavigateToBlogPost(post.slug)}
-                      className="rounded-3xl bg-[var(--glass-bg)] dark:bg-[#0f0f0f] border border-[var(--glass-border)] h-48 w-72 md:h-80 md:w-[28rem] overflow-hidden flex flex-col items-start justify-start relative z-10 hover:scale-[1.02] transition-transform text-left"
+                      className="rounded-3xl bg-[var(--glass-bg)] dark:bg-[#0f0f0f] border border-[var(--glass-border)] h-48 w-72 md:h-80 md:w-[28rem] overflow-hidden flex flex-col items-start justify-end relative z-10 hover:scale-[1.02] transition-transform text-left"
                     >
-                      <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/50 via-transparent to-transparent z-30 pointer-events-none" />
-                      <div className="relative z-40 p-4 md:p-6">
-                        <p className="text-blue-400 text-xs md:text-sm font-bold uppercase tracking-widest text-left">
+                      <div className="absolute h-full bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-30 pointer-events-none" />
+                      <div className="relative z-40 p-4 md:p-5">
+                        <p className="text-blue-400 text-xs font-bold uppercase tracking-widest text-left">
                           {post.category}
                         </p>
-                        <p className="text-white text-sm md:text-xl font-bold max-w-xs text-left [text-wrap:balance] mt-1 md:mt-2">
+                        <p className="text-white text-sm md:text-base font-bold max-w-xs text-left [text-wrap:balance] mt-1">
                           {post.title}
                         </p>
                       </div>
@@ -181,6 +181,7 @@ const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
                         src={post.src}
                         alt={post.title}
                         className="object-cover absolute z-10 inset-0 w-full h-full"
+                        style={post.imagePosition ? { objectPosition: post.imagePosition } : undefined}
                       />
                     </button>
                   </motion.div>
