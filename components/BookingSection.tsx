@@ -133,6 +133,7 @@ const BookingSection: React.FC = () => {
         {/* Mobile: Booking Card with Button */}
         {isMobile && (
           <motion.div
+            id="book-mobile"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
