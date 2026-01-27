@@ -14,7 +14,9 @@ import FreeGuide from './components/FreeGuide';
 import Services from './components/Services';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
+import NotFound from './components/NotFound';
 import SocialDock from './components/SocialDock';
+import { getBlogPostBySlug } from './data/blogPosts';
 
 type Theme = 'light' | 'dark';
 
@@ -40,14 +42,17 @@ const App: React.FC = () => {
     return 'dark';
   });
 
-  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost'>('home');
+  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | '404'>('home');
   const [blogSlug, setBlogSlug] = useState<string | null>(null);
 
   // Handle URL to State synchronization
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname;
-      if (path === '/free-guide') {
+      if (path === '/' || path === '') {
+        setView('home');
+        setBlogSlug(null);
+      } else if (path === '/free-guide') {
         setView('guide');
         setBlogSlug(null);
       } else if (path === '/services') {
@@ -55,8 +60,15 @@ const App: React.FC = () => {
         setBlogSlug(null);
       } else if (path.startsWith('/blog/')) {
         const slug = path.replace('/blog/', '');
-        setView('blogPost');
-        setBlogSlug(slug);
+        // Check if blog post exists
+        const post = getBlogPostBySlug(slug);
+        if (post) {
+          setView('blogPost');
+          setBlogSlug(slug);
+        } else {
+          setView('404');
+          setBlogSlug(null);
+        }
       } else if (path === '/blog') {
         setView('blog');
         setBlogSlug(null);
@@ -67,7 +79,8 @@ const App: React.FC = () => {
         setView('terms');
         setBlogSlug(null);
       } else {
-        setView('home');
+        // Unknown route - show 404
+        setView('404');
         setBlogSlug(null);
       }
     };
@@ -81,7 +94,7 @@ const App: React.FC = () => {
   }, []);
 
   // Function to navigate and update URL
-  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost', slug?: string) => {
+  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | '404', slug?: string) => {
     let path: string;
     if (newView === 'blogPost' && slug) {
       path = `/blog/${slug}`;
@@ -159,6 +172,14 @@ const App: React.FC = () => {
           </>
         ) : view === 'terms' ? (
           <TermsAndConditions onBack={() => navigate('home')} />
+        ) : view === '404' ? (
+          <>
+            <NotFound
+              onGoHome={() => navigate('home')}
+              onGoBack={() => window.history.back()}
+            />
+            <Navbar setView={navigate} currentView="home" />
+          </>
         ) : (
           <>
             <FreeGuide />
