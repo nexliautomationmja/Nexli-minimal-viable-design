@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Monitor, Bot, Zap, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
 const painPoints = [
@@ -43,16 +43,18 @@ const painPoints = [
   },
   {
     id: "03",
-    painTitle: "Great Prospects Are Slipping Away Before You Even Meet Them.",
-    painDescription: "By the time a prospect fills out your contact form, they've already visited 3 other advisors' sites. If your response time or onboarding process feels clunky, you've lost them to someone who made it easier.",
-    statistic: "55%",
-    statisticLabel: "of advisors say acquiring new clients is their biggest challenge",
-    solutionTitle: "Automated Lead Capture & Nurturing",
-    solutionDescription: "Turn website visitors into booked consultations with intelligent lead funnels that respond instantly, nurture prospects with value, and make scheduling frictionless.",
+    painTitle: "Your Best Prospects Expect White-Glove Service—Starting at First Contact.",
+    painDescription: "The clients who can transform your practice—$1M+ households, business owners, executives—have zero tolerance for friction. They're not filling out forms and waiting 48 hours. When your response feels templated or your booking process requires three clicks too many, they don't complain. They simply move on to an advisor who made it effortless.",
+    statistics: [
+      { value: "10x", label: "the lifetime revenue from one high-net-worth client vs. ten average clients—with less effort" },
+      { value: "$1M+", label: "clients generate 4x more referrals and 5x more assets over their lifetime" }
+    ],
+    solutionTitle: "Premium Client Acquisition on Autopilot",
+    solutionDescription: "Attract and convert high-net-worth prospects with intelligent systems that deliver white-glove responsiveness around the clock. Your ideal clients experience premium service from the first click—while you focus on relationships, not follow-ups.",
     solutionBullets: [
-      "Instant response sequences that engage leads 24/7",
-      "Automated nurture campaigns that build trust before the first call",
-      "One-click scheduling integration with your calendar"
+      "Instant, personalized engagement that meets high-net-worth expectations",
+      "Intelligent nurture sequences that pre-qualify and build trust",
+      "Frictionless scheduling that respects their time—and yours"
     ],
     icon: <Zap className="text-green-500" size={32} />,
     color: "from-green-500/20",
@@ -61,6 +63,48 @@ const painPoints = [
     mobileImage: "/logos/Nexli Value Prop 3-mobile.png"
   }
 ];
+
+// Auto-sliding stat carousel component
+const StatCarousel: React.FC<{ statistics: { value: string; label: string }[] }> = ({ statistics }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % statistics.length);
+    }, 4000); // Change every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [statistics.length]);
+
+  return (
+    <div className="relative overflow-hidden">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center gap-3 md:gap-6 p-4 md:p-6 glass-card rounded-xl md:rounded-3xl border border-[var(--glass-border)]"
+        >
+          <div className="text-2xl md:text-4xl font-black text-blue-500">{statistics[currentIndex].value}</div>
+          <div className="h-8 md:h-10 w-[1px] bg-[var(--glass-border)]" />
+          <p className="text-[var(--text-muted)] text-[9px] md:text-xs font-bold leading-tight uppercase tracking-wide">{statistics[currentIndex].label}</p>
+        </motion.div>
+      </AnimatePresence>
+      {/* Carousel indicators */}
+      <div className="flex justify-center gap-2 mt-3">
+        {statistics.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentIndex(idx)}
+            className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentIndex ? 'bg-blue-500 w-4' : 'bg-blue-500/30'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const ValueProposition: React.FC = () => {
   return (
@@ -111,11 +155,15 @@ const ValueProposition: React.FC = () => {
                     {point.painDescription}
                   </p>
 
-                  <div className="flex items-center gap-3 md:gap-6 p-4 md:p-6 glass-card rounded-xl md:rounded-3xl border border-[var(--glass-border)]">
-                    <div className="text-2xl md:text-4xl font-black text-blue-500">{point.statistic}</div>
-                    <div className="h-8 md:h-10 w-[1px] bg-[var(--glass-border)]" />
-                    <p className="text-[var(--text-muted)] text-[9px] md:text-xs font-bold leading-tight uppercase tracking-wide">{point.statisticLabel}</p>
-                  </div>
+                  {(point as any).statistics ? (
+                    <StatCarousel statistics={(point as any).statistics} />
+                  ) : (
+                    <div className="flex items-center gap-3 md:gap-6 p-4 md:p-6 glass-card rounded-xl md:rounded-3xl border border-[var(--glass-border)]">
+                      <div className="text-2xl md:text-4xl font-black text-blue-500">{(point as any).statistic}</div>
+                      <div className="h-8 md:h-10 w-[1px] bg-[var(--glass-border)]" />
+                      <p className="text-[var(--text-muted)] text-[9px] md:text-xs font-bold leading-tight uppercase tracking-wide">{(point as any).statisticLabel}</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="glass-card p-5 md:p-10 rounded-2xl md:rounded-[40px] border border-[var(--glass-border)] shadow-2xl relative overflow-hidden group">
