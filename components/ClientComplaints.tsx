@@ -210,12 +210,21 @@ const ClientComplaints: React.FC = () => {
           <p className="text-[var(--text-muted)] text-sm md:text-base mb-4">
             Don't let your clients become another complaint.
           </p>
-          <a
-            href="#book"
+          <button
+            onClick={() => {
+              setTimeout(() => {
+                const isMobile = window.innerWidth < 768;
+                if (isMobile) {
+                  document.getElementById('book-mobile')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                  document.getElementById('book')?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }, 100);
+            }}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-600 text-white font-bold text-sm hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/25"
           >
             See How Nexli Solves This
-          </a>
+          </button>
         </motion.div>
       </div>
     </section>
