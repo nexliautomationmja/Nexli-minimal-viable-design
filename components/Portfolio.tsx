@@ -93,10 +93,11 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
 
       {/* Portfolio Grid */}
       <section className="max-w-6xl mx-auto px-4 md:px-6 pb-32">
-        <div className="grid grid-cols-2 gap-4 md:gap-8 justify-items-center">
+        <div className="grid grid-cols-2 gap-4 md:gap-8">
           {firms.map((firm, index) => (
             <motion.div
               key={firm.slug}
+              className="w-full"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
