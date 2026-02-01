@@ -178,20 +178,7 @@ const FirmNavbar: React.FC<FirmNavbarProps> = ({ config, navigate }) => {
                   </button>
                 ))}
 
-                {/* Divider */}
-                <div className="my-1" style={{ borderTop: `1px solid ${colors.border}` }} />
-
-                {/* Portfolio link */}
-                <button
-                  onClick={() => { setIsOpen(false); handleNavigate('portfolio'); }}
-                  className="flex items-center gap-2 py-3 px-4 rounded-xl text-left text-sm font-bold uppercase tracking-wider transition-colors border cursor-pointer"
-                  style={{ color: colors.accent, borderColor: colors.accent, backgroundColor: 'transparent' }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                    <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Portfolio
-                </button>
+                {/* Portfolio link removed from hamburger — now a sticky button below Nexli logo */}
               </div>
             </motion.div>
           )}
@@ -214,6 +201,23 @@ const FirmNavbar: React.FC<FirmNavbarProps> = ({ config, navigate }) => {
           style={{ fontFamily: "'Syne', sans-serif" }}
         >
           NEXLI
+        </span>
+      </button>
+
+      {/* ===== Sticky "Back to Portfolio" button - mobile only, below Nexli logo ===== */}
+      <button
+        onClick={() => handleNavigate('portfolio')}
+        className="md:hidden fixed top-[6.75rem] left-3 z-[101] flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md border no-underline cursor-pointer transition-all duration-300 shadow-lg hover:scale-[1.03] active:scale-[0.97]"
+        style={{
+          background: 'rgba(0,0,0,0.25)',
+          borderColor: 'rgba(255,255,255,0.1)',
+        }}
+      >
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8L10 4" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="text-xs font-bold text-white tracking-wide">
+          Portfolio
         </span>
       </button>
     </>
