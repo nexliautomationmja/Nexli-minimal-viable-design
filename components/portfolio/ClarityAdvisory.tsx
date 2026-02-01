@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useTheme } from '../../App';
+import FirmNavbar from './FirmNavbar';
+import { clarityConfig } from './firmBrandConfigs';
 
 // ---------------------------------------------------------------------------
 // Animated Counter Hook
@@ -120,7 +122,11 @@ const ArrowUp: React.FC<{ className?: string }> = ({ className = '' }) => (
 // ---------------------------------------------------------------------------
 // ClarityAdvisory Landing Page
 // ---------------------------------------------------------------------------
-const ClarityAdvisory: React.FC = () => {
+interface ClarityAdvisoryProps {
+  navigate?: (view: string, slug?: string) => void;
+}
+
+const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigateProp }) => {
   const { theme } = useTheme();
 
   // Palette
@@ -150,7 +156,7 @@ const ClarityAdvisory: React.FC = () => {
   // HERO
   // -----------------------------------------------------------------------
   const HeroSection = () => (
-    <Section bg={navy} className="min-h-screen flex items-center justify-center">
+    <Section bg={navy} className="min-h-screen flex items-center justify-center pt-20">
       {/* Radial orb glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
@@ -684,6 +690,7 @@ const ClarityAdvisory: React.FC = () => {
   // -----------------------------------------------------------------------
   return (
     <div style={{ fontFamily: sans, color: cream, background: navy }}>
+      <FirmNavbar config={clarityConfig} navigate={navigateProp} />
       <HeroSection />
       <FeaturesSection />
       <StatsSection />

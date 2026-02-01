@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import FirmNavbar from './FirmNavbar';
+import { harborConfig } from './firmBrandConfigs';
 
 // ─── SVG Illustrations ────────────────────────────────────────────────────────
 
@@ -132,11 +134,17 @@ const stagger = {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-const HarborWealth: React.FC = () => {
+interface HarborWealthProps {
+  navigate?: (view: string, slug?: string) => void;
+}
+
+const HarborWealth: React.FC<HarborWealthProps> = ({ navigate: navigateProp }) => {
   return (
     <div className="min-h-screen bg-white font-sans text-black antialiased overflow-x-hidden">
+      <FirmNavbar config={harborConfig} navigate={navigateProp} />
+
       {/* ── Hero Section ─────────────────────────────────────────────────── */}
-      <section className="relative bg-white px-6 pt-24 pb-16 md:pt-32 md:pb-24">
+      <section className="relative bg-white px-6 pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="max-w-6xl mx-auto text-center">
           <motion.h1
             initial="hidden"

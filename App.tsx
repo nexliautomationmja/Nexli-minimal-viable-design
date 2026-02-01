@@ -23,7 +23,7 @@ import MeridianFinancial from './components/portfolio/MeridianFinancial';
 import HarborWealth from './components/portfolio/HarborWealth';
 import { getBlogPostBySlug } from './data/blogPosts';
 
-const PORTFOLIO_FIRMS: Record<string, React.FC> = {
+const PORTFOLIO_FIRMS: Record<string, React.FC<{ navigate?: (view: string, slug?: string) => void }>> = {
   'summit-tax-group': SummitTaxGroup,
   'clarity-advisory': ClarityAdvisory,
   'meridian-financial': MeridianFinancial,
@@ -222,18 +222,7 @@ const App: React.FC = () => {
           </>
         ) : view === 'portfolioFirm' && portfolioSlug && PORTFOLIO_FIRMS[portfolioSlug] ? (
           <>
-            {React.createElement(PORTFOLIO_FIRMS[portfolioSlug], {})}
-            {/* Back to Portfolio floating button */}
-            <button
-              onClick={() => navigate('portfolio')}
-              className="fixed top-8 left-8 z-[120] flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-md text-[var(--text-main)] text-sm font-semibold hover:bg-[var(--accent)] hover:text-white hover:border-transparent transition-all duration-300 shadow-lg"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Portfolio
-            </button>
-            <Navbar setView={navigate} currentView="portfolio" />
+            {React.createElement(PORTFOLIO_FIRMS[portfolioSlug], { navigate })}
           </>
         ) : view === 'terms' ? (
           <TermsAndConditions onBack={() => navigate('home')} />

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
+import FirmNavbar from './FirmNavbar';
+import { summitTaxConfig } from './firmBrandConfigs';
 
 /* ------------------------------------------------------------------ */
 /*  Color tokens                                                       */
@@ -437,7 +439,11 @@ const KEYFRAMES_CSS = `
 /* ================================================================== */
 /*  MAIN COMPONENT                                                     */
 /* ================================================================== */
-const SummitTaxGroup: React.FC = () => {
+interface SummitTaxGroupProps {
+  navigate?: (view: string, slug?: string) => void;
+}
+
+const SummitTaxGroup: React.FC<SummitTaxGroupProps> = ({ navigate }) => {
   /* Inject keyframes once */
   useEffect(() => {
     const id = 'summit-tax-keyframes';
@@ -482,11 +488,13 @@ const SummitTaxGroup: React.FC = () => {
   /* ================================================================ */
   return (
     <div className="w-full overflow-x-hidden" style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
+      <FirmNavbar config={summitTaxConfig} navigate={navigate} />
+
       {/* ============================================================ */}
       {/*  1. HERO SECTION                                             */}
       {/* ============================================================ */}
       <section
-        className="relative min-h-[92vh] flex items-center justify-center px-6 py-24"
+        className="relative min-h-[92vh] flex items-center justify-center px-6 pt-28 pb-24"
         style={{
           background: `linear-gradient(135deg, ${COLORS.dark} 0%, ${COLORS.primary} 60%, ${COLORS.light} 100%)`,
         }}

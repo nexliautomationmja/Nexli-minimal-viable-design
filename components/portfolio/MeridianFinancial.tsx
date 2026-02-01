@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import FirmNavbar from './FirmNavbar';
+import { meridianConfig } from './firmBrandConfigs';
 
 // ---------------------------------------------------------------------------
 // Floating Particles – simple CSS-animated divs that drift slowly in the hero
@@ -148,7 +150,7 @@ function injectKeyframes() {
 function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden"
+      className="relative overflow-hidden pt-20"
       style={{ background: '#0c0c0c', minHeight: '100vh' }}
     >
       {/* Warm gradient overlay – orange to red horizon */}
@@ -651,7 +653,11 @@ function FooterSection() {
 // Main Component
 // ---------------------------------------------------------------------------
 
-const MeridianFinancial: React.FC = () => {
+interface MeridianFinancialProps {
+  navigate?: (view: string, slug?: string) => void;
+}
+
+const MeridianFinancial: React.FC<MeridianFinancialProps> = ({ navigate: navigateProp }) => {
   useEffect(() => {
     injectKeyframes();
   }, []);
@@ -665,6 +671,7 @@ const MeridianFinancial: React.FC = () => {
         WebkitFontSmoothing: 'antialiased',
       }}
     >
+      <FirmNavbar config={meridianConfig} navigate={navigateProp} />
       <HeroSection />
       <ServicesSection />
       <TrustSection />
