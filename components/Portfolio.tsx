@@ -58,7 +58,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
           pointerColor="59, 130, 246"
           size="90%"
           blendingValue="hard-light"
-          containerClassName="pt-32 pb-16 md:pt-40 md:pb-24"
+          containerClassName="min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24"
         >
           <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
             <div className="max-w-7xl mx-auto px-6 text-center">
