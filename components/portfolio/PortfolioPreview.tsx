@@ -161,7 +161,7 @@ const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 style={{
                   width: '35%',
                   height: 14,
-                  backgroundColor: 'var(--text-main)',
+                  backgroundColor: '#000000',
                 }}
               />
             </div>
