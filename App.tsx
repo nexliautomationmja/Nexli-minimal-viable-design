@@ -16,7 +16,19 @@ import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import NotFound from './components/NotFound';
 import SocialDock from './components/SocialDock';
+import Portfolio from './components/Portfolio';
+import SummitTaxGroup from './components/portfolio/SummitTaxGroup';
+import ClarityAdvisory from './components/portfolio/ClarityAdvisory';
+import MeridianFinancial from './components/portfolio/MeridianFinancial';
+import HarborWealth from './components/portfolio/HarborWealth';
 import { getBlogPostBySlug } from './data/blogPosts';
+
+const PORTFOLIO_FIRMS: Record<string, React.FC> = {
+  'summit-tax-group': SummitTaxGroup,
+  'clarity-advisory': ClarityAdvisory,
+  'meridian-financial': MeridianFinancial,
+  'harbor-wealth': HarborWealth,
+};
 
 type Theme = 'light' | 'dark';
 
@@ -42,8 +54,9 @@ const App: React.FC = () => {
     return 'dark';
   });
 
-  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | '404'>('home');
+  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | '404'>('home');
   const [blogSlug, setBlogSlug] = useState<string | null>(null);
+  const [portfolioSlug, setPortfolioSlug] = useState<string | null>(null);
 
   // Handle URL to State synchronization
   useEffect(() => {
@@ -52,15 +65,32 @@ const App: React.FC = () => {
       if (path === '/' || path === '') {
         setView('home');
         setBlogSlug(null);
+        setPortfolioSlug(null);
       } else if (path === '/free-guide') {
         setView('guide');
         setBlogSlug(null);
+        setPortfolioSlug(null);
       } else if (path === '/services') {
         setView('services');
         setBlogSlug(null);
+        setPortfolioSlug(null);
+      } else if (path.startsWith('/portfolio/')) {
+        const slug = path.replace('/portfolio/', '');
+        if (PORTFOLIO_FIRMS[slug]) {
+          setView('portfolioFirm');
+          setPortfolioSlug(slug);
+          setBlogSlug(null);
+        } else {
+          setView('404');
+          setBlogSlug(null);
+          setPortfolioSlug(null);
+        }
+      } else if (path === '/portfolio') {
+        setView('portfolio');
+        setBlogSlug(null);
+        setPortfolioSlug(null);
       } else if (path.startsWith('/blog/')) {
         const slug = path.replace('/blog/', '');
-        // Check if blog post exists
         const post = getBlogPostBySlug(slug);
         if (post) {
           setView('blogPost');
@@ -69,19 +99,23 @@ const App: React.FC = () => {
           setView('404');
           setBlogSlug(null);
         }
+        setPortfolioSlug(null);
       } else if (path === '/blog') {
         setView('blog');
         setBlogSlug(null);
+        setPortfolioSlug(null);
       } else if (path === '/privacy') {
         setView('privacy');
         setBlogSlug(null);
+        setPortfolioSlug(null);
       } else if (path === '/terms') {
         setView('terms');
         setBlogSlug(null);
+        setPortfolioSlug(null);
       } else {
-        // Unknown route - show 404
         setView('404');
         setBlogSlug(null);
+        setPortfolioSlug(null);
       }
     };
 
@@ -94,28 +128,39 @@ const App: React.FC = () => {
   }, []);
 
   // Function to navigate and update URL
-  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | '404', slug?: string) => {
+  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | '404', slug?: string) => {
     let path: string;
     if (newView === 'blogPost' && slug) {
       path = `/blog/${slug}`;
+    } else if (newView === 'portfolioFirm' && slug) {
+      path = `/portfolio/${slug}`;
     } else {
       path = newView === 'guide' ? '/free-guide' :
         newView === 'services' ? '/services' :
-          newView === 'blog' ? '/blog' :
-            newView === 'privacy' ? '/privacy' :
-              newView === 'terms' ? '/terms' : '/';
+          newView === 'portfolio' ? '/portfolio' :
+            newView === 'blog' ? '/blog' :
+              newView === 'privacy' ? '/privacy' :
+                newView === 'terms' ? '/terms' : '/';
     }
 
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path);
       setView(newView);
       setBlogSlug(slug || null);
+      if (newView === 'portfolioFirm') {
+        setPortfolioSlug(slug || null);
+      } else {
+        setPortfolioSlug(null);
+      }
     }
   };
 
-  // Function to navigate to a blog post
   const navigateToBlogPost = (slug: string) => {
     navigate('blogPost', slug);
+  };
+
+  const navigateToPortfolioFirm = (slug: string) => {
+    navigate('portfolioFirm', slug);
   };
 
   useEffect(() => {
@@ -169,6 +214,26 @@ const App: React.FC = () => {
               onNavigate={navigateToBlogPost}
             />
             <Navbar setView={navigate} currentView="blog" />
+          </>
+        ) : view === 'portfolio' ? (
+          <>
+            <Portfolio onNavigateToFirm={navigateToPortfolioFirm} />
+            <Navbar setView={navigate} currentView={view} />
+          </>
+        ) : view === 'portfolioFirm' && portfolioSlug && PORTFOLIO_FIRMS[portfolioSlug] ? (
+          <>
+            {React.createElement(PORTFOLIO_FIRMS[portfolioSlug], {})}
+            {/* Back to Portfolio floating button */}
+            <button
+              onClick={() => navigate('portfolio')}
+              className="fixed top-8 left-8 z-[120] flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-md text-[var(--text-main)] text-sm font-semibold hover:bg-[var(--accent)] hover:text-white hover:border-transparent transition-all duration-300 shadow-lg"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Portfolio
+            </button>
+            <Navbar setView={navigate} currentView="portfolio" />
           </>
         ) : view === 'terms' ? (
           <TermsAndConditions onBack={() => navigate('home')} />
