@@ -111,9 +111,12 @@ const Hero: React.FC = () => {
             Book Consultation
             <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
           </a>
-          <a
-            href="#brand-audit"
-            className="relative flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-blue-400 overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-transform group"
+          <button
+            onClick={() => {
+              window.history.pushState({}, '', '/portfolio');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
+            className="relative flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-blue-400 overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-transform group cursor-pointer border-none bg-transparent"
           >
             {/* Shimmer border effect */}
             <span className="absolute inset-0 overflow-hidden rounded-full">
@@ -128,10 +131,10 @@ const Hero: React.FC = () => {
             <span className="absolute inset-[1.5px] rounded-full bg-black/80 backdrop-blur-md" />
             {/* Content */}
             <span className="relative z-10 flex items-center gap-2 md:gap-3">
-              Brand Audit
+              View Portfolio
               <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
             </span>
-          </a>
+          </button>
         </motion.div>
       </div>
 
