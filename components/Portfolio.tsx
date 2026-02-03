@@ -8,8 +8,7 @@ import SummitTaxGroup from './portfolio/SummitTaxGroup';
 import ClarityAdvisory from './portfolio/ClarityAdvisory';
 import MeridianFinancial from './portfolio/MeridianFinancial';
 import HarborWealth from './portfolio/HarborWealth';
-import { ShootingStars } from './ui/shooting-stars';
-import { StarsBackground } from './ui/stars-background';
+import { Meteors } from './ui/meteors';
 
 interface PortfolioProps {
   onNavigateToFirm: (slug: string) => void;
@@ -150,8 +149,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
           crafted to reflect the caliber of service our clients provide.
         </motion.p>
 
-        <ShootingStars />
-        <StarsBackground />
+        <Meteors number={30} />
       </div>
 
       {/* Portfolio Grid */}

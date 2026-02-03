@@ -261,6 +261,25 @@
       animation: spin-around calc(var(--speed) * 2) infinite linear;
     }
 
+    /* Meteor Animation */
+    @keyframes meteor {
+      0% {
+        transform: rotate(var(--angle)) translateX(0);
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(var(--angle)) translateX(-500px);
+        opacity: 0;
+      }
+    }
+
+    .animate-meteor {
+      animation: meteor 5s linear infinite;
+    }
+
     /* Portfolio Preview Auto-Scroll */
     @keyframes portfolioScroll {
       0%, 5% {
