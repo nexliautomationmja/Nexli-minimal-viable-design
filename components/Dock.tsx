@@ -44,12 +44,14 @@ interface DockIconProps {
   children: React.ReactNode;
   className?: string;
   href?: string;
+  onClick?: () => void;
 }
 
 export const DockIcon: React.FC<DockIconProps> = ({
   children,
   className = '',
-  href
+  href,
+  onClick
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const context = useContext(DockContext);
@@ -91,9 +93,17 @@ export const DockIcon: React.FC<DockIconProps> = ({
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
+      <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}>
         {content}
       </a>
+    );
+  }
+
+  if (onClick) {
+    return (
+      <button onClick={onClick} className="bg-transparent border-none p-0 cursor-pointer">
+        {content}
+      </button>
     );
   }
 

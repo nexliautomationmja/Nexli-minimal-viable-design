@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronRight, Sun, Moon } from 'lucide-react';
+import { Menu, X, ChevronRight, Sun, Moon, Mail, Check } from 'lucide-react';
 import { useTheme } from '../App';
 
 interface NavbarProps {
@@ -10,7 +10,15 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
+
+  const handleEmailClick = useCallback(() => {
+    navigator.clipboard.writeText('mail@nexli.net');
+    window.location.href = 'mailto:mail@nexli.net';
+    setEmailCopied(true);
+    setTimeout(() => setEmailCopied(false), 2000);
+  }, []);
 
   const navLinks = [
     { label: 'Portfolio', view: 'portfolio' as const },
@@ -121,6 +129,15 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
             </div>
 
             <div className="flex items-center gap-2 md:gap-3">
+              {/* Email Button */}
+              <button
+                onClick={handleEmailClick}
+                className="relative p-2 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all duration-300"
+                aria-label="Email us"
+              >
+                {emailCopied ? <Check size={18} className="text-green-500" /> : <Mail size={18} />}
+              </button>
+
               {/* Theme Toggle Button */}
               <button
                 onClick={toggleTheme}
@@ -180,6 +197,23 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
                     <ChevronRight size={16} className="text-[var(--text-muted)] opacity-50" />
                   </button>
                 ))}
+
+                {/* Email / Get in Touch */}
+                <button
+                  onClick={handleEmailClick}
+                  className="flex items-center justify-between py-3.5 px-2 rounded-xl text-left transition-colors mt-2 border-t border-[var(--glass-border)] pt-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <Mail size={16} className="text-blue-500" />
+                    <span className="text-[var(--text-main)] text-base font-semibold">
+                      {emailCopied ? 'Copied!' : 'mail@nexli.net'}
+                    </span>
+                  </div>
+                  {emailCopied
+                    ? <Check size={16} className="text-green-500" />
+                    : <ChevronRight size={16} className="text-[var(--text-muted)] opacity-50" />
+                  }
+                </button>
               </motion.div>
             )}
           </AnimatePresence>

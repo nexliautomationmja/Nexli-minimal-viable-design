@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dock, DockIcon } from './Dock';
 
 type IconProps = React.SVGAttributes<SVGElement>;
@@ -27,6 +27,36 @@ const Icons = {
         fill="currentColor"
       />
     </svg>
+  ),
+  mail: (props: IconProps) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="M22 6l-10 7L2 6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  check: (props: IconProps) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M20 6L9 17L4 12"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 };
 
@@ -41,6 +71,15 @@ const SocialDock: React.FC<SocialDockProps> = ({
   instagramUrl = '#',
   xUrl = '#'
 }) => {
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  const handleEmailClick = () => {
+    navigator.clipboard.writeText('mail@nexli.net');
+    window.location.href = 'mailto:mail@nexli.net';
+    setEmailCopied(true);
+    setTimeout(() => setEmailCopied(false), 2000);
+  };
+
   return (
     <Dock iconMagnification={60} iconDistance={100}>
       {/* TikTok - Black circle like App Store */}
@@ -79,6 +118,26 @@ const SocialDock: React.FC<SocialDockProps> = ({
           }}
         >
           <Icons.x className="w-5 h-5 text-white relative z-10" />
+        </div>
+      </DockIcon>
+
+      {/* Mail - Blue gradient, copies email + opens mailto */}
+      <DockIcon onClick={handleEmailClick}>
+        <div
+          className="w-full h-full rounded-full flex items-center justify-center p-2 relative overflow-hidden transition-all duration-300"
+          style={{
+            background: emailCopied
+              ? 'linear-gradient(135deg, #22c55e, #16a34a)'
+              : 'linear-gradient(135deg, #2563EB, #06B6D4)',
+            boxShadow: emailCopied
+              ? '0 4px 12px rgba(34,197,94,0.4), inset 0 1px 1px rgba(255,255,255,0.2)'
+              : '0 4px 12px rgba(37,99,235,0.4), inset 0 1px 1px rgba(255,255,255,0.2)'
+          }}
+        >
+          {emailCopied
+            ? <Icons.check className="w-5 h-5 text-white relative z-10" />
+            : <Icons.mail className="w-5 h-5 text-white relative z-10" />
+          }
         </div>
       </DockIcon>
     </Dock>
