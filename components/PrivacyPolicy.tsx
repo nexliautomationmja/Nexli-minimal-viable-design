@@ -33,7 +33,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
                     <section className="space-y-4">
                         <h2 className="text-2xl font-bold text-[var(--text-main)]">1. Introduction</h2>
                         <p>
-                            At Nexli, we respect your privacy and are committed to protecting it through our compliance with this policy. This policy describes the types of information we may collect from you or that you may provide when you visit Nexli (our "Website") and our practices for collecting, using, maintaining, protecting, and disclosing that information.
+                            At Nexli Automation LLC ("Nexli"), we respect your privacy and are committed to protecting it through our compliance with this policy. This policy describes the types of information we may collect from you or that you may provide when you visit Nexli (our "Website") and our practices for collecting, using, maintaining, protecting, and disclosing that information.
                         </p>
                     </section>
 
@@ -92,7 +92,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
                             To ask questions or comment about this privacy policy and our privacy practices, contact us at:
                         </p>
                         <div className="pl-6 space-y-1">
-                            <p><strong className="text-[var(--text-main)]">Nexli</strong></p>
+                            <p><strong className="text-[var(--text-main)]">Nexli Automation LLC</strong></p>
                             <p>480 N Orlando Ave STE 236</p>
                             <p>Winter Park, FL 32789</p>
                             <p>Email: <strong className="text-[var(--text-main)]">mail@nexli.net</strong></p>

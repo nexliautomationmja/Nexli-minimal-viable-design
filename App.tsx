@@ -299,7 +299,7 @@ const App: React.FC = () => {
                 </div>
               </div>
               <div className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
-                © 2026 Nexli. High-End Automation for Elite Advisors.
+                © 2026 Nexli Automation LLC. High-End Automation for Elite Advisors.
               </div>
             </div>
           </div>
