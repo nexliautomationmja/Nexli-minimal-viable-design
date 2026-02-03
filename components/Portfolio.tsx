@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { useTheme } from '../App';
 import PortfolioPreview from './portfolio/PortfolioPreview';
 import SummitTaxGroup from './portfolio/SummitTaxGroup';
 import ClarityAdvisory from './portfolio/ClarityAdvisory';
@@ -43,6 +45,68 @@ const firms = [
 ];
 
 const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
+  const { theme } = useTheme();
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    (function (C: any, A: string, L: string) {
+      let p = function (a: any, ar: any) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    const Cal = (window as any).Cal;
+    Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
+
+    if (!isMobile) {
+      Cal.ns["nexli-demo"]("inline", {
+        elementOrSelector: "#portfolio-cal-inline",
+        config: { "layout": "month_view", "theme": theme },
+        calLink: "nexli-automation-6fgn8j/nexli-demo",
+      });
+      Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": "month_view" });
+    }
+  }, [isMobile, theme]);
+
+  const openCalPopup = () => {
+    const Cal = (window as any).Cal;
+    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
+      Cal.ns["nexli-demo"]("modal", {
+        calLink: "nexli-automation-6fgn8j/nexli-demo",
+        config: { "layout": "month_view", "theme": theme },
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--bg-main)]">
       {/* Hero Section with Gradient Animation */}
@@ -133,31 +197,45 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
 
         {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mt-24"
+          className="mt-24"
         >
-          <p className="text-[var(--text-muted)] text-sm font-semibold uppercase tracking-[0.2em] mb-4">
-            Want a website like these?
-          </p>
-          <p className="text-[var(--text-muted)] text-base max-w-lg mx-auto mb-8">
-            Every project is custom-designed. No templates, no shortcuts.
-            Just premium digital experiences tailored to your firm.
-          </p>
-          <button
-            onClick={() => {
-              window.history.pushState({}, '', '/');
-              window.location.reload();
-            }}
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all"
-          >
-            Start Your Project
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+          <div className="max-w-4xl mx-auto p-6 md:p-16 rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none" />
+
+            <div className="relative z-10 text-center">
+              <h2 className="text-xl md:text-4xl font-bold text-[var(--text-main)] mb-4 md:mb-6">
+                Want a Website Like These?
+              </h2>
+              <p className="text-sm md:text-lg text-[var(--text-muted)] mb-6 md:mb-10 max-w-2xl mx-auto">
+                Every project is custom-designed. No templates, no shortcuts.
+                Just premium digital experiences tailored to your firm.
+              </p>
+
+              {isMobile ? (
+                <button
+                  onClick={openCalPopup}
+                  className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
+                >
+                  Book a Consultation
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+              ) : (
+                <div
+                  style={{
+                    width: '100%',
+                    height: 'calc(100vh - 300px)',
+                    minHeight: '500px',
+                    maxHeight: '800px',
+                    overflow: 'auto',
+                  }}
+                  id="portfolio-cal-inline"
+                />
+              )}
+            </div>
+          </div>
         </motion.div>
       </section>
     </div>
