@@ -62,10 +62,16 @@ const App: React.FC = () => {
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname;
+      const hash = window.location.hash;
       if (path === '/' || path === '') {
         setView('home');
         setBlogSlug(null);
         setPortfolioSlug(null);
+        if (hash) {
+          setTimeout(() => {
+            document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        }
       } else if (path === '/free-guide') {
         setView('guide');
         setBlogSlug(null);
@@ -122,9 +128,13 @@ const App: React.FC = () => {
     // Initial check
     handleLocationChange();
 
-    // Listen for back/forward buttons
+    // Listen for back/forward buttons and hash changes
     window.addEventListener('popstate', handleLocationChange);
-    return () => window.removeEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
 
   // Function to navigate and update URL
