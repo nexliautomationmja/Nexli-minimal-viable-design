@@ -9,6 +9,7 @@ import ClarityAdvisory from './portfolio/ClarityAdvisory';
 import MeridianFinancial from './portfolio/MeridianFinancial';
 import HarborWealth from './portfolio/HarborWealth';
 import { Meteors } from './ui/meteors';
+import { SolarSun } from './ui/SolarSun';
 
 interface PortfolioProps {
   onNavigateToFirm: (slug: string) => void;
@@ -110,8 +111,14 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)]">
-      {/* Hero Section with Shooting Stars */}
-      <div className="w-full rounded-md bg-[#020617] flex flex-col items-center justify-center relative overflow-hidden min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24">
+      {/* Hero Section — Night (dark) / Day (light) */}
+      <div
+        className="w-full rounded-md flex flex-col items-center justify-center relative overflow-hidden min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24 transition-colors duration-500"
+        style={{ backgroundColor: theme === 'dark' ? '#020617' : undefined }}
+      >
+        {/* Day mode background */}
+        {theme !== 'dark' && <SolarSun />}
+
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -119,7 +126,11 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
           transition={{ duration: 0.6 }}
           className="relative z-10 mb-8"
         >
-          <ShimmerButton className="shadow-2xl">
+          <ShimmerButton
+            className="shadow-2xl"
+            background={theme === 'dark' ? 'rgba(0, 0, 0, 1)' : 'rgba(14, 165, 233, 0.85)'}
+            shimmerColor={theme === 'dark' ? '#ffffff' : '#fef3c7'}
+          >
             <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg">
               Explore Projects
             </span>
@@ -130,11 +141,17 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 text-white text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6 px-2 md:px-10"
+          className={`relative z-10 text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6 px-2 md:px-10 ${
+            theme === 'dark' ? 'text-white' : 'text-slate-900'
+          }`}
         >
           Websites that
           <br />
-          <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
+          <span className={`bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora ${
+            theme === 'dark'
+              ? 'bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400'
+              : 'bg-gradient-to-r from-amber-500 via-orange-400 to-amber-500'
+          }`}>
             convert clients.
           </span>
         </motion.h2>
@@ -143,13 +160,16 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative z-10 text-white/60 text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed px-2 md:px-10"
+          className={`relative z-10 text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed px-2 md:px-10 ${
+            theme === 'dark' ? 'text-white/60' : 'text-slate-600'
+          }`}
         >
           Premium digital experiences built for financial firms. Each project is
           crafted to reflect the caliber of service our clients provide.
         </motion.p>
 
-        <Meteors number={30} />
+        {/* Night mode meteors */}
+        {theme === 'dark' && <Meteors number={30} />}
       </div>
 
       {/* Portfolio Grid */}

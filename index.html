@@ -280,6 +280,76 @@
       animation: meteor 5s linear infinite;
     }
 
+    /* Solar Sun Animations */
+    @keyframes sun-pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.15);
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes sun-rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes cloud-drift {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(120vw);
+      }
+    }
+
+    @keyframes cloud-drift-slow {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(100vw);
+      }
+    }
+
+    @keyframes float-particle {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translateY(-20px) scale(1.3);
+        opacity: 0.7;
+      }
+    }
+
+    .animate-sun-pulse {
+      animation: sun-pulse 4s ease-in-out infinite;
+    }
+
+    .animate-sun-rotate {
+      animation: sun-rotate 60s linear infinite;
+    }
+
+    .animate-cloud-drift {
+      animation: cloud-drift 25s linear infinite;
+    }
+
+    .animate-cloud-drift-slow {
+      animation: cloud-drift-slow 35s linear infinite;
+    }
+
+    .animate-float-particle {
+      animation: float-particle 4s ease-in-out infinite;
+    }
+
     /* Portfolio Preview Auto-Scroll */
     @keyframes portfolioScroll {
       0%, 5% {
