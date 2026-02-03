@@ -2,32 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import FirmNavbar from './FirmNavbar';
 import { meridianConfig } from './firmBrandConfigs';
-
-// ---------------------------------------------------------------------------
-// Floating Particles – simple CSS-animated divs that drift slowly in the hero
-// ---------------------------------------------------------------------------
-const particles = Array.from({ length: 18 }, (_, i) => ({
-  id: i,
-  size: Math.random() * 4 + 2,
-  x: Math.random() * 100,
-  y: Math.random() * 60,
-  duration: Math.random() * 12 + 14,
-  delay: Math.random() * -20,
-  opacity: Math.random() * 0.35 + 0.08,
-  color: ['#f97316', '#fbbf24', '#ef4444', '#06b6d4'][i % 4],
-}));
-
-const floatingLines = Array.from({ length: 6 }, (_, i) => ({
-  id: i,
-  width: Math.random() * 120 + 40,
-  x: Math.random() * 90,
-  y: Math.random() * 50 + 5,
-  rotation: Math.random() * 40 - 20,
-  duration: Math.random() * 16 + 18,
-  delay: Math.random() * -14,
-  opacity: Math.random() * 0.12 + 0.04,
-  color: ['#f97316', '#ef4444'][i % 2],
-}));
+import { Vortex } from '../Vortex';
 
 // ---------------------------------------------------------------------------
 // Inline SVG Icons
@@ -121,23 +96,9 @@ function injectKeyframes() {
   const style = document.createElement('style');
   style.id = KEYFRAMES_ID;
   style.textContent = `
-    @keyframes meridianFloat {
-      0%, 100% { transform: translateY(0px) translateX(0px); }
-      25% { transform: translateY(-18px) translateX(8px); }
-      50% { transform: translateY(-8px) translateX(-6px); }
-      75% { transform: translateY(-22px) translateX(4px); }
-    }
-    @keyframes meridianLineDrift {
-      0%, 100% { transform: translateX(0px) rotate(var(--rot)); }
-      50% { transform: translateX(30px) rotate(calc(var(--rot) + 8deg)); }
-    }
     @keyframes meridianPulseGlow {
       0%, 100% { box-shadow: 0 0 8px rgba(6,182,212,0.25), inset 0 0 8px rgba(6,182,212,0.08); }
       50% { box-shadow: 0 0 20px rgba(6,182,212,0.45), inset 0 0 14px rgba(6,182,212,0.15); }
-    }
-    @keyframes meridianCountUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   `;
   document.head.appendChild(style);
@@ -149,113 +110,60 @@ function injectKeyframes() {
 
 function HeroSection() {
   return (
-    <section
-      className="relative overflow-hidden pt-20"
-      style={{ background: '#0c0c0c', minHeight: '100vh' }}
+    <Vortex
+      baseHue={25}
+      backgroundColor="#0c0c0c"
+      particleCount={600}
+      rangeY={80}
+      containerClassName="min-h-screen overflow-hidden pt-20"
+      className="flex flex-col items-center justify-center min-h-screen px-6 text-center"
     >
-      {/* Warm gradient overlay – orange to red horizon */}
-      <div
-        className="absolute inset-0 pointer-events-none"
+      <motion.h1
+        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="font-black uppercase leading-none tracking-tight"
         style={{
-          background:
-            'radial-gradient(ellipse 120% 60% at 50% 0%, rgba(249,115,22,0.35) 0%, rgba(239,68,68,0.22) 40%, transparent 70%)',
+          color: '#fbbf24',
+          fontSize: 'clamp(3.2rem, 10vw, 8rem)',
+          lineHeight: 0.95,
+          maxWidth: 900,
         }}
-      />
+      >
+        Go Where
+        <br />
+        Your Money
+        <br />
+        Grows
+      </motion.h1>
 
-      {/* Secondary softer glow */}
-      <div
-        className="absolute inset-0 pointer-events-none"
+      <motion.p
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="mt-8 text-lg md:text-xl max-w-xl"
+        style={{ color: 'rgba(255,255,255,0.75)' }}
+      >
+        Where ambitious investors find their edge. Advisory, planning, and
+        growth&nbsp;&mdash; all under one roof.
+      </motion.p>
+
+      <motion.a
+        href="#get-started"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.97 }}
+        className="mt-10 inline-block px-10 py-4 rounded-full font-bold text-base text-white cursor-pointer"
         style={{
-          background:
-            'radial-gradient(ellipse 80% 40% at 60% 10%, rgba(251,191,36,0.12) 0%, transparent 60%)',
+          background: 'linear-gradient(135deg, #f97316, #ef4444)',
+          boxShadow: '0 8px 30px rgba(249,115,22,0.35)',
         }}
-      />
-
-      {/* Floating particles */}
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            width: p.size,
-            height: p.size,
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-            backgroundColor: p.color,
-            opacity: p.opacity,
-            animation: `meridianFloat ${p.duration}s ease-in-out ${p.delay}s infinite`,
-          }}
-        />
-      ))}
-
-      {/* Floating lines */}
-      {floatingLines.map((l) => (
-        <div
-          key={`line-${l.id}`}
-          className="absolute pointer-events-none"
-          style={{
-            width: l.width,
-            height: 1.5,
-            left: `${l.x}%`,
-            top: `${l.y}%`,
-            backgroundColor: l.color,
-            opacity: l.opacity,
-            borderRadius: 1,
-            transform: `rotate(${l.rotation}deg)`,
-            animation: `meridianLineDrift ${l.duration}s ease-in-out ${l.delay}s infinite`,
-          }}
-        />
-      ))}
-
-      {/* Hero content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 50, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="font-black uppercase leading-none tracking-tight"
-          style={{
-            color: '#fbbf24',
-            fontSize: 'clamp(3.2rem, 10vw, 8rem)',
-            lineHeight: 0.95,
-            maxWidth: 900,
-          }}
-        >
-          Go Where
-          <br />
-          Your Money
-          <br />
-          Grows
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 text-lg md:text-xl max-w-xl"
-          style={{ color: 'rgba(255,255,255,0.75)' }}
-        >
-          Where ambitious investors find their edge. Advisory, planning, and
-          growth&nbsp;&mdash; all under one roof.
-        </motion.p>
-
-        <motion.a
-          href="#get-started"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-          className="mt-10 inline-block px-10 py-4 rounded-full font-bold text-base text-white cursor-pointer"
-          style={{
-            background: 'linear-gradient(135deg, #f97316, #ef4444)',
-            boxShadow: '0 8px 30px rgba(249,115,22,0.35)',
-          }}
-        >
-          Get started
-        </motion.a>
-      </div>
-    </section>
+      >
+        Get started
+      </motion.a>
+    </Vortex>
   );
 }
 

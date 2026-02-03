@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import FirmNavbar from './FirmNavbar';
 import { harborConfig } from './firmBrandConfigs';
+import { Vortex } from '../Vortex';
 
 // ─── SVG Illustrations ────────────────────────────────────────────────────────
 
@@ -144,58 +145,63 @@ const HarborWealth: React.FC<HarborWealthProps> = ({ navigate: navigateProp }) =
       <FirmNavbar config={harborConfig} navigate={navigateProp} />
 
       {/* ── Hero Section ─────────────────────────────────────────────────── */}
-      <section className="relative bg-white px-6 pt-28 pb-16 md:pt-36 md:pb-24">
-        <div className="max-w-6xl mx-auto text-center">
-          <motion.h1
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] tracking-tight text-black"
-          >
-            Wealth for here,
-            <br />
-            there and
-            <br />
-            everywhere
-          </motion.h1>
+      <Vortex
+        baseHue={90}
+        backgroundColor="#f8fafc"
+        particleCount={500}
+        rangeY={60}
+        containerClassName="relative px-6 pt-28 pb-16 md:pt-36 md:pb-24"
+        className="max-w-6xl mx-auto text-center"
+      >
+        <motion.h1
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] tracking-tight text-black"
+        >
+          Wealth for here,
+          <br />
+          there and
+          <br />
+          everywhere
+        </motion.h1>
 
-          <motion.p
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 text-lg md:text-xl text-gray-500 max-w-xl mx-auto leading-relaxed"
-          >
-            40 countries. Global markets. Get the wealth management built to grow
-            your money round the world.
-          </motion.p>
+        <motion.p
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 text-lg md:text-xl text-gray-500 max-w-xl mx-auto leading-relaxed"
+        >
+          40 countries. Global markets. Get the wealth management built to grow
+          your money round the world.
+        </motion.p>
 
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <button className="px-8 py-3.5 bg-[#84cc16] text-black font-semibold rounded-full text-base hover:bg-[#65a30d] transition-colors">
-              Open an account
-            </button>
-            <button className="px-8 py-3.5 bg-white text-black font-semibold rounded-full text-base border-2 border-black hover:bg-gray-50 transition-colors">
-              Start planning
-            </button>
-          </motion.div>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
+          <button className="px-8 py-3.5 bg-[#84cc16] text-black font-semibold rounded-full text-base hover:bg-[#65a30d] transition-colors">
+            Open an account
+          </button>
+          <button className="px-8 py-3.5 bg-white text-black font-semibold rounded-full text-base border-2 border-black hover:bg-gray-50 transition-colors">
+            Start planning
+          </button>
+        </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-16 md:mt-20"
-          >
-            <GlobeIllustration />
-          </motion.div>
-        </div>
-      </section>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-16 md:mt-20"
+        >
+          <GlobeIllustration />
+        </motion.div>
+      </Vortex>
 
       {/* ── Features Section ─────────────────────────────────────────────── */}
       <section className="bg-[#fafafa] px-6 py-20 md:py-32">

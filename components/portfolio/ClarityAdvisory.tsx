@@ -3,6 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { useTheme } from '../../App';
 import FirmNavbar from './FirmNavbar';
 import { clarityConfig } from './firmBrandConfigs';
+import { Vortex } from '../Vortex';
 
 // ---------------------------------------------------------------------------
 // Animated Counter Hook
@@ -156,94 +157,91 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
   // HERO
   // -----------------------------------------------------------------------
   const HeroSection = () => (
-    <Section bg={navy} className="min-h-screen flex items-center justify-center pt-20">
-      {/* Radial orb glow */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
-        style={{
-          background: `radial-gradient(circle, ${gold}18 0%, ${gold}08 40%, transparent 70%)`,
-        }}
-      />
+    <Vortex
+      baseHue={40}
+      backgroundColor={navy}
+      particleCount={600}
+      rangeY={80}
+      containerClassName="min-h-screen flex items-center justify-center pt-20"
+      className="max-w-3xl mx-auto px-6 py-32 text-center"
+    >
+      <motion.h1
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="text-5xl md:text-7xl font-light leading-tight mb-8"
+        style={{ fontFamily: serif, color: cream }}
+      >
+        <em className="font-normal" style={{ fontStyle: 'italic' }}>
+          Own
+        </em>{' '}
+        your financial future.
+      </motion.h1>
 
-      <div className="relative z-10 max-w-3xl mx-auto px-6 py-32 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl md:text-7xl font-light leading-tight mb-8"
-          style={{ fontFamily: serif, color: cream }}
-        >
-          <em className="font-normal" style={{ fontStyle: 'italic' }}>
-            Own
-          </em>{' '}
-          your financial future.
-        </motion.h1>
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto"
+        style={{ fontFamily: sans, color: creamDark }}
+      >
+        Clarity Advisory is your AI-powered financial partner. Track spending,
+        investments, and net worth — all from one intelligent platform.
+      </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto"
-          style={{ fontFamily: sans, color: creamDark }}
+      {/* CTA Button */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="mb-10"
+      >
+        <button
+          className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:scale-105 cursor-pointer"
+          style={{
+            fontFamily: sans,
+            color: cream,
+            border: `1px solid ${gold}60`,
+            background: `linear-gradient(135deg, ${gold}15 0%, transparent 100%)`,
+          }}
         >
-          Clarity Advisory is your AI-powered financial partner. Track spending,
-          investments, and net worth — all from one intelligent platform.
-        </motion.p>
+          Get Started
+          <ArrowRight />
+        </button>
+      </motion.div>
 
-        {/* CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-10"
+      {/* AI Chat Input */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-md mx-auto"
+      >
+        <div
+          className="flex items-center gap-3 px-5 py-3.5 rounded-2xl"
+          style={{
+            background: `${navyLight}cc`,
+            border: `1px solid ${creamDark}20`,
+          }}
         >
-          <button
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:scale-105 cursor-pointer"
-            style={{
-              fontFamily: sans,
-              color: cream,
-              border: `1px solid ${gold}60`,
-              background: `linear-gradient(135deg, ${gold}15 0%, transparent 100%)`,
-            }}
+          <span
+            className="flex-1 text-left text-sm"
+            style={{ fontFamily: sans, color: `${creamDark}80` }}
           >
-            Get Started
-            <ArrowRight />
-          </button>
-        </motion.div>
-
-        {/* AI Chat Input */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-md mx-auto"
-        >
+            Where am I overspending?
+          </span>
           <div
-            className="flex items-center gap-3 px-5 py-3.5 rounded-2xl"
+            className="flex items-center justify-center w-8 h-8 rounded-full"
             style={{
-              background: `${navyLight}cc`,
-              border: `1px solid ${creamDark}20`,
+              background: `${gold}25`,
+              border: `1px solid ${gold}40`,
             }}
           >
-            <span
-              className="flex-1 text-left text-sm"
-              style={{ fontFamily: sans, color: `${creamDark}80` }}
-            >
-              Where am I overspending?
-            </span>
-            <div
-              className="flex items-center justify-center w-8 h-8 rounded-full"
-              style={{
-                background: `${gold}25`,
-                border: `1px solid ${gold}40`,
-              }}
-            >
-              <ArrowUp className="opacity-70" style={{ color: cream } as any} />
-            </div>
+            <ArrowUp className="opacity-70" style={{ color: cream } as any} />
           </div>
-        </motion.div>
-      </div>
-    </Section>
+        </div>
+      </motion.div>
+    </Vortex>
   );
 
   // -----------------------------------------------------------------------

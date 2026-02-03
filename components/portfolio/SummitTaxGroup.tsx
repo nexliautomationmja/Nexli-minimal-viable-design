@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import FirmNavbar from './FirmNavbar';
 import { summitTaxConfig } from './firmBrandConfigs';
+import { Vortex } from '../Vortex';
 
 /* ------------------------------------------------------------------ */
 /*  Color tokens                                                       */
@@ -336,107 +337,6 @@ function ChartLineIcon() {
 }
 
 /* ================================================================== */
-/*  FLOATING SHAPES (hero background)                                  */
-/* ================================================================== */
-function FloatingShapes() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Circle 1 */}
-      <div
-        className="absolute rounded-full opacity-10"
-        style={{
-          width: 300,
-          height: 300,
-          top: '-5%',
-          right: '-5%',
-          background: COLORS.light,
-          animation: 'floatA 18s ease-in-out infinite',
-        }}
-      />
-      {/* Circle 2 */}
-      <div
-        className="absolute rounded-full opacity-[0.07]"
-        style={{
-          width: 200,
-          height: 200,
-          bottom: '10%',
-          left: '5%',
-          background: COLORS.white,
-          animation: 'floatB 22s ease-in-out infinite',
-        }}
-      />
-      {/* Triangle SVG */}
-      <svg
-        className="absolute opacity-[0.08]"
-        style={{
-          width: 160,
-          height: 160,
-          top: '60%',
-          right: '15%',
-          animation: 'floatC 20s ease-in-out infinite',
-        }}
-        viewBox="0 0 100 100"
-      >
-        <polygon points="50,5 95,95 5,95" fill={COLORS.white} />
-      </svg>
-      {/* Small circle */}
-      <div
-        className="absolute rounded-full opacity-[0.12]"
-        style={{
-          width: 80,
-          height: 80,
-          top: '25%',
-          left: '20%',
-          border: `2px solid ${COLORS.light}`,
-          animation: 'floatA 15s ease-in-out infinite reverse',
-        }}
-      />
-      {/* Diamond */}
-      <svg
-        className="absolute opacity-[0.06]"
-        style={{
-          width: 100,
-          height: 100,
-          bottom: '20%',
-          right: '40%',
-          animation: 'floatB 25s ease-in-out infinite',
-        }}
-        viewBox="0 0 100 100"
-      >
-        <rect
-          x="15"
-          y="15"
-          width="70"
-          height="70"
-          rx="4"
-          fill={COLORS.white}
-          transform="rotate(45 50 50)"
-        />
-      </svg>
-    </div>
-  );
-}
-
-/* ================================================================== */
-/*  KEYFRAMES (injected once)                                          */
-/* ================================================================== */
-const KEYFRAMES_CSS = `
-@keyframes floatA {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-30px) rotate(6deg); }
-}
-@keyframes floatB {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  33%      { transform: translateY(-20px) translateX(15px); }
-  66%      { transform: translateY(10px) translateX(-10px); }
-}
-@keyframes floatC {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-25px) rotate(-8deg); }
-}
-`;
-
-/* ================================================================== */
 /*  MAIN COMPONENT                                                     */
 /* ================================================================== */
 interface SummitTaxGroupProps {
@@ -444,21 +344,6 @@ interface SummitTaxGroupProps {
 }
 
 const SummitTaxGroup: React.FC<SummitTaxGroupProps> = ({ navigate }) => {
-  /* Inject keyframes once */
-  useEffect(() => {
-    const id = 'summit-tax-keyframes';
-    if (!document.getElementById(id)) {
-      const style = document.createElement('style');
-      style.id = id;
-      style.textContent = KEYFRAMES_CSS;
-      document.head.appendChild(style);
-    }
-    return () => {
-      const el = document.getElementById(id);
-      if (el) el.remove();
-    };
-  }, []);
-
   /* ---------------------------------------------------------------- */
   /*  SERVICES DATA                                                    */
   /* ---------------------------------------------------------------- */
@@ -493,54 +378,52 @@ const SummitTaxGroup: React.FC<SummitTaxGroupProps> = ({ navigate }) => {
       {/* ============================================================ */}
       {/*  1. HERO SECTION                                             */}
       {/* ============================================================ */}
-      <section
-        className="relative min-h-[92vh] flex items-center justify-center px-6 pt-28 pb-24"
-        style={{
-          background: `linear-gradient(135deg, ${COLORS.dark} 0%, ${COLORS.primary} 60%, ${COLORS.light} 100%)`,
-        }}
+      <Vortex
+        baseHue={270}
+        backgroundColor={COLORS.deepDark}
+        particleCount={600}
+        rangeY={80}
+        containerClassName="min-h-[92vh] flex items-center justify-center px-6 pt-28 pb-24"
+        className="max-w-3xl mx-auto text-center"
       >
-        <FloatingShapes />
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white leading-tight tracking-tight"
+        >
+          Your Taxes. Optimized.
+        </motion.h1>
 
-        <div className="relative z-10 max-w-3xl mx-auto text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white leading-tight tracking-tight"
-          >
-            Your Taxes. Optimized.
-          </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-6 text-lg sm:text-xl text-white/80 max-w-xl mx-auto leading-relaxed"
+        >
+          Strategic tax planning and advisory for businesses and individuals.
+          Data-driven insights that save you more.
+        </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 text-lg sm:text-xl text-white/80 max-w-xl mx-auto leading-relaxed"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 flex flex-wrap justify-center gap-4"
+        >
+          <button
+            className="px-8 py-3.5 rounded-lg font-semibold text-base shadow-lg transition-transform hover:scale-105 active:scale-95"
+            style={{ backgroundColor: COLORS.white, color: COLORS.primary }}
           >
-            Strategic tax planning and advisory for businesses and individuals.
-            Data-driven insights that save you more.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 flex flex-wrap justify-center gap-4"
+            Get Started
+          </button>
+          <button
+            className="px-8 py-3.5 rounded-lg font-semibold text-base border-2 border-white/60 text-white bg-transparent transition-all hover:bg-white/10 hover:border-white hover:scale-105 active:scale-95"
           >
-            <button
-              className="px-8 py-3.5 rounded-lg font-semibold text-base shadow-lg transition-transform hover:scale-105 active:scale-95"
-              style={{ backgroundColor: COLORS.white, color: COLORS.primary }}
-            >
-              Get Started
-            </button>
-            <button
-              className="px-8 py-3.5 rounded-lg font-semibold text-base border-2 border-white/60 text-white bg-transparent transition-all hover:bg-white/10 hover:border-white hover:scale-105 active:scale-95"
-            >
-              See Our Results
-            </button>
-          </motion.div>
-        </div>
-      </section>
+            See Our Results
+          </button>
+        </motion.div>
+      </Vortex>
 
       {/* ============================================================ */}
       {/*  2. DASHBOARD PREVIEW SECTION                                */}
