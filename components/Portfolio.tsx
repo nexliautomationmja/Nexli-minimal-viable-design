@@ -112,7 +112,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
       {/* Hero Section with Vortex */}
       <div className="w-full mx-auto rounded-md overflow-hidden">
         <Vortex
-          backgroundColor={theme === 'dark' ? '#020617' : '#ffffff'}
+          backgroundColor="#020617"
           className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
           containerClassName="min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24"
         >
@@ -121,10 +121,10 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-sm mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm mb-8"
           >
             <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
               Our Work
             </span>
           </motion.div>
@@ -133,11 +133,11 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[var(--text-main)] text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6"
+            className="text-white text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6"
           >
             Websites that
             <br />
-            <span className="bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
               convert clients.
             </span>
           </motion.h2>
@@ -146,7 +146,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[var(--text-muted)] text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed"
+            className="text-white/60 text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed"
           >
             Premium digital experiences built for financial firms. Each project is
             crafted to reflect the caliber of service our clients provide.
