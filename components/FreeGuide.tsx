@@ -190,12 +190,14 @@ const FreeGuide: React.FC = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-[var(--text-main)] text-[10px] md:text-sm font-bold leading-relaxed text-left">
-                                                    I agree to receive SMS updates about my guide (optional)
+                                                    I consent to receive marketing text messages from Nexli (optional)
                                                 </p>
                                             </div>
                                         </div>
                                         <p className="px-2 text-[var(--text-muted)] opacity-50 text-[8px] md:text-[9px] leading-relaxed italic text-center">
-                                            By checking this box, you agree to receive automated messages. Message frequency varies. Message & data rates may apply. Text HELP for help. Reply STOP to unsubscribe.
+                                            By checking this box, you consent to receive automated marketing messages from Nexli. Message frequency varies. Message & data rates may apply. Text HELP for help or contact us at mail@nexli.net. Reply STOP to unsubscribe. View our{' '}
+                                            <button type="button" onClick={() => { window.history.pushState({}, '', '/privacy'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[8px] md:text-[9px] cursor-pointer">Privacy Policy</button>{' '}and{' '}
+                                            <button type="button" onClick={() => { window.history.pushState({}, '', '/terms'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[8px] md:text-[9px] cursor-pointer">Terms & Conditions</button>.
                                         </p>
                                     </div>
 

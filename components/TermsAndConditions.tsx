@@ -64,9 +64,19 @@ const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({ onBack }) => {
                             <li>You agree to receive automated messages including appointment reminders, account alerts, and strategy session confirmations.</li>
                             <li><strong>Message & Data Rates:</strong> Message and data rates may apply.</li>
                             <li><strong>Frequency:</strong> Message frequency varies based on your interaction with our systems.</li>
-                            <li><strong>Help:</strong> Text <span className="text-blue-500 font-bold">HELP</span> at any time for assistance.</li>
+                            <li><strong>Help:</strong> Text <span className="text-blue-500 font-bold">HELP</span> at any time for assistance, or contact us at <strong>mail@nexli.net</strong>.</li>
                             <li><strong>Opt-Out:</strong> Text <span className="text-blue-500 font-bold">STOP</span> to cancel. You will receive one final text confirming your request.</li>
+                            <li><strong>Carrier Disclaimer:</strong> Carriers are not liable for delayed or undelivered messages.</li>
                         </ul>
+                        <p className="text-sm mt-4">
+                            For more information on how we handle your data, please review our{' '}
+                            <button
+                                onClick={() => { window.history.pushState({}, '', '/privacy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+                                className="text-blue-500 underline hover:text-blue-400 transition-colors bg-transparent border-none p-0 cursor-pointer text-sm"
+                            >
+                                Privacy Policy
+                            </button>.
+                        </p>
                     </section>
 
                     <section className="space-y-4">

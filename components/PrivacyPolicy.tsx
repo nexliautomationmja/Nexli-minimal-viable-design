@@ -89,8 +89,14 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
                     <section className="space-y-4">
                         <h2 className="text-2xl font-bold text-[var(--text-main)]">6. Contact Information</h2>
                         <p>
-                            To ask questions or comment about this privacy policy and our privacy practices, contact us at: **legal@nexli.com**
+                            To ask questions or comment about this privacy policy and our privacy practices, contact us at:
                         </p>
+                        <div className="pl-6 space-y-1">
+                            <p><strong className="text-[var(--text-main)]">Nexli</strong></p>
+                            <p>480 N Orlando Ave STE 236</p>
+                            <p>Winter Park, FL 32789</p>
+                            <p>Email: <strong className="text-[var(--text-main)]">mail@nexli.net</strong></p>
+                        </div>
                     </section>
                 </div>
             </div>

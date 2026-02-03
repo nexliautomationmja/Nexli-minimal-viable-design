@@ -195,7 +195,10 @@ const App: React.FC = () => {
             <Navbar setView={navigate} currentView={view} />
           </>
         ) : view === 'privacy' ? (
-          <PrivacyPolicy onBack={() => navigate('home')} />
+          <>
+            <PrivacyPolicy onBack={() => navigate('home')} />
+            <Navbar setView={navigate} currentView={view} />
+          </>
         ) : view === 'services' ? (
           <>
             <Services />
@@ -225,7 +228,10 @@ const App: React.FC = () => {
             {React.createElement(PORTFOLIO_FIRMS[portfolioSlug], { navigate })}
           </>
         ) : view === 'terms' ? (
-          <TermsAndConditions onBack={() => navigate('home')} />
+          <>
+            <TermsAndConditions onBack={() => navigate('home')} />
+            <Navbar setView={navigate} currentView={view} />
+          </>
         ) : view === '404' ? (
           <>
             <NotFound
