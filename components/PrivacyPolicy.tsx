@@ -87,7 +87,44 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
                     </section>
 
                     <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-[var(--text-main)]">6. Contact Information</h2>
+                        <h2 className="text-2xl font-bold text-[var(--text-main)]">6. Your Rights</h2>
+                        <p>
+                            Depending on your location, you may have the following rights regarding your personal information:
+                        </p>
+                        <ul className="list-disc pl-6 space-y-2">
+                            <li><strong className="text-[var(--text-main)]">Right to Access:</strong> You may request a copy of the personal data we hold about you.</li>
+                            <li><strong className="text-[var(--text-main)]">Right to Correction:</strong> You may request that we correct any inaccurate or incomplete personal data.</li>
+                            <li><strong className="text-[var(--text-main)]">Right to Deletion:</strong> You may request that we delete your personal data, subject to certain legal exceptions.</li>
+                            <li><strong className="text-[var(--text-main)]">Right to Opt-Out:</strong> You may opt out of receiving marketing communications at any time by texting STOP, clicking the unsubscribe link in any email, or contacting us directly.</li>
+                        </ul>
+                        <p>
+                            To exercise any of these rights, please contact us at <strong className="text-[var(--text-main)]">mail@nexli.net</strong>. We will respond to your request within 30 days.
+                        </p>
+                    </section>
+
+                    <section className="space-y-4 p-8 glass-card rounded-3xl border border-blue-500/10">
+                        <h2 className="text-2xl font-bold text-[var(--text-main)]">7. Cookies & Tracking Technologies</h2>
+                        <p>
+                            Our Website uses cookies and similar tracking technologies to enhance your browsing experience and analyze site traffic. Below is a summary of the types of cookies we use:
+                        </p>
+                        <ul className="list-disc pl-6 space-y-3">
+                            <li>
+                                <strong className="text-[var(--text-main)]">Essential Cookies:</strong> Required for core site functionality such as page navigation and theme preferences. These cannot be disabled.
+                            </li>
+                            <li>
+                                <strong className="text-[var(--text-main)]">Analytics Cookies:</strong> We use Vercel Analytics and Vercel Speed Insights to collect anonymized usage data, including page views, session duration, and performance metrics. This helps us improve site performance and user experience.
+                            </li>
+                            <li>
+                                <strong className="text-[var(--text-main)]">Local Storage:</strong> We store your theme preference (light/dark mode) in your browser's local storage so it persists between visits.
+                            </li>
+                        </ul>
+                        <p>
+                            We do <strong className="text-[var(--text-main)]">not</strong> use third-party advertising cookies or sell your browsing data to any third parties. You can manage or delete cookies through your browser settings at any time.
+                        </p>
+                    </section>
+
+                    <section className="space-y-4">
+                        <h2 className="text-2xl font-bold text-[var(--text-main)]">8. Contact Information</h2>
                         <p>
                             To ask questions or comment about this privacy policy and our privacy practices, contact us at:
                         </p>
