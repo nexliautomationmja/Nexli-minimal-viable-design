@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useTheme } from '../App';
+import { ShimmerButton } from './ui/ShimmerButton';
 import PortfolioPreview from './portfolio/PortfolioPreview';
 import SummitTaxGroup from './portfolio/SummitTaxGroup';
 import ClarityAdvisory from './portfolio/ClarityAdvisory';
@@ -121,12 +122,13 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm mb-8"
+            className="mb-8"
           >
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
-              Our Work
-            </span>
+            <ShimmerButton className="shadow-2xl">
+              <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg">
+                Explore Projects
+              </span>
+            </ShimmerButton>
           </motion.div>
 
           <motion.h2
