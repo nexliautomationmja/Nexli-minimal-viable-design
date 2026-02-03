@@ -31,9 +31,9 @@ const painPoints = [
     solutionTitle: "AI Automations That Handle the Busywork",
     solutionDescription: "Reclaim 10-15 hours every week with intelligent automations that prep you for meetings, capture notes, update your CRM, and send personalized follow-ups—all without lifting a finger.",
     solutionBullets: [
-      "Automated meeting prep with client history and talking points",
-      "AI-powered notes that sync directly to your CRM",
-      "Smart follow-up sequences that keep clients engaged"
+      "Missed-call text-back that re-engages leads before they move on",
+      "Automated text & email outreach built for how high-value clients prefer to communicate",
+      "Live analytics portal with lead tracking, response speed, and booking rates—plus smart sequences that cut repetitive tasks"
     ],
     icon: <Bot className="text-blue-500" size={32} />,
     color: "from-blue-500/20",

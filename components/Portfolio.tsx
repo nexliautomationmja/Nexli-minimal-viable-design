@@ -8,7 +8,8 @@ import SummitTaxGroup from './portfolio/SummitTaxGroup';
 import ClarityAdvisory from './portfolio/ClarityAdvisory';
 import MeridianFinancial from './portfolio/MeridianFinancial';
 import HarborWealth from './portfolio/HarborWealth';
-import { Vortex } from './Vortex';
+import { ShootingStars } from './ui/shooting-stars';
+import { StarsBackground } from './ui/stars-background';
 
 interface PortfolioProps {
   onNavigateToFirm: (slug: string) => void;
@@ -110,50 +111,47 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)]">
-      {/* Hero Section with Vortex */}
-      <div className="w-full mx-auto rounded-md overflow-hidden">
-        <Vortex
-          backgroundColor="#020617"
-          className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
-          containerClassName="min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24"
+      {/* Hero Section with Shooting Stars */}
+      <div className="w-full rounded-md bg-[#020617] flex flex-col items-center justify-center relative overflow-hidden min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24">
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 mb-8"
         >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8"
-          >
-            <ShimmerButton className="shadow-2xl">
-              <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg">
-                Explore Projects
-              </span>
-            </ShimmerButton>
-          </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-white text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6"
-          >
-            Websites that
-            <br />
-            <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
-              convert clients.
+          <ShimmerButton className="shadow-2xl">
+            <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg">
+              Explore Projects
             </span>
-          </motion.h2>
+          </ShimmerButton>
+        </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-white/60 text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed"
-          >
-            Premium digital experiences built for financial firms. Each project is
-            crafted to reflect the caliber of service our clients provide.
-          </motion.p>
-        </Vortex>
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 text-white text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6 px-2 md:px-10"
+        >
+          Websites that
+          <br />
+          <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
+            convert clients.
+          </span>
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative z-10 text-white/60 text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed px-2 md:px-10"
+        >
+          Premium digital experiences built for financial firms. Each project is
+          crafted to reflect the caliber of service our clients provide.
+        </motion.p>
+
+        <ShootingStars />
+        <StarsBackground />
       </div>
 
       {/* Portfolio Grid */}
