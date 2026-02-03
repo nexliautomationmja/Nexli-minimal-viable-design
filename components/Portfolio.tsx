@@ -7,7 +7,7 @@ import SummitTaxGroup from './portfolio/SummitTaxGroup';
 import ClarityAdvisory from './portfolio/ClarityAdvisory';
 import MeridianFinancial from './portfolio/MeridianFinancial';
 import HarborWealth from './portfolio/HarborWealth';
-import { BackgroundGradientAnimation } from './ui/BackgroundGradientAnimation';
+import { Vortex } from './Vortex';
 
 interface PortfolioProps {
   onNavigateToFirm: (slug: string) => void;
@@ -109,62 +109,50 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)]">
-      {/* Hero Section with Gradient Animation */}
-      <section className="relative overflow-hidden">
-        <BackgroundGradientAnimation
-          gradientBackgroundStart="rgb(0, 17, 82)"
-          gradientBackgroundEnd="rgb(2, 6, 23)"
-          firstColor="59, 130, 246"
-          secondColor="6, 182, 212"
-          thirdColor="99, 102, 241"
-          fourthColor="139, 92, 246"
-          fifthColor="14, 165, 233"
-          pointerColor="59, 130, 246"
-          size="90%"
-          blendingValue="hard-light"
+      {/* Hero Section with Vortex */}
+      <div className="w-full mx-auto rounded-md overflow-hidden">
+        <Vortex
+          backgroundColor="#020617"
+          className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
           containerClassName="min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24"
         >
-          <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
-            <div className="max-w-7xl mx-auto px-6 text-center">
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm mb-8"
-              >
-                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
-                  Our Work
-                </span>
-              </motion.div>
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm mb-8"
+          >
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
+              Our Work
+            </span>
+          </motion.div>
 
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white mb-6"
-              >
-                Websites that
-                <br />
-                <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
-                  convert clients.
-                </span>
-              </motion.h1>
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-white text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6"
+          >
+            Websites that
+            <br />
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
+              convert clients.
+            </span>
+          </motion.h2>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-base md:text-lg text-white/60 max-w-2xl mx-auto leading-relaxed"
-              >
-                Premium digital experiences built for financial firms. Each project is
-                crafted to reflect the caliber of service our clients provide.
-              </motion.p>
-            </div>
-          </div>
-        </BackgroundGradientAnimation>
-      </section>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-white/60 text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed"
+          >
+            Premium digital experiences built for financial firms. Each project is
+            crafted to reflect the caliber of service our clients provide.
+          </motion.p>
+        </Vortex>
+      </div>
 
       {/* Portfolio Grid */}
       <section className="max-w-6xl mx-auto px-6 md:px-6 pt-8 pb-32">
