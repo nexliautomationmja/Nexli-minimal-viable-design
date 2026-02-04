@@ -15,6 +15,7 @@ import Services from './components/Services';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import NotFound from './components/NotFound';
+import SmartReviews from './components/SmartReviews';
 import SocialDock from './components/SocialDock';
 import Portfolio from './components/Portfolio';
 import SummitTaxGroup from './components/portfolio/SummitTaxGroup';
@@ -54,7 +55,7 @@ const App: React.FC = () => {
     return 'dark';
   });
 
-  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | '404'>('home');
+  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | '404'>('home');
   const [blogSlug, setBlogSlug] = useState<string | null>(null);
   const [portfolioSlug, setPortfolioSlug] = useState<string | null>(null);
 
@@ -118,6 +119,10 @@ const App: React.FC = () => {
         setView('terms');
         setBlogSlug(null);
         setPortfolioSlug(null);
+      } else if (path === '/smart-reviews') {
+        setView('smartReviews');
+        setBlogSlug(null);
+        setPortfolioSlug(null);
       } else {
         setView('404');
         setBlogSlug(null);
@@ -138,7 +143,7 @@ const App: React.FC = () => {
   }, []);
 
   // Function to navigate and update URL
-  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | '404', slug?: string) => {
+  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | '404', slug?: string) => {
     let path: string;
     if (newView === 'blogPost' && slug) {
       path = `/blog/${slug}`;
@@ -147,10 +152,11 @@ const App: React.FC = () => {
     } else {
       path = newView === 'guide' ? '/free-guide' :
         newView === 'services' ? '/services' :
-          newView === 'portfolio' ? '/portfolio' :
-            newView === 'blog' ? '/blog' :
-              newView === 'privacy' ? '/privacy' :
-                newView === 'terms' ? '/terms' : '/';
+          newView === 'smartReviews' ? '/smart-reviews' :
+            newView === 'portfolio' ? '/portfolio' :
+              newView === 'blog' ? '/blog' :
+                newView === 'privacy' ? '/privacy' :
+                  newView === 'terms' ? '/terms' : '/';
     }
 
     if (window.location.pathname !== path) {
@@ -212,6 +218,11 @@ const App: React.FC = () => {
         ) : view === 'services' ? (
           <>
             <Services />
+            <Navbar setView={navigate} currentView={view} />
+          </>
+        ) : view === 'smartReviews' ? (
+          <>
+            <SmartReviews />
             <Navbar setView={navigate} currentView={view} />
           </>
         ) : view === 'blog' ? (
