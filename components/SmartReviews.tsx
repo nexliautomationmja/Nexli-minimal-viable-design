@@ -146,14 +146,36 @@ const SmartReviews: React.FC = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "circOut" }}
                     >
-                        <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
-                            <Shield size={14} className="text-blue-400" />
-                            <span className="text-blue-400 text-[10px] md:text-xs font-black tracking-[0.2em] uppercase">Smart Reviews</span>
+                        <div className="relative inline-flex items-center mb-6 rounded-full overflow-hidden p-[1.5px]">
+                            {/* Rotating glow border */}
+                            <span
+                                className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
+                                style={{
+                                    background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)'
+                                }}
+                            />
+                            {/* Outer glow effect */}
+                            <span
+                                className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
+                                style={{
+                                    background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)'
+                                }}
+                            />
+                            {/* Inner pill content */}
+                            <span className="relative z-10 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--bg-main)]">
+                                <svg width="14" height="14" viewBox="0 0 24 24" className="flex-shrink-0">
+                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                </svg>
+                                <span className="text-[var(--text-main)] text-[10px] md:text-xs font-black tracking-[0.2em] uppercase">Google Reviews</span>
+                            </span>
                         </div>
 
-                        <h1 className="text-4xl md:text-6xl font-black text-[var(--text-main)] mb-6 leading-tight tracking-tighter" style={{ fontFamily: "'Syne', sans-serif" }}>
-                            Your Happy Clients Are Your <span className="text-blue-500">Best Marketing.</span>{' '}
-                            <br className="hidden md:block" />They Just Need a Nudge.
+                        <h1 className="text-[26px] sm:text-4xl md:text-6xl font-black text-[var(--text-main)] mb-6 leading-tight tracking-tighter" style={{ fontFamily: "'Syne', sans-serif" }}>
+                            A $10M Client Just Googled You.{' '}
+                            <br className="hidden md:block" /><span className="text-blue-500">3 Stars.</span> They Moved On.
                         </h1>
 
                         {/* Mobile-only: animated Google Reviews visual between headline and paragraph */}
@@ -219,8 +241,8 @@ const SmartReviews: React.FC = () => {
                             </div>
                         </motion.div>
 
-                        <p className="text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
-                            Most satisfied clients never leave a Google review — not because they don't want to, but because nobody asked. Smart Reviews automates the ask and protects your rating at the same time.
+                        <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
+                            High-net-worth clients don't settle. Before they ever call your office, they've already checked your reviews. CPAs, advisors, and wealth managers with weak ratings don't make the shortlist — no matter how good they actually are. Smart Reviews puts your reputation on autopilot so your Google profile matches the elite service you deliver.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
