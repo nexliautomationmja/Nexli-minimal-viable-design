@@ -71,10 +71,10 @@ const FreeGuide: React.FC = () => {
                         <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
                             <span className="text-blue-400 text-[10px] md:text-xs font-black tracking-[0.2em] uppercase">Free Resource</span>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-[var(--text-main)] mb-6 leading-tight tracking-tighter" style={{ fontFamily: "'Syne', sans-serif" }}>
+                        <h1 className="text-3xl md:text-5xl font-black text-[var(--text-main)] mb-6 leading-tight tracking-tighter" style={{ fontFamily: "'Syne', sans-serif" }}>
                             The 5 Automations Every Advisory Firm Needs <span className="text-blue-500">(+ The AI Assistant That Handles the Rest)</span>
                         </h1>
-                        <p className="text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
+                        <p className="text-base md:text-lg text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
                             If you bill $300/hour and spend just 5 hours a week on admin — that's $78,000/year gone. This guide gives you the exact systems to get it back.
                         </p>
 

@@ -669,12 +669,12 @@ const SmartReviews: React.FC = () => {
                             </div>
 
                             {/* Interaction Tabs (Footer) */}
-                            <div className={`border-t border-[var(--glass-border)] backdrop-blur-md grid grid-cols-3 transition-colors duration-500 ${theme === 'dark' ? 'bg-black/40' : 'bg-slate-50/50'}`}>
+                            <div className={`smart-reviews-tabs border-t border-[var(--glass-border)] backdrop-blur-md flex overflow-x-auto md:grid md:grid-cols-3 transition-colors duration-500 ${theme === 'dark' ? 'bg-black/40' : 'bg-slate-50/50'}`} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
                                 {reviewStats.map((stat, index) => (
                                     <button
                                         key={stat.id}
                                         onClick={() => handleStatTabClick(index)}
-                                        className={`relative px-3 py-4 md:p-8 transition-all border-r border-[var(--glass-border)] last:border-r-0 text-left group hover:bg-white/5 ${activeStatIndex === index ? (theme === 'dark' ? 'bg-white/[0.03]' : 'bg-blue-500/5') : ''}`}
+                                        className={`relative min-w-[130px] flex-shrink-0 md:min-w-0 md:flex-shrink px-4 py-5 md:p-8 transition-all border-r border-[var(--glass-border)] last:border-r-0 text-left group hover:bg-white/5 ${activeStatIndex === index ? (theme === 'dark' ? 'bg-white/[0.03]' : 'bg-blue-500/5') : ''}`}
                                     >
                                         {/* Progress bar */}
                                         <div className={`absolute top-0 left-0 h-[2px] w-full ${theme === 'dark' ? 'bg-white/10' : 'bg-blue-500/10'}`}>
@@ -689,10 +689,10 @@ const SmartReviews: React.FC = () => {
                                         </div>
 
                                         <div className="flex flex-col gap-1">
-                                            <span className={`text-[9px] md:text-sm font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] transition-colors ${activeStatIndex === index ? 'text-blue-500' : (theme === 'dark' ? 'text-neutral-500 group-hover:text-neutral-300' : 'text-slate-400 group-hover:text-slate-600')}`}>
+                                            <span className={`text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] transition-colors ${activeStatIndex === index ? 'text-blue-500' : (theme === 'dark' ? 'text-neutral-500 group-hover:text-neutral-300' : 'text-slate-400 group-hover:text-slate-600')}`}>
                                                 {stat.stat}
                                             </span>
-                                            <span className={`text-[10px] md:text-sm font-semibold transition-colors leading-tight ${activeStatIndex === index ? (theme === 'dark' ? 'text-white' : 'text-slate-900') : (theme === 'dark' ? 'text-neutral-400 group-hover:text-neutral-200' : 'text-slate-500 group-hover:text-slate-700')}`}>
+                                            <span className={`text-xs md:text-sm font-semibold transition-colors leading-tight ${activeStatIndex === index ? (theme === 'dark' ? 'text-white' : 'text-slate-900') : (theme === 'dark' ? 'text-neutral-400 group-hover:text-neutral-200' : 'text-slate-500 group-hover:text-slate-700')}`}>
                                                 {stat.label}
                                             </span>
                                         </div>
@@ -1210,7 +1210,7 @@ const SmartReviews: React.FC = () => {
                     </div>
 
                     {/* 3D Marquee with overlaid benefit cards */}
-                    <div className="relative overflow-hidden rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)]" style={{ height: 'clamp(500px, 70vh, 700px)' }}>
+                    <div className="relative overflow-hidden rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] h-[400px] md:h-[600px] lg:h-[700px]">
                         {/* Marquee keyframes */}
                         <style>{`
                             @keyframes marquee-scroll-left {
@@ -1221,16 +1221,26 @@ const SmartReviews: React.FC = () => {
                                 from { transform: translateX(-50%); }
                                 to { transform: translateX(0); }
                             }
+                            .marquee-3d-wrapper {
+                                transform: rotateX(20deg) scale(0.7);
+                                transform-style: preserve-3d;
+                            }
+                            @media (min-width: 768px) {
+                                .marquee-3d-wrapper {
+                                    transform: rotateX(25deg) scale(1.1);
+                                }
+                            }
+                            .smart-reviews-tabs::-webkit-scrollbar { display: none; }
                         `}</style>
 
                         {/* 3D Perspective Wrapper */}
                         <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ perspective: '1200px' }}>
-                            <div className="w-[200%] md:w-[160%]" style={{ transform: 'rotateX(25deg) scale(1.1)', transformStyle: 'preserve-3d' }}>
+                            <div className="w-[250%] md:w-[160%] marquee-3d-wrapper">
 
                                 {/* Row 1 - scrolls left */}
-                                <div className="flex gap-4 mb-4" style={{ animation: 'marquee-scroll-left 45s linear infinite', width: 'max-content' }}>
+                                <div className="flex gap-2 md:gap-4 mb-2 md:mb-4" style={{ animation: 'marquee-scroll-left 45s linear infinite', width: 'max-content' }}>
                                     {[0, 1].map((dup) => (
-                                        <div key={dup} className="flex gap-4 flex-shrink-0">
+                                        <div key={dup} className="flex gap-2 md:gap-4 flex-shrink-0">
                                             {/* 5-Star Rating */}
                                             <div className="w-[200px] h-[110px] rounded-2xl bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border border-yellow-500/20 p-4 flex flex-col justify-center flex-shrink-0">
                                                 <div className="flex gap-0.5 mb-2">{[1,2,3,4,5].map(s => <Star key={s} size={14} className="text-yellow-400 fill-yellow-400" />)}</div>
@@ -1282,9 +1292,9 @@ const SmartReviews: React.FC = () => {
                                 </div>
 
                                 {/* Row 2 - scrolls right */}
-                                <div className="flex gap-4 mb-4" style={{ animation: 'marquee-scroll-right 50s linear infinite', width: 'max-content' }}>
+                                <div className="flex gap-2 md:gap-4 mb-2 md:mb-4" style={{ animation: 'marquee-scroll-right 50s linear infinite', width: 'max-content' }}>
                                     {[0, 1].map((dup) => (
-                                        <div key={dup} className="flex gap-4 flex-shrink-0">
+                                        <div key={dup} className="flex gap-2 md:gap-4 flex-shrink-0">
                                             {/* Shield Protection */}
                                             <div className="w-[190px] h-[110px] rounded-2xl bg-gradient-to-br from-blue-500/10 to-indigo-500/5 border border-blue-500/20 p-4 flex flex-col justify-center flex-shrink-0">
                                                 <div className="flex items-center gap-2 mb-2">
@@ -1338,9 +1348,9 @@ const SmartReviews: React.FC = () => {
                                 </div>
 
                                 {/* Row 3 - scrolls left (slower) */}
-                                <div className="flex gap-4 mb-4" style={{ animation: 'marquee-scroll-left 55s linear infinite', width: 'max-content' }}>
+                                <div className="flex gap-2 md:gap-4 mb-2 md:mb-4" style={{ animation: 'marquee-scroll-left 55s linear infinite', width: 'max-content' }}>
                                     {[0, 1].map((dup) => (
-                                        <div key={dup} className="flex gap-4 flex-shrink-0">
+                                        <div key={dup} className="flex gap-2 md:gap-4 flex-shrink-0">
                                             {/* Response Rate */}
                                             <div className="w-[180px] h-[110px] rounded-2xl bg-gradient-to-br from-indigo-500/10 to-blue-500/5 border border-indigo-500/20 p-4 flex flex-col justify-center flex-shrink-0">
                                                 <span className="text-3xl font-black text-indigo-400/80 mb-1">72%</span>
@@ -1395,9 +1405,9 @@ const SmartReviews: React.FC = () => {
                                 </div>
 
                                 {/* Row 4 - scrolls right (slowest) */}
-                                <div className="flex gap-4" style={{ animation: 'marquee-scroll-right 60s linear infinite', width: 'max-content' }}>
+                                <div className="flex gap-2 md:gap-4" style={{ animation: 'marquee-scroll-right 60s linear infinite', width: 'max-content' }}>
                                     {[0, 1].map((dup) => (
-                                        <div key={dup} className="flex gap-4 flex-shrink-0">
+                                        <div key={dup} className="flex gap-2 md:gap-4 flex-shrink-0">
                                             {/* Competitor Edge */}
                                             <div className="w-[200px] h-[110px] rounded-2xl bg-gradient-to-br from-blue-500/10 to-sky-500/5 border border-blue-500/20 p-4 flex flex-col justify-center flex-shrink-0">
                                                 <div className="flex items-center gap-2 mb-2">

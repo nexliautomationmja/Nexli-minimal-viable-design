@@ -202,7 +202,7 @@ const CardShredder: React.FC = () => {
             >
                 <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-red-500/5 border border-red-500/10">
                     <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-red-400 text-[10px] md:text-sm font-bold">
+                    <span className="text-red-400 text-xs md:text-sm font-bold">
                         The average CPA firm loses $435K+ per year from client attrition — retaining and attracting beats the revolving door every time (CPA Trendlines)
                     </span>
                 </div>
