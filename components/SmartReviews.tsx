@@ -431,7 +431,7 @@ const SmartReviews: React.FC = () => {
                     </div>
 
                     <div className="max-w-6xl mx-auto">
-                        <div className={`relative rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden flex flex-col min-h-[500px] md:min-h-[600px] transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+                        <div className={`relative rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden flex flex-col md:min-h-[600px] transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
 
                             {/* Glowing Atmosphere */}
                             <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-blue-500/5 opacity-100' : 'bg-blue-500/10 opacity-50'}`} />
@@ -474,7 +474,7 @@ const SmartReviews: React.FC = () => {
                                 </div>
 
                                 {/* Right Side: Animated Scene Frame */}
-                                <div className="relative z-10 order-1 lg:order-2 h-full min-h-[220px] md:min-h-[300px] flex items-center justify-center">
+                                <div className="relative z-10 order-1 lg:order-2 h-full min-h-[260px] md:min-h-[300px] flex items-center justify-center">
                                     <AnimatePresence mode="wait">
                                         <motion.div
                                             key={activeStatIndex}
@@ -482,7 +482,7 @@ const SmartReviews: React.FC = () => {
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 1.1 }}
                                             transition={{ duration: 0.5, ease: "easeOut" }}
-                                            className="w-full h-full aspect-[4/3] md:aspect-auto md:h-[400px] rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-gradient-to-br from-slate-900 to-slate-950 relative overflow-hidden flex items-center justify-center shadow-inner"
+                                            className="w-full h-full aspect-auto rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-gradient-to-br from-slate-900 to-slate-950 relative overflow-hidden flex items-center justify-center shadow-inner"
                                         >
                                             {/* Scene 1: Google Search Results */}
                                             {activeStatIndex === 0 && (
@@ -669,12 +669,12 @@ const SmartReviews: React.FC = () => {
                             </div>
 
                             {/* Interaction Tabs (Footer) */}
-                            <div className={`smart-reviews-tabs border-t border-[var(--glass-border)] backdrop-blur-md flex overflow-x-auto md:grid md:grid-cols-3 transition-colors duration-500 ${theme === 'dark' ? 'bg-black/40' : 'bg-slate-50/50'}`} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+                            <div className={`smart-reviews-tabs border-t border-[var(--glass-border)] backdrop-blur-md grid grid-cols-3 transition-colors duration-500 ${theme === 'dark' ? 'bg-black/40' : 'bg-slate-50/50'}`}>
                                 {reviewStats.map((stat, index) => (
                                     <button
                                         key={stat.id}
                                         onClick={() => handleStatTabClick(index)}
-                                        className={`relative min-w-[130px] flex-shrink-0 md:min-w-0 md:flex-shrink px-4 py-5 md:p-8 transition-all border-r border-[var(--glass-border)] last:border-r-0 text-left group hover:bg-white/5 ${activeStatIndex === index ? (theme === 'dark' ? 'bg-white/[0.03]' : 'bg-blue-500/5') : ''}`}
+                                        className={`relative px-2 py-3 md:p-8 transition-all border-r border-[var(--glass-border)] last:border-r-0 text-left group hover:bg-white/5 ${activeStatIndex === index ? (theme === 'dark' ? 'bg-white/[0.03]' : 'bg-blue-500/5') : ''}`}
                                     >
                                         {/* Progress bar */}
                                         <div className={`absolute top-0 left-0 h-[2px] w-full ${theme === 'dark' ? 'bg-white/10' : 'bg-blue-500/10'}`}>
@@ -1468,13 +1468,13 @@ const SmartReviews: React.FC = () => {
                         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to right, var(--bg-main) 0%, transparent 15%, transparent 85%, var(--bg-main) 100%)' }} />
 
                         {/* Overlaid Benefit Cards */}
-                        <div className="absolute inset-0 flex items-center justify-center p-4 md:p-8">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-5 max-w-3xl w-full">
+                        <div className="absolute inset-0 flex items-center justify-center p-3 md:p-8">
+                            <div className="grid grid-cols-2 gap-2 md:gap-5 max-w-3xl w-full">
                                 {[
-                                    { icon: <Shield size={22} className="text-blue-400" />, title: 'Protect Your Google Rating', description: 'Negative experiences get routed to private feedback instead of public reviews. Your rating stays intact.', iconDark: 'bg-blue-500/10 border-blue-500/20', iconLight: 'bg-blue-50 border-blue-200' },
-                                    { icon: <RefreshCw size={22} className="text-emerald-400" />, title: 'Turn Feedback Into Improvement', description: 'Every piece of critical feedback is an opportunity to fix issues and win back clients before they leave.', iconDark: 'bg-emerald-500/10 border-emerald-500/20', iconLight: 'bg-emerald-50 border-emerald-200' },
-                                    { icon: <Zap size={22} className="text-violet-400" />, title: 'Automate the Ask', description: "Stop relying on memory or sticky notes. Every client gets asked for a review automatically at the right time.", iconDark: 'bg-violet-500/10 border-violet-500/20', iconLight: 'bg-violet-50 border-violet-200' },
-                                    { icon: <Star size={22} className="text-yellow-400 fill-yellow-400" />, title: 'More 5-Star Reviews', description: 'Happy clients who are asked leave reviews. It is that simple. Watch your star count climb.', iconDark: 'bg-yellow-500/10 border-yellow-500/20', iconLight: 'bg-yellow-50 border-yellow-200' },
+                                    { icon: <Shield size={16} className="text-blue-400 md:w-[22px] md:h-[22px]" />, title: 'Protect Your Google Rating', description: 'Negative experiences get routed to private feedback instead of public reviews. Your rating stays intact.', iconDark: 'bg-blue-500/10 border-blue-500/20', iconLight: 'bg-blue-50 border-blue-200' },
+                                    { icon: <RefreshCw size={16} className="text-emerald-400 md:w-[22px] md:h-[22px]" />, title: 'Turn Feedback Into Improvement', description: 'Every piece of critical feedback is an opportunity to fix issues and win back clients before they leave.', iconDark: 'bg-emerald-500/10 border-emerald-500/20', iconLight: 'bg-emerald-50 border-emerald-200' },
+                                    { icon: <Zap size={16} className="text-violet-400 md:w-[22px] md:h-[22px]" />, title: 'Automate the Ask', description: "Stop relying on memory or sticky notes. Every client gets asked for a review automatically at the right time.", iconDark: 'bg-violet-500/10 border-violet-500/20', iconLight: 'bg-violet-50 border-violet-200' },
+                                    { icon: <Star size={16} className="text-yellow-400 fill-yellow-400 md:w-[22px] md:h-[22px]" />, title: 'More 5-Star Reviews', description: 'Happy clients who are asked leave reviews. It is that simple. Watch your star count climb.', iconDark: 'bg-yellow-500/10 border-yellow-500/20', iconLight: 'bg-yellow-50 border-yellow-200' },
                                 ].map((item, i) => (
                                     <motion.div
                                         key={i}
@@ -1482,13 +1482,13 @@ const SmartReviews: React.FC = () => {
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: 0.2 + i * 0.1 }}
-                                        className={`p-4 md:p-6 rounded-2xl md:rounded-3xl border backdrop-blur-xl transition-all hover:scale-[1.02] ${theme === 'dark' ? 'bg-black/70 border-white/10 hover:border-white/20' : 'bg-white/80 border-black/10 hover:border-black/20'}`}
+                                        className={`p-2.5 md:p-6 rounded-xl md:rounded-3xl border backdrop-blur-xl transition-all hover:scale-[1.02] ${theme === 'dark' ? 'bg-black/70 border-white/10 hover:border-white/20' : 'bg-white/80 border-black/10 hover:border-black/20'}`}
                                     >
-                                        <div className={`w-10 h-10 md:w-12 md:h-12 mb-3 md:mb-4 rounded-xl flex items-center justify-center border ${theme === 'dark' ? item.iconDark : item.iconLight}`}>
+                                        <div className={`w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-4 rounded-lg md:rounded-xl flex items-center justify-center border ${theme === 'dark' ? item.iconDark : item.iconLight}`}>
                                             {item.icon}
                                         </div>
-                                        <h3 className="text-sm md:text-base font-bold text-[var(--text-main)] mb-1.5 md:mb-2">{item.title}</h3>
-                                        <p className="text-[var(--text-muted)] text-[11px] md:text-xs leading-relaxed">{item.description}</p>
+                                        <h3 className="text-[11px] md:text-base font-bold text-[var(--text-main)] mb-1 md:mb-2 leading-tight">{item.title}</h3>
+                                        <p className="text-[var(--text-muted)] text-[9px] md:text-xs leading-relaxed hidden sm:block">{item.description}</p>
                                     </motion.div>
                                 ))}
                             </div>
