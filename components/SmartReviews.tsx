@@ -1157,7 +1157,7 @@ const SmartReviews: React.FC = () => {
                     </div>
 
                     {/* Mobile: Tap-to-expand accordion */}
-                    <p className="md:hidden text-center text-[var(--text-muted)] text-xs mb-4 opacity-60 font-semibold tracking-wide">Tap a step to expand</p>
+                    <p className="md:hidden text-center text-[var(--text-main)] text-sm mb-4 font-bold tracking-wide">Double-Tap to expand</p>
                     <div className="md:hidden space-y-3">
                         {expandedStepCards.map((item, i) => {
                             const isActive = expandedStep === i;
