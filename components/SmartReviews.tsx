@@ -820,25 +820,29 @@ const SmartReviews: React.FC = () => {
                                         >
                                             {/* Confetti particles */}
                                             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                                                {Array.from({ length: 12 }).map((_, i) => (
-                                                    <motion.div
-                                                        key={i}
-                                                        className="absolute w-2 h-2 rounded-full"
-                                                        style={{
-                                                            background: ['#fbbf24', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][i % 5],
-                                                            left: `${20 + Math.random() * 60}%`,
-                                                            top: '50%',
-                                                        }}
-                                                        initial={{ y: 0, opacity: 1, scale: 1 }}
-                                                        animate={{
-                                                            y: [0, -80 - Math.random() * 120],
-                                                            x: [-30 + Math.random() * 60],
-                                                            opacity: [1, 0],
-                                                            scale: [1, 0.5],
-                                                        }}
-                                                        transition={{ duration: 1.5, delay: i * 0.05, ease: "easeOut" }}
-                                                    />
-                                                ))}
+                                                {Array.from({ length: 10 }).map((_, i) => {
+                                                    const angle = (i / 10) * Math.PI * 2;
+                                                    const radius = 40 + Math.random() * 40;
+                                                    return (
+                                                        <motion.div
+                                                            key={i}
+                                                            className="absolute w-1.5 h-1.5 md:w-2 md:h-2 rounded-full"
+                                                            style={{
+                                                                background: ['#fbbf24', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][i % 5],
+                                                                left: '50%',
+                                                                top: '40%',
+                                                            }}
+                                                            initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                                                            animate={{
+                                                                x: Math.cos(angle) * radius,
+                                                                y: Math.sin(angle) * radius - 20,
+                                                                opacity: [1, 1, 0],
+                                                                scale: [0, 1.2, 0.4],
+                                                            }}
+                                                            transition={{ duration: 1.2, delay: i * 0.04, ease: "easeOut" }}
+                                                        />
+                                                    );
+                                                })}
                                             </div>
 
                                             <motion.div
@@ -1153,6 +1157,7 @@ const SmartReviews: React.FC = () => {
                     </div>
 
                     {/* Mobile: Tap-to-expand accordion */}
+                    <p className="md:hidden text-center text-[var(--text-muted)] text-xs mb-4 opacity-60 font-semibold tracking-wide">Tap a step to expand</p>
                     <div className="md:hidden space-y-3">
                         {expandedStepCards.map((item, i) => {
                             const isActive = expandedStep === i;
