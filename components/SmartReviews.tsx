@@ -820,26 +820,57 @@ const SmartReviews: React.FC = () => {
                                         >
                                             {/* Confetti particles */}
                                             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                                                {Array.from({ length: 10 }).map((_, i) => {
-                                                    const angle = (i / 10) * Math.PI * 2;
-                                                    const radius = 40 + Math.random() * 40;
+                                                {/* Burst wave 1 — large bright pieces */}
+                                                {Array.from({ length: 16 }).map((_, i) => {
+                                                    const angle = (i / 16) * Math.PI * 2;
+                                                    const radius = 60 + Math.random() * 80;
+                                                    const colors = ['#fbbf24', '#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
+                                                    const shapes = ['rounded-full', 'rounded-sm', 'rounded-full'];
                                                     return (
                                                         <motion.div
-                                                            key={i}
-                                                            className="absolute w-1.5 h-1.5 md:w-2 md:h-2 rounded-full"
+                                                            key={`burst1-${i}`}
+                                                            className={`absolute w-2.5 h-2.5 md:w-3 md:h-3 ${shapes[i % 3]}`}
                                                             style={{
-                                                                background: ['#fbbf24', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][i % 5],
+                                                                background: colors[i % 8],
                                                                 left: '50%',
-                                                                top: '40%',
+                                                                top: '35%',
+                                                                boxShadow: `0 0 6px ${colors[i % 8]}80`,
                                                             }}
-                                                            initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                                                            initial={{ x: 0, y: 0, opacity: 1, scale: 0, rotate: 0 }}
                                                             animate={{
                                                                 x: Math.cos(angle) * radius,
-                                                                y: Math.sin(angle) * radius - 20,
-                                                                opacity: [1, 1, 0],
-                                                                scale: [0, 1.2, 0.4],
+                                                                y: Math.sin(angle) * radius,
+                                                                opacity: [0, 1, 1, 0],
+                                                                scale: [0, 1.5, 1, 0.3],
+                                                                rotate: Math.random() * 360,
                                                             }}
-                                                            transition={{ duration: 1.2, delay: i * 0.04, ease: "easeOut" }}
+                                                            transition={{ duration: 1.6, delay: i * 0.03, ease: "easeOut" }}
+                                                        />
+                                                    );
+                                                })}
+                                                {/* Burst wave 2 — small sparkle dots */}
+                                                {Array.from({ length: 12 }).map((_, i) => {
+                                                    const angle = ((i + 0.5) / 12) * Math.PI * 2;
+                                                    const radius = 30 + Math.random() * 50;
+                                                    const colors = ['#fde68a', '#93c5fd', '#6ee7b7', '#fcd34d', '#c4b5fd', '#f9a8d4'];
+                                                    return (
+                                                        <motion.div
+                                                            key={`burst2-${i}`}
+                                                            className="absolute w-1.5 h-1.5 rounded-full"
+                                                            style={{
+                                                                background: colors[i % 6],
+                                                                left: '50%',
+                                                                top: '35%',
+                                                                boxShadow: `0 0 4px ${colors[i % 6]}`,
+                                                            }}
+                                                            initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+                                                            animate={{
+                                                                x: Math.cos(angle) * radius,
+                                                                y: Math.sin(angle) * radius,
+                                                                opacity: [0, 1, 1, 0],
+                                                                scale: [0, 1.8, 0.8, 0],
+                                                            }}
+                                                            transition={{ duration: 1.2, delay: 0.15 + i * 0.04, ease: "easeOut" }}
                                                         />
                                                     );
                                                 })}
