@@ -894,7 +894,7 @@ const SmartReviews: React.FC = () => {
                                                 We Value Your Feedback
                                             </h3>
                                             <p className="text-[var(--text-muted)] text-sm mb-6">
-                                                Help us improve. Your feedback goes directly to our team — not to a public review. The best part? Your customer has no idea it's being routed internally. To them, it just feels like a normal review experience.
+                                                Help us improve. Your feedback goes directly to your team INTERNALLY — NOT as a Public Google review. The best part? Your customer has no idea it's being routed internally. To them, it just feels like a normal review experience.
                                             </p>
                                             <textarea
                                                 value={feedbackText}
