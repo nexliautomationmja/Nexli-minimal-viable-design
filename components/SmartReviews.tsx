@@ -176,6 +176,13 @@ const SmartReviews: React.FC = () => {
     const handleStatTabClick = (index: number) => {
         setActiveStatIndex(index);
         setStatProgress(0);
+        // On mobile, scroll the display area into view so user sees the content change
+        if (window.innerWidth < 768) {
+            const displayArea = document.getElementById('stat-display-area');
+            if (displayArea) {
+                displayArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
     };
 
     // Inline star SVG component
@@ -437,7 +444,7 @@ const SmartReviews: React.FC = () => {
                             <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-blue-500/5 opacity-100' : 'bg-blue-500/10 opacity-50'}`} />
 
                             {/* Display Area */}
-                            <div className="flex-grow grid lg:grid-cols-2 gap-5 md:gap-12 p-5 md:p-16 items-center">
+                            <div id="stat-display-area" className="flex-grow grid lg:grid-cols-2 gap-5 md:gap-12 p-5 md:p-16 items-center">
 
                                 {/* Left Side: Content Reveal */}
                                 <div className="relative z-10 order-2 lg:order-1">
@@ -1156,8 +1163,8 @@ const SmartReviews: React.FC = () => {
                                     onClick={() => setExpandedStep(isActive ? -1 : i)}
                                     className="relative overflow-hidden rounded-2xl cursor-pointer border border-white/10"
                                 >
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${item.bg}`} />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                    <div className={`absolute inset-0 bg-gradient-to-br pointer-events-none ${item.bg}`} />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
 
                                     {/* Header row */}
                                     <div className="relative z-10 flex items-center gap-4 px-5 py-4">
