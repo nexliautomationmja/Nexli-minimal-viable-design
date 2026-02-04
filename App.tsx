@@ -16,6 +16,7 @@ import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import NotFound from './components/NotFound';
 import SmartReviews from './components/SmartReviews';
+import CardShredder from './components/CardShredder';
 import SocialDock from './components/SocialDock';
 import Portfolio from './components/Portfolio';
 import SummitTaxGroup from './components/portfolio/SummitTaxGroup';
@@ -204,6 +205,7 @@ const App: React.FC = () => {
         {view === 'home' ? (
           <>
             <Hero />
+            <CardShredder />
             <ValueProposition />
             <ClientComplaints />
             <ContactForm />

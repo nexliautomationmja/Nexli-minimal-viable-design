@@ -50,11 +50,12 @@ const FreeGuide: React.FC = () => {
     };
 
     const benefits = [
-        { text: "The $36K math: why automation isn't optional anymore", icon: <ArrowRight size={18} className="text-blue-500" /> },
-        { text: "5 copy-and-paste automations you can implement this week", icon: <ArrowRight size={18} className="text-blue-500" /> },
-        { text: "Exact email and SMS templates you can steal", icon: <ArrowRight size={18} className="text-blue-500" /> },
-        { text: "How to reduce no-shows by 30-50%", icon: <ArrowRight size={18} className="text-blue-500" /> },
-        { text: "BONUS: The AI chat assistant that handles everything else", icon: <ArrowRight size={18} className="text-blue-500" /> }
+        { text: "The $36K math — why 5 hours of weekly admin is costing you $78K/year", icon: <ArrowRight size={18} className="text-blue-500" /> },
+        { text: "SMS vs. Email: leverage 98% open rates instead of fighting for 20%", icon: <ArrowRight size={18} className="text-blue-500" /> },
+        { text: "Copy-and-paste email + SMS templates for reminders, onboarding & follow-ups", icon: <ArrowRight size={18} className="text-blue-500" /> },
+        { text: "Reduce no-shows by 30-50% with a simple appointment reminder sequence", icon: <ArrowRight size={18} className="text-blue-500" /> },
+        { text: "The AI chatbot + missed call text back system (78% buy from whoever responds first)", icon: <ArrowRight size={18} className="text-blue-500" /> },
+        { text: "BONUS: The smart review system that fills your Google profile with 5-star reviews", icon: <ArrowRight size={18} className="text-blue-500" /> }
     ];
 
     return (
@@ -74,7 +75,7 @@ const FreeGuide: React.FC = () => {
                             The 5 Automations Every Advisory Firm Needs <span className="text-blue-500">(+ The AI Assistant That Handles the Rest)</span>
                         </h1>
                         <p className="text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
-                            A practical guide to saving 10+ hours per week with systems that run while you sleep.
+                            If you bill $300/hour and spend just 5 hours a week on admin — that's $78,000/year gone. This guide gives you the exact systems to get it back.
                         </p>
 
                         <div className="flex flex-col gap-4 mb-8">
@@ -94,7 +95,7 @@ const FreeGuide: React.FC = () => {
 
                         <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10 inline-block">
                             <p className="text-[var(--text-muted)] text-sm font-bold uppercase tracking-widest">
-                                Built for CPAs, wealth managers, and financial advisors who value their time.
+                                Built for CPAs, financial advisors & wealth managers who'd rather serve clients than chase admin.
                             </p>
                         </div>
                     </motion.div>
