@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useTheme } from "../../App";
-import { WeatherFx } from "./WeatherFx";
 
 interface TimelineEntry {
   title: string;
@@ -12,10 +11,8 @@ interface TimelineEntry {
 export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   const { theme } = useTheme();
-  const isInView = useInView(titleRef, { once: false, margin: "-100px" });
 
   useEffect(() => {
     if (ref.current) {
@@ -37,66 +34,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
       className="w-full font-sans md:px-10"
       ref={containerRef}
     >
-      <div ref={titleRef} className="relative max-w-7xl mx-auto py-10 md:py-20 px-4 md:px-8 lg:px-10 bg-black rounded-3xl">
-        {/* Heavy Rain Effect */}
-        {isInView && (
-          <WeatherFx
-            height={20}
-            type="rain"
-            intensity={150}
-            colors={["brand-solid-light"]}
-          />
-        )}
-
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 text-2xl md:text-5xl font-bold mb-4 max-w-4xl text-white"
-        >
-          {"The Digital Rainmaker System".split(" ").map((word, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.1,
-                ease: "easeOut"
-              }}
-              className={`inline-block mr-2 ${
-                word === "Rainmaker"
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500"
-                  : ""
-              }`}
-            >
-              {word}
-            </motion.span>
-          ))}
-          <motion.span
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, delay: 0.5, type: "spring", stiffness: 200 }}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500"
-          >
-            &trade;
-          </motion.span>
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="relative z-10 max-w-sm text-sm md:text-base text-neutral-300"
-        >
-          Your Firm's 24/7 Client Acquisition Machine
-        </motion.p>
-      </div>
-
-      <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
+      <div ref={ref} className="relative max-w-7xl mx-auto pb-20 pt-10 md:pt-20">
         {data.map((item, index) => (
           <div
             key={index}

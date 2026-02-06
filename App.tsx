@@ -78,7 +78,7 @@ const App: React.FC = () => {
         setView('guide');
         setBlogSlug(null);
         setPortfolioSlug(null);
-      } else if (path === '/services') {
+      } else if (path === '/rainmaker') {
         setView('services');
         setBlogSlug(null);
         setPortfolioSlug(null);
@@ -152,7 +152,7 @@ const App: React.FC = () => {
       path = `/portfolio/${slug}`;
     } else {
       path = newView === 'guide' ? '/free-guide' :
-        newView === 'services' ? '/services' :
+        newView === 'services' ? '/rainmaker' :
           newView === 'smartReviews' ? '/smart-reviews' :
             newView === 'portfolio' ? '/portfolio' :
               newView === 'blog' ? '/blog' :

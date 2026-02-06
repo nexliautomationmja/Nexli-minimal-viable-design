@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
 
   const navLinks = [
     { label: 'Portfolio', view: 'portfolio' as const },
-    { label: 'Services', view: 'services' as const },
+    { label: 'Rainmaker™', view: 'services' as const },
     { label: 'Blog', view: 'blog' as const },
     { label: 'Free Guide', view: 'guide' as const },
     { label: 'Google Reviews', view: 'smartReviews' as const, hasGoogleIcon: true },

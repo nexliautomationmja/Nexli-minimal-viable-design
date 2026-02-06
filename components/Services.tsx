@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, MessageSquare, Clock, Bot, Calendar, Send, TrendingUp } from 'lucide-react';
+import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp } from 'lucide-react';
 import { useTheme } from '../App';
 import { SparklesCore } from './Sparkles';
-import { Vortex } from './Vortex';
 import { Timeline } from './ui/Timeline';
+import { WeatherFx } from './ui/WeatherFx';
 
 const Services: React.FC = () => {
     const { theme } = useTheme();
@@ -310,160 +310,140 @@ const Services: React.FC = () => {
         },
     ];
 
-    const heroContent = (
-        <div className="relative z-10 max-w-5xl mx-auto text-center px-6 pt-24 md:pt-0">
-            {/* Shimmer Badge */}
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="inline-block mb-6 md:mb-8"
-            >
-                <div className={`relative inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest overflow-hidden ${
-                    theme === 'dark' ? 'text-blue-400' : 'text-blue-600'
-                }`}>
-                    {/* Shimmer border effect */}
-                    <span className="absolute inset-0 overflow-hidden rounded-full">
-                        <span
-                            className="absolute inset-[-100%] animate-[shimmer_3s_linear_infinite]"
-                            style={{
-                                background: theme === 'dark'
-                                    ? 'conic-gradient(from 90deg at 50% 50%, #3b82f6 0%, transparent 50%, transparent 75%, #06b6d4 100%)'
-                                    : 'conic-gradient(from 90deg at 50% 50%, #2563eb 0%, transparent 50%, transparent 75%, #0891b2 100%)'
-                            }}
-                        />
-                    </span>
-                    {/* Inner background */}
-                    <span className={`absolute inset-[1.5px] rounded-full ${
-                        theme === 'dark' ? 'bg-black' : 'bg-white'
-                    }`} />
-                    {/* Text */}
-                    <span className="relative z-10">Our Services</span>
-                </div>
-            </motion.div>
-
-            <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                className={`text-3xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 md:mb-8 leading-[1.15] md:leading-[1.1] ${
-                    theme === 'dark' ? 'text-white' : 'text-slate-900'
-                }`}
-            >
-                Stop Chasing Clients.{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">
-                    Start Attracting Them.
-                </span>
-            </motion.h1>
-
-            <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className={`text-base md:text-xl leading-relaxed max-w-2xl mx-auto mb-8 md:mb-10 ${
-                    theme === 'dark' ? 'text-neutral-400' : 'text-slate-600'
-                }`}
-            >
-                High-net-worth prospects are searching for an advisor right now. With the right digital presence, they'll find you, trust you, and book a call — before you ever pick up the phone.
-            </motion.p>
-
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-            >
-                <button
-                    onClick={openCalPopup}
-                    className="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
-                >
-                    Book a Consultation
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </button>
-            </motion.div>
-
-            {/* Decorative line with glow */}
-            <motion.div
-                initial={{ opacity: 0, scaleX: 0 }}
-                animate={{ opacity: 1, scaleX: 1 }}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="w-48 md:w-64 h-[2px] mx-auto mt-10 md:mt-12 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
-                style={{ boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }}
-            />
-        </div>
-    );
+    // No longer using heroContent - hero is now inline with rain effect
 
     return (
         <div className="pb-20 overflow-hidden">
-            {/* Hero Section - Sparkles for Dark, Vortex for Light */}
-            {theme === 'dark' ? (
-                <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-black">
-                    {/* Sparkles Background */}
-                    <div className="absolute inset-0 w-full h-full">
-                        <SparklesCore
-                            id="services-sparkles"
-                            background="transparent"
-                            minSize={0.6}
-                            maxSize={1.4}
-                            particleCount={120}
-                            particleColor="#FFFFFF"
-                            speed={0.8}
-                            className="w-full h-full"
-                        />
-                    </div>
+            {/* Hero Section - Always Dark with Rain */}
+            <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-black">
+                {/* Rain Effect */}
+                <WeatherFx
+                    height={60}
+                    type="rain"
+                    intensity={200}
+                    colors={["brand-solid-light"]}
+                />
 
-                    {/* Gradient overlays for depth */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50 pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg-main)] to-transparent pointer-events-none z-10" />
+                {/* Sparkles Background */}
+                <div className="absolute inset-0 w-full h-full">
+                    <SparklesCore
+                        id="services-sparkles"
+                        background="transparent"
+                        minSize={0.4}
+                        maxSize={1}
+                        particleCount={80}
+                        particleColor="#FFFFFF"
+                        speed={0.5}
+                        className="w-full h-full"
+                    />
+                </div>
 
-                    {heroContent}
-                </section>
-            ) : (
-                <Vortex
-                    backgroundColor="#ffffff"
-                    baseHue={217}
-                    particleCount={800}
-                    rangeY={120}
-                    baseRadius={1}
-                    rangeRadius={2}
-                    containerClassName="min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center"
-                    className="flex flex-col items-center justify-center w-full"
-                >
-                    {/* Bottom fade for light mode */}
-                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent pointer-events-none z-10" />
-                    {heroContent}
-                </Vortex>
-            )}
+                {/* Gradient overlays for depth */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg-main)] to-transparent pointer-events-none z-10" />
 
-            {/* Intro Section */}
-            <section className="px-6 py-16 md:py-24">
-                <div className="max-w-4xl mx-auto text-center">
+                {/* Hero Content */}
+                <div className="relative z-10 max-w-5xl mx-auto text-center px-6 pt-24 md:pt-0">
+                    {/* Animated Title - The Digital Rainmaker System */}
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="relative z-10 text-3xl md:text-6xl lg:text-7xl font-bold mb-6 md:mb-8 max-w-4xl mx-auto text-white leading-[1.15] md:leading-[1.1]"
+                    >
+                        {"The Digital Rainmaker System".split(" ").map((word, index) => (
+                            <motion.span
+                                key={index}
+                                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+                                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: 0.3 + index * 0.1,
+                                    ease: "easeOut"
+                                }}
+                                className={`inline-block mr-3 md:mr-4 ${
+                                    word === "Rainmaker"
+                                        ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500"
+                                        : ""
+                                }`}
+                            >
+                                {word}
+                            </motion.span>
+                        ))}
+                        <motion.span
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: 0.8, type: "spring", stiffness: 200 }}
+                            className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500"
+                        >
+                            &trade;
+                        </motion.span>
+                    </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.9 }}
+                        className="relative z-10 text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 text-neutral-300 leading-relaxed"
+                    >
+                        Your firm's 24/7 client acquisition machine. A premium website, AI automation, and Google review engine — working together to attract high-value clients while you sleep.
+                    </motion.p>
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20"
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 1 }}
                     >
-                        <Zap size={14} className="text-blue-400" />
-                        <span className="text-blue-400 text-xs font-black tracking-[0.2em] uppercase">The System</span>
+                        <button
+                            onClick={openCalPopup}
+                            className="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
+                        >
+                            See How It Works
+                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
                     </motion.div>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className={`text-2xl md:text-5xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}
-                    >
-                        This is Not Just a Website Redesign
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className={`text-base md:text-xl leading-relaxed ${theme === 'dark' ? 'text-neutral-400' : 'text-slate-600'}`}
-                    >
-                        This is a system that combines three things no other web agency is bundling for CPA firms. The Digital Rainmaker System&trade; is your firm's 24/7 client acquisition machine.
-                    </motion.p>
+
+                    {/* Decorative line with glow */}
+                    <motion.div
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: 1, scaleX: 1 }}
+                        transition={{ duration: 1, delay: 1.2 }}
+                        className="w-48 md:w-64 h-[2px] mx-auto mt-10 md:mt-12 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+                        style={{ boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }}
+                    />
+                </div>
+            </section>
+
+            {/* Rain Banner Transition */}
+            <section className="px-4 md:px-10 -mt-20 relative z-20">
+                <div className="relative max-w-7xl mx-auto py-16 md:py-24 px-4 md:px-8 lg:px-10 bg-black rounded-3xl overflow-hidden">
+                    {/* Rain Effect */}
+                    <WeatherFx
+                        height={20}
+                        type="rain"
+                        intensity={150}
+                        colors={["brand-solid-light"]}
+                    />
+
+                    <div className="relative z-10 text-center">
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="text-xs md:text-sm font-black tracking-[0.2em] uppercase text-blue-400 mb-3"
+                        >
+                            3-Step System
+                        </motion.p>
+                        <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 }}
+                            className="text-2xl md:text-4xl font-bold text-white max-w-2xl mx-auto"
+                        >
+                            Here's How It Works
+                        </motion.h2>
+                    </div>
                 </div>
             </section>
 
