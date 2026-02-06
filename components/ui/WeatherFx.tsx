@@ -8,6 +8,7 @@ interface WeatherFxProps {
   intensity?: number;
   colors?: string[];
   className?: string;
+  speed?: number; // Multiplier for animation duration (higher = slower)
 }
 
 export const WeatherFx: React.FC<WeatherFxProps> = ({
@@ -16,6 +17,7 @@ export const WeatherFx: React.FC<WeatherFxProps> = ({
   intensity = 75,
   colors = ["#3b82f6"],
   className = "",
+  speed = 1,
 }) => {
   // Generate rain drops based on intensity
   const drops = useMemo(() => {
@@ -23,11 +25,11 @@ export const WeatherFx: React.FC<WeatherFxProps> = ({
       id: i,
       x: Math.random() * 100,
       delay: Math.random() * 3,
-      duration: 0.6 + Math.random() * 0.4,
+      duration: (0.6 + Math.random() * 0.4) * speed,
       length: 15 + Math.random() * 20,
       opacity: 0.4 + Math.random() * 0.4,
     }));
-  }, [intensity]);
+  }, [intensity, speed]);
 
   const getColor = (index: number) => {
     const colorMap: Record<string, string> = {

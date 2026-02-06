@@ -322,6 +322,7 @@ const Services: React.FC = () => {
                     type="rain"
                     intensity={200}
                     colors={["brand-solid-light"]}
+                    speed={2}
                 />
 
                 {/* Sparkles Background */}
@@ -423,6 +424,7 @@ const Services: React.FC = () => {
                         type="rain"
                         intensity={150}
                         colors={["brand-solid-light"]}
+                        speed={2}
                     />
 
                     <div className="relative z-10 text-center">
