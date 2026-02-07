@@ -25,7 +25,7 @@
   <text x="600" y="310" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="72" font-weight="900" letter-spacing="-2" fill="white">NEXLI</text>
 
   <!-- Tagline - centered -->
-  <text x="600" y="370" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="26" font-weight="600" fill="rgba(255,255,255,0.7)">Premium Websites &amp; Automation for Wealth Managers</text>
+  <text x="600" y="370" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="26" font-weight="600" fill="rgba(255,255,255,0.7)">Premium Websites &amp; Automation for CPAs</text>
 
   <!-- Decorative line - centered -->
   <rect x="450" y="400" width="300" height="2" rx="1" fill="url(#lineGrad)"/>
