@@ -299,9 +299,7 @@ const App: React.FC = () => {
                 <span className="text-3xl font-black tracking-tighter text-[var(--text-main)]" style={{ fontFamily: "'Syne', sans-serif" }}>NEXLI</span>
               </button>
               <SocialDock
-                tiktokUrl="#"
-                instagramUrl="#"
-                xUrl="#"
+                instagramUrl="https://www.instagram.com/nexliautomation"
               />
               <div className="flex gap-10 text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
                 <button
