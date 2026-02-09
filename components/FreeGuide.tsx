@@ -37,6 +37,11 @@ const FreeGuide: React.FC = () => {
             });
 
             if (response.ok) {
+                if (typeof (window as any).fbq === 'function') {
+                  (window as any).fbq('track', 'Lead', {
+                    content_name: 'Free Guide - 5 Automations',
+                  });
+                }
                 setSubmitted(true);
             } else {
                 throw new Error('Form submission failed');

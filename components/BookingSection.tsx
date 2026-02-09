@@ -61,6 +61,18 @@ const BookingSection: React.FC = () => {
 
       Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": "month_view" });
     }
+
+    // Track successful bookings with Facebook Pixel
+    Cal("on", {
+      action: "bookingSuccessful",
+      callback: () => {
+        if (typeof (window as any).fbq === 'function') {
+          (window as any).fbq('track', 'Schedule', {
+            content_name: 'Strategy Session Booking',
+          });
+        }
+      },
+    });
   }, [theme, isMobile]);
 
   // Function to open Cal.com popup on mobile

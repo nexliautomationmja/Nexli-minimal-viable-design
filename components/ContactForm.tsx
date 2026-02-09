@@ -37,6 +37,11 @@ const ContactForm: React.FC = () => {
       });
 
       if (response.ok) {
+        if (typeof (window as any).fbq === 'function') {
+          (window as any).fbq('track', 'SubmitApplication', {
+            content_name: 'Website Brand Audit',
+          });
+        }
         setSubmitted(true);
       } else {
         console.error('Webhook submission failed');
