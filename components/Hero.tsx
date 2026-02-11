@@ -75,7 +75,7 @@ const Hero: React.FC = () => {
           </div>
 
           <span className="text-white text-[10px] md:text-sm font-bold tracking-tight">
-            Every 8 seconds, a high-net-worth client searches for an advisor online.
+            Every 8 seconds, a high-net-worth client searches for a CPA online.
           </span>
         </motion.div>
 
