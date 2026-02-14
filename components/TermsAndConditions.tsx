@@ -61,6 +61,7 @@ const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({ onBack }) => {
                             If you opt-in to receive SMS notifications from Nexli through our web forms:
                         </p>
                         <ul className="list-disc pl-6 space-y-2">
+                            <li><strong>Age Requirement:</strong> You must be 18 years of age or older to consent to SMS communications.</li>
                             <li>You agree to receive automated messages including appointment reminders, account alerts, and strategy session confirmations.</li>
                             <li><strong>Message & Data Rates:</strong> Message and data rates may apply.</li>
                             <li><strong>Frequency:</strong> Message frequency may vary based on your interaction with our systems.</li>
