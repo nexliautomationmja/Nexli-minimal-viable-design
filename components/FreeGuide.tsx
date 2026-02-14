@@ -212,7 +212,7 @@ const FreeGuide: React.FC = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-[var(--text-main)] text-[9px] md:text-xs font-medium leading-relaxed text-left">
-                                                    I consent to receive marketing text messages from <strong>Nexli Automation LLC</strong> at the phone number provided. Message frequency may vary. Message & data rates may apply. Text HELP for assistance or text STOP to +1 321-241-2945 to opt out.
+                                                    I consent to receive marketing text messages from <strong>Nexli Automation LLC</strong> at the phone number provided. Message frequency varies based on your interactions. Examples: appointment confirmations, 48-hour reminders, follow-up messages, and monthly newsletters. Typically 3-6 messages per month. Message & data rates may apply. Text HELP for assistance or text STOP to +1 321-241-2945 to opt out.
                                                 </p>
                                             </div>
                                         </div>
@@ -229,7 +229,7 @@ const FreeGuide: React.FC = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-[var(--text-main)] text-[9px] md:text-xs font-medium leading-relaxed text-left">
-                                                    I consent to receive non-marketing text messages from <strong>Nexli Automation LLC</strong> about Marketing. Message frequency may vary. Message & data rates may apply. Text HELP for assistance or text STOP to +1 321-241-2945 to opt out.
+                                                    I consent to receive non-marketing text messages from <strong>Nexli Automation LLC</strong> about account updates and service notifications. Message frequency varies based on your interactions. Typically 2-4 messages per month. Message & data rates may apply. Text HELP for assistance or text STOP to +1 321-241-2945 to opt out.
                                                 </p>
                                             </div>
                                         </div>
