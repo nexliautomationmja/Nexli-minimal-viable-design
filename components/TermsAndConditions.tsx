@@ -63,7 +63,7 @@ const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({ onBack }) => {
                         <ul className="list-disc pl-6 space-y-2">
                             <li>You agree to receive automated messages including appointment reminders, account alerts, and strategy session confirmations.</li>
                             <li><strong>Message & Data Rates:</strong> Message and data rates may apply.</li>
-                            <li><strong>Frequency:</strong> Message frequency varies based on your interaction with our systems. Examples include: appointment confirmations, 48-hour reminders, follow-up messages, account updates, service notifications, and monthly newsletters. For marketing messages, you can typically expect 3-6 messages per month. For non-marketing messages (account updates and service notifications), you can typically expect 2-4 messages per month.</li>
+                            <li><strong>Frequency:</strong> Message frequency may vary based on your interaction with our systems.</li>
                             <li><strong>Help:</strong> Text <span className="text-blue-500 font-bold">HELP</span> at any time for assistance, or contact us at <strong>mail@nexli.net</strong>.</li>
                             <li><strong>Opt-Out:</strong> Text <span className="text-blue-500 font-bold">STOP</span> to <strong>+1 321-241-2945</strong> to cancel. You will receive one final text confirming your request.</li>
                             <li><strong>Carrier Disclaimer:</strong> Carriers are not liable for delayed or undelivered messages.</li>
