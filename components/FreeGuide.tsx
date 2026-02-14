@@ -10,7 +10,8 @@ const FreeGuide: React.FC = () => {
         lastName: '',
         email: '',
         phone: '',
-        smsOptIn: false
+        marketingSmsOptIn: false,
+        nonMarketingSmsOptIn: false
     });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -30,7 +31,8 @@ const FreeGuide: React.FC = () => {
                     lastName: formData.lastName,
                     email: formData.email,
                     phone: formData.phone,
-                    smsOptIn: formData.smsOptIn,
+                    marketingSmsOptIn: formData.marketingSmsOptIn,
+                    nonMarketingSmsOptIn: formData.nonMarketingSmsOptIn,
                     source: 'Free Guide Landing Page',
                     guideTitle: 'The 5 Automations Every Advisory Firm Needs'
                 }),
@@ -183,25 +185,46 @@ const FreeGuide: React.FC = () => {
                                     </div>
 
                                     <div className="space-y-4">
+                                        {/* Marketing SMS Consent */}
                                         <div
                                             className={`flex items-start gap-3 p-4 glass-card rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer ${formData.phone ? 'hover:border-blue-500/30' : 'opacity-40 cursor-not-allowed'}`}
                                             onClick={() => {
                                                 if (formData.phone) {
-                                                    setFormData(prev => ({ ...prev, smsOptIn: !prev.smsOptIn }));
+                                                    setFormData(prev => ({ ...prev, marketingSmsOptIn: !prev.marketingSmsOptIn }));
                                                 }
                                             }}
                                         >
-                                            <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.smsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
-                                                {formData.smsOptIn && <CheckCircle className="text-white" size={14} />}
+                                            <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.marketingSmsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
+                                                {formData.marketingSmsOptIn && <CheckCircle className="text-white" size={14} />}
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-[var(--text-main)] text-[10px] md:text-sm font-bold leading-relaxed text-left">
-                                                    I consent to receive marketing text messages from Nexli (optional)
+                                                    I consent to receive marketing text messages from <strong>Nexli Automation LLC</strong> at the phone number provided. Frequency may vary. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
                                                 </p>
                                             </div>
                                         </div>
+
+                                        {/* Non-Marketing SMS Consent */}
+                                        <div
+                                            className={`flex items-start gap-3 p-4 glass-card rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer ${formData.phone ? 'hover:border-blue-500/30' : 'opacity-40 cursor-not-allowed'}`}
+                                            onClick={() => {
+                                                if (formData.phone) {
+                                                    setFormData(prev => ({ ...prev, nonMarketingSmsOptIn: !prev.nonMarketingSmsOptIn }));
+                                                }
+                                            }}
+                                        >
+                                            <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.nonMarketingSmsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
+                                                {formData.nonMarketingSmsOptIn && <CheckCircle className="text-white" size={14} />}
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="text-[var(--text-main)] text-[10px] md:text-sm font-bold leading-relaxed text-left">
+                                                    I consent to receive non-marketing text messages from <strong>Nexli Automation LLC</strong> about Marketing. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
+                                                </p>
+                                            </div>
+                                        </div>
+
                                         <p className="px-2 text-[var(--text-muted)] opacity-50 text-[8px] md:text-[9px] leading-relaxed italic text-center">
-                                            By checking this box, you consent to receive automated marketing messages from Nexli. Message frequency varies. Message & data rates may apply. Text HELP for help or contact us at mail@nexli.net. Reply STOP to unsubscribe. View our{' '}
+                                            View our{' '}
                                             <button type="button" onClick={() => { window.history.pushState({}, '', '/privacy'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[8px] md:text-[9px] cursor-pointer">Privacy Policy</button>{' '}and{' '}
                                             <button type="button" onClick={() => { window.history.pushState({}, '', '/terms'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[8px] md:text-[9px] cursor-pointer">Terms & Conditions</button>.
                                         </p>
