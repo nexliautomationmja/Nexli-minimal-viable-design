@@ -16,6 +16,7 @@ const ContactForm: React.FC = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleUrlBlur = () => {
     let url = formData.websiteUrl.trim();
@@ -26,6 +27,14 @@ const ContactForm: React.FC = () => {
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
+    // Validate phone number if either SMS consent is checked
+    if ((formData.marketingSmsOptIn || formData.nonMarketingSmsOptIn) && !formData.phone.trim()) {
+      setError('Phone number is required when opting in to SMS messages.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -192,20 +201,24 @@ const ContactForm: React.FC = () => {
                 </div>
 
                 <div className="space-y-2 md:space-y-4">
+                  {error && (
+                    <div className="p-3 md:p-4 bg-red-500/10 border border-red-500/20 rounded-xl md:rounded-2xl">
+                      <p className="text-red-500 text-xs md:text-sm font-bold text-center">{error}</p>
+                    </div>
+                  )}
+
                   {/* Marketing SMS Consent */}
                   <div
-                    className={`flex items-start gap-2 md:gap-3 p-3 md:p-4 glass-card rounded-xl md:rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer ${formData.phone ? 'hover:border-blue-500/30' : 'opacity-40 cursor-not-allowed'}`}
+                    className="flex items-start gap-2 md:gap-3 p-3 md:p-4 glass-card rounded-xl md:rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer hover:border-blue-500/30"
                     onClick={() => {
-                      if (formData.phone) {
-                        setFormData(prev => ({ ...prev, marketingSmsOptIn: !prev.marketingSmsOptIn }));
-                      }
+                      setFormData(prev => ({ ...prev, marketingSmsOptIn: !prev.marketingSmsOptIn }));
                     }}
                   >
                     <div className={`mt-0.5 w-4 h-4 md:w-5 md:h-5 rounded border-2 flex items-center justify-center transition-all flex-shrink-0 ${formData.marketingSmsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
                       {formData.marketingSmsOptIn && <CheckCircle className="text-white" size={12} />}
                     </div>
                     <div className="flex-1">
-                      <p className="text-[var(--text-main)] text-[9px] md:text-sm font-bold leading-tight md:leading-relaxed">
+                      <p className="text-[var(--text-main)] text-[8px] md:text-xs font-medium leading-tight md:leading-relaxed">
                         I consent to receive marketing text messages from <strong>Nexli Automation LLC</strong> at the phone number provided. Frequency may vary. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
                       </p>
                     </div>
@@ -213,18 +226,16 @@ const ContactForm: React.FC = () => {
 
                   {/* Non-Marketing SMS Consent */}
                   <div
-                    className={`flex items-start gap-2 md:gap-3 p-3 md:p-4 glass-card rounded-xl md:rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer ${formData.phone ? 'hover:border-blue-500/30' : 'opacity-40 cursor-not-allowed'}`}
+                    className="flex items-start gap-2 md:gap-3 p-3 md:p-4 glass-card rounded-xl md:rounded-2xl border border-[var(--glass-border)] transition-colors cursor-pointer hover:border-blue-500/30"
                     onClick={() => {
-                      if (formData.phone) {
-                        setFormData(prev => ({ ...prev, nonMarketingSmsOptIn: !prev.nonMarketingSmsOptIn }));
-                      }
+                      setFormData(prev => ({ ...prev, nonMarketingSmsOptIn: !prev.nonMarketingSmsOptIn }));
                     }}
                   >
                     <div className={`mt-0.5 w-4 h-4 md:w-5 md:h-5 rounded border-2 flex items-center justify-center transition-all flex-shrink-0 ${formData.nonMarketingSmsOptIn ? 'bg-blue-600 border-blue-600' : 'border-[var(--glass-border)]'}`}>
                       {formData.nonMarketingSmsOptIn && <CheckCircle className="text-white" size={12} />}
                     </div>
                     <div className="flex-1">
-                      <p className="text-[var(--text-main)] text-[9px] md:text-sm font-bold leading-tight md:leading-relaxed">
+                      <p className="text-[var(--text-main)] text-[8px] md:text-xs font-medium leading-tight md:leading-relaxed">
                         I consent to receive non-marketing text messages from <strong>Nexli Automation LLC</strong> about Marketing. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
                       </p>
                     </div>
