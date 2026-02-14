@@ -65,7 +65,7 @@ const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({ onBack }) => {
                             <li><strong>Message & Data Rates:</strong> Message and data rates may apply.</li>
                             <li><strong>Frequency:</strong> Message frequency varies based on your interaction with our systems.</li>
                             <li><strong>Help:</strong> Text <span className="text-blue-500 font-bold">HELP</span> at any time for assistance, or contact us at <strong>mail@nexli.net</strong>.</li>
-                            <li><strong>Opt-Out:</strong> Text <span className="text-blue-500 font-bold">STOP</span> to cancel. You will receive one final text confirming your request.</li>
+                            <li><strong>Opt-Out:</strong> Text <span className="text-blue-500 font-bold">STOP</span> to <strong>+1 321-241-2945</strong> to cancel. You will receive one final text confirming your request.</li>
                             <li><strong>Carrier Disclaimer:</strong> Carriers are not liable for delayed or undelivered messages.</li>
                         </ul>
                         <p className="text-sm mt-4">
@@ -97,6 +97,19 @@ const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({ onBack }) => {
                         <h2 className="text-2xl font-bold text-[var(--text-main)]">6. Governing Law</h2>
                         <p>
                             These Terms shall be governed by and defined in accordance with the laws of the United States. Nexli and yourself irrevocably consent that the courts shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these terms.
+                        </p>
+                    </section>
+
+                    {/* Related Links */}
+                    <section className="pt-8 mt-8 border-t border-[var(--glass-border)]">
+                        <p className="text-center text-[var(--text-muted)] text-sm">
+                            For information about how we collect and use your data, please review our{' '}
+                            <button
+                                onClick={() => { window.history.pushState({}, '', '/privacy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+                                className="text-blue-500 underline hover:text-blue-400 transition-colors bg-transparent border-none p-0 cursor-pointer font-bold"
+                            >
+                                Privacy Policy
+                            </button>.
                         </p>
                     </section>
                 </div>

@@ -212,7 +212,7 @@ const FreeGuide: React.FC = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-[var(--text-main)] text-[9px] md:text-xs font-medium leading-relaxed text-left">
-                                                    I consent to receive marketing text messages from <strong>Nexli Automation LLC</strong> at the phone number provided. Frequency may vary. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
+                                                    I consent to receive marketing text messages from <strong>Nexli Automation LLC</strong> at the phone number provided. Message frequency may vary. Message & data rates may apply. Text HELP for assistance or text STOP to +1 321-241-2945 to opt out.
                                                 </p>
                                             </div>
                                         </div>
@@ -229,7 +229,7 @@ const FreeGuide: React.FC = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-[var(--text-main)] text-[9px] md:text-xs font-medium leading-relaxed text-left">
-                                                    I consent to receive non-marketing text messages from <strong>Nexli Automation LLC</strong> about Marketing. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
+                                                    I consent to receive non-marketing text messages from <strong>Nexli Automation LLC</strong> about Marketing. Message frequency may vary. Message & data rates may apply. Text HELP for assistance or text STOP to +1 321-241-2945 to opt out.
                                                 </p>
                                             </div>
                                         </div>
