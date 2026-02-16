@@ -42,6 +42,7 @@ export const ThreeDMarquee = ({
                     src={item}
                     alt={`Showcase ${idx + 1}`}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="w-full h-full">{item}</div>
@@ -72,6 +73,7 @@ export const ThreeDMarquee = ({
                     src={item}
                     alt={`Showcase ${idx + 1}`}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="w-full h-full">{item}</div>

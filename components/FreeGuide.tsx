@@ -124,9 +124,10 @@ const FreeGuide: React.FC = () => {
                     >
                         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full" />
                         <img
-                            src={theme === 'dark' ? "/guide_mockup.png" : "/guide_mockup_light.png"}
+                            src={theme === 'dark' ? "/guide_mockup.webp" : "/guide_mockup_light.webp"}
                             alt="The 5 Automations Every Advisory Firm Needs Guide"
                             className={`relative z-10 w-full max-w-[550px] mx-auto drop-shadow-[0_0_50px_rgba(37,99,235,0.3)] floating-animation ${theme === 'dark' ? 'mix-blend-screen' : 'mix-blend-multiply'}`}
+                            loading="lazy"
                         />
                     </motion.div>
                 </div>

@@ -24,6 +24,20 @@ import ClarityAdvisory from './components/portfolio/ClarityAdvisory';
 import MeridianFinancial from './components/portfolio/MeridianFinancial';
 import HarborWealth from './components/portfolio/HarborWealth';
 import { getBlogPostBySlug } from './data/blogPosts';
+import {
+  updateSEO,
+  getHomeSEO,
+  getBlogListSEO,
+  getBlogPostSEO,
+  getPortfolioListSEO,
+  getPortfolioFirmSEO,
+  getServicesSEO,
+  getFreeGuideSEO,
+  getSmartReviewsSEO,
+  getPrivacySEO,
+  getTermsSEO,
+  get404SEO,
+} from './utils/seo';
 
 const PORTFOLIO_FIRMS: Record<string, React.FC<{ navigate?: (view: string, slug?: string) => void }>> = {
   'summit-tax-group': SummitTaxGroup,
@@ -194,6 +208,36 @@ const App: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [view]);
+
+  // Update SEO meta tags when route changes
+  useEffect(() => {
+    if (view === 'home') {
+      updateSEO(getHomeSEO());
+    } else if (view === 'blog') {
+      updateSEO(getBlogListSEO());
+    } else if (view === 'blogPost' && blogSlug) {
+      const post = getBlogPostBySlug(blogSlug);
+      if (post) {
+        updateSEO(getBlogPostSEO(post));
+      }
+    } else if (view === 'portfolio') {
+      updateSEO(getPortfolioListSEO());
+    } else if (view === 'portfolioFirm' && portfolioSlug) {
+      updateSEO(getPortfolioFirmSEO(portfolioSlug));
+    } else if (view === 'services') {
+      updateSEO(getServicesSEO());
+    } else if (view === 'guide') {
+      updateSEO(getFreeGuideSEO());
+    } else if (view === 'smartReviews') {
+      updateSEO(getSmartReviewsSEO());
+    } else if (view === 'privacy') {
+      updateSEO(getPrivacySEO());
+    } else if (view === 'terms') {
+      updateSEO(getTermsSEO());
+    } else if (view === '404') {
+      updateSEO(get404SEO());
+    }
+  }, [view, blogSlug, portfolioSlug]);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'));

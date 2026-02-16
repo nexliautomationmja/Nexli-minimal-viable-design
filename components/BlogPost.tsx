@@ -55,6 +55,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
           alt={post.title}
           className="w-full h-full object-cover"
           style={post.imagePosition ? { objectPosition: post.imagePosition } : undefined}
+          loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/60 to-transparent" />
 
@@ -128,6 +129,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
                   src={section.image}
                   alt={section.heading}
                   className="mt-8 rounded-2xl w-full object-cover"
+                  loading="lazy"
                 />
               )}
             </motion.div>

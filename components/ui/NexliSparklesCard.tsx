@@ -23,6 +23,7 @@ export const NexliSparklesCard: React.FC = () => {
           src="/logos/nexli-icon-gradient.png"
           alt="Nexli"
           className="w-8 h-8 object-contain"
+          loading="lazy"
         />
         <h1 className="text-2xl font-bold text-center text-white">
           NEXLI

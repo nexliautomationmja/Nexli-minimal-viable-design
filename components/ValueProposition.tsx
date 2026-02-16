@@ -19,8 +19,8 @@ const painPoints = [
     icon: <Monitor className="text-orange-500" size={32} />,
     color: "from-orange-500/20",
     video: "/videos/value-prop-1.mp4",
-    image: "/logos/Nexli Value Prop 1 .png",
-    mobileImage: "/logos/Nexli Value Prop 1-mobile.png"
+    image: "/logos/Nexli Value Prop 1 .webp",
+    mobileImage: "/logos/Nexli Value Prop 1-mobile.webp"
   },
   {
     id: "02",
@@ -38,8 +38,8 @@ const painPoints = [
     icon: <Bot className="text-blue-500" size={32} />,
     color: "from-blue-500/20",
     video: "/videos/value-prop-2.mp4",
-    image: "/logos/Nexli Value Prop 2.png",
-    mobileImage: "/logos/Nexli Value Prop 2-mobile.png"
+    image: "/logos/Nexli Value Prop 2.webp",
+    mobileImage: "/logos/Nexli Value Prop 2-mobile.webp"
   },
   {
     id: "03",
@@ -59,8 +59,8 @@ const painPoints = [
     icon: <Zap className="text-green-500" size={32} />,
     color: "from-green-500/20",
     video: "/videos/value-prop-3.mp4",
-    image: "/logos/Nexli Value Prop Section 3.png",
-    mobileImage: "/logos/Nexli Value Prop 3-mobile.png"
+    image: "/logos/Nexli Value Prop Section 3.webp",
+    mobileImage: "/logos/Nexli Value Prop 3-mobile.webp"
   }
 ];
 
@@ -211,12 +211,14 @@ const ValueProposition: React.FC = () => {
                         src={point.image}
                         alt={point.solutionTitle}
                         className="hidden md:block w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        loading="lazy"
                       />
                       {/* Mobile Image */}
                       <img
                         src={(point as any).mobileImage}
                         alt={point.solutionTitle}
                         className="block md:hidden w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        loading="lazy"
                       />
                     </>
                   )}

@@ -20,7 +20,7 @@ export const blogPosts: BlogPost[] = [
     slug: "best-cpa-websites-accounting-firm-design",
     category: "CPA Web Design",
     title: "Best CPA Websites in 2026: 10 Accounting Firm Examples That Convert Prospects Into Clients",
-    src: "/blog-images/blog-web-design-photo.png",
+    src: "/blog-images/blog-web-design-photo.webp",
     excerpt: "Your accounting firm's website is often the first impression prospective clients have of your practice. In this comprehensive guide, we analyze the top-performing CPA websites and reveal exactly what makes them convert visitors into booked consultations.",
     sections: [
       {
@@ -45,7 +45,7 @@ export const blogPosts: BlogPost[] = [
     slug: "cpa-lead-generation-accounting-firm-marketing",
     category: "CPA Marketing",
     title: "CPA Lead Generation: 12 Proven Digital Marketing Strategies for Accounting Firms in 2026",
-    src: "/blog-images/blog-growth-strategy.jpeg",
+    src: "/blog-images/blog-growth-strategy.webp",
     excerpt: "Generating a consistent flow of qualified leads is the difference between CPAs who grow and those who struggle. Discover the exact digital marketing strategies top-performing accounting firms use to attract business clients and high-net-worth individuals.",
     sections: [
       {
@@ -95,7 +95,7 @@ export const blogPosts: BlogPost[] = [
     slug: "cpa-automation-accounting-practice-efficiency",
     category: "CPA Automation",
     title: "AI Automation for CPAs: The Complete Guide to Streamlining Your Accounting Practice",
-    src: "/blog-images/blog-ai-automation-photo.jpeg",
+    src: "/blog-images/blog-ai-automation-photo.webp",
     excerpt: "Artificial intelligence is revolutionizing how successful CPAs operate. Learn how to leverage AI automation to serve more clients, eliminate administrative burden, and reclaim 15+ hours per week—without sacrificing the personalized service that defines your practice.",
     sections: [
       {
@@ -120,7 +120,7 @@ export const blogPosts: BlogPost[] = [
     slug: "cpa-client-acquisition-tax-professional-growth",
     category: "CPA Growth",
     title: "CPA Client Acquisition: Proven Strategies for Growing Your Accounting Practice in 2026",
-    src: "/blog-images/client-acquisition-photo.jpeg",
+    src: "/blog-images/client-acquisition-photo.webp",
     excerpt: "Growing an accounting practice requires different strategies than traditional service businesses. Learn the specific approaches that resonate with business owners and high-net-worth individuals seeking a trusted CPA relationship.",
     sections: [
       {
@@ -145,7 +145,7 @@ export const blogPosts: BlogPost[] = [
     slug: "best-financial-advisor-websites-examples-design",
     category: "Web Design",
     title: "Best Financial Advisor Websites in 2026: 10 Examples That Convert Prospects Into Clients",
-    src: "/blog-images/blog-web-design-photo.png",
+    src: "/blog-images/blog-web-design-photo.webp",
     excerpt: "Your website is often the first impression high-net-worth prospects have of your practice. In this comprehensive guide, we analyze the top-performing financial advisor websites and reveal exactly what makes them convert visitors into booked consultations.",
     sections: [
       {
@@ -170,7 +170,7 @@ export const blogPosts: BlogPost[] = [
     slug: "ai-automation-financial-advisors-wealth-management",
     category: "AI & Automation",
     title: "AI Automation for Financial Advisors: The Complete Guide to Scaling Your Practice",
-    src: "/blog-images/blog-ai-automation-photo.jpeg",
+    src: "/blog-images/blog-ai-automation-photo.webp",
     excerpt: "Artificial intelligence is revolutionizing how elite financial advisors operate. Learn how to leverage AI automation to serve more clients, reduce administrative burden, and reclaim 10+ hours per week—without sacrificing the personal touch that defines your practice.",
     sections: [
       {
@@ -195,7 +195,7 @@ export const blogPosts: BlogPost[] = [
     slug: "wealth-management-lead-generation-strategies",
     category: "Lead Generation",
     title: "Wealth Management Lead Generation: 12 Proven Strategies for Attracting High-Net-Worth Clients",
-    src: "/blog-images/blog-growth-strategy.jpeg",
+    src: "/blog-images/blog-growth-strategy.webp",
     excerpt: "Generating a consistent flow of qualified high-net-worth leads is the difference between advisors who grow and those who stagnate. Discover the exact strategies top-performing wealth managers use to attract affluent clients in 2026.",
     sections: [
       {
@@ -220,7 +220,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-client-onboarding-process",
     category: "Client Experience",
     title: "Financial Advisor Client Onboarding: How to Create a 5-Star Experience That Drives Referrals",
-    src: "/blog-images/5-star-experience.jpeg",
+    src: "/blog-images/5-star-experience.webp",
     excerpt: "The first 90 days of a client relationship determine everything—retention, referrals, and lifetime value. Learn how to build an onboarding process that transforms new clients into enthusiastic advocates for your practice.",
     sections: [
       {
@@ -270,7 +270,7 @@ export const blogPosts: BlogPost[] = [
     slug: "email-marketing-financial-advisors-templates",
     category: "Email Marketing",
     title: "Email Marketing for Financial Advisors: Templates, Strategies & Compliance Best Practices",
-    src: "/blog-images/email-marketing.jpeg",
+    src: "/blog-images/email-marketing.webp",
     excerpt: "Email remains the most effective digital channel for financial advisors—when done right. Discover proven email strategies, ready-to-use templates, and compliance-safe approaches to nurturing prospects and engaging clients.",
     sections: [
       {
@@ -295,7 +295,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-branding-personal-brand",
     category: "Branding",
     title: "Financial Advisor Branding: How to Build a Personal Brand That Attracts Ideal Clients",
-    src: "/blog-images/branding-gradient.png",
+    src: "/blog-images/branding-gradient.webp",
     excerpt: "In a crowded market, your personal brand is what makes prospects choose you over competitors with similar credentials. Learn how to craft an authentic, differentiated brand that resonates with high-net-worth clients.",
     sections: [
       {
@@ -320,7 +320,7 @@ export const blogPosts: BlogPost[] = [
     slug: "client-retention-strategies-financial-advisors",
     category: "Client Retention",
     title: "Client Retention Strategies for Financial Advisors: Keeping Your Best Clients for Life",
-    src: "/Founder Photos/Founder 3.PNG",
+    src: "/Founder Photos/Founder 3.webp",
     imagePosition: "center 25%",
     excerpt: "Acquiring a new client costs 5-7x more than retaining an existing one. Yet many advisors focus relentlessly on acquisition while neglecting the clients already on their books. Master client retention and build a practice on a foundation of loyal, growing relationships.",
     sections: [
@@ -396,7 +396,7 @@ export const blogPosts: BlogPost[] = [
     slug: "ria-marketing-strategies-registered-investment-advisor",
     category: "RIA Marketing",
     title: "RIA Marketing Strategies: How Registered Investment Advisors Can Compete and Win",
-    src: "/blog-images/peyton-l-headshot.png",
+    src: "/blog-images/peyton-l-headshot.webp",
     imagePosition: "center 30%",
     excerpt: "As an independent RIA, you're competing against wirehouses with massive marketing budgets. But nimble, strategic marketing can outperform brute-force spending. Learn the marketing strategies that give independent advisors an edge.",
     sections: [
@@ -422,7 +422,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-content-marketing-strategy",
     category: "Content Marketing",
     title: "Content Marketing for Financial Advisors: Creating Content That Attracts Wealthy Clients",
-    src: "/blog-images/content-marketing.png",
+    src: "/blog-images/content-marketing.webp",
     excerpt: "Content marketing establishes expertise, builds trust, and attracts prospects before you ever speak. Learn how to create a content strategy that positions you as the obvious choice for high-net-worth clients in your market.",
     sections: [
       {
@@ -447,7 +447,7 @@ export const blogPosts: BlogPost[] = [
     slug: "high-net-worth-client-acquisition-strategies",
     category: "Client Acquisition",
     title: "How to Attract High-Net-Worth Clients: Proven Strategies for Wealth Advisors",
-    src: "/blog-images/client-acquisition-photo.jpeg",
+    src: "/blog-images/client-acquisition-photo.webp",
     excerpt: "High-net-worth clients transform a practice. But attracting them requires different strategies than mass-market client acquisition. Learn the specific approaches that resonate with affluent investors and open doors to significant relationships.",
     sections: [
       {
@@ -472,7 +472,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-video-marketing-youtube",
     category: "Video Marketing",
     title: "Video Marketing for Financial Advisors: YouTube, LinkedIn Video & Beyond",
-    src: "/blog-images/san-fran-studio.png",
+    src: "/blog-images/san-fran-studio.webp",
     excerpt: "Video is the most engaging content format, and financial advisors who embrace it are building massive trust advantages. Learn how to create professional video content that attracts clients and establishes your authority.",
     sections: [
       {
@@ -497,7 +497,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-referral-program-template",
     category: "Referrals",
     title: "Financial Advisor Referral Programs: Templates and Strategies That Generate Introductions",
-    src: "/blog-images/blog-referrals-photo.jpeg",
+    src: "/blog-images/blog-referrals-photo.webp",
     excerpt: "Referrals remain the most effective client acquisition channel for financial advisors. But hoping for referrals isn't a strategy. Learn how to build a systematic referral program that consistently generates warm introductions.",
     sections: [
       {
@@ -522,7 +522,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-website-copy-writing",
     category: "Copywriting",
     title: "Financial Advisor Website Copy That Converts: Writing Tips and Examples",
-    src: "/blog-images/copywriting.png",
+    src: "/blog-images/copywriting.webp",
     excerpt: "Your website copy is your silent salesperson—working around the clock to convince prospects to book consultations. Learn how to write website copy that speaks to affluent clients' concerns and motivates action.",
     sections: [
       {
@@ -547,7 +547,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-niche-marketing-specialization",
     category: "Niche Marketing",
     title: "Niche Marketing for Financial Advisors: How Specialization Attracts Premium Clients",
-    src: "/blog-images/office-vibe.jpeg",
+    src: "/blog-images/office-vibe.webp",
     excerpt: "Generalist advisors compete on price. Specialists command premium fees. Learn how to identify, develop, and market a profitable niche that positions you as the obvious choice for specific high-value client segments.",
     sections: [
       {
@@ -572,7 +572,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-google-ads-ppc-advertising",
     category: "Paid Advertising",
     title: "Google Ads for Financial Advisors: PPC Strategies That Generate Qualified Leads",
-    src: "/blog-images/paid-ads.jpeg",
+    src: "/blog-images/paid-ads.webp",
     excerpt: "Pay-per-click advertising can deliver qualified leads on demand—or waste thousands on unqualified clicks. Learn how to build Google Ads campaigns that attract high-net-worth prospects while maintaining positive ROI.",
     sections: [
       {
@@ -597,7 +597,7 @@ export const blogPosts: BlogPost[] = [
     slug: "financial-advisor-client-communication-best-practices",
     category: "Client Communication",
     title: "Client Communication Best Practices for Financial Advisors: Building Trust and Loyalty",
-    src: "/blog-images/business-call-2.jpeg",
+    src: "/blog-images/business-call-2.webp",
     excerpt: "How you communicate with clients determines whether they stay, refer, and grow their relationship with you. Master the art and science of client communication to build a practice defined by loyal, appreciative clients.",
     sections: [
       {

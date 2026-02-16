@@ -15,80 +15,80 @@ interface Complaint {
 }
 
 const complaints: Complaint[] = [
-  // Web Development Complaints
+  // Surprise Bills & Tax Planning Failures
   {
     name: "Peyton L.",
     username: "@peyton_investor",
-    avatar: "/avatars/peyton-l.png",
-    text: "Their site is confusing and cumbersome. Ended up making a mistake and signed up for a 5 yr CD instead of 1."
+    avatar: "/avatars/peyton-l.webp",
+    text: "My CPA never once mentioned estimated quarterly taxes. I got hit with a $12K penalty at filing. Isn't the whole point of hiring a CPA to AVOID surprises?"
   },
   {
     name: "Jian Z.",
     username: "@jian_wealth",
-    avatar: "/avatars/jian-z.png",
-    text: "Worse website, always errors. My cash transfer failed and it's been a month — still not solved."
+    avatar: "/avatars/jian-z.webp",
+    text: "My accountant forgot to e-file my extension. I didn't find out until the IRS sent me a penalty notice 3 months later. He still billed me in full."
   },
   {
     name: "Sandra K.",
     username: "@sandra_cpa",
-    avatar: "/avatars/sandra-k.png",
-    text: "I got errors every time I logged into the account. Unable to add banking info. Their e-sign process did not work."
+    avatar: "/avatars/sandra-k.webp",
+    text: "Their client portal is impossible. I uploaded all my documents in January and they told me in March they 'never received them.' Had to redo everything."
   },
   {
     name: "Peyton R.",
     username: "@peyton_research",
-    avatar: "/avatars/peyton-r.png",
-    text: "68% of clients expect digital experiences to match those of leading technology companies."
+    avatar: "/avatars/peyton-r.webp",
+    text: "72% of business owners left their CPA because they weren't offered any strategic advice — just compliance work and a bill."
   },
-  // Brand Identity Complaints
+  // Generic Service & Lack of Expertise
   {
     name: "Roberto W.",
     username: "@roberto_client",
-    avatar: "/avatars/roberto-w.png",
-    text: "They are just another cookie cutter company. They provide you with a plan based on age that just divides up your portfolio in set allocations."
+    avatar: "/avatars/roberto-w.webp",
+    text: "My CPA uses the same template for every client. No understanding of my industry, no tailored advice. I'm paying premium prices for a generic TurboTax experience."
   },
   {
     name: "Keyonna M.",
     username: "@keyonna_estate",
-    avatar: "/avatars/keyonna-m.png",
-    text: "When I liquidated my late mother's last IRA the assistant said 'oh this is just such a small amount.'"
+    avatar: "/avatars/keyonna-m.webp",
+    text: "When I asked my CPA about tax strategies for my small business, he laughed and said 'you don't make enough for that to matter.' I make $400K/year."
   },
-  // AI Automation Complaints
+  // Communication & Responsiveness Failures
   {
     name: "William R.",
     username: "@william_trust",
-    avatar: "/avatars/william-r.png",
-    text: "I transferred over $3M to their trust and there is ABSOLUTELY NO CUSTOMER SERVICE. The trust officer does not communicate AT ALL."
+    avatar: "/avatars/william-r.webp",
+    text: "Tax deadline is in 2 weeks and my CPA hasn't returned a single email in 3 weeks. I've sent my documents TWICE. This is a firm I pay $8K/year."
   },
   {
     name: "Patricia N.",
     username: "@patricia_hnw",
-    avatar: "/avatars/patricia-n.png",
-    text: "Unanswered emails, calls that never get returned, and weeks of radio silence when I just need a simple answer."
+    avatar: "/avatars/patricia-n.webp",
+    text: "My CPA never once reached out proactively. Not about tax law changes, not about new deductions, nothing. I only hear from them when my invoice is due."
   },
   {
     name: "Bernice P.",
     username: "@bernice_advisor",
-    avatar: "/avatars/bernice-p.png",
-    text: "75% of clients considered leaving or actually left their advisor in 2023, with lack of communication as the primary driver."
+    avatar: "/avatars/bernice-p.webp",
+    text: "Only 61% of small business owners are satisfied with their accountant, and 34% only hear from their CPA during tax season."
   },
   {
     name: "James C.",
     username: "@james_market",
-    avatar: "/avatars/james-c.png",
-    text: "Once the market turned downward, the broker ignored me. No proactive outreach whatsoever."
+    avatar: "/avatars/james-c.webp",
+    text: "Found out my previous CPA missed the pass-through entity deduction for TWO YEARS. Cost me over $80K. His response? 'These things happen.'"
   },
   {
     name: "Robert F.",
     username: "@robert_vanguard",
-    avatar: "/avatars/robert-f.png",
-    text: "I took an available time slot for our call. When he didn't call at the scheduled time, I found out he wasn't even in the office that day."
+    avatar: "/avatars/robert-f.webp",
+    text: "Every time I bring a new idea to my accountant, the answer is 'no.' It feels like my CPA works for the IRS, not for me."
   },
   {
     name: "Catherine D.",
     username: "@catherine_closing",
-    avatar: "/avatars/catherine-d.png",
-    text: "I've been trying to close my account for over a year now. Every time I call, I get conflicting information, transferred, disconnected..."
+    avatar: "/avatars/catherine-d.webp",
+    text: "Asked my CPA for an itemized bill after a $4,500 charge. They billed me for the time it took to create the itemized breakdown. I can't make this up."
   }
 ];
 
@@ -117,6 +117,7 @@ const ComplaintCard = ({ name, username, avatar, text, isDark }: Complaint & { i
           className="rounded-full w-10 h-10 md:w-12 md:h-12 object-cover"
           alt={name}
           src={avatar}
+          loading="lazy"
         />
         <div className="flex flex-col">
           <div className="flex items-center gap-1">
@@ -176,7 +177,7 @@ const ClientComplaints: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
           >
-            Clunky portals. Unanswered calls. Generic experiences. These are real complaints driving clients away from advisors every day. <span className="text-[var(--text-main)] font-semibold">We make sure they're never said about you.</span>
+            Missed deadlines. Surprise tax bills. Zero communication. These are real complaints driving clients away from their CPA every day. <span className="text-[var(--text-main)] font-semibold">We make sure they're never said about you.</span>
           </motion.p>
         </div>
       </div>
@@ -208,7 +209,7 @@ const ClientComplaints: React.FC = () => {
           className="mt-10 md:mt-16 text-center"
         >
           <p className="text-[var(--text-muted)] text-sm md:text-base mb-4">
-            Don't let your clients become another complaint.
+            Don't let your firm become another complaint.
           </p>
           <button
             onClick={() => {

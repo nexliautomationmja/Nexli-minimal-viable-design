@@ -182,6 +182,7 @@ const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
                         alt={post.title}
                         className="object-cover absolute z-10 inset-0 w-full h-full"
                         style={post.imagePosition ? { objectPosition: post.imagePosition } : undefined}
+                        loading="lazy"
                       />
                     </button>
                   </motion.div>

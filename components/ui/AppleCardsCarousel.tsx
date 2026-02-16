@@ -229,6 +229,7 @@ export const Card = ({
           src={card.src}
           alt={card.title}
           className="object-cover absolute z-10 inset-0 w-full h-full"
+          loading="lazy"
         />
       </motion.button>
     </>

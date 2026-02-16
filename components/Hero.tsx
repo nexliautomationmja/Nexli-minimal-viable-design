@@ -57,7 +57,7 @@ const Hero: React.FC = () => {
               <div key={i} className="relative">
                 <div className="w-8 h-8 rounded-full border-2 border-[var(--bg-main)] overflow-hidden">
                   <img
-                    src={`/Founder Photos/Founder ${i}.PNG`}
+                    src={`/Founder Photos/Founder ${i}.webp`}
                     alt={`Active Searcher ${i}`}
                     className="w-full h-full object-cover object-[center_20%]"
                   />
