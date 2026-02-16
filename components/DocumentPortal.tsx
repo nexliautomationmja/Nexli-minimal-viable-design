@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Shield,
@@ -29,8 +29,17 @@ import {
     Copy,
     Mail,
     Camera,
+    Search,
+    ChevronRight,
+    ChevronDown,
+    X,
+    Printer,
+    Save,
+    PenLine,
 } from 'lucide-react';
 import { useTheme } from '../App';
+import { allForms, formCategories, allStates, getFormFields, type TaxForm, type FormCategory } from '../data/taxForms';
+import FormPreview from './FormPreview';
 
 type DemoView = 'generate' | 'deliver' | 'client' | 'admin';
 type UploadState = 'idle' | 'dragging' | 'uploading' | 'success';
@@ -65,6 +74,36 @@ const DocumentPortal: React.FC = () => {
     const [capturedDocs, setCapturedDocs] = useState<string[]>([]);
     const [capturingDoc, setCapturingDoc] = useState<string | null>(null);
     const [captureStep, setCaptureStep] = useState<'camera' | 'scanning' | 'detected' | null>(null);
+
+    // Forms browser state
+    const [adminTab, setAdminTab] = useState<'documents' | 'forms'>('documents');
+    const [formSearch, setFormSearch] = useState('');
+    const [formScope, setFormScope] = useState<'federal' | 'state'>('federal');
+    const [formCategory, setFormCategory] = useState<FormCategory | 'All'>('All');
+    const [formState, setFormState] = useState<string>('All');
+    const [selectedForm, setSelectedForm] = useState<TaxForm | null>(null);
+    const [formData, setFormData] = useState<Record<string, string>>({});
+    const [formView, setFormView] = useState<'edit' | 'preview'>('edit');
+    const formPreviewRef = useRef<HTMLDivElement>(null);
+
+    // Print/Download: open form in a new window with Tailwind styles and trigger browser print
+    const handlePrintOrDownload = useCallback(() => {
+        if (!formPreviewRef.current || !selectedForm) return;
+        const html = formPreviewRef.current.innerHTML;
+        const printWindow = window.open('', '_blank', 'width=900,height=1100');
+        if (!printWindow) return;
+        // Grab all stylesheets from the current page
+        const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+            .map(el => el.outerHTML).join('\n');
+        printWindow.document.write(`<!DOCTYPE html><html><head><title>Form ${selectedForm.number} — ${selectedForm.name}</title>${styles}<style>
+            @media print { body { margin: 0; padding: 0; } @page { size: letter; margin: 0.5in; } }
+            body { font-family: 'Courier New', 'Liberation Mono', monospace; background: white; color: #1e293b; padding: 0; margin: 0; }
+            .print-wrapper { max-width: 850px; margin: 0 auto; padding: 24px; }
+        </style></head><body><div class="print-wrapper">${html}</div></body></html>`);
+        printWindow.document.close();
+        // Wait for styles to load then trigger print
+        setTimeout(() => { printWindow.focus(); printWindow.print(); }, 400);
+    }, [selectedForm]);
 
     // Cal.com integration
     useEffect(() => {
@@ -325,6 +364,37 @@ const DocumentPortal: React.FC = () => {
         { icon: <History size={16} className="text-indigo-400 md:w-[22px] md:h-[22px]" />, title: 'Full Audit Trail', description: 'Every upload, download, and access is logged and timestamped.', iconDark: 'bg-indigo-500/10 border-indigo-500/20', iconLight: 'bg-indigo-50 border-indigo-200' },
         { icon: <Key size={16} className="text-teal-400 md:w-[22px] md:h-[22px]" />, title: 'No Third-Party Data Sharing', description: 'Your data stays in your vault. We never share or commingle.', iconDark: 'bg-teal-500/10 border-teal-500/20', iconLight: 'bg-teal-50 border-teal-200' },
     ];
+
+    // Forms browser filtering
+    const filteredForms = allForms.filter(f => {
+        const matchesSearch = formSearch === '' ||
+            f.number.toLowerCase().includes(formSearch.toLowerCase()) ||
+            f.name.toLowerCase().includes(formSearch.toLowerCase()) ||
+            f.description.toLowerCase().includes(formSearch.toLowerCase());
+        const isStateForm = f.category === 'State Forms';
+        // Federal/State scope filter
+        if (formScope === 'federal' && isStateForm) return false;
+        if (formScope === 'state' && !isStateForm) return false;
+        // Category filter (skip "State Forms" category when in state scope since everything is state)
+        const matchesCategory = formCategory === 'All' || f.category === formCategory;
+        // State dropdown filter
+        const matchesState = formState === 'All' || f.state === formState;
+        return matchesSearch && matchesCategory && matchesState;
+    });
+    // Categories relevant to current scope
+    const visibleCategories = formScope === 'state'
+        ? ['State Forms'] as const
+        : formCategories.filter(c => c !== 'State Forms');
+
+    const handleSelectForm = (form: TaxForm) => {
+        setSelectedForm(form);
+        setFormData({});
+        setFormView('edit');
+    };
+
+    const handleFormFieldChange = (fieldId: string, value: string) => {
+        setFormData(prev => ({ ...prev, [fieldId]: value }));
+    };
 
     // File type pills for the client upload demo
     const fileTypes = [
@@ -1472,6 +1542,26 @@ const DocumentPortal: React.FC = () => {
                                             </div>
                                         </div>
 
+                                        {/* Tab bar: Documents | Forms Library */}
+                                        <div className={`flex gap-1 mb-6 p-1 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'}`}>
+                                            {(['documents', 'forms'] as const).map(tab => (
+                                                <button
+                                                    key={tab}
+                                                    onClick={() => { setAdminTab(tab); setSelectedForm(null); }}
+                                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all ${
+                                                        adminTab === tab
+                                                            ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-500/20'
+                                                            : theme === 'dark' ? 'text-white/40 hover:text-white/60' : 'text-slate-500 hover:text-slate-700'
+                                                    }`}
+                                                >
+                                                    {tab === 'documents' ? <><FileText size={12} /> Documents</> : <><PenLine size={12} /> Forms Library</>}
+                                                    {tab === 'forms' && <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${adminTab === 'forms' ? 'bg-white/20' : theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`}>{allForms.length}</span>}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        {adminTab === 'documents' ? (
+                                        <>
                                         {/* Stats row */}
                                         <div className="grid grid-cols-3 gap-3 mb-6">
                                             {[
@@ -1568,6 +1658,283 @@ const DocumentPortal: React.FC = () => {
                                                 ))}
                                             </div>
                                         </div>
+                                        </>
+                                        ) : selectedForm && formView === 'preview' ? (
+                                        /* ── Form Preview View — IRS-Authentic Templates (always light) ── */
+                                        <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} key="form-preview" className="bg-white rounded-2xl p-5 -mx-2 border border-slate-200">
+                                            {/* Back to edit */}
+                                            <button
+                                                onClick={() => setFormView('edit')}
+                                                className="flex items-center gap-1.5 text-xs font-bold mb-4 transition-colors text-slate-400 hover:text-slate-600"
+                                            >
+                                                <ChevronRight size={14} className="rotate-180" />
+                                                Back to Edit
+                                            </button>
+
+                                            {/* Polished IRS-authentic form preview */}
+                                            <div ref={formPreviewRef} className="max-h-[520px] overflow-y-auto rounded-xl" style={{ scrollbarWidth: 'thin' }}>
+                                                <FormPreview form={selectedForm} data={formData} />
+                                            </div>
+
+                                            {/* Action bar below preview */}
+                                            <div className="mt-4 flex items-center gap-2">
+                                                <button
+                                                    onClick={() => setFormView('edit')}
+                                                    className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all hover:scale-[1.01]"
+                                                >
+                                                    <PenLine size={12} />
+                                                    Edit
+                                                </button>
+                                                <button className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-cyan-600 text-white text-xs font-bold hover:bg-cyan-500 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-cyan-500/20">
+                                                    <Send size={12} />
+                                                    Send to Client for Signature
+                                                </button>
+                                                <button
+                                                    onClick={handlePrintOrDownload}
+                                                    className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all hover:scale-[1.01]"
+                                                >
+                                                    <Printer size={12} />
+                                                </button>
+                                                <button
+                                                    onClick={handlePrintOrDownload}
+                                                    className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all hover:scale-[1.01]"
+                                                >
+                                                    <Download size={12} />
+                                                </button>
+                                            </div>
+                                        </motion.div>
+
+                                        ) : selectedForm ? (
+                                        /* ── Form Detail / Fill View (always light) ── */
+                                        <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} key="form-edit" className="bg-white rounded-2xl p-5 -mx-2 border border-slate-200">
+                                            {/* Back button + form header */}
+                                            <button
+                                                onClick={() => setSelectedForm(null)}
+                                                className="flex items-center gap-1.5 text-xs font-bold mb-4 transition-colors text-slate-400 hover:text-slate-600"
+                                            >
+                                                <ChevronRight size={14} className="rotate-180" />
+                                                Back to Forms
+                                            </button>
+
+                                            <div className="rounded-xl border p-4 mb-4 bg-cyan-50 border-cyan-200">
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <div>
+                                                        <span className="text-cyan-600 text-xs font-black tracking-wider">{selectedForm.number}</span>
+                                                        <h4 className="text-sm font-bold leading-tight mt-0.5 text-slate-900">{selectedForm.name}</h4>
+                                                        <p className="text-[10px] mt-1 text-slate-500">{selectedForm.description}</p>
+                                                        {selectedForm.state && <span className="inline-block mt-1 text-[9px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-600">{selectedForm.state}</span>}
+                                                    </div>
+                                                    <div className="flex gap-1.5 shrink-0">
+                                                        <button className="p-2 rounded-lg transition-colors bg-white hover:bg-slate-50 text-slate-500" title="Print">
+                                                            <Printer size={14} />
+                                                        </button>
+                                                        <button className="p-2 rounded-lg transition-colors bg-white hover:bg-slate-50 text-slate-500" title="Save">
+                                                            <Save size={14} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Fillable form fields */}
+                                            <div className="max-h-[320px] overflow-y-auto pr-1 space-y-4" style={{ scrollbarWidth: 'thin' }}>
+                                                {(() => {
+                                                    const fields = getFormFields(selectedForm);
+                                                    const sections = [...new Set(fields.map(f => f.section))];
+                                                    return sections.map(section => (
+                                                        <div key={section}>
+                                                            <p className="text-[9px] font-black tracking-[0.15em] uppercase mb-2 text-cyan-600">{section}</p>
+                                                            <div className="space-y-2">
+                                                                {fields.filter(f => f.section === section).map(field => (
+                                                                    <div key={field.id}>
+                                                                        <label className="text-[10px] font-semibold block mb-1 text-slate-600">{field.label}</label>
+                                                                        {field.type === 'select' ? (
+                                                                            <select
+                                                                                value={formData[field.id] || ''}
+                                                                                onChange={e => handleFormFieldChange(field.id, e.target.value)}
+                                                                                className="w-full text-xs px-3 py-2 rounded-lg border outline-none transition-colors bg-white border-slate-200 text-slate-700 focus:border-cyan-500"
+                                                                            >
+                                                                                <option value="">Select...</option>
+                                                                                {field.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                                                            </select>
+                                                                        ) : (
+                                                                            <input
+                                                                                type="text"
+                                                                                value={formData[field.id] || ''}
+                                                                                onChange={e => handleFormFieldChange(field.id, e.target.value)}
+                                                                                placeholder={field.placeholder}
+                                                                                className="w-full text-xs px-3 py-2 rounded-lg border outline-none transition-colors bg-white border-slate-200 text-slate-700 placeholder-slate-300 focus:border-cyan-500"
+                                                                            />
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ));
+                                                })()}
+                                            </div>
+
+                                            {/* Submit bar */}
+                                            <div className="mt-4 pt-3 border-t border-slate-200 flex items-center gap-2">
+                                                <button
+                                                    onClick={() => setFormView('preview')}
+                                                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-cyan-600 text-white text-xs font-bold hover:bg-cyan-500 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-cyan-500/20"
+                                                >
+                                                    <Eye size={12} />
+                                                    Preview Form
+                                                </button>
+                                                <button className="py-2.5 px-4 rounded-xl text-xs font-bold border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all hover:scale-[1.01]">
+                                                    <Download size={12} />
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                        ) : (
+                                        /* ── Forms Library Browser with Sidebar Filters ── */
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                            {/* Search bar */}
+                                            <div className="relative mb-4">
+                                                <Search size={14} className={`absolute left-3 top-1/2 -translate-y-1/2 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`} />
+                                                <input
+                                                    type="text"
+                                                    value={formSearch}
+                                                    onChange={e => setFormSearch(e.target.value)}
+                                                    placeholder="Search forms by number or name..."
+                                                    className={`w-full text-xs pl-9 pr-8 py-2.5 rounded-xl border outline-none transition-colors ${
+                                                        theme === 'dark'
+                                                            ? 'bg-white/5 border-white/10 text-white/70 placeholder-white/20 focus:border-cyan-500/50'
+                                                            : 'bg-white border-slate-200 text-slate-700 placeholder-slate-400 focus:border-cyan-500'
+                                                    }`}
+                                                />
+                                                {formSearch && (
+                                                    <button onClick={() => setFormSearch('')} className={`absolute right-3 top-1/2 -translate-y-1/2 ${theme === 'dark' ? 'text-white/30 hover:text-white/60' : 'text-slate-400 hover:text-slate-600'}`}>
+                                                        <X size={14} />
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            {/* Sidebar + Results layout */}
+                                            <div className="flex gap-3">
+                                                {/* ── Left Sidebar Filters ── */}
+                                                <div className={`w-[140px] shrink-0 rounded-xl border p-3 space-y-4 ${
+                                                    theme === 'dark' ? 'border-white/10 bg-white/[0.02]' : 'border-slate-200 bg-slate-50'
+                                                }`}>
+                                                    {/* Federal / State toggle */}
+                                                    <div>
+                                                        <p className={`text-[9px] font-black uppercase tracking-wider mb-2 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>Scope</p>
+                                                        <div className="space-y-1">
+                                                            {(['federal', 'state'] as const).map(scope => (
+                                                                <button
+                                                                    key={scope}
+                                                                    onClick={() => { setFormScope(scope); setFormCategory('All'); setFormState('All'); }}
+                                                                    className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-all ${
+                                                                        formScope === scope
+                                                                            ? 'bg-cyan-600 text-white'
+                                                                            : theme === 'dark' ? 'text-white/50 hover:bg-white/5' : 'text-slate-600 hover:bg-slate-100'
+                                                                    }`}
+                                                                >
+                                                                    <span className={`w-2 h-2 rounded-full shrink-0 ${formScope === scope ? 'bg-white' : theme === 'dark' ? 'bg-white/20' : 'bg-slate-300'}`} />
+                                                                    {scope === 'federal' ? 'Federal (IRS)' : 'State Forms'}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* State dropdown (only when state scope) */}
+                                                    {formScope === 'state' && (
+                                                        <div>
+                                                            <p className={`text-[9px] font-black uppercase tracking-wider mb-2 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>State</p>
+                                                            <select
+                                                                value={formState}
+                                                                onChange={e => setFormState(e.target.value)}
+                                                                className={`w-full text-[10px] px-2 py-1.5 rounded-lg border outline-none ${
+                                                                    theme === 'dark'
+                                                                        ? 'bg-white/5 border-white/10 text-white/70'
+                                                                        : 'bg-white border-slate-200 text-slate-700'
+                                                                }`}
+                                                            >
+                                                                <option value="All">All States</option>
+                                                                {allStates.map(st => <option key={st} value={st}>{st}</option>)}
+                                                            </select>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Category filters (only for federal scope) */}
+                                                    {formScope === 'federal' && (
+                                                        <div>
+                                                            <p className={`text-[9px] font-black uppercase tracking-wider mb-2 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>Category</p>
+                                                            <div className="space-y-0.5 max-h-[200px] overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+                                                                <button
+                                                                    onClick={() => setFormCategory('All')}
+                                                                    className={`w-full text-left px-2 py-1 rounded-md text-[9px] font-bold transition-all ${
+                                                                        formCategory === 'All'
+                                                                            ? theme === 'dark' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-50 text-cyan-700'
+                                                                            : theme === 'dark' ? 'text-white/40 hover:text-white/60 hover:bg-white/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                                                                    }`}
+                                                                >All Categories</button>
+                                                                {visibleCategories.map(cat => (
+                                                                    <button
+                                                                        key={cat}
+                                                                        onClick={() => setFormCategory(cat)}
+                                                                        className={`w-full text-left px-2 py-1 rounded-md text-[9px] font-bold transition-all truncate ${
+                                                                            formCategory === cat
+                                                                                ? theme === 'dark' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-50 text-cyan-700'
+                                                                                : theme === 'dark' ? 'text-white/40 hover:text-white/60 hover:bg-white/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                                                                        }`}
+                                                                    >{cat}</button>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* ── Right: Form Results ── */}
+                                                <div className="flex-1 min-w-0">
+                                                    {/* Results count */}
+                                                    <p className={`text-[9px] font-bold mb-2 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
+                                                        {filteredForms.length} form{filteredForms.length !== 1 ? 's' : ''} found
+                                                    </p>
+
+                                                    {/* Form cards list */}
+                                                    <div className="max-h-[320px] overflow-y-auto space-y-1.5 pr-1" style={{ scrollbarWidth: 'thin' }}>
+                                                        {filteredForms.slice(0, 50).map(form => (
+                                                            <button
+                                                                key={form.id}
+                                                                onClick={() => handleSelectForm(form)}
+                                                                className={`w-full text-left flex items-center gap-3 p-2.5 rounded-xl border transition-all hover:scale-[1.005] ${
+                                                                    theme === 'dark'
+                                                                        ? 'border-white/5 bg-white/[0.02] hover:border-cyan-500/30 hover:bg-cyan-500/5'
+                                                                        : 'border-slate-100 bg-white hover:border-cyan-500/30 hover:bg-cyan-50'
+                                                                }`}
+                                                            >
+                                                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                                                                    theme === 'dark' ? 'bg-cyan-500/10' : 'bg-cyan-50'
+                                                                }`}>
+                                                                    <span className="text-cyan-500 text-[8px] font-black leading-tight text-center">{form.number.length > 8 ? form.number.substring(0, 8) : form.number}</span>
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <span className={`text-[11px] font-bold block truncate ${theme === 'dark' ? 'text-white/80' : 'text-slate-700'}`}>{form.name}</span>
+                                                                    <span className={`text-[9px] block truncate ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
+                                                                        {form.state ? `${form.state} · ` : ''}{form.description}
+                                                                    </span>
+                                                                </div>
+                                                                <ChevronRight size={14} className={theme === 'dark' ? 'text-white/20 shrink-0' : 'text-slate-300 shrink-0'} />
+                                                            </button>
+                                                        ))}
+                                                        {filteredForms.length > 50 && (
+                                                            <p className={`text-center text-[9px] py-2 ${theme === 'dark' ? 'text-white/20' : 'text-slate-400'}`}>
+                                                                Showing 50 of {filteredForms.length} — refine your search to see more
+                                                            </p>
+                                                        )}
+                                                        {filteredForms.length === 0 && (
+                                                            <div className="text-center py-8">
+                                                                <Search size={24} className={theme === 'dark' ? 'text-white/10 mx-auto mb-2' : 'text-slate-200 mx-auto mb-2'} />
+                                                                <p className={`text-xs ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>No forms match your search</p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                        )}
                                     </motion.div>
                                 )}
                             </AnimatePresence>
