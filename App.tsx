@@ -16,6 +16,7 @@ import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import NotFound from './components/NotFound';
 import SmartReviews from './components/SmartReviews';
+import DocumentPortal from './components/DocumentPortal';
 import CardShredder from './components/CardShredder';
 import SocialDock from './components/SocialDock';
 import Portfolio from './components/Portfolio';
@@ -34,6 +35,7 @@ import {
   getServicesSEO,
   getFreeGuideSEO,
   getSmartReviewsSEO,
+  getDocumentPortalSEO,
   getPrivacySEO,
   getTermsSEO,
   get404SEO,
@@ -70,7 +72,7 @@ const App: React.FC = () => {
     return 'dark';
   });
 
-  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | '404'>('home');
+  const [view, setView] = useState<'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | 'documentPortal' | '404'>('home');
   const [blogSlug, setBlogSlug] = useState<string | null>(null);
   const [portfolioSlug, setPortfolioSlug] = useState<string | null>(null);
 
@@ -138,6 +140,10 @@ const App: React.FC = () => {
         setView('smartReviews');
         setBlogSlug(null);
         setPortfolioSlug(null);
+      } else if (path === '/document-portal') {
+        setView('documentPortal');
+        setBlogSlug(null);
+        setPortfolioSlug(null);
       } else {
         setView('404');
         setBlogSlug(null);
@@ -158,7 +164,7 @@ const App: React.FC = () => {
   }, []);
 
   // Function to navigate and update URL
-  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | '404', slug?: string) => {
+  const navigate = (newView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | 'documentPortal' | '404', slug?: string) => {
     let path: string;
     if (newView === 'blogPost' && slug) {
       path = `/blog/${slug}`;
@@ -168,6 +174,7 @@ const App: React.FC = () => {
       path = newView === 'guide' ? '/free-guide' :
         newView === 'services' ? '/rainmaker' :
           newView === 'smartReviews' ? '/smart-reviews' :
+            newView === 'documentPortal' ? '/document-portal' :
             newView === 'portfolio' ? '/portfolio' :
               newView === 'blog' ? '/blog' :
                 newView === 'privacy' ? '/privacy' :
@@ -230,6 +237,8 @@ const App: React.FC = () => {
       updateSEO(getFreeGuideSEO());
     } else if (view === 'smartReviews') {
       updateSEO(getSmartReviewsSEO());
+    } else if (view === 'documentPortal') {
+      updateSEO(getDocumentPortalSEO());
     } else if (view === 'privacy') {
       updateSEO(getPrivacySEO());
     } else if (view === 'terms') {
@@ -269,6 +278,11 @@ const App: React.FC = () => {
         ) : view === 'smartReviews' ? (
           <>
             <SmartReviews />
+            <Navbar setView={navigate} currentView={view} />
+          </>
+        ) : view === 'documentPortal' ? (
+          <>
+            <DocumentPortal />
             <Navbar setView={navigate} currentView={view} />
           </>
         ) : view === 'blog' ? (

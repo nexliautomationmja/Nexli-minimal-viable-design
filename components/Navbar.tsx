@@ -4,8 +4,8 @@ import { Menu, X, ChevronRight, Sun, Moon, Mail, Check } from 'lucide-react';
 import { useTheme } from '../App';
 
 interface NavbarProps {
-  setView: (view: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews') => void;
-  currentView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews';
+  setView: (view: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | 'documentPortal') => void;
+  currentView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | 'documentPortal';
 }
 
 const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
@@ -26,6 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
     { label: 'Blog', view: 'blog' as const },
     { label: 'Free Guide', view: 'guide' as const },
     { label: 'Google Reviews', view: 'smartReviews' as const, hasGoogleIcon: true },
+    { label: 'Doc Portal', view: 'documentPortal' as const },
   ];
 
   const handleNavClick = (link: typeof navLinks[0]) => {

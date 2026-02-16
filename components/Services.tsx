@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp } from 'lucide-react';
+import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield } from 'lucide-react';
 import { useTheme } from '../App';
 import { SparklesCore } from './Sparkles';
 import { Timeline } from './ui/Timeline';
@@ -181,7 +181,8 @@ const Services: React.FC = () => {
                             "Prospect nurturing campaigns",
                             "Automated appointment booking",
                             "AI chat assistant for your site",
-                            "Zero-touch lead qualification"
+                            "Zero-touch lead qualification",
+                            "Secure client document collection"
                         ].map((benefit, i) => (
                             <div key={i} className="flex items-start gap-2 text-sm">
                                 <CheckCircle size={16} className="text-cyan-500 shrink-0 mt-0.5" />
@@ -196,6 +197,7 @@ const Services: React.FC = () => {
                                 { icon: Bot, label: "AI Assistant" },
                                 { icon: Send, label: "Auto Follow-up" },
                                 { icon: Calendar, label: "Smart Booking" },
+                                { icon: FileText, label: "Doc Vault" },
                             ].map((item, i) => (
                                 <motion.div
                                     key={i}
@@ -213,6 +215,33 @@ const Services: React.FC = () => {
                                     </span>
                                 </motion.div>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Document Portal callout */}
+                    <div className={`rounded-2xl p-5 mt-6 border-2 border-dashed ${theme === 'dark' ? 'border-cyan-500/30 bg-cyan-500/5' : 'border-cyan-500/40 bg-cyan-50'}`}>
+                        <div className="flex items-start gap-3">
+                            <div className="p-2 rounded-lg bg-cyan-500/20 shrink-0">
+                                <Shield className="w-5 h-5 text-cyan-500" />
+                            </div>
+                            <div>
+                                <p className={`font-bold mb-1 ${theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'}`}>
+                                    Secure Document Collection
+                                </p>
+                                <p className={`text-sm mb-2 ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
+                                    Stop emailing W-2s. Collect client documents through your firm's own branded portal with AES-256 encryption and per-firm isolated storage.
+                                </p>
+                                <button
+                                    onClick={() => {
+                                        window.history.pushState({}, '', '/document-portal');
+                                        window.dispatchEvent(new PopStateEvent('popstate'));
+                                    }}
+                                    className="inline-flex items-center gap-1.5 text-cyan-500 text-sm font-bold hover:text-cyan-400 transition-colors bg-transparent border-none p-0 cursor-pointer"
+                                >
+                                    See the Demo
+                                    <ArrowRight size={14} />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

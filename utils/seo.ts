@@ -365,6 +365,34 @@ export function getSmartReviewsSEO(): SEOConfig {
   };
 }
 
+export function getDocumentPortalSEO(): SEOConfig {
+  return {
+    title: 'Secure Document Portal | CPA Client Document Collection | Nexli',
+    description: 'Collect client tax documents securely through your firm\'s branded portal. AES-256 encryption, per-firm isolated storage, IRS Pub 4557 compliant. No more emailing W-2s.',
+    canonical: `${BASE_URL}/document-portal`,
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Home',
+            'item': BASE_URL,
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Document Portal',
+            'item': `${BASE_URL}/document-portal`,
+          },
+        ],
+      },
+    ],
+  };
+}
+
 export function getPrivacySEO(): SEOConfig {
   return {
     title: 'Privacy Policy | Nexli Automation',
