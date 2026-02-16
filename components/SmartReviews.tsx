@@ -205,9 +205,9 @@ const SmartReviews: React.FC = () => {
         >
             <path
                 d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"
-                fill={filled || hovered ? '#fbbf24' : 'var(--glass-border)'}
-                stroke={filled || hovered ? '#f59e0b' : 'var(--glass-border)'}
-                strokeWidth="0.5"
+                fill={filled || hovered ? '#fbbf24' : 'transparent'}
+                stroke={filled || hovered ? '#f59e0b' : 'var(--text-muted)'}
+                strokeWidth={filled || hovered ? '0.5' : '1.5'}
                 className="transition-colors duration-200"
             />
         </motion.svg>
