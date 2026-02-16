@@ -28,6 +28,7 @@ import {
     Smartphone,
     Copy,
     Mail,
+    Camera,
 } from 'lucide-react';
 import { useTheme } from '../App';
 
@@ -60,6 +61,10 @@ const DocumentPortal: React.FC = () => {
     const [linkGenerated, setLinkGenerated] = useState(false);
     const [linkSent, setLinkSent] = useState(false);
     const [deliveryMethod, setDeliveryMethod] = useState<'sms' | 'email' | null>(null);
+    const [uploadMode, setUploadMode] = useState<'standard' | 'guided'>('standard');
+    const [capturedDocs, setCapturedDocs] = useState<string[]>([]);
+    const [capturingDoc, setCapturingDoc] = useState<string | null>(null);
+    const [captureStep, setCaptureStep] = useState<'camera' | 'scanning' | 'detected' | null>(null);
 
     // Cal.com integration
     useEffect(() => {
@@ -142,6 +147,45 @@ const DocumentPortal: React.FC = () => {
         setUploadingFileName('');
     };
 
+    // Guided capture documents
+    const guidedDocuments = [
+        { id: 'w2', label: 'W-2', description: 'Wage & Tax Statement from employer' },
+        { id: '1099-int', label: '1099-INT', description: 'Interest Income from bank' },
+        { id: 'bank', label: 'Bank Statements', description: 'Jan – Dec 2025' },
+        { id: '1098', label: '1098 Mortgage', description: 'Mortgage Interest Statement' },
+    ];
+
+    // Camera capture handler
+    const handleCaptureDoc = (docId: string, docLabel: string) => {
+        if (capturingDoc) return;
+        setCapturingDoc(docId);
+        setCaptureStep('camera');
+
+        setTimeout(() => {
+            setCaptureStep('scanning');
+        }, 1200);
+
+        setTimeout(() => {
+            setCaptureStep('detected');
+        }, 2600);
+
+        setTimeout(() => {
+            setCapturedDocs(prev => [...prev, docId]);
+            setCapturingDoc(null);
+            setCaptureStep(null);
+            setNewUploadAlert(true);
+            setUploadedFiles(files => [{
+                id: `file-${Date.now()}`,
+                name: `${docLabel}_2025.pdf`,
+                type: 'PDF',
+                size: `${(Math.random() * 2 + 0.5).toFixed(1)} MB`,
+                client: 'Sarah M.',
+                date: 'Just now',
+                status: 'New',
+            }, ...files]);
+        }, 3500);
+    };
+
     // Link generation handlers
     const handleGenerateLink = () => {
         setLinkGenerated(true);
@@ -154,12 +198,16 @@ const DocumentPortal: React.FC = () => {
         }, 800);
     };
 
-    // Reset link generation state when re-entering generate view
+    // Reset state when re-entering generate view
     useEffect(() => {
         if (demoView === 'generate') {
             setLinkGenerated(false);
             setLinkSent(false);
             setDeliveryMethod(null);
+            setUploadMode('standard');
+            setCapturedDocs([]);
+            setCapturingDoc(null);
+            setCaptureStep(null);
         }
     }, [demoView]);
 
@@ -834,6 +882,45 @@ const DocumentPortal: React.FC = () => {
                                                     </div>
                                                 </div>
 
+                                                {/* Upload mode selection */}
+                                                <p className={`text-xs font-bold mb-3 ${theme === 'dark' ? 'text-white/50' : 'text-slate-600'}`}>
+                                                    Choose portal experience for this client:
+                                                </p>
+                                                <div className="grid grid-cols-2 gap-3 mb-5">
+                                                    <button
+                                                        onClick={() => setUploadMode('standard')}
+                                                        className={`p-3 rounded-xl border text-left transition-all hover:scale-[1.01] ${
+                                                            uploadMode === 'standard'
+                                                                ? 'border-cyan-500/50 bg-cyan-500/10 ring-1 ring-cyan-500/30'
+                                                                : theme === 'dark' ? 'border-white/10 bg-white/[0.02] hover:border-white/20' : 'border-slate-200 bg-white hover:border-slate-300'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <Upload size={14} className="text-cyan-500" />
+                                                            <span className={`text-xs font-bold ${theme === 'dark' ? 'text-white/80' : 'text-slate-700'}`}>Standard Upload</span>
+                                                        </div>
+                                                        <p className={`text-[9px] leading-relaxed ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
+                                                            Drag-and-drop files. For tech-savvy clients with digital docs ready.
+                                                        </p>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setUploadMode('guided')}
+                                                        className={`p-3 rounded-xl border text-left transition-all hover:scale-[1.01] ${
+                                                            uploadMode === 'guided'
+                                                                ? 'border-cyan-500/50 bg-cyan-500/10 ring-1 ring-cyan-500/30'
+                                                                : theme === 'dark' ? 'border-white/10 bg-white/[0.02] hover:border-white/20' : 'border-slate-200 bg-white hover:border-slate-300'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <Camera size={14} className="text-emerald-500" />
+                                                            <span className={`text-xs font-bold ${theme === 'dark' ? 'text-white/80' : 'text-slate-700'}`}>Guided Camera</span>
+                                                        </div>
+                                                        <p className={`text-[9px] leading-relaxed ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
+                                                            Step-by-step photo capture. For clients who prefer snapping paper docs.
+                                                        </p>
+                                                    </button>
+                                                </div>
+
                                                 {/* Delivery method selection */}
                                                 <p className={`text-xs font-bold mb-3 ${theme === 'dark' ? 'text-white/50' : 'text-slate-600'}`}>
                                                     How should we deliver this link to Sarah?
@@ -1013,126 +1100,348 @@ const DocumentPortal: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        {/* Welcome message */}
-                                        <p className={`text-sm md:text-base mb-6 ${theme === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>
-                                            Welcome, <span className="font-bold">Sarah</span>. Upload your tax documents securely below.
-                                        </p>
+                                        {uploadMode === 'guided' ? (
+                                            <>
+                                                {/* Guided mode welcome */}
+                                                <p className={`text-sm md:text-base mb-6 ${theme === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>
+                                                    Welcome, <span className="font-bold">Sarah</span>. Your CPA needs these documents — just tap each one to take a photo:
+                                                </p>
 
-                                        {/* Upload area */}
-                                        {uploadState === 'idle' && (
-                                            <div>
-                                                {/* Drag and drop zone */}
-                                                <div
-                                                    className={`rounded-2xl border-2 border-dashed p-8 md:p-12 text-center mb-6 transition-colors ${theme === 'dark'
-                                                        ? 'border-white/10 bg-white/[0.02] hover:border-cyan-500/30 hover:bg-cyan-500/[0.03]'
-                                                        : 'border-slate-200 bg-slate-50 hover:border-cyan-500/40 hover:bg-cyan-50'
-                                                        }`}
-                                                >
-                                                    <Upload size={32} className={`mx-auto mb-3 ${theme === 'dark' ? 'text-white/20' : 'text-slate-300'}`} />
-                                                    <p className={`text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>
-                                                        Drag and drop files here
-                                                    </p>
-                                                    <p className={`text-xs ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
-                                                        PDF, JPG, PNG, XLSX up to 25MB
-                                                    </p>
+                                                {/* Progress indicator */}
+                                                <div className={`flex items-center gap-3 mb-6 p-3 rounded-xl border ${theme === 'dark' ? 'bg-white/[0.03] border-white/10' : 'bg-slate-50 border-slate-200'}`}>
+                                                    <div className={`text-lg font-black ${capturedDocs.length === guidedDocuments.length ? 'text-emerald-500' : 'text-cyan-500'}`}>
+                                                        {capturedDocs.length}/{guidedDocuments.length}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <div className={`h-2 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`}>
+                                                            <motion.div
+                                                                className={`h-full rounded-full ${capturedDocs.length === guidedDocuments.length ? 'bg-emerald-500' : 'bg-gradient-to-r from-cyan-500 to-emerald-500'}`}
+                                                                animate={{ width: `${(capturedDocs.length / guidedDocuments.length) * 100}%` }}
+                                                                transition={{ duration: 0.5 }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <span className={`text-[10px] font-bold ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
+                                                        {capturedDocs.length === guidedDocuments.length ? 'All done!' : 'Documents captured'}
+                                                    </span>
                                                 </div>
 
-                                                {/* File type pills */}
-                                                <p className={`text-xs font-bold mb-3 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
-                                                    Or click a document type to simulate upload:
-                                                </p>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {fileTypes.map((file) => (
+                                                {/* Document checklist */}
+                                                {capturedDocs.length < guidedDocuments.length ? (
+                                                    <div className="space-y-2 relative">
+                                                        {guidedDocuments.map((doc) => {
+                                                            const isCaptured = capturedDocs.includes(doc.id);
+                                                            const isCapturing = capturingDoc === doc.id;
+                                                            return (
+                                                                <motion.button
+                                                                    key={doc.id}
+                                                                    onClick={() => !isCaptured && !isCapturing && handleCaptureDoc(doc.id, doc.label)}
+                                                                    disabled={isCaptured || !!capturingDoc}
+                                                                    className={`w-full flex items-center gap-3 p-3 md:p-4 rounded-xl border text-left transition-all ${
+                                                                        isCaptured
+                                                                            ? theme === 'dark' ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-emerald-500/30 bg-emerald-50'
+                                                                            : isCapturing
+                                                                            ? theme === 'dark' ? 'border-cyan-500/50 bg-cyan-500/10 ring-1 ring-cyan-500/30' : 'border-cyan-500/50 bg-cyan-50 ring-1 ring-cyan-500/30'
+                                                                            : theme === 'dark' ? 'border-white/10 bg-white/[0.02] hover:border-cyan-500/30 hover:bg-cyan-500/5' : 'border-slate-200 bg-white hover:border-cyan-500/30 hover:bg-cyan-50'
+                                                                    } ${capturingDoc && !isCapturing ? 'opacity-40 pointer-events-none' : ''}`}
+                                                                    layout
+                                                                >
+                                                                    {/* Status icon */}
+                                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                                                                        isCaptured ? 'bg-emerald-500/20' :
+                                                                        isCapturing ? 'bg-cyan-500/20' :
+                                                                        theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'
+                                                                    }`}>
+                                                                        {isCaptured ? (
+                                                                            <CheckCircle size={18} className="text-emerald-500" />
+                                                                        ) : isCapturing ? (
+                                                                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
+                                                                                <Camera size={18} className="text-cyan-500" />
+                                                                            </motion.div>
+                                                                        ) : (
+                                                                            <Camera size={18} className={theme === 'dark' ? 'text-white/30' : 'text-slate-400'} />
+                                                                        )}
+                                                                    </div>
+                                                                    {/* Doc info */}
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <span className={`text-sm font-bold block ${
+                                                                            isCaptured ? 'text-emerald-500' :
+                                                                            isCapturing ? 'text-cyan-500' :
+                                                                            theme === 'dark' ? 'text-white/80' : 'text-slate-700'
+                                                                        }`}>{doc.label}</span>
+                                                                        <span className={`text-[10px] md:text-xs ${
+                                                                            isCaptured ? 'text-emerald-500/50' :
+                                                                            theme === 'dark' ? 'text-white/30' : 'text-slate-400'
+                                                                        }`}>
+                                                                            {isCaptured ? 'Captured & encrypted' : isCapturing ? 'Scanning...' : doc.description}
+                                                                        </span>
+                                                                    </div>
+                                                                    {/* Action hint */}
+                                                                    {!isCaptured && !isCapturing && (
+                                                                        <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-bold ${
+                                                                            theme === 'dark' ? 'bg-cyan-500/10 text-cyan-400' : 'bg-cyan-50 text-cyan-600'
+                                                                        }`}>
+                                                                            <Camera size={10} />
+                                                                            Tap
+                                                                        </div>
+                                                                    )}
+                                                                </motion.button>
+                                                            );
+                                                        })}
+
+                                                        {/* Camera viewfinder overlay */}
+                                                        <AnimatePresence>
+                                                            {capturingDoc && (
+                                                                <motion.div
+                                                                    initial={{ opacity: 0 }}
+                                                                    animate={{ opacity: 1 }}
+                                                                    exit={{ opacity: 0 }}
+                                                                    className="absolute inset-0 -m-6 md:-m-10 bg-black/95 rounded-[1.5rem] md:rounded-[3rem] z-20 flex flex-col items-center justify-center"
+                                                                >
+                                                                    {captureStep === 'camera' && (
+                                                                        <motion.div
+                                                                            initial={{ scale: 0.8, opacity: 0 }}
+                                                                            animate={{ scale: 1, opacity: 1 }}
+                                                                            className="flex flex-col items-center gap-4"
+                                                                        >
+                                                                            {/* Viewfinder frame */}
+                                                                            <div className="relative w-[200px] h-[260px] border-2 border-white/20 rounded-xl">
+                                                                                {/* Corner brackets */}
+                                                                                <div className="absolute -top-[2px] -left-[2px] w-6 h-6 border-t-2 border-l-2 border-cyan-400 rounded-tl-lg" />
+                                                                                <div className="absolute -top-[2px] -right-[2px] w-6 h-6 border-t-2 border-r-2 border-cyan-400 rounded-tr-lg" />
+                                                                                <div className="absolute -bottom-[2px] -left-[2px] w-6 h-6 border-b-2 border-l-2 border-cyan-400 rounded-bl-lg" />
+                                                                                <div className="absolute -bottom-[2px] -right-[2px] w-6 h-6 border-b-2 border-r-2 border-cyan-400 rounded-br-lg" />
+                                                                                {/* Mock document in frame */}
+                                                                                <div className="absolute inset-4 rounded-lg bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-2">
+                                                                                    <FileText size={32} className="text-white/20" />
+                                                                                    <span className="text-white/30 text-[10px] font-bold">{guidedDocuments.find(d => d.id === capturingDoc)?.label}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <motion.p
+                                                                                animate={{ opacity: [0.4, 1, 0.4] }}
+                                                                                transition={{ duration: 1.5, repeat: Infinity }}
+                                                                                className="text-white/60 text-sm font-semibold"
+                                                                            >
+                                                                                Point camera at document...
+                                                                            </motion.p>
+                                                                        </motion.div>
+                                                                    )}
+
+                                                                    {captureStep === 'scanning' && (
+                                                                        <motion.div
+                                                                            initial={{ opacity: 0 }}
+                                                                            animate={{ opacity: 1 }}
+                                                                            className="flex flex-col items-center gap-4"
+                                                                        >
+                                                                            <div className="relative w-[200px] h-[260px] border-2 border-cyan-500/40 rounded-xl overflow-hidden">
+                                                                                {/* Document captured image */}
+                                                                                <div className="absolute inset-2 rounded-lg bg-white/10 flex flex-col items-center justify-center gap-2">
+                                                                                    <FileText size={32} className="text-white/30" />
+                                                                                    <span className="text-white/40 text-[10px] font-bold">{guidedDocuments.find(d => d.id === capturingDoc)?.label}</span>
+                                                                                </div>
+                                                                                {/* Scanning line */}
+                                                                                <motion.div
+                                                                                    className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+                                                                                    initial={{ top: 0 }}
+                                                                                    animate={{ top: ['0%', '100%', '0%'] }}
+                                                                                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="flex items-center gap-2">
+                                                                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                                                                                    <Zap size={14} className="text-cyan-400" />
+                                                                                </motion.div>
+                                                                                <span className="text-cyan-400 text-sm font-bold">AI scanning document...</span>
+                                                                            </div>
+                                                                        </motion.div>
+                                                                    )}
+
+                                                                    {captureStep === 'detected' && (
+                                                                        <motion.div
+                                                                            initial={{ scale: 0.8, opacity: 0 }}
+                                                                            animate={{ scale: 1, opacity: 1 }}
+                                                                            className="flex flex-col items-center gap-4"
+                                                                        >
+                                                                            <motion.div
+                                                                                initial={{ scale: 0 }}
+                                                                                animate={{ scale: 1 }}
+                                                                                transition={{ type: "spring", stiffness: 200 }}
+                                                                                className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center"
+                                                                            >
+                                                                                <CheckCircle size={40} className="text-emerald-500" />
+                                                                            </motion.div>
+                                                                            <div className="text-center">
+                                                                                <p className="text-white text-lg font-bold mb-1">
+                                                                                    {guidedDocuments.find(d => d.id === capturingDoc)?.label} Detected!
+                                                                                </p>
+                                                                                <p className="text-emerald-400 text-xs font-semibold">
+                                                                                    Encrypted & uploaded securely
+                                                                                </p>
+                                                                            </div>
+                                                                        </motion.div>
+                                                                    )}
+                                                                </motion.div>
+                                                            )}
+                                                        </AnimatePresence>
+                                                    </div>
+                                                ) : (
+                                                    /* All documents captured - success */
+                                                    <motion.div
+                                                        initial={{ opacity: 0, scale: 0.95 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        className="text-center py-6"
+                                                    >
+                                                        <motion.div
+                                                            initial={{ scale: 0 }}
+                                                            animate={{ scale: 1 }}
+                                                            transition={{ type: "spring", stiffness: 200 }}
+                                                            className="w-16 h-16 rounded-full mx-auto mb-4 bg-emerald-500/20 flex items-center justify-center"
+                                                        >
+                                                            <CheckCircle size={32} className="text-emerald-500" />
+                                                        </motion.div>
+                                                        <p className={`text-lg font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                                            All Documents Received!
+                                                        </p>
+                                                        <p className={`text-sm mb-1 ${theme === 'dark' ? 'text-white/60' : 'text-slate-600'}`}>
+                                                            {guidedDocuments.length} documents captured, encrypted & delivered
+                                                        </p>
+                                                        <p className={`text-xs mb-6 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
+                                                            Your CPA has been notified. You're all set for tax season.
+                                                        </p>
                                                         <button
-                                                            key={file.name}
-                                                            onClick={() => handleFileUpload(file.name, 'PDF')}
-                                                            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] ${theme === 'dark'
-                                                                ? 'bg-white/5 border border-white/10 text-white/70 hover:border-cyan-500/30 hover:bg-cyan-500/5'
-                                                                : 'bg-slate-50 border border-slate-200 text-slate-600 hover:border-cyan-500/40 hover:bg-cyan-50'
+                                                            onClick={() => setDemoView('admin')}
+                                                            className="inline-flex items-center gap-2 text-emerald-500 font-bold text-xs uppercase tracking-widest hover:text-emerald-400 transition-colors"
+                                                        >
+                                                            <Eye size={14} />
+                                                            View CPA Dashboard
+                                                        </button>
+                                                    </motion.div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <>
+                                                {/* Standard mode welcome */}
+                                                <p className={`text-sm md:text-base mb-6 ${theme === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>
+                                                    Welcome, <span className="font-bold">Sarah</span>. Upload your tax documents securely below.
+                                                </p>
+
+                                                {/* Upload area */}
+                                                {uploadState === 'idle' && (
+                                                    <div>
+                                                        {/* Drag and drop zone */}
+                                                        <div
+                                                            className={`rounded-2xl border-2 border-dashed p-8 md:p-12 text-center mb-6 transition-colors ${theme === 'dark'
+                                                                ? 'border-white/10 bg-white/[0.02] hover:border-cyan-500/30 hover:bg-cyan-500/[0.03]'
+                                                                : 'border-slate-200 bg-slate-50 hover:border-cyan-500/40 hover:bg-cyan-50'
                                                                 }`}
                                                         >
-                                                            <FileText size={14} className="text-cyan-500" />
-                                                            {file.label}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
+                                                            <Upload size={32} className={`mx-auto mb-3 ${theme === 'dark' ? 'text-white/20' : 'text-slate-300'}`} />
+                                                            <p className={`text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>
+                                                                Drag and drop files here
+                                                            </p>
+                                                            <p className={`text-xs ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
+                                                                PDF, JPG, PNG, XLSX up to 25MB
+                                                            </p>
+                                                        </div>
 
-                                        {/* Uploading state */}
-                                        {uploadState === 'uploading' && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                className="text-center py-8"
-                                            >
-                                                <div className={`w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center ${theme === 'dark' ? 'bg-cyan-500/10' : 'bg-cyan-50'}`}>
+                                                        {/* File type pills */}
+                                                        <p className={`text-xs font-bold mb-3 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
+                                                            Or click a document type to simulate upload:
+                                                        </p>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {fileTypes.map((file) => (
+                                                                <button
+                                                                    key={file.name}
+                                                                    onClick={() => handleFileUpload(file.name, 'PDF')}
+                                                                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] ${theme === 'dark'
+                                                                        ? 'bg-white/5 border border-white/10 text-white/70 hover:border-cyan-500/30 hover:bg-cyan-500/5'
+                                                                        : 'bg-slate-50 border border-slate-200 text-slate-600 hover:border-cyan-500/40 hover:bg-cyan-50'
+                                                                        }`}
+                                                                >
+                                                                    <FileText size={14} className="text-cyan-500" />
+                                                                    {file.label}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Uploading state */}
+                                                {uploadState === 'uploading' && (
                                                     <motion.div
-                                                        animate={{ rotate: 360 }}
-                                                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        className="text-center py-8"
                                                     >
-                                                        <Upload size={24} className="text-cyan-500" />
+                                                        <div className={`w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center ${theme === 'dark' ? 'bg-cyan-500/10' : 'bg-cyan-50'}`}>
+                                                            <motion.div
+                                                                animate={{ rotate: 360 }}
+                                                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                                            >
+                                                                <Upload size={24} className="text-cyan-500" />
+                                                            </motion.div>
+                                                        </div>
+                                                        <p className={`text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                                                            Encrypting & uploading...
+                                                        </p>
+                                                        <p className={`text-xs mb-4 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
+                                                            {uploadingFileName}
+                                                        </p>
+                                                        <div className={`w-full max-w-xs mx-auto h-2 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`}>
+                                                            <motion.div
+                                                                className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full"
+                                                                style={{ width: `${uploadProgress}%` }}
+                                                            />
+                                                        </div>
+                                                        <p className={`text-xs mt-2 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
+                                                            {uploadProgress}%
+                                                        </p>
                                                     </motion.div>
-                                                </div>
-                                                <p className={`text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                                                    Encrypting & uploading...
-                                                </p>
-                                                <p className={`text-xs mb-4 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
-                                                    {uploadingFileName}
-                                                </p>
-                                                <div className={`w-full max-w-xs mx-auto h-2 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`}>
-                                                    <motion.div
-                                                        className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full"
-                                                        style={{ width: `${uploadProgress}%` }}
-                                                    />
-                                                </div>
-                                                <p className={`text-xs mt-2 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}>
-                                                    {uploadProgress}%
-                                                </p>
-                                            </motion.div>
-                                        )}
+                                                )}
 
-                                        {/* Success state */}
-                                        {uploadState === 'success' && (
-                                            <motion.div
-                                                initial={{ opacity: 0, scale: 0.95 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                className="text-center py-8"
-                                            >
-                                                <motion.div
-                                                    initial={{ scale: 0 }}
-                                                    animate={{ scale: 1 }}
-                                                    transition={{ type: "spring", stiffness: 200 }}
-                                                    className="w-16 h-16 rounded-full mx-auto mb-4 bg-emerald-500/20 flex items-center justify-center"
-                                                >
-                                                    <CheckCircle size={32} className="text-emerald-500" />
-                                                </motion.div>
-                                                <p className={`text-lg font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                                                    Document Received!
-                                                </p>
-                                                <p className={`text-sm mb-1 ${theme === 'dark' ? 'text-white/60' : 'text-slate-600'}`}>
-                                                    {uploadingFileName}
-                                                </p>
-                                                <p className={`text-xs mb-6 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
-                                                    Your CPA has been notified and can access this document securely.
-                                                </p>
-                                                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                                                    <button
-                                                        onClick={resetUpload}
-                                                        className="inline-flex items-center gap-2 text-cyan-500 font-bold text-xs uppercase tracking-widest hover:text-cyan-400 transition-colors"
+                                                {/* Success state */}
+                                                {uploadState === 'success' && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, scale: 0.95 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        className="text-center py-8"
                                                     >
-                                                        <RotateCcw size={14} />
-                                                        Upload Another
-                                                    </button>
-                                                    <button
-                                                        onClick={() => setDemoView('admin')}
-                                                        className="inline-flex items-center gap-2 text-emerald-500 font-bold text-xs uppercase tracking-widest hover:text-emerald-400 transition-colors"
-                                                    >
-                                                        <Eye size={14} />
-                                                        View CPA Dashboard
-                                                    </button>
-                                                </div>
-                                            </motion.div>
+                                                        <motion.div
+                                                            initial={{ scale: 0 }}
+                                                            animate={{ scale: 1 }}
+                                                            transition={{ type: "spring", stiffness: 200 }}
+                                                            className="w-16 h-16 rounded-full mx-auto mb-4 bg-emerald-500/20 flex items-center justify-center"
+                                                        >
+                                                            <CheckCircle size={32} className="text-emerald-500" />
+                                                        </motion.div>
+                                                        <p className={`text-lg font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                                            Document Received!
+                                                        </p>
+                                                        <p className={`text-sm mb-1 ${theme === 'dark' ? 'text-white/60' : 'text-slate-600'}`}>
+                                                            {uploadingFileName}
+                                                        </p>
+                                                        <p className={`text-xs mb-6 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
+                                                            Your CPA has been notified and can access this document securely.
+                                                        </p>
+                                                        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                                                            <button
+                                                                onClick={resetUpload}
+                                                                className="inline-flex items-center gap-2 text-cyan-500 font-bold text-xs uppercase tracking-widest hover:text-cyan-400 transition-colors"
+                                                            >
+                                                                <RotateCcw size={14} />
+                                                                Upload Another
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setDemoView('admin')}
+                                                                className="inline-flex items-center gap-2 text-emerald-500 font-bold text-xs uppercase tracking-widest hover:text-emerald-400 transition-colors"
+                                                            >
+                                                                <Eye size={14} />
+                                                                View CPA Dashboard
+                                                            </button>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </>
                                         )}
                                     </motion.div>
                                 ) : (
