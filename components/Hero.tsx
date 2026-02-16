@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, TrendingUp } from 'lucide-react';
+import { ArrowRight, TrendingUp, ShieldCheck, CalendarX, Repeat } from 'lucide-react';
 
 const Hero: React.FC = () => {
   return (
@@ -97,6 +97,28 @@ const Hero: React.FC = () => {
         >
           Referrals won't save you forever. Prospects don't see your expertise — they see your homepage. We fix that gap.
         </motion.p>
+
+        {/* Trust Signals — No Contracts */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mb-8 md:mb-10"
+        >
+          {[
+            { Icon: CalendarX, text: 'No Annual Contracts' },
+            { Icon: Repeat, text: 'Month-to-Month' },
+            { Icon: ShieldCheck, text: 'Cancel Anytime' },
+          ].map((item) => (
+            <span
+              key={item.text}
+              className="flex items-center gap-1.5 text-white/60 text-xs md:text-sm font-medium"
+            >
+              <item.Icon size={14} className="text-blue-400 md:w-4 md:h-4" />
+              {item.text}
+            </span>
+          ))}
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
