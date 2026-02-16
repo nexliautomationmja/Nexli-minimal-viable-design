@@ -52,13 +52,13 @@ const Form1040: React.FC<FormPreviewProps> = ({ form, data }) => {
                     <p className="text-[10px] text-slate-400 mt-0.5">(99)</p>
                 </div>
                 <div className="flex-1 text-center">
-                    <p className="text-xl font-black tracking-tight leading-tight">U.S. Individual Income Tax Return</p>
+                    <p className="text-xl font-black tracking-tight leading-tight text-slate-900">U.S. Individual Income Tax Return</p>
                     <p className="text-[11px] text-slate-500 mt-1">For the year Jan. 1–Dec. 31, 2025, or other tax year beginning _________, 2025, ending _________, 20__</p>
                 </div>
                 <div className="w-[18%] text-right">
                     <p className="text-[11px] text-slate-500">OMB No. 1545-0074</p>
                     <div className="inline-block border-2 border-slate-900 px-3 py-1 mt-1">
-                        <p className="text-base font-black leading-none">2025</p>
+                        <p className="text-base font-black leading-none text-slate-900">2025</p>
                     </div>
                     <p className="text-[10px] text-slate-400 mt-1">IRS Use Only—Do not write<br/>or staple in this space.</p>
                 </div>
@@ -181,11 +181,11 @@ const FormW2: React.FC<FormPreviewProps> = ({ form, data }) => {
                     <p className="text-[11px] text-slate-500">Department of the Treasury — Internal Revenue Service</p>
                 </div>
                 <div className="text-center">
-                    <p className="text-lg font-black">Wage and Tax Statement</p>
+                    <p className="text-lg font-black text-slate-900">Wage and Tax Statement</p>
                 </div>
                 <div className="text-right">
                     <p className="text-[11px] text-slate-500">OMB No. 1545-0008</p>
-                    <span className="text-sm font-black border-2 border-slate-900 px-2 py-0.5">2025</span>
+                    <span className="text-sm font-black text-slate-900 border-2 border-slate-900 px-2 py-0.5">2025</span>
                 </div>
             </div>
 
@@ -283,7 +283,7 @@ const FormW2: React.FC<FormPreviewProps> = ({ form, data }) => {
 
             {/* Form identifier */}
             <div className="mt-2 flex items-center justify-between">
-                <p className="text-sm font-black">Form W-2</p>
+                <p className="text-sm font-black text-slate-900">Form W-2</p>
                 <p className="text-xs text-slate-400">Copy B — To Be Filed With Employee&apos;s FEDERAL Tax Return</p>
             </div>
         </>
@@ -301,11 +301,11 @@ const FormW9: React.FC<FormPreviewProps> = ({ form, data }) => {
             {/* Header */}
             <div className="flex items-start border-b-[3px] border-slate-900 pb-3">
                 <div className="w-[20%] border-r-2 border-slate-900 pr-2 mr-3 self-stretch flex flex-col justify-center">
-                    <p className="text-3xl font-black leading-none">W-9</p>
+                    <p className="text-3xl font-black leading-none text-slate-900">W-9</p>
                     <p className="text-[10px] text-slate-500 leading-snug mt-1">(Rev. March 2024)<br/>Department of the Treasury<br/>Internal Revenue Service</p>
                 </div>
                 <div className="flex-1 text-center">
-                    <p className="text-lg font-black leading-tight">Request for Taxpayer<br/>Identification Number and Certification</p>
+                    <p className="text-lg font-black leading-tight text-slate-900">Request for Taxpayer<br/>Identification Number and Certification</p>
                     <p className="text-[11px] text-slate-500 mt-1">▶ Go to www.irs.gov/FormW9 for instructions and the latest information.</p>
                 </div>
                 <div className="w-[18%] text-right border-l-2 border-slate-900 pl-2 ml-3 self-stretch flex flex-col justify-center">
@@ -429,11 +429,11 @@ const Form2848: React.FC<FormPreviewProps> = ({ form, data }) => {
             {/* Header */}
             <div className="flex items-start border-b-[3px] border-slate-900 pb-3">
                 <div className="w-[20%] border-r-2 border-slate-900 pr-2 mr-3 self-stretch flex flex-col justify-center">
-                    <p className="text-2xl font-black leading-none">2848</p>
+                    <p className="text-2xl font-black leading-none text-slate-900">2848</p>
                     <p className="text-[10px] text-slate-500 leading-snug mt-1">(Rev. January 2021)<br/>Department of the Treasury<br/>Internal Revenue Service</p>
                 </div>
                 <div className="flex-1 text-center">
-                    <p className="text-lg font-black leading-tight">Power of Attorney<br/>and Declaration of Representative</p>
+                    <p className="text-lg font-black leading-tight text-slate-900">Power of Attorney<br/>and Declaration of Representative</p>
                     <p className="text-[11px] text-slate-500 mt-1">▶ Go to www.irs.gov/Form2848 for instructions and the latest information.</p>
                 </div>
                 <div className="w-[18%] text-right border-l-2 border-slate-900 pl-2 ml-3 self-stretch flex flex-col justify-center">
@@ -555,11 +555,11 @@ const Form9465: React.FC<FormPreviewProps> = ({ form, data }) => {
             {/* Header */}
             <div className="flex items-start border-b-[3px] border-slate-900 pb-3">
                 <div className="w-[20%] border-r-2 border-slate-900 pr-2 mr-3 self-stretch flex flex-col justify-center">
-                    <p className="text-2xl font-black leading-none">9465</p>
+                    <p className="text-2xl font-black leading-none text-slate-900">9465</p>
                     <p className="text-[10px] text-slate-500 leading-snug mt-1">(Rev. December 2024)<br/>Department of the Treasury<br/>Internal Revenue Service</p>
                 </div>
                 <div className="flex-1 text-center">
-                    <p className="text-lg font-black leading-tight">Installment Agreement Request</p>
+                    <p className="text-lg font-black leading-tight text-slate-900">Installment Agreement Request</p>
                     <p className="text-[11px] text-slate-500 mt-1">▶ Do not file this form if you are currently making payments on an installment agreement.</p>
                     <p className="text-[11px] text-slate-500">▶ Go to www.irs.gov/Form9465 for instructions and the latest information.</p>
                 </div>
@@ -705,7 +705,7 @@ const Form1099: React.FC<FormPreviewProps> = ({ form, data }) => {
 
             {/* Footer */}
             <div className="bg-slate-50 border-t border-slate-400 px-3 py-1.5 flex items-center justify-between">
-                <p className="text-sm font-black">Form 1099-{formNum}</p>
+                <p className="text-sm font-black text-slate-900">Form 1099-{formNum}</p>
                 <p className="text-xs text-slate-500">Copy B — For Recipient</p>
                 <p className="text-xs text-slate-500">www.irs.gov/Form1099{formNum}</p>
             </div>
@@ -727,18 +727,18 @@ const GenericForm: React.FC<FormPreviewProps> = ({ form, data }) => {
             {/* Header */}
             <div className="flex items-start border-b-[3px] border-slate-900 pb-3">
                 <div className="w-[20%] border-r-2 border-slate-900 pr-2 mr-3 self-stretch flex flex-col justify-center">
-                    <p className="text-xl font-black leading-tight">{form.number.length > 10 ? form.number.substring(0, 10) : form.number}</p>
+                    <p className="text-xl font-black leading-tight text-slate-900">{form.number.length > 10 ? form.number.substring(0, 10) : form.number}</p>
                     <p className="text-[10px] text-slate-500 leading-snug mt-1">{isState ? `${form.state}\nDepartment of Revenue` : '(Rev. 2025)\nDepartment of the Treasury\nInternal Revenue Service'}</p>
                 </div>
                 <div className="flex-1 text-center">
-                    <p className="text-base font-black leading-tight">{form.name}</p>
+                    <p className="text-base font-black leading-tight text-slate-900">{form.name}</p>
                     <p className="text-[11px] text-slate-500 mt-1">{form.description}</p>
                     {isState && <p className="text-[11px] text-slate-500">▶ See instructions for this form</p>}
                 </div>
                 <div className="w-[16%] text-right border-l-2 border-slate-900 pl-2 ml-3 self-stretch flex flex-col justify-center">
                     {!isState && <p className="text-[11px] text-slate-500 leading-snug">OMB No.<br/>1545-0074</p>}
                     <div className="inline-block border-2 border-slate-900 px-2 py-0.5 mt-1 ml-auto">
-                        <p className="text-sm font-black leading-none">2025</p>
+                        <p className="text-sm font-black leading-none text-slate-900">2025</p>
                     </div>
                 </div>
             </div>
