@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
@@ -9,6 +10,7 @@ import { WeatherFx } from './ui/WeatherFx';
 
 const Services: React.FC = () => {
     const { theme } = useTheme();
+    const router = useRouter();
 
     // Load Cal.com embed script
     useEffect(() => {
@@ -233,10 +235,7 @@ const Services: React.FC = () => {
                                     Stop emailing W-2s. Collect client documents through your firm's own branded portal with AES-256 encryption and per-firm isolated storage.
                                 </p>
                                 <button
-                                    onClick={() => {
-                                        window.history.pushState({}, '', '/document-portal');
-                                        window.dispatchEvent(new PopStateEvent('popstate'));
-                                    }}
+                                    onClick={() => router.push('/document-portal')}
                                     className="inline-flex items-center gap-1.5 text-cyan-500 text-sm font-bold hover:text-cyan-400 transition-colors bg-transparent border-none p-0 cursor-pointer"
                                 >
                                     See the Demo
