@@ -755,9 +755,9 @@ const DocumentPortal: React.FC = () => {
                                     <button
                                         key={stat.id}
                                         onClick={() => handleStatTabClick(i)}
-                                        className={`flex-1 min-w-[140px] md:min-w-0 relative flex items-center gap-2 md:gap-3 px-4 md:px-8 py-4 md:py-6 text-left transition-colors ${activeStatIndex === i ? '' : 'opacity-50 hover:opacity-75'}`}
+                                        className={`flex-1 min-w-0 relative flex items-center gap-1.5 md:gap-3 px-2 md:px-8 py-3 md:py-6 text-left transition-colors ${activeStatIndex === i ? '' : 'opacity-50 hover:opacity-75'}`}
                                     >
-                                        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0 ${activeStatIndex === i ? 'bg-cyan-500/20 text-cyan-400' : `text-[var(--text-muted)] ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'}`}`}>
+                                        <div className={`w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0 ${activeStatIndex === i ? 'bg-cyan-500/20 text-cyan-400' : `text-[var(--text-muted)] ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'}`}`}>
                                             {stat.icon}
                                         </div>
                                         <div>
