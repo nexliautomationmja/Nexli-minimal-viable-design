@@ -42,7 +42,6 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { label: 'Portfolio', view: 'portfolio' as const },
     { label: 'Rainmaker™', view: 'services' as const },
-    { label: 'Blog', view: 'blog' as const },
     { label: 'Free Guide', view: 'guide' as const },
     { label: 'Google Reviews', view: 'smartReviews' as const, hasGoogleIcon: true },
     { label: 'Doc Portal', view: 'documentPortal' as const },

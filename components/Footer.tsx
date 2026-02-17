@@ -43,6 +43,12 @@ const Footer: React.FC = () => {
           />
           <div className="flex gap-10 text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
             <Link
+              href="/blog"
+              className="hover:text-blue-500 transition-colors uppercase tracking-[0.2em]"
+            >
+              Blog
+            </Link>
+            <Link
               href="/privacy"
               className="hover:text-blue-500 transition-colors uppercase tracking-[0.2em]"
             >
