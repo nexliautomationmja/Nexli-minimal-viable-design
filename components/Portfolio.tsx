@@ -104,6 +104,8 @@ const Portfolio: React.FC = () => {
         calLink: "nexli-automation-6fgn8j/nexli-demo",
         config: { "layout": "month_view", "theme": theme },
       });
+    } else {
+      window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
     }
   };
 

@@ -71,7 +71,7 @@ const TermsAndConditions: React.FC = () => {
                         <p className="text-sm mt-4">
                             For more information on how we handle your data, please review our{' '}
                             <button
-                                onClick={() => { window.history.pushState({}, '', '/privacy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+                                onClick={() => router.push('/privacy')}
                                 className="text-blue-500 underline hover:text-blue-400 transition-colors bg-transparent border-none p-0 cursor-pointer text-sm"
                             >
                                 Privacy Policy
@@ -105,7 +105,7 @@ const TermsAndConditions: React.FC = () => {
                         <p className="text-center text-[var(--text-muted)] text-sm">
                             For information about how we collect and use your data, please review our{' '}
                             <button
-                                onClick={() => { window.history.pushState({}, '', '/privacy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+                                onClick={() => router.push('/privacy')}
                                 className="text-blue-500 underline hover:text-blue-400 transition-colors bg-transparent border-none p-0 cursor-pointer font-bold"
                             >
                                 Privacy Policy

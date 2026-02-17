@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import type { FirmBrandConfig } from './firmBrandConfigs';
 
 interface FirmNavbarProps {
@@ -9,6 +10,7 @@ interface FirmNavbarProps {
 }
 
 const FirmNavbar: React.FC<FirmNavbarProps> = ({ config, navigate }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const { colors, fonts, navLinks, style, firmName } = config;
 
@@ -29,8 +31,7 @@ const FirmNavbar: React.FC<FirmNavbarProps> = ({ config, navigate }) => {
     if (navigate) {
       navigate(view as any);
     } else {
-      window.history.pushState({}, '', view === 'home' ? '/' : `/${view}`);
-      window.location.reload();
+      router.push(view === 'home' ? '/' : `/${view}`);
     }
   };
 

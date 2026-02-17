@@ -1,9 +1,11 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowRight, TrendingUp, ShieldCheck, CalendarX, Repeat } from 'lucide-react';
 
 const Hero: React.FC = () => {
+  const router = useRouter();
   return (
     <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center pt-20 md:pt-24 pb-0 overflow-hidden bg-[var(--bg-main)]">
       {/* Cinematic Video Background - Seamlessly Blended */}
@@ -135,10 +137,7 @@ const Hero: React.FC = () => {
             <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
           </a>
           <button
-            onClick={() => {
-              window.history.pushState({}, '', '/portfolio');
-              window.dispatchEvent(new PopStateEvent('popstate'));
-            }}
+            onClick={() => router.push('/portfolio')}
             className="relative flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-blue-400 overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-transform group cursor-pointer border-none bg-transparent"
           >
             {/* Shimmer border effect */}

@@ -1,10 +1,12 @@
 'use client';
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { Send, CheckCircle } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 
 const ContactForm: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -244,8 +246,8 @@ const ContactForm: React.FC = () => {
 
                   <p className="px-2 text-[var(--text-muted)] opacity-50 text-[7px] md:text-[9px] leading-relaxed italic text-center">
                     View our{' '}
-                    <button type="button" onClick={() => { window.history.pushState({}, '', '/privacy'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[7px] md:text-[9px] cursor-pointer">Privacy Policy</button>{' '}and{' '}
-                    <button type="button" onClick={() => { window.history.pushState({}, '', '/terms'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[7px] md:text-[9px] cursor-pointer">Terms & Conditions</button>.
+                    <button type="button" onClick={() => router.push('/privacy')} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[7px] md:text-[9px] cursor-pointer">Privacy Policy</button>{' '}and{' '}
+                    <button type="button" onClick={() => router.push('/terms')} className="underline hover:text-blue-500 transition-colors bg-transparent border-none p-0 italic text-[var(--text-muted)] opacity-100 text-[7px] md:text-[9px] cursor-pointer">Terms & Conditions</button>.
                   </p>
                 </div>
 
