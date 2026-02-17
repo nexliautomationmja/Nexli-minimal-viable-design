@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useRef } from "react"
 import { cn } from "../../lib/utils"
 import { AnimatedBeam } from "./AnimatedBeam"

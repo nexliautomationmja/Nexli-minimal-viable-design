@@ -1,7 +1,8 @@
+'use client';
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield } from 'lucide-react';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 import { SparklesCore } from './Sparkles';
 import { Timeline } from './ui/Timeline';
 import { WeatherFx } from './ui/WeatherFx';
@@ -394,7 +395,7 @@ const Services: React.FC = () => {
                                 className={`inline-block mr-3 md:mr-4 ${
                                     word === "Rainmaker"
                                         ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500"
-                                        : ""
+                                        : "!text-white"
                                 }`}
                             >
                                 {word}
@@ -414,7 +415,7 @@ const Services: React.FC = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.9 }}
-                        className="relative z-10 text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 text-neutral-300 leading-relaxed"
+                        className="relative z-10 text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 !text-neutral-300 leading-relaxed"
                     >
                         Your firm's 24/7 client acquisition machine. A premium website, AI automation, and Google review engine — working together to attract high-value clients while you sleep.
                     </motion.p>
@@ -461,7 +462,7 @@ const Services: React.FC = () => {
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="text-xs md:text-sm font-black tracking-[0.2em] uppercase text-blue-400 mb-3"
+                            className="text-xs md:text-sm font-black tracking-[0.2em] uppercase !text-blue-400 mb-3"
                         >
                             3-Step System
                         </motion.p>
@@ -470,7 +471,7 @@ const Services: React.FC = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.1 }}
-                            className="text-2xl md:text-4xl font-bold text-white max-w-2xl mx-auto"
+                            className="text-2xl md:text-4xl font-bold !text-white max-w-2xl mx-auto"
                         >
                             Here's How It Works
                         </motion.h2>

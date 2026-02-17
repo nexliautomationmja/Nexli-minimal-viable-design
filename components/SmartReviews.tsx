@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -18,7 +19,7 @@ import {
     Star,
     RefreshCw
 } from 'lucide-react';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 
 type DemoState = 'idle' | 'selected' | 'positive' | 'negative' | 'feedbackSent';
 
@@ -185,7 +186,7 @@ const SmartReviews: React.FC = () => {
         }
     };
 
-    // Inline star SVG component
+    // Inline star SVG component — single click triggers action on all devices
     const StarIcon: React.FC<{ index: number; filled: boolean; hovered: boolean }> = ({ index, filled, hovered }) => (
         <motion.svg
             width="48"
@@ -197,10 +198,6 @@ const SmartReviews: React.FC = () => {
             whileTap={{ scale: 0.9 }}
             onMouseEnter={() => demoState === 'idle' && setHoveredStar(index)}
             onMouseLeave={() => demoState === 'idle' && setHoveredStar(0)}
-            onTouchStart={(e) => {
-                e.preventDefault();
-                if (demoState === 'idle') handleStarClick(index);
-            }}
             onClick={() => demoState === 'idle' && handleStarClick(index)}
         >
             <path
@@ -762,7 +759,7 @@ const SmartReviews: React.FC = () => {
                                                 How was your experience?
                                             </h3>
                                             <p className="text-[var(--text-muted)] text-sm mb-8">
-                                                Tap a star to leave your Google review
+                                                Click a star to leave your Google review
                                             </p>
                                             <div className="flex justify-center gap-2 md:gap-3">
                                                 {[1, 2, 3, 4, 5].map((index) => (

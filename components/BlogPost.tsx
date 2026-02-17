@@ -1,16 +1,13 @@
+'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../App';
+import { useRouter } from 'next/navigation';
+import { useTheme } from './ThemeProvider';
 import { ArrowLeft, ArrowRight, Clock, Calendar } from 'lucide-react';
 import { BlogPost as BlogPostType, getBlogPostBySlug, blogPosts } from '../data/blogPosts';
 
-interface BlogPostProps {
-  slug: string;
-  onBack: () => void;
-  onNavigate: (slug: string) => void;
-}
-
-const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
+const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
+    const router = useRouter();
   const { theme } = useTheme();
   const post = getBlogPostBySlug(slug);
 
@@ -31,7 +28,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-[var(--text-main)] mb-4">Post not found</h1>
           <button
-            onClick={onBack}
+            onClick={() => router.push('/blog')}
             className="text-blue-500 hover:text-blue-400 font-semibold"
           >
             Back to Blog
@@ -63,7 +60,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={onBack}
+          onClick={() => router.push('/blog')}
           className="absolute top-24 md:top-32 left-6 md:left-12 z-50 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 cursor-pointer"
         >
           <ArrowLeft size={18} />
@@ -162,7 +159,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
         <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-4">
           {prevPost && (
             <button
-              onClick={() => onNavigate(prevPost.slug)}
+              onClick={() => router.push(`/blog/${prevPost.slug}`)}
               className="group p-6 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-left hover:border-blue-500/30 transition-all"
             >
               <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2 mb-2">
@@ -176,7 +173,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ slug, onBack, onNavigate }) => {
           )}
           {nextPost && (
             <button
-              onClick={() => onNavigate(nextPost.slug)}
+              onClick={() => router.push(`/blog/${nextPost.slug}`)}
               className="group p-6 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-right hover:border-blue-500/30 transition-all md:col-start-2"
             >
               <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center justify-end gap-2 mb-2">

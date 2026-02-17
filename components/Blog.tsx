@@ -1,15 +1,14 @@
+'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../App';
+import { useRouter } from 'next/navigation';
+import { useTheme } from './ThemeProvider';
 import { SparklesCore } from './Sparkles';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { blogPosts } from '../data/blogPosts';
 
-interface BlogProps {
-  onNavigateToBlogPost: (slug: string) => void;
-}
-
-const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
+const Blog: React.FC = () => {
+    const router = useRouter();
   const { theme } = useTheme();
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
@@ -165,7 +164,7 @@ const Blog: React.FC<BlogProps> = ({ onNavigateToBlogPost }) => {
                     className="last:pr-[5%] md:last:pr-[33%] rounded-3xl"
                   >
                     <button
-                      onClick={() => onNavigateToBlogPost(post.slug)}
+                      onClick={() => router.push(`/blog/${post.slug}`)}
                       className="rounded-3xl bg-[var(--glass-bg)] dark:bg-[#0f0f0f] border border-[var(--glass-border)] h-48 w-72 md:h-80 md:w-[28rem] overflow-hidden flex flex-col items-start justify-end relative z-10 hover:scale-[1.02] transition-transform text-left"
                     >
                       <div className="absolute h-full bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-30 pointer-events-none" />

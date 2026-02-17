@@ -1,7 +1,8 @@
+'use client';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Send, ArrowRight, Download } from 'lucide-react';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 
 const FreeGuide: React.FC = () => {
     const { theme } = useTheme();

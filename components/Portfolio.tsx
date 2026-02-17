@@ -1,7 +1,9 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { useTheme } from '../App';
+import { useRouter } from 'next/navigation';
+import { useTheme } from './ThemeProvider';
 import { ShimmerButton } from './ui/ShimmerButton';
 import PortfolioPreview from './portfolio/PortfolioPreview';
 import SummitTaxGroup from './portfolio/SummitTaxGroup';
@@ -9,10 +11,6 @@ import ClarityAdvisory from './portfolio/ClarityAdvisory';
 import MeridianFinancial from './portfolio/MeridianFinancial';
 import HarborWealth from './portfolio/HarborWealth';
 import { Lightspeed } from './ui/Lightspeed';
-
-interface PortfolioProps {
-  onNavigateToFirm: (slug: string) => void;
-}
 
 const firms = [
   {
@@ -45,7 +43,8 @@ const firms = [
   },
 ];
 
-const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
+const Portfolio: React.FC = () => {
+    const router = useRouter();
   const { theme } = useTheme();
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth < 768 : false
@@ -173,7 +172,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onNavigateToFirm }) => {
                 subtitle={firm.subtitle}
                 slug={firm.slug}
                 accentColor={firm.accentColor}
-                onNavigate={onNavigateToFirm}
+                onNavigate={(slug: string) => router.push(`/portfolio/${slug}`)}
               >
                 <firm.component />
               </PortfolioPreview>

@@ -1,7 +1,8 @@
+'use client';
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Send, CheckCircle } from 'lucide-react';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState({

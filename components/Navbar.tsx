@@ -1,17 +1,36 @@
+'use client';
+
 import React, { useState, useCallback } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronRight, Sun, Moon, Mail, Check } from 'lucide-react';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 
-interface NavbarProps {
-  setView: (view: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | 'documentPortal') => void;
-  currentView: 'home' | 'privacy' | 'terms' | 'guide' | 'services' | 'blog' | 'blogPost' | 'portfolio' | 'portfolioFirm' | 'smartReviews' | 'documentPortal';
-}
+const VIEW_TO_PATH: Record<string, string> = {
+  home: '/',
+  portfolio: '/portfolio',
+  services: '/rainmaker',
+  blog: '/blog',
+  guide: '/free-guide',
+  smartReviews: '/smart-reviews',
+  documentPortal: '/document-portal',
+  privacy: '/privacy',
+  terms: '/terms',
+};
 
-const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
+const PATH_TO_VIEW: Record<string, string> = Object.fromEntries(
+  Object.entries(VIEW_TO_PATH).map(([k, v]) => [v, k])
+);
+
+const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Derive currentView from pathname
+  const currentView = PATH_TO_VIEW[pathname] || 'home';
 
   const handleEmailClick = useCallback(() => {
     navigator.clipboard.writeText('mail@nexli.net');
@@ -29,14 +48,14 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
     { label: 'Doc Portal', view: 'documentPortal' as const },
   ];
 
+  const navigateTo = (view: string) => {
+    const path = VIEW_TO_PATH[view] || '/';
+    router.push(path);
+  };
+
   const handleNavClick = (link: typeof navLinks[0]) => {
     setIsOpen(false);
-    if (link.id) {
-      setView('home');
-      setTimeout(() => document.getElementById(link.id!)?.scrollIntoView({ behavior: 'smooth' }), 100);
-    } else {
-      setView(link.view);
-    }
+    navigateTo(link.view);
   };
 
   return (
@@ -44,7 +63,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
       {/* Desktop Logo - Top Left */}
       <div className="fixed top-8 left-8 z-[110] hidden md:block">
         <button
-          onClick={() => setView('home')}
+          onClick={() => navigateTo('home')}
           className={`flex items-center gap-2 group cursor-pointer backdrop-blur-md px-4 py-2 rounded-full border no-underline transition-colors duration-300 ${theme === 'dark'
             ? 'bg-black/20 border-white/5'
             : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'
@@ -86,7 +105,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
 
             {/* Mobile Logo Identification */}
             <button
-              onClick={() => { setIsOpen(false); setView('home'); }}
+              onClick={() => { setIsOpen(false); navigateTo('home'); }}
               className={`flex md:hidden items-center gap-2 group cursor-pointer backdrop-blur-md px-3 py-1.5 rounded-full border no-underline transition-colors duration-300 ${theme === 'dark'
                 ? 'bg-black/20 border-white/5'
                 : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'
@@ -160,15 +179,24 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  setView('home');
-                  setTimeout(() => {
+                  if (pathname !== '/') {
+                    router.push('/');
+                    setTimeout(() => {
+                      const isMobile = window.innerWidth < 768;
+                      if (isMobile) {
+                        document.getElementById('book-mobile')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      } else {
+                        document.getElementById('book')?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }, 500);
+                  } else {
                     const isMobile = window.innerWidth < 768;
                     if (isMobile) {
                       document.getElementById('book-mobile')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     } else {
                       document.getElementById('book')?.scrollIntoView({ behavior: 'smooth' });
                     }
-                  }, 100);
+                  }
                 }}
                 className="bg-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap"
               >

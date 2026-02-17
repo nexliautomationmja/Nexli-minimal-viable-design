@@ -1,14 +1,12 @@
+'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../App';
+import { useRouter } from 'next/navigation';
+import { useTheme } from './ThemeProvider';
 import { Home, ArrowLeft, Search } from 'lucide-react';
 
-interface NotFoundProps {
-  onGoHome: () => void;
-  onGoBack: () => void;
-}
-
-const NotFound: React.FC<NotFoundProps> = ({ onGoHome, onGoBack }) => {
+const NotFound: React.FC = () => {
+  const router = useRouter();
   const { theme } = useTheme();
 
   return (
@@ -64,14 +62,14 @@ const NotFound: React.FC<NotFoundProps> = ({ onGoHome, onGoBack }) => {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <button
-            onClick={onGoHome}
+            onClick={() => router.push('/')}
             className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-lg shadow-blue-600/25"
           >
             <Home size={18} />
             Go Home
           </button>
           <button
-            onClick={onGoBack}
+            onClick={() => router.back()}
             className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-all border ${
               theme === 'dark'
                 ? 'border-white/20 text-white hover:bg-white/10'
@@ -99,7 +97,7 @@ const NotFound: React.FC<NotFoundProps> = ({ onGoHome, onGoBack }) => {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
             <button
-              onClick={onGoHome}
+              onClick={() => router.push('/')}
               className="text-blue-500 hover:text-blue-400 transition-colors"
             >
               Home

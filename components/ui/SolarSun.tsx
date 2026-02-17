@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 
 interface SolarSunProps {
@@ -143,23 +144,30 @@ export const SolarSun: React.FC<SolarSunProps> = ({ className }) => {
       />
 
       {/* Light particles / dust motes */}
-      {Array.from({ length: 15 }).map((_, i) => (
+      {Array.from({ length: 15 }).map((_, i) => {
+        const seed = (i * 7 + 3) % 15;
+        const size = 2 + (seed / 15) * 3;
+        const top = 10 + ((i * 13 + 5) % 15) / 15 * 70;
+        const left = (i * 17 % 15) / 15 * 100;
+        const delay = (i / 15) * 5;
+        const duration = 3 + (seed / 15) * 4;
+        return (
         <div
           key={i}
           className="animate-float-particle"
           style={{
             position: 'absolute',
-            width: `${2 + Math.random() * 3}px`,
-            height: `${2 + Math.random() * 3}px`,
+            width: `${size}px`,
+            height: `${size}px`,
             borderRadius: '50%',
             background: 'rgba(253,224,71,0.4)',
-            top: `${10 + Math.random() * 70}%`,
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${3 + Math.random() * 4}s`,
+            top: `${top}%`,
+            left: `${left}%`,
+            animationDelay: `${delay}s`,
+            animationDuration: `${duration}s`,
           }}
         />
-      ))}
+      );})}
     </div>
   );
 };

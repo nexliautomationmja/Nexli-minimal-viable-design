@@ -1,6 +1,7 @@
+'use client';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useTheme } from '../../App';
+import { useTheme } from '../ThemeProvider';
 import FirmNavbar from './FirmNavbar';
 import { clarityConfig } from './firmBrandConfigs';
 

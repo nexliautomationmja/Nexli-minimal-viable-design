@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_FRAG = `#version 300 es

@@ -1,8 +1,9 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Video, ArrowRight } from 'lucide-react';
 
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 
 const BookingSection: React.FC = () => {
   const { theme } = useTheme();

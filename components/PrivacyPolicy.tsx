@@ -1,17 +1,16 @@
+'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { Shield, ArrowLeft } from 'lucide-react';
 
-interface PrivacyPolicyProps {
-    onBack: () => void;
-}
-
-const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
+const PrivacyPolicy: React.FC = () => {
+    const router = useRouter();
     return (
         <section className="min-h-screen py-32 bg-[var(--bg-main)] transition-colors duration-300">
             <div className="max-w-4xl mx-auto px-6">
                 <button
-                    onClick={onBack}
+                    onClick={() => router.push('/')}
                     className="flex items-center gap-2 text-blue-500 font-bold mb-12 hover:gap-3 transition-all uppercase tracking-widest text-xs"
                 >
                     <ArrowLeft size={16} />

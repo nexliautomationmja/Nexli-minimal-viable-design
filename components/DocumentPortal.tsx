@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -37,7 +38,7 @@ import {
     Save,
     PenLine,
 } from 'lucide-react';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 import { allForms, formCategories, allStates, getFormFields, type TaxForm, type FormCategory } from '../data/taxForms';
 import FormPreview from './FormPreview';
 
@@ -53,6 +54,8 @@ interface UploadedFile {
     date: string;
     status: 'New' | 'Reviewed' | 'Archived';
 }
+
+let fileIdCounter = 0;
 
 const DocumentPortal: React.FC = () => {
     const { theme } = useTheme();
@@ -163,7 +166,7 @@ const DocumentPortal: React.FC = () => {
                     setNewUploadAlert(true);
                     setUploadedFiles((files) => [
                         {
-                            id: `file-${Date.now()}`,
+                            id: `file-${Date.now()}-${++fileIdCounter}`,
                             name: fileName,
                             type: fileType,
                             size: `${(Math.random() * 2 + 0.5).toFixed(1)} MB`,
@@ -214,7 +217,7 @@ const DocumentPortal: React.FC = () => {
             setCaptureStep(null);
             setNewUploadAlert(true);
             setUploadedFiles(files => [{
-                id: `file-${Date.now()}`,
+                id: `file-${Date.now()}-${++fileIdCounter}`,
                 name: `${docLabel}_2025.pdf`,
                 type: 'PDF',
                 size: `${(Math.random() * 2 + 0.5).toFixed(1)} MB`,

@@ -1,10 +1,11 @@
+'use client';
 "use client";
 
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Marquee } from './ui/Marquee';
 import { cn } from '../lib/utils';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 import { AuroraText } from './ui/AuroraText';
 
 interface Complaint {

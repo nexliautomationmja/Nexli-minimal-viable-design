@@ -1,7 +1,7 @@
-"use client";
+'use client';
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useTheme } from "../../App";
+import { useTheme } from "../ThemeProvider";
 
 interface TimelineEntry {
   title: string;

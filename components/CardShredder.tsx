@@ -1,6 +1,7 @@
+'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../App';
+import { useTheme } from './ThemeProvider';
 
 const CARDS = [
     { amount: '$50K', label: 'Lost Client', network: 'visa' as const },
@@ -166,29 +167,38 @@ const CardShredder: React.FC = () => {
 
                 {/* Floating particles around the shredder beam */}
                 <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-20 z-30 pointer-events-none overflow-hidden">
-                    {[...Array(12)].map((_, i) => (
+                    {[...Array(12)].map((_, i) => {
+                        // Deterministic pseudo-random values based on index to avoid hydration mismatch
+                        const seed = (i * 7 + 3) % 12;
+                        const left = 30 + (seed / 12) * 40;
+                        const top = ((i * 13 + 5) % 12) / 12 * 100;
+                        const yOffset = -30 - (seed / 12) * 40;
+                        const xOffset = ((seed / 12) - 0.5) * 30;
+                        const duration = 2 + (seed / 12) * 2;
+                        const delay = (i / 12) * 3;
+                        return (
                         <motion.div
                             key={i}
                             className="absolute w-1 h-1 rounded-full"
                             style={{
                                 background: i % 2 === 0 ? '#ef4444' : '#f97316',
-                                left: `${30 + Math.random() * 40}%`,
-                                top: `${Math.random() * 100}%`,
+                                left: `${left}%`,
+                                top: `${top}%`,
                             }}
                             animate={{
-                                y: [0, -30 - Math.random() * 40, 0],
-                                x: [0, (Math.random() - 0.5) * 30, 0],
+                                y: [0, yOffset, 0],
+                                x: [0, xOffset, 0],
                                 opacity: [0, 0.8, 0],
                                 scale: [0, 1, 0],
                             }}
                             transition={{
-                                duration: 2 + Math.random() * 2,
+                                duration,
                                 repeat: Infinity,
-                                delay: Math.random() * 3,
+                                delay,
                                 ease: 'easeInOut',
                             }}
                         />
-                    ))}
+                    );})}
                 </div>
             </div>
 
