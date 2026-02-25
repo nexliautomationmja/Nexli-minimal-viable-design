@@ -1,16 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Monitor, Layout, Code, Palette, Globe } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
-import { ShimmerButton } from './ui/ShimmerButton';
 import PortfolioPreview from './portfolio/PortfolioPreview';
 import SummitTaxGroup from './portfolio/SummitTaxGroup';
 import ClarityAdvisory from './portfolio/ClarityAdvisory';
 import MeridianFinancial from './portfolio/MeridianFinancial';
 import HarborWealth from './portfolio/HarborWealth';
-import { Lightspeed } from './ui/Lightspeed';
 
 const firms = [
   {
@@ -109,52 +107,155 @@ const Portfolio: React.FC = () => {
     }
   };
 
+  const heroIcons = [Monitor, Layout, Code, Palette, Globe];
+
   return (
-    <div className="min-h-screen bg-[var(--bg-main)]">
-      {/* Hero Section with Lightspeed */}
-      <div className="w-full rounded-md flex flex-col items-center justify-center relative overflow-hidden min-h-[70vh] md:min-h-0 pt-32 pb-20 md:pt-40 md:pb-24 bg-black">
-        <Lightspeed speed={0.4} intensity={0.8} particleCount={15} quality="medium" />
+    <div className="min-h-screen bg-[var(--bg-main)] transition-colors duration-300 pt-32 pb-0">
+      <div className="max-w-7xl mx-auto px-6">
 
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 mb-8"
-        >
-          <ShimmerButton className="shadow-2xl">
-            <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg">
-              Explore Projects
-            </span>
-          </ShimmerButton>
-        </motion.div>
+        {/* ── Hero Section ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "circOut" }}
+          >
+            {/* Shimmer badge */}
+            <div className="relative inline-flex items-center mb-6 rounded-full overflow-hidden p-[1.5px]">
+              <span
+                className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
+                style={{
+                  background: 'conic-gradient(from 0deg at 50% 50%, #2563EB, #06B6D4, #3B82F6, #0EA5E9, #2563EB)'
+                }}
+              />
+              <span
+                className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
+                style={{
+                  background: 'conic-gradient(from 0deg at 50% 50%, #2563EB, #06B6D4, #3B82F6, #0EA5E9, #2563EB)'
+                }}
+              />
+              <span className="relative z-10 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--bg-main)]">
+                <Monitor size={14} className="text-blue-400" />
+                <span className="text-[var(--text-main)] text-[10px] md:text-xs font-black tracking-[0.2em] uppercase">Premium Websites</span>
+              </span>
+            </div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 text-white text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-center mb-6 px-2 md:px-10"
-        >
-          Websites that
-          <br />
-          <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-aurora">
-            convert clients.
-          </span>
-        </motion.h2>
+            <h1 className="text-[26px] sm:text-4xl md:text-6xl font-black text-[var(--text-main)] mb-6 leading-tight tracking-tighter" style={{ fontFamily: "'Syne', sans-serif" }}>
+              Websites That Turn Visitors Into{' '}
+              <br className="hidden md:block" /><span className="text-blue-500">High-Value Clients.</span>
+            </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative z-10 text-white/60 text-base md:text-lg max-w-2xl mt-6 text-center leading-relaxed px-2 md:px-10"
-        >
-          Premium digital experiences built for financial firms. Each project is
-          crafted to reflect the caliber of service our clients provide.
-        </motion.p>
+            {/* Mobile floating icons */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: "circOut" }}
+              className="flex lg:hidden items-center justify-center my-8 relative"
+            >
+              <div className="absolute inset-0 bg-blue-500/10 blur-[80px] rounded-full" />
+              <div className="relative z-10 flex gap-3" style={{ perspective: '600px' }}>
+                {heroIcons.map((Icon, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{
+                      opacity: 1,
+                      y: [0, -6, 0],
+                      rotateX: [0, 4, 0],
+                      rotateY: [0, i % 2 === 0 ? 6 : -6, 0],
+                    }}
+                    transition={{
+                      opacity: { delay: 0.3 + i * 0.15, duration: 0.6 },
+                      y: { delay: 0.8 + i * 0.15, duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
+                      rotateX: { delay: 0.8 + i * 0.15, duration: 3.5 + i * 0.3, repeat: Infinity, ease: "easeInOut" },
+                      rotateY: { delay: 0.8 + i * 0.15, duration: 4 + i * 0.5, repeat: Infinity, ease: "easeInOut" },
+                    }}
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center" style={{ filter: 'drop-shadow(0 4px 8px rgba(37, 99, 235, 0.3))' }}>
+                      <Icon size={20} className="text-blue-400" />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
+              No templates. No shortcuts. Every website is custom-designed for CPAs, financial advisors, and wealth managers who want a digital presence that matches the caliber of service they deliver.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
+              <button
+                onClick={() => document.getElementById('portfolio-grid')?.scrollIntoView({ behavior: 'smooth' })}
+                className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/20 group"
+              >
+                Explore Projects
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button
+                onClick={openCalPopup}
+                className="flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-[var(--text-main)] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md hover:border-blue-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                Book Now
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Right: floating icons (desktop) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "circOut" }}
+            className="relative hidden lg:flex items-center justify-center"
+          >
+            <div className="absolute inset-0 bg-blue-500/10 blur-[100px] rounded-full" />
+            <div className="relative z-10 flex flex-col items-center gap-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="flex items-center gap-3"
+              >
+                <Monitor size={48} className="text-blue-400" />
+                <span className="text-3xl font-bold text-[var(--text-main)]">Premium Websites</span>
+              </motion.div>
+              <div className="flex gap-3" style={{ perspective: '600px' }}>
+                {heroIcons.map((Icon, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{
+                      opacity: 1,
+                      y: [0, -6, 0],
+                      rotateX: [0, 4, 0],
+                      rotateY: [0, i % 2 === 0 ? 6 : -6, 0],
+                      rotateZ: [0, i % 2 === 0 ? 2 : -2, 0],
+                    }}
+                    transition={{
+                      opacity: { delay: 0.3 + i * 0.15, duration: 0.6 },
+                      y: { delay: 0.8 + i * 0.15, duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
+                      rotateX: { delay: 0.8 + i * 0.15, duration: 3.5 + i * 0.3, repeat: Infinity, ease: "easeInOut" },
+                      rotateY: { delay: 0.8 + i * 0.15, duration: 4 + i * 0.5, repeat: Infinity, ease: "easeInOut" },
+                      rotateZ: { delay: 0.8 + i * 0.15, duration: 5 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
+                    }}
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    <div
+                      className="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center"
+                      style={{ filter: 'drop-shadow(0 4px 8px rgba(37, 99, 235, 0.3))' }}
+                    >
+                      <Icon size={28} className="text-blue-400" />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       {/* Portfolio Grid */}
-      <section className="max-w-6xl mx-auto px-6 md:px-6 pt-8 pb-32">
+      <section id="portfolio-grid" className="max-w-6xl mx-auto px-6 md:px-6 pt-8 pb-32">
         <div className="grid grid-cols-2 gap-5 md:gap-8">
           {firms.map((firm, index) => (
             <motion.div
