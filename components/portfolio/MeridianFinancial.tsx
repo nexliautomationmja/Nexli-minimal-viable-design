@@ -1,34 +1,38 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import FirmNavbar from './FirmNavbar';
 import { meridianConfig } from './firmBrandConfigs';
 
 // ---------------------------------------------------------------------------
-// Floating Particles – simple CSS-animated divs that drift slowly in the hero
+// Floating Particles – generated client-side only to avoid hydration mismatch
 // ---------------------------------------------------------------------------
-const particles = Array.from({ length: 18 }, (_, i) => ({
-  id: i,
-  size: Math.random() * 4 + 2,
-  x: Math.random() * 100,
-  y: Math.random() * 60,
-  duration: Math.random() * 12 + 14,
-  delay: Math.random() * -20,
-  opacity: Math.random() * 0.35 + 0.08,
-  color: ['#f97316', '#fbbf24', '#ef4444', '#06b6d4'][i % 4],
-}));
+function generateParticles() {
+  return Array.from({ length: 18 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 4 + 2,
+    x: Math.random() * 100,
+    y: Math.random() * 60,
+    duration: Math.random() * 12 + 14,
+    delay: Math.random() * -20,
+    opacity: Math.random() * 0.35 + 0.08,
+    color: ['#f97316', '#fbbf24', '#ef4444', '#06b6d4'][i % 4],
+  }));
+}
 
-const floatingLines = Array.from({ length: 6 }, (_, i) => ({
-  id: i,
-  width: Math.random() * 120 + 40,
-  x: Math.random() * 90,
-  y: Math.random() * 50 + 5,
-  rotation: Math.random() * 40 - 20,
-  duration: Math.random() * 16 + 18,
-  delay: Math.random() * -14,
-  opacity: Math.random() * 0.12 + 0.04,
-  color: ['#f97316', '#ef4444'][i % 2],
-}));
+function generateFloatingLines() {
+  return Array.from({ length: 6 }, (_, i) => ({
+    id: i,
+    width: Math.random() * 120 + 40,
+    x: Math.random() * 90,
+    y: Math.random() * 50 + 5,
+    rotation: Math.random() * 40 - 20,
+    duration: Math.random() * 16 + 18,
+    delay: Math.random() * -14,
+    opacity: Math.random() * 0.12 + 0.04,
+    color: ['#f97316', '#ef4444'][i % 2],
+  }));
+}
 
 // ---------------------------------------------------------------------------
 // Inline SVG Icons
@@ -149,6 +153,14 @@ function injectKeyframes() {
 // ---------------------------------------------------------------------------
 
 function HeroSection() {
+  const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
+  const [lines, setLines] = useState<ReturnType<typeof generateFloatingLines>>([]);
+
+  useEffect(() => {
+    setParticles(generateParticles());
+    setLines(generateFloatingLines());
+  }, []);
+
   return (
     <section
       className="relative overflow-hidden pt-20"
@@ -190,7 +202,7 @@ function HeroSection() {
       ))}
 
       {/* Floating lines */}
-      {floatingLines.map((l) => (
+      {lines.map((l) => (
         <div
           key={`line-${l.id}`}
           className="absolute pointer-events-none"
