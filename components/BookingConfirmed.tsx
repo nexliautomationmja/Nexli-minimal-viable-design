@@ -129,50 +129,50 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ value, onChange }) => {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl md:rounded-2xl bg-green-500/5 border border-green-500/10 p-5 md:p-8">
-        <div className="flex items-start gap-3 mb-4">
-          <Mic size={18} className="text-green-400 mt-0.5 flex-shrink-0" />
+      <div className="rounded-xl bg-green-500/5 border border-green-500/10 p-3 md:p-5">
+        <div className="flex items-start gap-2.5 mb-3">
+          <Mic size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-sm md:text-base font-bold text-[var(--text-main)] mb-1">Record your answers</p>
-            <p className="text-xs md:text-sm text-[var(--text-muted)] leading-relaxed">
+            <p className="text-sm font-bold text-[var(--text-main)] mb-0.5">Record your answers</p>
+            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
               Hit record and answer all three questions in one go. Speak naturally — we&apos;ll transcribe everything.
             </p>
           </div>
         </div>
 
-        <div className="bg-[var(--glass-border)] rounded-xl p-4 mb-4">
-          <p className="text-[10px] md:text-xs font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] mb-3">Questions to answer</p>
-          <ol className="space-y-2 text-sm text-[var(--text-main)] list-decimal list-inside leading-relaxed">
+        <div className="bg-[var(--glass-border)] rounded-lg p-3 mb-3">
+          <p className="text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] mb-2">Questions to answer</p>
+          <ol className="space-y-1.5 text-sm text-[var(--text-main)] list-decimal list-inside leading-relaxed">
             <li>What&apos;s your biggest operational challenge right now?</li>
             <li>What outcome would make this investment a no-brainer for you?</li>
             <li>How many clients does your firm serve?</li>
           </ol>
         </div>
 
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-2">
           {!isRecording ? (
             <button
               type="button"
               onClick={startRecording}
-              className="group relative w-24 h-24 md:w-28 md:h-28 rounded-full bg-red-500/10 border-2 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/20 transition-all flex items-center justify-center shadow-xl shadow-red-500/10 hover:shadow-red-500/20"
+              className="group relative w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/10 border-2 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/20 transition-all flex items-center justify-center shadow-xl shadow-red-500/10 hover:shadow-red-500/20"
             >
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-red-500 group-hover:bg-red-400 transition-colors flex items-center justify-center shadow-lg">
-                <Mic size={28} className="text-white" />
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 group-hover:bg-red-400 transition-colors flex items-center justify-center shadow-lg">
+                <Mic size={24} className="text-white" />
               </div>
             </button>
           ) : (
             <button
               type="button"
               onClick={stopRecording}
-              className="relative w-24 h-24 md:w-28 md:h-28 rounded-full bg-red-500/20 border-2 border-red-500/40 transition-all flex items-center justify-center"
+              className="relative w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/20 border-2 border-red-500/40 transition-all flex items-center justify-center"
             >
               <span className="absolute inset-0 rounded-full animate-ping bg-red-500/20" />
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-red-500 flex items-center justify-center shadow-lg">
-                <Square size={24} className="text-white fill-white" />
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 flex items-center justify-center shadow-lg">
+                <Square size={20} className="text-white fill-white" />
               </div>
             </button>
           )}
-          <span className="text-xs md:text-sm font-bold text-[var(--text-muted)]">
+          <span className="text-xs font-bold text-[var(--text-muted)]">
             {isRecording ? `Recording... ${formatTime(recordingTime)}` : hasRecording ? 'Tap to record again' : 'Tap to record'}
           </span>
         </div>
@@ -182,7 +182,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ value, onChange }) => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 md:p-5 rounded-xl bg-[var(--glass-bg)] border border-[var(--glass-border)]"
+          className="p-3 md:p-4 rounded-xl bg-[var(--glass-bg)] border border-[var(--glass-border)]"
         >
           <p className="text-[10px] md:text-xs font-black text-green-400 uppercase tracking-[0.2em] mb-2">Transcription</p>
           <p className="text-sm text-[var(--text-main)] leading-relaxed">{value}</p>
@@ -456,7 +456,7 @@ const BookingConfirmed: React.FC = () => {
     ? voiceTranscript.trim().length > 0
     : intelForm.challenge && intelForm.outcome && intelForm.clientCount;
 
-  const inputClass = 'w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-5 text-[var(--text-main)] focus:outline-none focus:border-green-500 transition-all font-medium text-sm md:text-base placeholder:text-[var(--text-muted)] placeholder:opacity-40';
+  const inputClass = 'w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-xl px-3 md:px-4 py-2 md:py-3 text-[var(--text-main)] focus:outline-none focus:border-green-500 transition-all font-medium text-sm placeholder:text-[var(--text-muted)] placeholder:opacity-40';
   const labelClass = 'text-[8px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2 mb-1.5 block';
 
   const heroIcons = [CheckCircle, Video, ClipboardCheck, MessageSquare, Calendar];
@@ -623,13 +623,13 @@ const BookingConfirmed: React.FC = () => {
         >
           <StepBadge number={1} label="Watch the Welcome Video" />
 
-          <div className={`relative rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
-            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
+          <div className={`relative max-w-3xl mx-auto rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
-            <div className="relative z-10 p-5 md:p-10">
+            <div className="relative z-10 p-4 md:p-8">
               <VideoPlaceholder label="Watch Welcome Video" />
 
-              <p className="mt-8 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-2xl mx-auto">
+              <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
                 A quick welcome from our team. We&apos;ll walk you through what to expect on your strategy session and how to get the most out of it.
               </p>
             </div>
@@ -658,9 +658,9 @@ const BookingConfirmed: React.FC = () => {
           </div>
 
           <div className={`relative max-w-3xl mx-auto rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
-            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
+            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
-            <div className="relative z-10 p-5 md:p-10">
+            <div className="relative z-10 p-4 md:p-8">
               <AnimatePresence mode="wait">
                 {!intelSubmitted ? (
                   <motion.form
@@ -669,7 +669,7 @@ const BookingConfirmed: React.FC = () => {
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.3 }}
                     onSubmit={handleIntelSubmit}
-                    className="space-y-6 md:space-y-8"
+                    className="space-y-4 md:space-y-5"
                   >
                     {/* Input mode toggle */}
                     <div className="flex items-center justify-center gap-2 p-1.5 rounded-xl bg-[var(--glass-border)] w-fit mx-auto">
@@ -704,7 +704,7 @@ const BookingConfirmed: React.FC = () => {
                         <div>
                           <label className={labelClass}>Question 1</label>
                           <textarea
-                            rows={4}
+                            rows={2}
                             placeholder="What's your biggest operational challenge right now?"
                             value={intelForm.challenge}
                             onChange={(e) => setIntelForm(prev => ({ ...prev, challenge: e.target.value }))}
@@ -716,7 +716,7 @@ const BookingConfirmed: React.FC = () => {
                         <div>
                           <label className={labelClass}>Question 2</label>
                           <textarea
-                            rows={3}
+                            rows={2}
                             placeholder="What outcome would make this investment a no-brainer for you?"
                             value={intelForm.outcome}
                             onChange={(e) => setIntelForm(prev => ({ ...prev, outcome: e.target.value }))}
@@ -747,7 +747,7 @@ const BookingConfirmed: React.FC = () => {
                     <button
                       type="submit"
                       disabled={intelLoading || !isFormValid}
-                      className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-3 md:py-5 rounded-xl md:rounded-2xl text-sm md:text-base font-bold hover:bg-green-500 hover:scale-[1.01] active:scale-[0.99] transition-all shadow-xl shadow-green-600/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2.5 md:py-3.5 rounded-xl text-sm font-bold hover:bg-green-500 hover:scale-[1.01] active:scale-[0.99] transition-all shadow-xl shadow-green-600/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
                       {intelLoading ? (
                         <>
@@ -833,13 +833,13 @@ const BookingConfirmed: React.FC = () => {
         >
           <StepBadge number={2} label="See the Digital Rainmaker System" />
 
-          <div className={`relative rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
-            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
+          <div className={`relative max-w-3xl mx-auto rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
-            <div className="relative z-10 p-5 md:p-10">
+            <div className="relative z-10 p-4 md:p-8">
               <VideoPlaceholder label="Watch How It Works" />
 
-              <p className="mt-8 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-2xl mx-auto">
+              <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
                 See exactly how the Digital Rainmaker System combines a premium website, AI automation, and Google review amplification to turn your firm into a client acquisition machine.
               </p>
             </div>
@@ -856,11 +856,11 @@ const BookingConfirmed: React.FC = () => {
         >
           <StepBadge number={3} label="Confirm Your Calendar Invite" />
 
-          <div className={`relative rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
-            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] blur-[120px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
+          <div className={`relative max-w-3xl mx-auto rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
-            <div className="relative z-10 p-5 md:p-10">
-              <div className="relative w-full aspect-video rounded-xl md:rounded-2xl overflow-hidden mb-8">
+            <div className="relative z-10 p-4 md:p-8">
+              <div className="relative w-full aspect-video rounded-xl md:rounded-2xl overflow-hidden mb-6">
                 <div className="absolute inset-0 bg-gradient-to-br from-green-950 via-emerald-900 to-teal-900" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center justify-center h-full gap-3 text-center px-4">
