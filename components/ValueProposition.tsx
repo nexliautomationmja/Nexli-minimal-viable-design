@@ -6,60 +6,60 @@ import { Monitor, Bot, Zap, ArrowRight, AlertCircle, CheckCircle } from 'lucide-
 const painPoints = [
   {
     id: "01",
-    painTitle: "Your Website Says 'Fine.' Your Clients Expect Exceptional.",
-    painDescription: "You didn't build a successful practice by being average. But when prospects visit your site, do they see the caliber of advisor who manages seven-figure portfolios—or just another template that looks like everyone else's?",
-    statistic: "82%",
-    statisticLabel: "of clients expect your digital presence to match Amazon and Netflix in quality",
-    solutionTitle: "Premium Digital Presence That Commands Respect",
-    solutionDescription: "We craft bespoke websites that communicate your expertise before you ever speak. Strategic design, compelling copy, and modern functionality that positions you as the obvious choice for discerning clients.",
+    painTitle: "Your Clients Finally See You as the Premium Firm You Are.",
+    painDescription: "Right now, your website is screaming 'I'm stuck in 2015'—and it's costing you high-value clients who judge your expertise by your digital presence. When prospects land on your homepage, they don't see the CPA who saves business owners six figures in taxes. They see another dated template that looks like everyone else's.",
+    statistic: "73%",
+    statisticLabel: "of prospects research your website before booking a call—and decide in 7 seconds whether you're worth their time",
+    solutionTitle: "Premium Website That Commands Respect",
+    solutionDescription: "We build custom websites that position you as the obvious choice for discerning clients. Strategic design, compelling copy, and modern functionality that communicates your expertise before you ever speak—so prospects see credibility, not just another accountant.",
     solutionBullets: [
-      "Custom design that reflects your unique approach and philosophy",
-      "Conversion-optimized layouts that turn visitors into consultations",
-      "Mobile-first builds for the modern investor researching on the go"
+      "Custom design that reflects your unique value and positions you as a premium firm",
+      "Conversion-optimized layouts that turn visitors into consultation bookings",
+      "Mobile-first builds that impress prospects researching you on the go"
     ],
     icon: <Monitor className="text-orange-500" size={32} />,
     color: "from-orange-500/20",
-    video: "/videos/value-prop-1.mp4",
+    video: "/videos/premium-firm.mp4",
     image: "/logos/Nexli Value Prop 1 .webp",
     mobileImage: "/logos/Nexli Value Prop 1-mobile.webp"
   },
   {
     id: "02",
-    painTitle: "You Became an Advisor to Help People—Not to Drown in Admin.",
-    painDescription: "Every hour spent on meeting prep, follow-up emails, CRM updates, and scheduling is an hour you're not building relationships or growing your book. And when things slip through the cracks? That's when clients start looking elsewhere.",
-    statistic: "30%",
-    statisticLabel: "of investors would switch advisors due to poor communication and follow-up",
-    solutionTitle: "AI Automations That Handle the Busywork",
-    solutionDescription: "Reclaim 10-15 hours every week with intelligent automations that prep you for meetings, capture notes, update your CRM, and send personalized follow-ups—all without lifting a finger.",
+    painTitle: "No More Chasing Clients for Missing Documents or Playing Email Tag During Tax Season.",
+    painDescription: "You became a CPA to do strategic tax planning—not to send the third follow-up email asking for the same W-2. Every hour spent chasing documents, organizing files, and playing email ping-pong is an hour you're not doing billable work. This reactive chaos is suffocating your revenue and burning you out.",
+    statistic: "40%",
+    statisticLabel: "of a CPA's time during tax season is wasted on document management and administrative follow-up",
+    solutionTitle: "Document Collection on Autopilot",
+    solutionDescription: "Go from reactive chaos to proactive control. Intelligent systems that automatically request documents, send smart reminders, and organize everything by client—so you get your time back and your clients actually enjoy working with you.",
     solutionBullets: [
-      "Missed-call text-back that re-engages leads before they move on",
-      "Automated text & email outreach built for how high-value clients prefer to communicate",
-      "Live analytics portal with lead tracking, response speed, and booking rates—plus smart sequences that cut repetitive tasks"
+      "Automated document requests with smart follow-ups that eliminate email ping-pong",
+      "Branded client portals where clients upload once and you never chase again",
+      "Real-time tracking dashboard so you always know what's missing—without digging through email"
     ],
     icon: <Bot className="text-blue-500" size={32} />,
     color: "from-blue-500/20",
-    video: "/videos/value-prop-2.mp4",
+    video: "/videos/beach-video-cpa-5s.mp4",
     image: "/logos/Nexli Value Prop 2.webp",
     mobileImage: "/logos/Nexli Value Prop 2-mobile.webp"
   },
   {
     id: "03",
-    painTitle: "Your Best Prospects Expect White-Glove Service—Starting at First Contact.",
-    painDescription: "The clients who can transform your practice—$1M+ households, business owners, executives—have zero tolerance for friction. They're not filling out forms and waiting 48 hours. When your response feels templated or your booking process requires three clicks too many, they don't complain. They simply move on to an advisor who made it effortless.",
+    painTitle: "Your Reputation Grows on Autopilot While You Focus on What You Do Best.",
+    painDescription: "You know you need more Google reviews—but right now you have maybe three reviews from 2019. High-value prospects are comparing you to competitors with 47 five-star reviews and glowing testimonials. You know reviews drive trust and bookings, but you have no system to actually get them.",
     statistics: [
-      { value: "10x", label: "the lifetime revenue from one high-net-worth client vs. ten average clients—with less effort" },
-      { value: "$1M+", label: "clients generate 4x more referrals and 5x more assets over their lifetime" }
+      { value: "5x", label: "more likely to book a consultation when you have 20+ recent reviews vs. 3 old ones" },
+      { value: "92%", label: "of prospects read online reviews before choosing a CPA—and recency matters" }
     ],
-    solutionTitle: "Premium Client Acquisition on Autopilot",
-    solutionDescription: "Attract and convert high-net-worth prospects with intelligent systems that deliver white-glove responsiveness around the clock. Your ideal clients experience premium service from the first click—while you focus on relationships, not follow-ups.",
+    solutionTitle: "Google Review Engine That Runs Itself",
+    solutionDescription: "Stop manually asking for reviews and hoping clients remember. Intelligent automation requests reviews at the perfect moment—right after tax filing or a big win—so your reputation grows on autopilot while you focus on delivering exceptional service.",
     solutionBullets: [
-      "Instant, personalized engagement that meets high-net-worth expectations",
-      "Intelligent nurture sequences that pre-qualify and build trust",
-      "Frictionless scheduling that respects their time—and yours"
+      "Automated review requests sent at the perfect moment (post-filing, after a big refund)",
+      "One-click Google review links that make it effortless for happy clients to leave feedback",
+      "Smart sequences that follow up with clients who haven't responded—without you lifting a finger"
     ],
     icon: <Zap className="text-green-500" size={32} />,
     color: "from-green-500/20",
-    video: "/videos/value-prop-3.mp4",
+    video: "/videos/value-prop-2.mp4",
     image: "/logos/Nexli Value Prop Section 3.webp",
     mobileImage: "/logos/Nexli Value Prop 3-mobile.webp"
   }
@@ -127,7 +127,7 @@ const ValueProposition: React.FC = () => {
             transition={{ delay: 0.1, ease: "circOut" }}
             className="text-[var(--text-main)] max-w-4xl mx-auto leading-tight text-2xl md:text-5xl lg:text-7xl font-bold"
           >
-            We Solve the Structural Growth Issues That <span className="text-blue-500 underline decoration-blue-500/30 underline-offset-8">Actually</span> Hold Your Practice Back
+            Stop Losing Clients to Firms With <span className="text-blue-500 underline decoration-blue-500/30 underline-offset-8">Better Systems</span>
           </motion.h2>
         </div>
 

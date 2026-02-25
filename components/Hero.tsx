@@ -86,10 +86,10 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-white mb-6 md:mb-8 text-[28px] sm:text-5xl md:text-7xl font-bold tracking-tight px-4 leading-[1.2] md:leading-[1.1]"
+          className="text-white mb-6 md:mb-8 text-[28px] sm:text-5xl md:text-5xl font-bold tracking-tight px-4 leading-[1.2] md:leading-[1.1]"
         >
-          Your Website Is <span className="text-blue-500">Costing You</span><br className="hidden sm:block" />
-          Your Dream Clients.
+          We Eliminate the <span className="text-blue-500">Document Chaos</span><br className="hidden sm:block" />
+          That's Killing Your Client Relationships.
         </motion.h1>
 
         <motion.p
@@ -98,7 +98,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="text-white/80 text-sm md:text-xl font-medium max-w-2xl mb-10 md:mb-12 drop-shadow-lg px-4"
         >
-          Referrals won't save you forever. Prospects don't see your expertise — they see your homepage. We fix that gap.
+          Stop losing high-value clients to firms with better systems. We fix the broken workflows, endless email chains, and disorganized portals that make you look amateur—so you can focus on what you do best.
         </motion.p>
 
         {/* Trust Signals — No Contracts */}
