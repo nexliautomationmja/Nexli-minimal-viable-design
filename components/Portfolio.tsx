@@ -44,15 +44,6 @@ const firms = [
 const Portfolio: React.FC = () => {
     const router = useRouter();
   const { theme } = useTheme();
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth < 768 : false
-  );
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
 
   useEffect(() => {
     (function (C: any, A: string, L: string) {
@@ -84,16 +75,7 @@ const Portfolio: React.FC = () => {
 
     const Cal = (window as any).Cal;
     Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
-
-    if (!isMobile) {
-      Cal.ns["nexli-demo"]("inline", {
-        elementOrSelector: "#portfolio-cal-inline",
-        config: { "layout": "month_view", "theme": theme },
-        calLink: "nexli-automation-6fgn8j/nexli-demo",
-      });
-      Cal.ns["nexli-demo"]("ui", { "theme": theme, "hideEventTypeDetails": false, "layout": "month_view" });
-    }
-  }, [isMobile, theme]);
+  }, [theme]);
 
   const openCalPopup = () => {
     const Cal = (window as any).Cal;
@@ -153,7 +135,15 @@ const Portfolio: React.FC = () => {
               className="flex lg:hidden items-center justify-center my-8 relative"
             >
               <div className="absolute inset-0 bg-blue-500/10 blur-[80px] rounded-full" />
-              <div className="relative z-10 flex gap-3" style={{ perspective: '600px' }}>
+              <div className="relative z-10 flex flex-col items-center gap-3">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                >
+                  <Monitor size={48} className="text-blue-400" style={{ filter: 'drop-shadow(0 0 20px rgba(37, 99, 235, 0.4))' }} />
+                </motion.div>
+                <div className="flex gap-3" style={{ perspective: '600px' }}>
                 {heroIcons.map((Icon, i) => (
                   <motion.div
                     key={i}
@@ -177,6 +167,7 @@ const Portfolio: React.FC = () => {
                     </div>
                   </motion.div>
                 ))}
+                </div>
               </div>
             </motion.div>
 
@@ -284,47 +275,32 @@ const Portfolio: React.FC = () => {
         </div>
 
         {/* Bottom CTA */}
-        <motion.div
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-24"
+          className="mt-24 text-center"
         >
-          <div className="max-w-4xl mx-auto p-6 md:p-16 rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden">
+          <div className="max-w-4xl mx-auto p-6 md:p-20 rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none" />
-
-            <div className="relative z-10 text-center">
-              <h2 className="text-xl md:text-4xl font-bold text-[var(--text-main)] mb-4 md:mb-6">
-                Want a Website Like These?
+            <div className="relative z-10">
+              <h2 className="text-xl md:text-5xl font-bold text-[var(--text-main)] mb-4 md:mb-8 tracking-tight leading-tight">
+                Want a Website Like These? <br className="hidden md:block" /><span className="text-blue-500">Let&apos;s Build Yours.</span>
               </h2>
-              <p className="text-sm md:text-lg text-[var(--text-muted)] mb-6 md:mb-10 max-w-2xl mx-auto">
+              <p className="text-sm md:text-xl text-[var(--text-muted)] mb-6 md:mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
                 Every project is custom-designed. No templates, no shortcuts.
                 Just premium digital experiences tailored to your firm.
               </p>
-
-              {isMobile ? (
-                <button
-                  onClick={openCalPopup}
-                  className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
-                >
-                  Book a Consultation
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </button>
-              ) : (
-                <div
-                  style={{
-                    width: '100%',
-                    height: 'calc(100vh - 300px)',
-                    minHeight: '500px',
-                    maxHeight: '800px',
-                    overflow: 'auto',
-                  }}
-                  id="portfolio-cal-inline"
-                />
-              )}
+              <button
+                onClick={openCalPopup}
+                className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
+              >
+                Book a Consultation
+                <ArrowRight size={16} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
           </div>
-        </motion.div>
+        </motion.section>
       </section>
     </div>
   );

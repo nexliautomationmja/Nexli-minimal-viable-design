@@ -278,6 +278,13 @@ const AIAutomations: React.FC = () => {
                         >
                             <div className="absolute inset-0 bg-violet-500/10 blur-[80px] rounded-full" />
                             <div className="relative z-10 flex flex-col items-center gap-3">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                                >
+                                    <Bot size={48} className="text-violet-400" style={{ filter: 'drop-shadow(0 0 20px rgba(139, 92, 246, 0.4))' }} />
+                                </motion.div>
                                 <div className="flex gap-3" style={{ perspective: '600px' }}>
                                     {[PhoneOff, Zap, MessageSquare, CalendarCheck, CheckCircle].map((Icon, i) => (
                                         <motion.div
