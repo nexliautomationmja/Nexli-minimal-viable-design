@@ -41,12 +41,12 @@ const Navbar: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { label: 'Portfolio', view: 'portfolio' as const },
     { label: 'Rainmaker™', view: 'services' as const },
+    { label: 'Portfolio', view: 'portfolio' as const },
     { label: 'AI Automations', view: 'aiAutomations' as const },
-    { label: 'Free Guide', view: 'guide' as const },
-    { label: 'Google Reviews', view: 'smartReviews' as const, hasGoogleIcon: true },
     { label: 'Doc Portal', view: 'documentPortal' as const },
+    { label: 'Google Reviews', view: 'smartReviews' as const, hasGoogleIcon: true },
+    { label: 'Free Guide', view: 'guide' as const },
   ];
 
   const navigateTo = (view: string) => {
