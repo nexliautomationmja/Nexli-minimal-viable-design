@@ -2,11 +2,9 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield } from 'lucide-react';
+import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield, Droplets, Monitor } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
-import { SparklesCore } from './Sparkles';
 import { Timeline } from './ui/Timeline';
-import { WeatherFx } from './ui/WeatherFx';
 
 const Services: React.FC = () => {
     const { theme } = useTheme();
@@ -161,6 +159,14 @@ const Services: React.FC = () => {
                             </p>
                         </motion.div>
                     </div>
+
+                    <button
+                        onClick={() => router.push('/portfolio')}
+                        className="inline-flex items-center gap-1.5 text-blue-500 text-sm font-bold hover:text-blue-400 transition-colors bg-transparent border-none p-0 cursor-pointer mt-6"
+                    >
+                        See Our Portfolio
+                        <ArrowRight size={14} />
+                    </button>
                 </div>
             ),
         },
@@ -246,6 +252,14 @@ const Services: React.FC = () => {
                             </div>
                         </div>
                     </div>
+
+                    <button
+                        onClick={() => router.push('/ai-automations')}
+                        className="inline-flex items-center gap-1.5 text-cyan-500 text-sm font-bold hover:text-cyan-400 transition-colors bg-transparent border-none p-0 cursor-pointer mt-6"
+                    >
+                        See AI Automations
+                        <ArrowRight size={14} />
+                    </button>
                 </div>
             ),
         },
@@ -336,146 +350,213 @@ const Services: React.FC = () => {
                             </motion.div>
                         </div>
                     </div>
+
+                    <button
+                        onClick={() => router.push('/smart-reviews')}
+                        className="inline-flex items-center gap-1.5 text-yellow-500 text-sm font-bold hover:text-yellow-400 transition-colors bg-transparent border-none p-0 cursor-pointer mt-6"
+                    >
+                        See Smart Reviews
+                        <ArrowRight size={14} />
+                    </button>
                 </div>
             ),
         },
     ];
 
-    // No longer using heroContent - hero is now inline with rain effect
+    // Google G SVG component for the hero sub-icons
+    const GoogleGIcon = ({ size = 20, className = '' }: { size?: number; className?: string }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+        </svg>
+    );
+
+    // Hero sub-icons: each service's signature icon with its color
+    const heroSubIcons = [
+        { Icon: Monitor, color: 'blue', label: 'Website' },
+        { Icon: Bot, color: 'violet', label: 'AI' },
+        { Icon: Shield, color: 'cyan', label: 'Portal' },
+        { Icon: null, color: 'amber', label: 'Reviews', isGoogle: true },
+    ];
+
+    const getIconColors = (color: string) => {
+        const map: Record<string, { bg: string; border: string; text: string; shadow: string; glow: string }> = {
+            blue: { bg: 'bg-blue-500/20', border: 'border-blue-500/30', text: 'text-blue-400', shadow: 'rgba(37, 99, 235, 0.3)', glow: 'rgba(37, 99, 235, 0.4)' },
+            violet: { bg: 'bg-violet-500/20', border: 'border-violet-500/30', text: 'text-violet-400', shadow: 'rgba(139, 92, 246, 0.3)', glow: 'rgba(139, 92, 246, 0.4)' },
+            cyan: { bg: 'bg-cyan-500/20', border: 'border-cyan-500/30', text: 'text-cyan-400', shadow: 'rgba(6, 182, 212, 0.3)', glow: 'rgba(6, 182, 212, 0.4)' },
+            amber: { bg: 'bg-amber-500/20', border: 'border-amber-500/30', text: 'text-amber-400', shadow: 'rgba(245, 158, 11, 0.3)', glow: 'rgba(245, 158, 11, 0.4)' },
+        };
+        return map[color] || map.blue;
+    };
 
     return (
         <div className="pb-20 overflow-hidden">
-            {/* Hero Section - Always Dark with Rain */}
-            <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-black">
-                {/* Rain Effect */}
-                <WeatherFx
-                    height={60}
-                    type="rain"
-                    intensity={200}
-                    colors={["brand-solid-light"]}
-                    speed={2}
-                />
+            {/* ── SECTION 1: Hero — two-column layout matching other pages ── */}
+            <section className="min-h-screen bg-[var(--bg-main)] transition-colors duration-300 pt-32 pb-20">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, ease: 'circOut' }}
+                        >
+                            {/* Shimmer badge */}
+                            <div className="relative inline-flex items-center mb-6 rounded-full overflow-hidden p-[1.5px]">
+                                <span
+                                    className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
+                                    style={{
+                                        background: 'conic-gradient(from 0deg at 50% 50%, #3B82F6, #8B5CF6, #06B6D4, #F59E0B, #3B82F6)'
+                                    }}
+                                />
+                                <span
+                                    className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
+                                    style={{
+                                        background: 'conic-gradient(from 0deg at 50% 50%, #3B82F6, #8B5CF6, #06B6D4, #F59E0B, #3B82F6)'
+                                    }}
+                                />
+                                <span className="relative z-10 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--bg-main)]">
+                                    <Droplets size={14} className="text-blue-400" />
+                                    <span className="text-[var(--text-main)] text-[10px] md:text-xs font-black tracking-[0.2em] uppercase">Digital Rainmaker System</span>
+                                </span>
+                            </div>
 
-                {/* Sparkles Background */}
-                <div className="absolute inset-0 w-full h-full">
-                    <SparklesCore
-                        id="services-sparkles"
-                        background="transparent"
-                        minSize={0.4}
-                        maxSize={1}
-                        particleCount={80}
-                        particleColor="#FFFFFF"
-                        speed={0.5}
-                        className="w-full h-full"
-                    />
-                </div>
-
-                {/* Gradient overlays for depth */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg-main)] to-transparent pointer-events-none z-10" />
-
-                {/* Hero Content */}
-                <div className="relative z-10 max-w-5xl mx-auto text-center px-6 pt-24 md:pt-0">
-                    {/* Animated Title - The Digital Rainmaker System */}
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="relative z-10 text-3xl md:text-6xl lg:text-7xl font-bold mb-6 md:mb-8 max-w-4xl mx-auto text-white leading-[1.15] md:leading-[1.1]"
-                    >
-                        {"The Digital Rainmaker System".split(" ").map((word, index) => (
-                            <motion.span
-                                key={index}
-                                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                                transition={{
-                                    duration: 0.5,
-                                    delay: 0.3 + index * 0.1,
-                                    ease: "easeOut"
-                                }}
-                                className={`inline-block mr-3 md:mr-4 ${
-                                    word === "Rainmaker"
-                                        ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500"
-                                        : "!text-white"
-                                }`}
+                            <h1
+                                className="text-[26px] sm:text-4xl md:text-6xl font-black text-[var(--text-main)] mb-6 leading-tight tracking-tighter"
+                                style={{ fontFamily: "'Syne', sans-serif" }}
                             >
-                                {word}
-                            </motion.span>
-                        ))}
-                        <motion.span
-                            initial={{ opacity: 0, scale: 0.5 }}
+                                The Digital{' '}
+                                <br className="hidden md:block" />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-500">Rainmaker System.</span>
+                            </h1>
+
+                            {/* Mobile floating icons */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 1, ease: 'circOut' }}
+                                className="flex lg:hidden items-center justify-center my-8 relative"
+                            >
+                                <div className="absolute inset-0 bg-blue-500/10 blur-[80px] rounded-full" />
+                                <div className="relative z-10 flex flex-col items-center gap-3">
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
+                                    >
+                                        <Droplets size={48} className="text-blue-400" style={{ filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))' }} />
+                                    </motion.div>
+                                    <div className="flex gap-3" style={{ perspective: '600px' }}>
+                                        {heroSubIcons.map((item, i) => {
+                                            const colors = getIconColors(item.color);
+                                            return (
+                                                <motion.div
+                                                    key={i}
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        y: [0, -6, 0],
+                                                        rotateX: [0, 4, 0],
+                                                        rotateY: [0, i % 2 === 0 ? 6 : -6, 0],
+                                                    }}
+                                                    transition={{
+                                                        opacity: { delay: 0.3 + i * 0.15, duration: 0.6 },
+                                                        y: { delay: 0.8 + i * 0.15, duration: 3 + i * 0.4, repeat: Infinity, ease: 'easeInOut' },
+                                                        rotateX: { delay: 0.8 + i * 0.15, duration: 3.5 + i * 0.3, repeat: Infinity, ease: 'easeInOut' },
+                                                        rotateY: { delay: 0.8 + i * 0.15, duration: 4 + i * 0.5, repeat: Infinity, ease: 'easeInOut' },
+                                                    }}
+                                                    style={{ transformStyle: 'preserve-3d' }}
+                                                >
+                                                    <div
+                                                        className={`w-10 h-10 rounded-xl ${colors.bg} ${colors.border} border flex items-center justify-center`}
+                                                        style={{ filter: `drop-shadow(0 4px 8px ${colors.shadow})` }}
+                                                    >
+                                                        {item.isGoogle ? (
+                                                            <GoogleGIcon size={20} />
+                                                        ) : item.Icon ? (
+                                                            <item.Icon size={20} className={colors.text} />
+                                                        ) : null}
+                                                    </div>
+                                                </motion.div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
+                                Your firm&apos;s 24/7 client acquisition machine. A premium website, AI automation, and Google review engine — working together to attract high-value clients while you sleep.
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
+                                <button
+                                    onClick={openCalPopup}
+                                    className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/20 group"
+                                >
+                                    See How It Works
+                                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        </motion.div>
+
+                        {/* Right: floating icons (desktop) */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.3, delay: 0.8, type: "spring", stiffness: 200 }}
-                            className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500"
+                            transition={{ duration: 1, ease: 'circOut' }}
+                            className="relative hidden lg:flex items-center justify-center"
                         >
-                            &trade;
-                        </motion.span>
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.9 }}
-                        className="relative z-10 text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 !text-neutral-300 leading-relaxed"
-                    >
-                        Your firm's 24/7 client acquisition machine. A premium website, AI automation, and Google review engine — working together to attract high-value clients while you sleep.
-                    </motion.p>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 1 }}
-                    >
-                        <button
-                            onClick={openCalPopup}
-                            className="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
-                        >
-                            See How It Works
-                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                        </button>
-                    </motion.div>
-
-                    {/* Decorative line with glow */}
-                    <motion.div
-                        initial={{ opacity: 0, scaleX: 0 }}
-                        animate={{ opacity: 1, scaleX: 1 }}
-                        transition={{ duration: 1, delay: 1.2 }}
-                        className="w-48 md:w-64 h-[2px] mx-auto mt-10 md:mt-12 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
-                        style={{ boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }}
-                    />
-                </div>
-            </section>
-
-            {/* Rain Banner Transition */}
-            <section className="px-4 md:px-10 -mt-20 relative z-20">
-                <div className="relative max-w-7xl mx-auto py-16 md:py-24 px-4 md:px-8 lg:px-10 bg-black rounded-3xl overflow-hidden">
-                    {/* Rain Effect */}
-                    <WeatherFx
-                        height={20}
-                        type="rain"
-                        intensity={150}
-                        colors={["brand-solid-light"]}
-                        speed={2}
-                    />
-
-                    <div className="relative z-10 text-center">
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-xs md:text-sm font-black tracking-[0.2em] uppercase !text-blue-400 mb-3"
-                        >
-                            3-Step System
-                        </motion.p>
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.1 }}
-                            className="text-2xl md:text-4xl font-bold !text-white max-w-2xl mx-auto"
-                        >
-                            Here's How It Works
-                        </motion.h2>
+                            <div className="absolute inset-0 bg-blue-500/10 blur-[100px] rounded-full" />
+                            <div className="relative z-10 flex flex-col items-center gap-4">
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.6 }}
+                                    className="flex items-center gap-3"
+                                >
+                                    <Droplets size={48} className="text-blue-400" style={{ filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))' }} />
+                                    <span className="text-3xl font-bold text-[var(--text-main)]">Rainmaker System</span>
+                                </motion.div>
+                                <div className="flex gap-3" style={{ perspective: '600px' }}>
+                                    {heroSubIcons.map((item, i) => {
+                                        const colors = getIconColors(item.color);
+                                        return (
+                                            <motion.div
+                                                key={i}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{
+                                                    opacity: 1,
+                                                    y: [0, -6, 0],
+                                                    rotateX: [0, 4, 0],
+                                                    rotateY: [0, i % 2 === 0 ? 6 : -6, 0],
+                                                    rotateZ: [0, i % 2 === 0 ? 2 : -2, 0],
+                                                }}
+                                                transition={{
+                                                    opacity: { delay: 0.3 + i * 0.15, duration: 0.6 },
+                                                    y: { delay: 0.8 + i * 0.15, duration: 3 + i * 0.4, repeat: Infinity, ease: 'easeInOut' },
+                                                    rotateX: { delay: 0.8 + i * 0.15, duration: 3.5 + i * 0.3, repeat: Infinity, ease: 'easeInOut' },
+                                                    rotateY: { delay: 0.8 + i * 0.15, duration: 4 + i * 0.5, repeat: Infinity, ease: 'easeInOut' },
+                                                    rotateZ: { delay: 0.8 + i * 0.15, duration: 5 + i * 0.4, repeat: Infinity, ease: 'easeInOut' },
+                                                }}
+                                                style={{ transformStyle: 'preserve-3d' }}
+                                            >
+                                                <div
+                                                    className={`w-14 h-14 rounded-2xl ${colors.bg} ${colors.border} border flex items-center justify-center`}
+                                                    style={{ filter: `drop-shadow(0 4px 8px ${colors.shadow})` }}
+                                                >
+                                                    {item.isGoogle ? (
+                                                        <GoogleGIcon size={28} />
+                                                    ) : item.Icon ? (
+                                                        <item.Icon size={28} className={colors.text} />
+                                                    ) : null}
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
