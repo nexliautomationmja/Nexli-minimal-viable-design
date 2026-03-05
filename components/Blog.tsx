@@ -3,6 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 import { SparklesCore } from './Sparkles';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { blogPosts } from '../data/blogPosts';
@@ -10,22 +11,10 @@ import { blogPosts } from '../data/blogPosts';
 const Blog: React.FC = () => {
     const router = useRouter();
   const { theme } = useTheme();
+  const { openBooking } = useBooking();
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
-
-  // Function to open Cal.com popup
-  const openCalPopup = () => {
-    const Cal = (window as any).Cal;
-    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-      Cal.ns["nexli-demo"]("modal", {
-        calLink: "nexli-automation-6fgn8j/nexli-demo",
-        config: { "layout": "month_view", "theme": theme },
-      });
-    } else {
-      window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
-    }
-  };
 
   const checkScrollability = () => {
     if (carouselRef.current) {
@@ -228,7 +217,7 @@ const Blog: React.FC = () => {
               Stop reading about success and start experiencing it. Book a consultation to see how Nexli can help you attract better clients and reclaim your time.
             </p>
             <button
-              onClick={openCalPopup}
+              onClick={openBooking}
               className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
             >
               Book a Consultation

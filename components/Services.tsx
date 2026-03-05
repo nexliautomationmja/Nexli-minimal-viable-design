@@ -1,60 +1,16 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield, Droplets, Monitor } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 import { Timeline } from './ui/Timeline';
 
 const Services: React.FC = () => {
     const { theme } = useTheme();
     const router = useRouter();
-
-    // Load Cal.com embed script
-    useEffect(() => {
-        (function (C: any, A: string, L: string) {
-            let p = function (a: any, ar: any) { a.q.push(ar); };
-            let d = C.document;
-            C.Cal = C.Cal || function () {
-                let cal = C.Cal;
-                let ar = arguments;
-                if (!cal.loaded) {
-                    cal.ns = {};
-                    cal.q = cal.q || [];
-                    d.head.appendChild(d.createElement("script")).src = A;
-                    cal.loaded = true;
-                }
-                if (ar[0] === L) {
-                    const api = function () { p(api, arguments); };
-                    const namespace = ar[1];
-                    api.q = api.q || [];
-                    if (typeof namespace === "string") {
-                        cal.ns[namespace] = cal.ns[namespace] || api;
-                        p(cal.ns[namespace], ar);
-                        p(cal, ["initNamespace", namespace]);
-                    } else p(cal, ar);
-                    return;
-                }
-                p(cal, ar);
-            };
-        })(window, "https://app.cal.com/embed/embed.js", "init");
-
-        const Cal = (window as any).Cal;
-        Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
-    }, []);
-
-    // Function to open Cal.com popup
-    const openCalPopup = () => {
-        const Cal = (window as any).Cal;
-        if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-            Cal.ns["nexli-demo"]("modal", {
-                calLink: "nexli-automation-6fgn8j/nexli-demo",
-                config: { "layout": "month_view", "theme": theme },
-            });
-        } else {
-            window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
-        }
-    };
+    const { openBooking } = useBooking();
 
     // Google G with animated stars component for Step 3
     const GoogleReviewAnimation = () => {
@@ -183,16 +139,16 @@ const Services: React.FC = () => {
                         </h4>
                     </div>
                     <p className={`mb-6 text-sm md:text-base leading-relaxed ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
-                        That captures leads 24/7, follows up automatically, nurtures prospects through sequences, and books appointments to your calendar without your staff lifting a finger.
+                        That processes every inbound inquiry 24/7, follows up automatically, vets and nurtures prospects through intelligent sequences, and books qualified appointments to your calendar — without your staff lifting a finger.
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                         {[
-                            "24/7 lead capture & response",
+                            "24/7 inbound inquiry processing",
                             "Automated follow-up sequences",
-                            "Prospect nurturing campaigns",
+                            "Intelligent prospect vetting & nurturing",
                             "Automated appointment booking",
                             "AI chat assistant for your site",
-                            "Zero-touch lead qualification",
+                            "Zero-touch prospect qualification",
                             "Secure client document collection"
                         ].map((benefit, i) => (
                             <div key={i} className="flex items-start gap-2 text-sm">
@@ -276,7 +232,7 @@ const Services: React.FC = () => {
                         </h4>
                     </div>
                     <p className={`mb-6 text-sm md:text-base leading-relaxed ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
-                        That automatically requests and routes Google reviews from satisfied clients, turning your happiest tax season clients into a compounding trust asset that drives new leads year-round.
+                        That automatically requests and routes Google reviews from satisfied clients, turning your happiest tax season clients into a compounding trust asset that reinforces your reputation year-round.
                     </p>
 
                     {/* The Secret Weapon callout */}
@@ -290,7 +246,7 @@ const Services: React.FC = () => {
                                     Your Secret Weapon
                                 </p>
                                 <p className={`text-sm ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
-                                    Nobody in the CPA web design world is talking about systematically engineering Google reviews as a lead generation mechanism. Most CPAs have 4 to 12 reviews sitting on Google. The firms dominating local search have 80 or more.
+                                    Nobody in the CPA web design world is talking about systematically engineering Google reviews as a trust amplification mechanism. Most CPAs have 4 to 12 reviews sitting on Google. The firms dominating local search have 80 or more.
                                 </p>
                             </div>
                         </div>
@@ -486,12 +442,12 @@ const Services: React.FC = () => {
                             </motion.div>
 
                             <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
-                                Your firm&apos;s 24/7 client acquisition machine. A premium website, AI automation, and Google review engine — working together to attract high-value clients while you sleep.
+                                Your firm&apos;s business amplification system. A premium website, AI automation, and Google review engine — working together to process, vet, and nurture every inbound opportunity at light speed.
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
                                 <button
-                                    onClick={openCalPopup}
+                                    onClick={openBooking}
                                     className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/20 group"
                                 >
                                     See How It Works
@@ -584,7 +540,7 @@ const Services: React.FC = () => {
                         </p>
 
                         <button
-                            onClick={openCalPopup}
+                            onClick={openBooking}
                             className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
                         >
                             Book a Consultation

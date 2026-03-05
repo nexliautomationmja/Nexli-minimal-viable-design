@@ -3,26 +3,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 import { ArrowLeft, ArrowRight, Clock, Calendar } from 'lucide-react';
 import { BlogPost as BlogPostType, getBlogPostBySlug, blogPosts } from '../data/blogPosts';
 
 const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
     const router = useRouter();
   const { theme } = useTheme();
+  const { openBooking } = useBooking();
   const post = getBlogPostBySlug(slug);
-
-  // Function to open Cal.com popup
-  const openCalPopup = () => {
-    const Cal = (window as any).Cal;
-    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-      Cal.ns["nexli-demo"]("modal", {
-        calLink: "nexli-automation-6fgn8j/nexli-demo",
-        config: { "layout": "month_view", "theme": theme },
-      });
-    } else {
-      window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
-    }
-  };
 
   if (!post) {
     return (
@@ -149,7 +138,7 @@ const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
             See how Nexli can help you implement these strategies and grow your firm.
           </p>
           <button
-            onClick={openCalPopup}
+            onClick={openBooking}
             className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-lg shadow-blue-600/25"
           >
             Book a Consultation

@@ -20,11 +20,13 @@ import {
     RefreshCw
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 
 type DemoState = 'idle' | 'selected' | 'positive' | 'negative' | 'feedbackSent';
 
 const SmartReviews: React.FC = () => {
     const { theme } = useTheme();
+    const { openBooking } = useBooking();
 
     // Star demo state
     const [hoveredStar, setHoveredStar] = useState<number>(0);
@@ -35,51 +37,6 @@ const SmartReviews: React.FC = () => {
     const [activeStatIndex, setActiveStatIndex] = useState(0);
     const [statProgress, setStatProgress] = useState(0);
     const [expandedStep, setExpandedStep] = useState<number>(0);
-
-    // Cal.com integration
-    useEffect(() => {
-        (function (C: any, A: string, L: string) {
-            let p = function (a: any, ar: any) { a.q.push(ar); };
-            let d = C.document;
-            C.Cal = C.Cal || function () {
-                let cal = C.Cal;
-                let ar = arguments;
-                if (!cal.loaded) {
-                    cal.ns = {};
-                    cal.q = cal.q || [];
-                    d.head.appendChild(d.createElement("script")).src = A;
-                    cal.loaded = true;
-                }
-                if (ar[0] === L) {
-                    const api = function () { p(api, arguments); };
-                    const namespace = ar[1];
-                    api.q = api.q || [];
-                    if (typeof namespace === "string") {
-                        cal.ns[namespace] = cal.ns[namespace] || api;
-                        p(cal.ns[namespace], ar);
-                        p(cal, ["initNamespace", namespace]);
-                    } else p(cal, ar);
-                    return;
-                }
-                p(cal, ar);
-            };
-        })(window, "https://app.cal.com/embed/embed.js", "init");
-
-        const Cal = (window as any).Cal;
-        Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
-    }, []);
-
-    const openCalPopup = () => {
-        const Cal = (window as any).Cal;
-        if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-            Cal.ns["nexli-demo"]("modal", {
-                calLink: "nexli-automation-6fgn8j/nexli-demo",
-                config: { "layout": "month_view", "theme": theme },
-            });
-        } else {
-            window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
-        }
-    };
 
     // Star click handler
     const handleStarClick = (rating: number) => {
@@ -188,19 +145,35 @@ const SmartReviews: React.FC = () => {
         }
     };
 
-    // Inline star SVG component — single click triggers action on all devices
+    // Inline star SVG component — desktop: hover + single click, mobile: double tap
     const StarIcon: React.FC<{ index: number; filled: boolean; hovered: boolean }> = ({ index, filled, hovered }) => (
         <motion.svg
             width="48"
             height="48"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="cursor-pointer w-10 h-10 md:w-12 md:h-12 touch-manipulation"
-            whileHover={{ scale: 1.2 }}
+            className="cursor-pointer w-10 h-10 md:w-12 md:h-12 touch-manipulation select-none"
+            animate={{ scale: hovered ? 1.15 : 1 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
             whileTap={{ scale: 0.9 }}
+            onPointerDown={(e) => {
+                if (demoState !== 'idle') return;
+
+                if (e.pointerType === 'touch') {
+                    // Mobile: first tap previews, second tap on same star confirms
+                    e.preventDefault();
+                    if (hoveredStar === index) {
+                        handleStarClick(index);
+                    } else {
+                        setHoveredStar(index);
+                    }
+                } else {
+                    // Desktop mouse: single click fires immediately
+                    handleStarClick(index);
+                }
+            }}
             onMouseEnter={() => demoState === 'idle' && setHoveredStar(index)}
             onMouseLeave={() => demoState === 'idle' && setHoveredStar(0)}
-            onClick={() => demoState === 'idle' && handleStarClick(index)}
         >
             <path
                 d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"
@@ -341,7 +314,7 @@ const SmartReviews: React.FC = () => {
                                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                             <button
-                                onClick={openCalPopup}
+                                onClick={openBooking}
                                 className="flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-[var(--text-main)] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md hover:border-blue-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                             >
                                 Book Now
@@ -1555,7 +1528,7 @@ const SmartReviews: React.FC = () => {
                                 Let us set up Smart Reviews for your business. We will show you exactly how it works and what kind of impact it can have on your Google presence.
                             </p>
                             <button
-                                onClick={openCalPopup}
+                                onClick={openBooking}
                                 className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
                             >
                                 Book a Consultation

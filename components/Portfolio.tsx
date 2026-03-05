@@ -1,9 +1,9 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Monitor, Layout, Code, Palette, Globe } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 import PortfolioPreview from './portfolio/PortfolioPreview';
 import SummitTaxGroup from './portfolio/SummitTaxGroup';
 import ClarityAdvisory from './portfolio/ClarityAdvisory';
@@ -43,51 +43,7 @@ const firms = [
 
 const Portfolio: React.FC = () => {
     const router = useRouter();
-  const { theme } = useTheme();
-
-  useEffect(() => {
-    (function (C: any, A: string, L: string) {
-      let p = function (a: any, ar: any) { a.q.push(ar); };
-      let d = C.document;
-      C.Cal = C.Cal || function () {
-        let cal = C.Cal;
-        let ar = arguments;
-        if (!cal.loaded) {
-          cal.ns = {};
-          cal.q = cal.q || [];
-          d.head.appendChild(d.createElement("script")).src = A;
-          cal.loaded = true;
-        }
-        if (ar[0] === L) {
-          const api = function () { p(api, arguments); };
-          const namespace = ar[1];
-          api.q = api.q || [];
-          if (typeof namespace === "string") {
-            cal.ns[namespace] = cal.ns[namespace] || api;
-            p(cal.ns[namespace], ar);
-            p(cal, ["initNamespace", namespace]);
-          } else p(cal, ar);
-          return;
-        }
-        p(cal, ar);
-      };
-    })(window, "https://app.cal.com/embed/embed.js", "init");
-
-    const Cal = (window as any).Cal;
-    Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
-  }, [theme]);
-
-  const openCalPopup = () => {
-    const Cal = (window as any).Cal;
-    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-      Cal.ns["nexli-demo"]("modal", {
-        calLink: "nexli-automation-6fgn8j/nexli-demo",
-        config: { "layout": "month_view", "theme": theme },
-      });
-    } else {
-      window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
-    }
-  };
+  const { openBooking } = useBooking();
 
   const heroIcons = [Monitor, Layout, Code, Palette, Globe];
 
@@ -184,7 +140,7 @@ const Portfolio: React.FC = () => {
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button
-                onClick={openCalPopup}
+                onClick={openBooking}
                 className="flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-[var(--text-main)] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md hover:border-blue-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
               >
                 Book Now
@@ -288,11 +244,11 @@ const Portfolio: React.FC = () => {
                 Want a Website Like These? <br className="hidden md:block" /><span className="text-blue-500">Let&apos;s Build Yours.</span>
               </h2>
               <p className="text-sm md:text-xl text-[var(--text-muted)] mb-6 md:mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
-                Every project is custom-designed. No templates, no shortcuts.
-                Just premium digital experiences tailored to your firm.
+                Every project is custom-designed to amplify what's already working.
+                No templates, no shortcuts — just premium systems built for your firm.
               </p>
               <button
-                onClick={openCalPopup}
+                onClick={openBooking}
                 className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
               >
                 Book a Consultation

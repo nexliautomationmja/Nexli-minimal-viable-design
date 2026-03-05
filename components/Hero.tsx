@@ -3,9 +3,11 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowRight, TrendingUp, ShieldCheck, CalendarX, Repeat } from 'lucide-react';
+import { useBooking } from './QualificationProvider';
 
 const Hero: React.FC = () => {
   const router = useRouter();
+  const { openBooking } = useBooking();
   return (
     <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center pt-20 md:pt-24 pb-0 overflow-hidden bg-[var(--bg-main)]">
       {/* Cinematic Video Background - Seamlessly Blended */}
@@ -88,8 +90,8 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-white mb-6 md:mb-8 text-[28px] sm:text-5xl md:text-5xl font-bold tracking-tight px-4 leading-[1.2] md:leading-[1.1]"
         >
-          We Eliminate the <span className="text-blue-500">Document Chaos</span><br className="hidden sm:block" />
-          That's Killing Your Client Relationships.
+          Stop Losing the Clients <span className="text-blue-500">Already Looking</span><br className="hidden sm:block" />
+          for You.
         </motion.h1>
 
         <motion.p
@@ -98,7 +100,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="text-white/80 text-sm md:text-xl font-medium max-w-2xl mb-10 md:mb-12 drop-shadow-lg px-4"
         >
-          Stop losing high-value clients to firms with better systems. We fix the broken workflows, endless email chains, and disorganized portals that make you look amateur—so you can focus on what you do best.
+          Your firm is already attracting high-value prospects. The problem? Slow follow-ups, manual chaos, and broken systems are letting them slip through the cracks. We build the infrastructure that captures, vets, and nurtures every inbound opportunity — at light speed.
         </motion.p>
 
         {/* Trust Signals — No Contracts */}
@@ -129,13 +131,13 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-5 w-auto"
         >
-          <a
-            href="#book"
+          <button
+            onClick={openBooking}
             className="flex items-center justify-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold md:font-bold hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/20 group backdrop-blur-sm"
           >
             Book Consultation
             <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
-          </a>
+          </button>
           <button
             onClick={() => router.push('/portfolio')}
             className="relative flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-blue-400 overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-transform group cursor-pointer border-none bg-transparent"

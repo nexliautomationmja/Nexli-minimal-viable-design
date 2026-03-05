@@ -27,6 +27,7 @@ import {
     RotateCcw,
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 
 type DemoTab = 'missed-call' | 'website-lead';
 type MissedCallStep = 'idle' | 'ringing' | 'missed' | 'texted' | 'booked';
@@ -34,6 +35,7 @@ type WebLeadStep = 'idle' | 'form-filled' | 'auto-reply' | 'nurture' | 'booked';
 
 const AIAutomations: React.FC = () => {
     const { theme } = useTheme();
+    const { openBooking } = useBooking();
 
     // Demo state
     const [demoTab, setDemoTab] = useState<DemoTab>('missed-call');
@@ -43,51 +45,6 @@ const AIAutomations: React.FC = () => {
     const [statProgress, setStatProgress] = useState(0);
     const [expandedStep, setExpandedStep] = useState<number>(0);
     const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-
-    // Cal.com integration
-    useEffect(() => {
-        (function (C: any, A: string, L: string) {
-            let p = function (a: any, ar: any) { a.q.push(ar); };
-            let d = C.document;
-            C.Cal = C.Cal || function () {
-                let cal = C.Cal;
-                let ar = arguments;
-                if (!cal.loaded) {
-                    cal.ns = {};
-                    cal.q = cal.q || [];
-                    d.head.appendChild(d.createElement("script")).src = A;
-                    cal.loaded = true;
-                }
-                if (ar[0] === L) {
-                    const api = function () { p(api, arguments); };
-                    const namespace = ar[1];
-                    api.q = api.q || [];
-                    if (typeof namespace === "string") {
-                        cal.ns[namespace] = cal.ns[namespace] || api;
-                        p(cal.ns[namespace], ar);
-                        p(cal, ["initNamespace", namespace]);
-                    } else p(cal, ar);
-                    return;
-                }
-                p(cal, ar);
-            };
-        })(window, "https://app.cal.com/embed/embed.js", "init");
-
-        const Cal = (window as any).Cal;
-        Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
-    }, []);
-
-    const openCalPopup = () => {
-        const Cal = (window as any).Cal;
-        if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-            Cal.ns["nexli-demo"]("modal", {
-                calLink: "nexli-automation-6fgn8j/nexli-demo",
-                config: { "layout": "month_view", "theme": theme },
-            });
-        } else {
-            window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
-        }
-    };
 
     // Problem stats data
     const problemStats = [
@@ -326,7 +283,7 @@ const AIAutomations: React.FC = () => {
                                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                             <button
-                                onClick={openCalPopup}
+                                onClick={openBooking}
                                 className="flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-[var(--text-main)] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md hover:border-violet-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                             >
                                 Book Now
@@ -1196,7 +1153,7 @@ const AIAutomations: React.FC = () => {
                                 Let us show you exactly how AI automations will work for your firm. We&apos;ll map out your lead flow, set up your automations, and have everything running in under 48 hours.
                             </p>
                             <button
-                                onClick={openCalPopup}
+                                onClick={openBooking}
                                 className="inline-flex items-center gap-2 md:gap-3 bg-violet-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-violet-500 hover:scale-105 transition-all shadow-xl shadow-violet-600/25 active:scale-95 group"
                             >
                                 See It In Action

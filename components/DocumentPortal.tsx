@@ -39,6 +39,7 @@ import {
     PenLine,
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 import { allForms, formCategories, allStates, getFormFields, type TaxForm, type FormCategory } from '../data/taxForms';
 import FormPreview from './FormPreview';
 
@@ -59,6 +60,7 @@ let fileIdCounter = 0;
 
 const DocumentPortal: React.FC = () => {
     const { theme } = useTheme();
+    const { openBooking } = useBooking();
 
     // Demo state
     const [demoView, setDemoView] = useState<DemoView>('generate');
@@ -107,51 +109,6 @@ const DocumentPortal: React.FC = () => {
         // Wait for styles to load then trigger print
         setTimeout(() => { printWindow.focus(); printWindow.print(); }, 400);
     }, [selectedForm]);
-
-    // Cal.com integration
-    useEffect(() => {
-        (function (C: any, A: string, L: string) {
-            let p = function (a: any, ar: any) { a.q.push(ar); };
-            let d = C.document;
-            C.Cal = C.Cal || function () {
-                let cal = C.Cal;
-                let ar = arguments;
-                if (!cal.loaded) {
-                    cal.ns = {};
-                    cal.q = cal.q || [];
-                    d.head.appendChild(d.createElement("script")).src = A;
-                    cal.loaded = true;
-                }
-                if (ar[0] === L) {
-                    const api = function () { p(api, arguments); };
-                    const namespace = ar[1];
-                    api.q = api.q || [];
-                    if (typeof namespace === "string") {
-                        cal.ns[namespace] = cal.ns[namespace] || api;
-                        p(cal.ns[namespace], ar);
-                        p(cal, ["initNamespace", namespace]);
-                    } else p(cal, ar);
-                    return;
-                }
-                p(cal, ar);
-            };
-        })(window, "https://app.cal.com/embed/embed.js", "init");
-
-        const Cal = (window as any).Cal;
-        Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
-    }, []);
-
-    const openCalPopup = () => {
-        const Cal = (window as any).Cal;
-        if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-            Cal.ns["nexli-demo"]("modal", {
-                calLink: "nexli-automation-6fgn8j/nexli-demo",
-                config: { "layout": "month_view", "theme": theme },
-            });
-        } else {
-            window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
-        }
-    };
 
     // Simulated upload handler
     const handleFileUpload = (fileName: string, fileType: string) => {
@@ -506,7 +463,7 @@ const DocumentPortal: React.FC = () => {
                                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                             <button
-                                onClick={openCalPopup}
+                                onClick={openBooking}
                                 className="flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-[var(--text-main)] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md hover:border-cyan-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                             >
                                 Book Now
@@ -2234,7 +2191,7 @@ const DocumentPortal: React.FC = () => {
                                 Stop relying on email and third-party portals. Give your clients a secure, branded experience that builds trust and protects their most sensitive financial data.
                             </p>
                             <button
-                                onClick={openCalPopup}
+                                onClick={openBooking}
                                 className="inline-flex items-center gap-2 md:gap-3 bg-cyan-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-cyan-500 hover:scale-105 transition-all shadow-xl shadow-cyan-600/25 active:scale-95 group"
                             >
                                 Book a Consultation
