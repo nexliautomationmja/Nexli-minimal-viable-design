@@ -193,15 +193,15 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ value, onChange }) => {
 };
 
 // ---------------------------------------------------------------------------
-// FAQ Questions — Justine answers each one live via AI + voice
+// FAQ Questions — Pre-recorded Justine voice answers
 // ---------------------------------------------------------------------------
-const faqQuestions = [
-  'How much does the Digital Rainmaker System cost?',
-  'I already have a website. Why do I need a new one?',
-  'I don\'t have time for a big project right now.',
-  'How is this different from other marketing agencies?',
-  'What if it doesn\'t work for my firm?',
-  'Do I need to prepare anything for the call?',
+const faqItems = [
+  { question: 'How secure is the document portal? What about compliance?', audio: '/audio/faq/faq-security.mp3' },
+  { question: 'What happens to my data? Do I actually own it?', audio: '/audio/faq/faq-data-ownership.mp3' },
+  { question: 'I already have a website. Why do I need a new one?', audio: '/audio/faq/faq-website.mp3' },
+  { question: 'I don\'t have time for a big project right now.', audio: '/audio/faq/faq-time.mp3' },
+  { question: 'How is this different from other marketing agencies?', audio: '/audio/faq/faq-different.mp3' },
+  { question: 'My clients are used to how we do things — won\'t this disrupt everything?', audio: '/audio/faq/faq-disruption.mp3' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -353,13 +353,10 @@ const BookingConfirmed: React.FC = () => {
 
   // FAQ state
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const [faqCache, setFaqCache] = useState<Record<number, { message: string; audioUrl: string }>>({});
-  const [faqLoading, setFaqLoading] = useState<number | null>(null);
   const [faqPlaying, setFaqPlaying] = useState<number | null>(null);
-  const [faqError, setFaqError] = useState<number | null>(null);
   const faqAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handleFaqPlay = async (index: number) => {
+  const handleFaqPlay = (index: number) => {
     // If already playing this one, pause
     if (faqPlaying === index && faqAudioRef.current) {
       faqAudioRef.current.pause();
@@ -373,42 +370,12 @@ const BookingConfirmed: React.FC = () => {
       setFaqPlaying(null);
     }
 
-    // If cached, replay
-    if (faqCache[index]?.audioUrl) {
-      const audio = new Audio(faqCache[index].audioUrl);
-      faqAudioRef.current = audio;
-      audio.onended = () => setFaqPlaying(null);
-      audio.play();
-      setFaqPlaying(index);
-      return;
-    }
-
-    // Generate Justine's real response + voice
-    setFaqLoading(index);
-    setFaqError(null);
-    try {
-      const res = await fetch('/api/faq-voice', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: faqQuestions[index] }),
-      });
-      if (!res.ok) throw new Error('Failed');
-      const data = await res.json();
-      setFaqCache(prev => ({ ...prev, [index]: { message: data.message, audioUrl: data.audioUrl } }));
-
-      if (data.audioUrl) {
-        const audio = new Audio(data.audioUrl);
-        faqAudioRef.current = audio;
-        audio.onended = () => setFaqPlaying(null);
-        audio.play();
-        setFaqPlaying(index);
-      }
-    } catch {
-      setFaqError(index);
-    } finally {
-      setFaqLoading(index === faqLoading ? null : faqLoading);
-      setFaqLoading(null);
-    }
+    // Play pre-recorded audio
+    const audio = new Audio(faqItems[index].audio);
+    faqAudioRef.current = audio;
+    audio.onended = () => setFaqPlaying(null);
+    audio.play();
+    setFaqPlaying(index);
   };
 
   const handleIntelSubmit = async (e: React.FormEvent) => {
@@ -905,12 +872,12 @@ const BookingConfirmed: React.FC = () => {
               Questions Before <span className="text-green-500">Your Call?</span>
             </h2>
             <p className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg">
-              Tap any question and Justine will answer it personally — in her own voice.
+              Tap any question to hear Justine answer it personally — in her own voice.
             </p>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-3">
-            {faqQuestions.map((question, i) => (
+            {faqItems.map((item, i) => (
               <div
                 key={i}
                 className={`rounded-2xl border transition-all ${expandedFaq === i ? (theme === 'dark' ? 'border-green-500/30 bg-green-500/5' : 'border-green-500/30 bg-green-50/50') : 'border-[var(--glass-border)] bg-[var(--glass-bg)]'}`}
@@ -919,7 +886,7 @@ const BookingConfirmed: React.FC = () => {
                   onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
                   className="w-full flex items-center justify-between gap-4 px-5 md:px-6 py-4 md:py-5 text-left"
                 >
-                  <span className="text-sm md:text-base font-bold text-[var(--text-main)]">{question}</span>
+                  <span className="text-sm md:text-base font-bold text-[var(--text-main)]">{item.question}</span>
                   <motion.div animate={{ rotate: expandedFaq === i ? 180 : 0 }} transition={{ duration: 0.3 }} className="text-[var(--text-muted)] flex-shrink-0">
                     <ChevronDown size={18} />
                   </motion.div>
@@ -941,18 +908,13 @@ const BookingConfirmed: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleFaqPlay(i)}
-                              disabled={faqLoading === i}
                               className={`flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all ${
                                 faqPlaying === i
                                   ? 'bg-green-600 shadow-lg shadow-green-600/30'
-                                  : faqLoading === i
-                                    ? 'bg-green-600/50'
-                                    : 'bg-green-600 hover:bg-green-500 hover:scale-105 active:scale-95 shadow-lg shadow-green-600/20'
+                                  : 'bg-green-600 hover:bg-green-500 hover:scale-105 active:scale-95 shadow-lg shadow-green-600/20'
                               }`}
                             >
-                              {faqLoading === i ? (
-                                <Loader2 size={20} className="text-white animate-spin" />
-                              ) : faqPlaying === i ? (
+                              {faqPlaying === i ? (
                                 <Pause size={20} className="text-white" />
                               ) : (
                                 <Play size={20} className="text-white ml-0.5" />
@@ -961,30 +923,16 @@ const BookingConfirmed: React.FC = () => {
 
                             {/* Waveform visualizer */}
                             <div className="flex-1 min-w-0">
-                              {faqError === i ? (
-                                <div className="flex flex-col gap-1">
-                                  <p className="text-xs text-red-400 font-bold">Couldn&apos;t generate response</p>
-                                  <p className="text-[10px] text-[var(--text-muted)]">Tap play to try again</p>
-                                </div>
-                              ) : (
-                                <WaveformVisualizer
-                                  audioElement={faqPlaying === i ? faqAudioRef.current : null}
-                                  isActive={faqPlaying === i}
-                                  isLoading={faqLoading === i}
-                                />
-                              )}
+                              <WaveformVisualizer
+                                audioElement={faqPlaying === i ? faqAudioRef.current : null}
+                                isActive={faqPlaying === i}
+                              />
                             </div>
                           </div>
 
                           {/* Status text */}
                           <p className="text-[10px] md:text-xs mt-3 ml-[3.75rem] md:ml-[4.5rem] font-medium text-[var(--text-muted)]">
-                            {faqLoading === i
-                              ? 'Justine is recording her answer...'
-                              : faqPlaying === i
-                                ? 'Playing...'
-                                : faqCache[i]?.audioUrl
-                                  ? 'Tap to play again'
-                                  : 'Tap play to hear Justine\u2019s answer'}
+                            {faqPlaying === i ? 'Playing...' : 'Tap play to hear Justine\u2019s answer'}
                           </p>
                         </div>
                       </div>
