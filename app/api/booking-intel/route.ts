@@ -33,15 +33,13 @@ You are Justine, COO of Nexli Automation. A CPA firm just confirmed their appoin
 ## Context You Have
 - They're a CPA firm who booked a call about the Digital Rainmaker System
 - They filled out 3 questions on the intel form (you'll see their specific answers)
+- Question 3 asks what they've tried before and why it failed — this is your BEST ammunition. Use it to differentiate Nexli from whatever burned them before, address their skepticism, and show them why this time is different
 - This response sets the tone for the sales call
 - Your goal is to position Nexli as the strategic partner who "gets it"
 - After reading your response, they should scroll down to watch the Digital Rainmaker System video (Step 2 on the page)
+- Do NOT include a sign-off like "— Justine" or "COO, Nexli Automation" at the end. The UI already shows your name and title. Just end naturally after your last point.`;
 
-Sign off as:
-— Justine
-COO, Nexli Automation`;
-
-async function generateText(challenge: string, outcome: string, clientCount: string): Promise<string> {
+async function generateText(challenge: string, outcome: string, priorAttempts: string): Promise<string> {
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -55,7 +53,7 @@ async function generateText(challenge: string, outcome: string, clientCount: str
         { role: 'system', content: SYSTEM_PROMPT },
         {
           role: 'user',
-          content: `Here are the prospect's responses:\n\n1. Biggest operational challenge: "${challenge}"\n2. What would make this investment a no-brainer: "${outcome}"\n3. Number of clients their firm serves: ${clientCount}\n\nWrite a personalized strategic response.`,
+          content: `Here are the prospect's responses:\n\n1. Biggest operational challenge: "${challenge}"\n2. What would make this investment a no-brainer: "${outcome}"\n3. What they've tried before and why it didn't work: "${priorAttempts}"\n\nWrite a personalized strategic response. Pay special attention to question 3 — use their past failures and frustrations to show exactly why the Digital Rainmaker System is different from whatever they tried before, and address any skepticism head-on.`,
         },
       ],
     }),
@@ -106,9 +104,9 @@ async function generateVoice(text: string): Promise<string> {
 
 export async function POST(req: NextRequest) {
   try {
-    const { challenge, outcome, clientCount } = await req.json();
+    const { challenge, outcome, priorAttempts } = await req.json();
 
-    if (!challenge || !outcome || !clientCount) {
+    if (!challenge || !outcome || !priorAttempts) {
       return NextResponse.json(
         { error: 'All three questions are required.' },
         { status: 400 }
@@ -116,7 +114,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Step 1: Generate text response via OpenRouter
-    const message = await generateText(challenge, outcome, clientCount);
+    const message = await generateText(challenge, outcome, priorAttempts);
 
     // Step 2: Generate voice response via ElevenLabs
     let audioUrl = '';

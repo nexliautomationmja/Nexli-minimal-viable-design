@@ -3,11 +3,13 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   CheckCircle, ChevronDown, Play, Send, Calendar,
-  Bot, HelpCircle, Mail, Loader2, Volume2, Pause,
+  HelpCircle, Mail, Loader2, Volume2, Pause,
   Mic, Square, Type, AudioLines, ArrowRight,
   Sparkles, Video, ClipboardCheck, MessageSquare
 } from 'lucide-react';
+import Image from 'next/image';
 import { useTheme } from './ThemeProvider';
+import RainmakerDemo from './RainmakerDemo';
 
 // ---------------------------------------------------------------------------
 // Step Badge — matches section badge pattern from AI Automations
@@ -46,78 +48,211 @@ const VideoPlaceholder = ({ label }: { label: string }) => (
 );
 
 // ---------------------------------------------------------------------------
-// Voice Recorder — single recording for all questions
+// Voice Message Bubble — iMessage-style audio message
 // ---------------------------------------------------------------------------
-interface VoiceRecorderProps {
-  value: string;
-  onChange: (val: string) => void;
-}
+const VoiceMessageBubble: React.FC<{
+  audioUrl: string;
+  duration: number;
+  align: 'left' | 'right';
+  label?: string;
+  audioRef?: React.RefObject<HTMLAudioElement | null>;
+  isPlayingExternal?: boolean;
+  onTogglePlay?: () => void;
+}> = ({ audioUrl, duration, align, label, audioRef: externalAudioRef, isPlayingExternal, onTogglePlay }) => {
+  const [internalPlaying, setInternalPlaying] = useState(false);
+  const internalAudioRef = useRef<HTMLAudioElement | null>(null);
 
-const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ value, onChange }) => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [hasRecording, setHasRecording] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
-  const recognitionRef = useRef<any>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const aRef = externalAudioRef || internalAudioRef;
+  const playing = isPlayingExternal !== undefined ? isPlayingExternal : internalPlaying;
 
-  const startRecording = useCallback(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert('Voice recording is not supported in this browser. Please use Chrome, Edge, or Safari.');
+  const handleToggle = () => {
+    if (onTogglePlay) {
+      onTogglePlay();
       return;
     }
+    if (!aRef.current) return;
+    if (playing) {
+      aRef.current.pause();
+      setInternalPlaying(false);
+    } else {
+      aRef.current.play();
+      setInternalPlaying(true);
+    }
+  };
 
-    const recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
 
-    let finalTranscript = '';
+  const isRight = align === 'right';
 
-    recognition.onresult = (event: any) => {
-      let interim = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-          finalTranscript += (finalTranscript ? ' ' : '') + event.results[i][0].transcript;
-        } else {
-          interim += event.results[i][0].transcript;
-        }
+  return (
+    <div className={`flex ${isRight ? 'justify-end' : 'justify-start'}`}>
+      <div
+        className={`${
+          isRight
+            ? 'bg-green-600 rounded-2xl rounded-br-md shadow-lg shadow-green-600/20'
+            : 'bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl rounded-bl-md'
+        } px-4 py-3 max-w-[85%]`}
+      >
+        {label && (
+          <p className={`text-[10px] font-bold mb-1.5 ${isRight ? 'text-white/60' : 'text-[var(--text-muted)]'}`}>{label}</p>
+        )}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleToggle}
+            className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+              isRight
+                ? 'bg-white/20 hover:bg-white/30'
+                : 'bg-green-500/20 hover:bg-green-500/30'
+            }`}
+          >
+            {playing ? (
+              <Pause size={16} className={isRight ? 'text-white' : 'text-green-400'} />
+            ) : (
+              <Play size={16} className={`${isRight ? 'text-white' : 'text-green-400'} ml-0.5`} />
+            )}
+          </button>
+
+          {/* Waveform bars */}
+          <div className="flex items-center gap-[2px] h-8 flex-1">
+            {Array.from({ length: 24 }).map((_, i) => {
+              const h = 20 + Math.sin(i * 0.7) * 35 + Math.sin(i * 1.4) * 20 + Math.cos(i * 0.5) * 10;
+              return (
+                <div
+                  key={i}
+                  className={`w-[3px] rounded-full transition-all duration-200 ${
+                    playing
+                      ? isRight ? 'bg-white/90' : 'bg-green-400/90'
+                      : isRight ? 'bg-white/40' : 'bg-green-400/40'
+                  }`}
+                  style={{
+                    height: `${Math.max(15, h)}%`,
+                    animationDelay: playing ? `${i * 50}ms` : undefined,
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          <span className={`text-xs font-bold ml-1 flex-shrink-0 ${isRight ? 'text-white/70' : 'text-[var(--text-muted)]'}`}>
+            {formatTime(duration)}
+          </span>
+        </div>
+      </div>
+      {!externalAudioRef && (
+        <audio
+          ref={internalAudioRef}
+          src={audioUrl}
+          onEnded={() => setInternalPlaying(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Voice Recorder — records audio + hidden transcript, shows as voice message
+// ---------------------------------------------------------------------------
+interface VoiceRecorderProps {
+  onTranscriptChange: (val: string) => void;
+  onAudioReady: (url: string, duration: number) => void;
+}
+
+const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptChange, onAudioReady }) => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingDurationRef = useRef(0);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const startRecording = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+
+      // MediaRecorder for actual audio capture
+      const mediaRecorder = new MediaRecorder(stream);
+      chunksRef.current = [];
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+        onAudioReady(url, recordingDurationRef.current);
+        stream.getTracks().forEach(t => t.stop());
+      };
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+
+      // SpeechRecognition in parallel for hidden transcript (sent to API)
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+        let finalTranscript = '';
+        recognition.onresult = (event: any) => {
+          let interim = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              finalTranscript += (finalTranscript ? ' ' : '') + event.results[i][0].transcript;
+            } else {
+              interim += event.results[i][0].transcript;
+            }
+          }
+          onTranscriptChange(finalTranscript + (interim ? ' ' + interim : ''));
+        };
+        recognition.onerror = () => {};
+        recognitionRef.current = recognition;
+        recognition.start();
       }
-      onChange(finalTranscript + (interim ? ' ' + interim : ''));
-    };
 
-    recognition.onerror = () => {
-      setIsRecording(false);
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+      setIsRecording(true);
+      setAudioUrl(null);
+      recordingDurationRef.current = 0;
+      setRecordingTime(0);
 
-    recognition.onend = () => {
-      setIsRecording(false);
-      setHasRecording(true);
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-
-    recognitionRef.current = recognition;
-    recognition.start();
-    setIsRecording(true);
-    setRecordingTime(0);
-
-    timerRef.current = setInterval(() => {
-      setRecordingTime(prev => prev + 1);
-    }, 1000);
-  }, [onChange]);
+      timerRef.current = setInterval(() => {
+        recordingDurationRef.current += 1;
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+    } catch {
+      alert('Could not access microphone. Please check your browser permissions.');
+    }
+  }, [onTranscriptChange, onAudioReady]);
 
   const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') mediaRecorderRef.current.stop();
     if (recognitionRef.current) recognitionRef.current.stop();
     if (timerRef.current) clearInterval(timerRef.current);
     setIsRecording(false);
-    setHasRecording(true);
   }, []);
+
+  const reRecord = useCallback(() => {
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl(null);
+    setRecordingTime(0);
+    onTranscriptChange('');
+    onAudioReady('', 0);
+  }, [audioUrl, onTranscriptChange, onAudioReady]);
 
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
       if (recognitionRef.current) recognitionRef.current.abort();
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') mediaRecorderRef.current.stop();
+      if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
     };
   }, []);
 
@@ -135,59 +270,62 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ value, onChange }) => {
           <div>
             <p className="text-sm font-bold text-[var(--text-main)] mb-0.5">Record your answers</p>
             <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-              Hit record and answer all three questions in one go. Speak naturally — we&apos;ll transcribe everything.
+              Hit record and answer all three questions in one go. Speak naturally.
             </p>
           </div>
         </div>
 
-        <div className="bg-[var(--glass-border)] rounded-lg p-3 mb-3">
+        <div className="bg-[var(--glass-border)] rounded-lg p-3 mb-4">
           <p className="text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] mb-2">Questions to answer</p>
           <ol className="space-y-1.5 text-sm text-[var(--text-main)] list-decimal list-inside leading-relaxed">
             <li>What&apos;s your biggest operational challenge right now?</li>
             <li>What outcome would make this investment a no-brainer for you?</li>
-            <li>How many clients does your firm serve?</li>
+            <li>What have you tried before to fix this, and why didn&apos;t it work?</li>
           </ol>
         </div>
 
-        <div className="flex flex-col items-center gap-2">
-          {!isRecording ? (
+        {!audioUrl ? (
+          <div className="flex flex-col items-center gap-2">
+            {!isRecording ? (
+              <button
+                type="button"
+                onClick={startRecording}
+                className="group relative w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/10 border-2 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/20 transition-all flex items-center justify-center shadow-xl shadow-red-500/10 hover:shadow-red-500/20"
+              >
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 group-hover:bg-red-400 transition-colors flex items-center justify-center shadow-lg">
+                  <Mic size={24} className="text-white" />
+                </div>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={stopRecording}
+                className="relative w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/20 border-2 border-red-500/40 transition-all flex items-center justify-center"
+              >
+                <span className="absolute inset-0 rounded-full animate-ping bg-red-500/20" />
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 flex items-center justify-center shadow-lg">
+                  <Square size={20} className="text-white fill-white" />
+                </div>
+              </button>
+            )}
+            <span className="text-xs font-bold text-[var(--text-muted)]">
+              {isRecording ? `Recording... ${formatTime(recordingTime)}` : 'Tap to record'}
+            </span>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <VoiceMessageBubble audioUrl={audioUrl} duration={recordingTime} align="right" />
             <button
               type="button"
-              onClick={startRecording}
-              className="group relative w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/10 border-2 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/20 transition-all flex items-center justify-center shadow-xl shadow-red-500/10 hover:shadow-red-500/20"
+              onClick={reRecord}
+              className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors mx-auto"
             >
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 group-hover:bg-red-400 transition-colors flex items-center justify-center shadow-lg">
-                <Mic size={24} className="text-white" />
-              </div>
+              <Mic size={12} />
+              Record again
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={stopRecording}
-              className="relative w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/20 border-2 border-red-500/40 transition-all flex items-center justify-center"
-            >
-              <span className="absolute inset-0 rounded-full animate-ping bg-red-500/20" />
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 flex items-center justify-center shadow-lg">
-                <Square size={20} className="text-white fill-white" />
-              </div>
-            </button>
-          )}
-          <span className="text-xs font-bold text-[var(--text-muted)]">
-            {isRecording ? `Recording... ${formatTime(recordingTime)}` : hasRecording ? 'Tap to record again' : 'Tap to record'}
-          </span>
-        </div>
+          </div>
+        )}
       </div>
-
-      {value && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-3 md:p-4 rounded-xl bg-[var(--glass-bg)] border border-[var(--glass-border)]"
-        >
-          <p className="text-[10px] md:text-xs font-black text-green-400 uppercase tracking-[0.2em] mb-2">Transcription</p>
-          <p className="text-sm text-[var(--text-main)] leading-relaxed">{value}</p>
-        </motion.div>
-      )}
     </div>
   );
 };
@@ -341,7 +479,7 @@ const BookingConfirmed: React.FC = () => {
   const [intelForm, setIntelForm] = useState({
     challenge: '',
     outcome: '',
-    clientCount: '',
+    priorAttempts: '',
   });
   const [intelSubmitted, setIntelSubmitted] = useState(false);
   const [intelLoading, setIntelLoading] = useState(false);
@@ -350,6 +488,11 @@ const BookingConfirmed: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // User voice message state (for iMessage thread after submission)
+  const [userAudioUrl, setUserAudioUrl] = useState<string | null>(null);
+  const [userAudioDuration, setUserAudioDuration] = useState(0);
+  const [showTranscript, setShowTranscript] = useState(false);
 
   // FAQ state
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
@@ -383,8 +526,13 @@ const BookingConfirmed: React.FC = () => {
     setAiError('');
     setIntelLoading(true);
 
+    // Voice mode: show the chat thread immediately (like sending an iMessage)
+    if (inputMode === 'voice') {
+      setIntelSubmitted(true);
+    }
+
     const payload = inputMode === 'voice'
-      ? { challenge: voiceTranscript, outcome: '(included in voice response above)', clientCount: '(included in voice response above)' }
+      ? { challenge: voiceTranscript || '(Voice message sent)', outcome: '(included in voice response)', priorAttempts: '(included in voice response)' }
       : intelForm;
 
     try {
@@ -420,8 +568,8 @@ const BookingConfirmed: React.FC = () => {
   };
 
   const isFormValid = inputMode === 'voice'
-    ? voiceTranscript.trim().length > 0
-    : intelForm.challenge && intelForm.outcome && intelForm.clientCount;
+    ? !!userAudioUrl
+    : intelForm.challenge && intelForm.outcome && intelForm.priorAttempts;
 
   const inputClass = 'w-full bg-[var(--glass-border)] border border-[var(--glass-border)] rounded-xl md:rounded-xl px-3 md:px-4 py-2 md:py-3 text-[var(--text-main)] focus:outline-none focus:border-green-500 transition-all font-medium text-sm placeholder:text-[var(--text-muted)] placeholder:opacity-40';
   const labelClass = 'text-[8px] md:text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] ml-2 mb-1.5 block';
@@ -613,7 +761,7 @@ const BookingConfirmed: React.FC = () => {
         >
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
-              <Bot size={14} className="text-green-400" />
+              <img src="/justine-headshot.png" alt="Justine" className="w-5 h-5 rounded-full object-cover border border-green-500/30" />
               <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Powered by Justine, COO</span>
             </div>
             <h2 className="text-2xl md:text-5xl font-bold text-[var(--text-main)] mb-4 md:mb-6">
@@ -694,20 +842,20 @@ const BookingConfirmed: React.FC = () => {
 
                         <div>
                           <label className={labelClass}>Question 3</label>
-                          <input
-                            type="text"
-                            placeholder="How many clients does your firm serve?"
-                            value={intelForm.clientCount}
-                            onChange={(e) => setIntelForm(prev => ({ ...prev, clientCount: e.target.value }))}
-                            className={inputClass}
+                          <textarea
+                            rows={2}
+                            placeholder="What have you tried before to fix this, and why didn't it work?"
+                            value={intelForm.priorAttempts}
+                            onChange={(e) => setIntelForm(prev => ({ ...prev, priorAttempts: e.target.value }))}
+                            className={`${inputClass} resize-none`}
                             required
                           />
                         </div>
                       </>
                     ) : (
                       <VoiceRecorder
-                        value={voiceTranscript}
-                        onChange={setVoiceTranscript}
+                        onTranscriptChange={setVoiceTranscript}
+                        onAudioReady={(url, dur) => { setUserAudioUrl(url); setUserAudioDuration(dur); }}
                       />
                     )}
 
@@ -729,7 +877,132 @@ const BookingConfirmed: React.FC = () => {
                       )}
                     </button>
                   </motion.form>
+                ) : inputMode === 'voice' ? (
+                  /* ── Voice Mode: iMessage-like thread ── */
+                  <motion.div
+                    key="voice-thread"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="space-y-4"
+                  >
+                    {/* User's sent voice message (right-aligned, green) */}
+                    {userAudioUrl && (
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                      >
+                        <VoiceMessageBubble
+                          audioUrl={userAudioUrl}
+                          duration={userAudioDuration}
+                          align="right"
+                          label="Your message"
+                        />
+                        <p className="text-[10px] text-[var(--text-muted)] text-right mt-1.5 mr-2">Delivered</p>
+                      </motion.div>
+                    )}
+
+                    {/* Justine's response or typing indicator */}
+                    {intelLoading ? (
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.4 }}
+                        className="flex items-start gap-3"
+                      >
+                        <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
+                        <div>
+                          <p className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 ml-1">Justine</p>
+                          <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl rounded-bl-md px-5 py-4">
+                            <div className="flex items-center gap-2">
+                              <div className="flex gap-1.5">
+                                <span className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                <span className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                <span className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                              </div>
+                              <span className="text-xs text-[var(--text-muted)] ml-2">Justine is listening...</span>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ) : aiResponse ? (
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: 0.1 }}
+                        className="flex items-start gap-3"
+                      >
+                        <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
+                        <div className="flex-1 min-w-0 space-y-3">
+                          <p className="text-[10px] font-bold text-[var(--text-muted)] ml-1">Justine</p>
+
+                          {/* Justine's voice message */}
+                          {audioUrl && (
+                            <>
+                              <VoiceMessageBubble
+                                audioUrl={audioUrl}
+                                duration={0}
+                                align="left"
+                                audioRef={audioRef}
+                                isPlayingExternal={isPlaying}
+                                onTogglePlay={toggleAudio}
+                              />
+                              <audio
+                                ref={audioRef}
+                                src={audioUrl}
+                                onEnded={() => setIsPlaying(false)}
+                              />
+                            </>
+                          )}
+
+                          {/* Read transcript toggle */}
+                          <button
+                            type="button"
+                            onClick={() => setShowTranscript(!showTranscript)}
+                            className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-green-400 transition-colors ml-1"
+                          >
+                            <ChevronDown size={14} className={`transition-transform duration-300 ${showTranscript ? 'rotate-180' : ''}`} />
+                            {showTranscript ? 'Hide transcript' : 'Read transcript'}
+                          </button>
+
+                          <AnimatePresence>
+                            {showTranscript && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl rounded-bl-md p-4 md:p-6">
+                                  {aiResponse.split('\n\n').map((paragraph, i) => (
+                                    <p key={i} className="text-sm md:text-base text-[var(--text-main)] leading-relaxed mb-3 last:mb-0">
+                                      {paragraph}
+                                    </p>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </motion.div>
+                    ) : aiError ? (
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                        className="flex items-start gap-3"
+                      >
+                        <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
+                        <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl rounded-bl-md px-5 py-4">
+                          <p className="text-sm text-[var(--text-main)] leading-relaxed">{aiError}</p>
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </motion.div>
                 ) : (
+                  /* ── Text Mode: existing response card ── */
                   <motion.div
                     key="response"
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -740,9 +1013,7 @@ const BookingConfirmed: React.FC = () => {
                       <div>
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-600/20 border border-green-500/30 flex items-center justify-center">
-                              <Bot size={20} className="text-green-400" />
-                            </div>
+                            <Image src="/justine-headshot.png" alt="Justine" width={48} height={48} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-green-500/30" />
                             <div>
                               <p className="text-sm md:text-base font-bold text-[var(--text-main)]">Justine</p>
                               <p className="text-[10px] md:text-xs text-[var(--text-muted)]">COO, Nexli Automation</p>
@@ -800,16 +1071,8 @@ const BookingConfirmed: React.FC = () => {
         >
           <StepBadge number={2} label="See the Digital Rainmaker System" />
 
-          <div className={`relative max-w-3xl mx-auto rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
-            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
-
-            <div className="relative z-10 p-4 md:p-8">
-              <VideoPlaceholder label="Watch How It Works" />
-
-              <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
-                See exactly how the Digital Rainmaker System combines a premium website, AI automation, and Google review amplification to turn your firm into a client acquisition machine.
-              </p>
-            </div>
+          <div className="max-w-3xl mx-auto">
+            <RainmakerDemo />
           </div>
         </motion.section>
 
