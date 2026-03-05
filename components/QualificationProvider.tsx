@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle, XCircle, Building2, Users, Target, DollarSign, Briefcase, Star, X } from 'lucide-react';
+import { ArrowRight, CheckCircle, XCircle, Building2, Users, Target, DollarSign, Briefcase, Star, Crown, X } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 
 // ---------------------------------------------------------------------------
@@ -12,6 +12,7 @@ type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
 interface QualificationAnswers {
   usBased: boolean | null;
   hasClients: boolean | null;
+  isDecisionMaker: boolean | null;
   annualRevenue: string | null;
   firmServices: string[] | null;
   hasGoogleReviews: boolean | null;
@@ -32,6 +33,12 @@ const qualificationQuestions = [
     icon: <Users className="text-blue-400" size={20} />,
     question: 'Do you currently have an established client base?',
     description: 'Our systems are built to amplify firms that are already serving clients.',
+  },
+  {
+    key: 'isDecisionMaker' as const,
+    icon: <Crown className="text-blue-400" size={20} />,
+    question: 'Are you the firm owner or a decision maker?',
+    description: 'Our strategy sessions are designed for the people who can greenlight and implement changes.',
   },
 ];
 
@@ -73,6 +80,7 @@ async function sendQualificationToGHL(answers: QualificationAnswers, qualified: 
         qualified,
         us_based: answers.usBased,
         has_clients: answers.hasClients,
+        is_decision_maker: answers.isDecisionMaker,
         annual_revenue: answers.annualRevenue,
         firm_services: answers.firmServices?.join(', ') ?? '',
         has_google_reviews: answers.hasGoogleReviews,
@@ -109,6 +117,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
   const [answers, setAnswers] = useState<QualificationAnswers>({
     usBased: null,
     hasClients: null,
+    isDecisionMaker: null,
     annualRevenue: null,
     firmServices: null,
     hasGoogleReviews: null,
@@ -116,7 +125,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
   });
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  const handleYesNo = (key: 'usBased' | 'hasClients', value: boolean) => {
+  const handleYesNo = (key: 'usBased' | 'hasClients' | 'isDecisionMaker', value: boolean) => {
     const updated = { ...answers, [key]: value };
     setAnswers(updated);
     if (!value) {
@@ -134,7 +143,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       sendQualificationToGHL(updated, false);
       onResult('not-qualified');
     } else {
-      setStep(3);
+      setStep(4);
     }
   };
 
@@ -152,14 +161,14 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       sendQualificationToGHL(updated, false);
       onResult('not-qualified');
     } else {
-      setStep(4);
+      setStep(5);
     }
   };
 
   const handleGoogleReviews = (value: boolean) => {
     const updated = { ...answers, hasGoogleReviews: value };
     setAnswers(updated);
-    setStep(5);
+    setStep(6);
   };
 
   const handleGoal = (value: string) => {
@@ -174,7 +183,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     }
   };
 
-  const totalSteps = 6;
+  const totalSteps = 7;
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
@@ -183,7 +192,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           <Target className="text-blue-400" size={28} />
         </div>
         <h3 className="text-[var(--text-main)] text-lg md:text-2xl font-bold mb-2">
-          Quick Qualification
+          Tell Us About Your Firm
         </h3>
         <p className="text-[var(--text-muted)] text-xs md:text-sm max-w-md mx-auto">
           We work exclusively with established CPA firms. A few quick questions to make sure we&apos;re the right fit.
@@ -203,8 +212,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       </div>
 
       <AnimatePresence mode="wait">
-        {/* Steps 0 & 1: Yes/No */}
-        {step < 2 && (
+        {/* Steps 0, 1 & 2: Yes/No */}
+        {step < 3 && (
           <motion.div
             key={`q-${step}`}
             initial={{ opacity: 0, x: 30 }}
@@ -245,8 +254,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 2: Annual revenue */}
-        {step === 2 && (
+        {/* Step 3: Annual revenue */}
+        {step === 3 && (
           <motion.div
             key="q-revenue"
             initial={{ opacity: 0, x: 30 }}
@@ -282,8 +291,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 3: Firm services (multi-select) */}
-        {step === 3 && (
+        {/* Step 4: Firm services (multi-select) */}
+        {step === 4 && (
           <motion.div
             key="q-services"
             initial={{ opacity: 0, x: 30 }}
@@ -345,8 +354,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 4: Google Reviews */}
-        {step === 4 && (
+        {/* Step 5: Google Reviews */}
+        {step === 5 && (
           <motion.div
             key="q-reviews"
             initial={{ opacity: 0, x: 30 }}
@@ -387,8 +396,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 5: Goal selection */}
-        {step === 5 && (
+        {/* Step 6: Goal selection */}
+        {step === 6 && (
           <motion.div
             key="q-goal"
             initial={{ opacity: 0, x: 30 }}
