@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle, XCircle, Building2, Users, Target, DollarSign, Briefcase, Star, Crown, X } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
@@ -552,7 +552,7 @@ export default function QualificationProvider({ children }: { children: React.Re
   const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [qualificationStatus, setQualificationStatus] = useState<QualificationStatus>('pending');
-  const [qualificationAnswers, setQualificationAnswers] = useState<QualificationAnswers | null>(null);
+  const answersRef = useRef<QualificationAnswers | null>(null);
   const [calInitialized, setCalInitialized] = useState(false);
 
   // Initialize Cal.com embed script once
@@ -587,14 +587,39 @@ export default function QualificationProvider({ children }: { children: React.Re
     const Cal = (window as any).Cal;
     Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
 
-    // Track successful bookings with Facebook Pixel
+    // Track successful bookings with Facebook Pixel + send prequalification data to GHL
     Cal("on", {
       action: "bookingSuccessful",
-      callback: () => {
+      callback: (e: any) => {
         if (typeof (window as any).fbq === 'function') {
           (window as any).fbq('track', 'Schedule', {
             content_name: 'Strategy Session Booking',
           });
+        }
+
+        // Send prequalification answers to GHL with booking info
+        const savedAnswers = answersRef.current;
+        if (savedAnswers) {
+          const bookingData = e?.detail?.data ?? {};
+          fetch(GHL_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              source: 'booking-with-qualification',
+              qualified: true,
+              booking_uid: bookingData.uid ?? '',
+              booking_confirmed: bookingData.confirmed ?? true,
+              us_based: savedAnswers.usBased,
+              has_clients: savedAnswers.hasClients,
+              decision_role: savedAnswers.decisionRole,
+              annual_revenue: savedAnswers.annualRevenue,
+              firm_services: savedAnswers.firmServices?.join(', ') ?? '',
+              has_google_reviews: savedAnswers.hasGoogleReviews,
+              goal: savedAnswers.goal,
+              qualification_notes: formatAnswersAsNotes(savedAnswers),
+              submitted_at: new Date().toISOString(),
+            }),
+          }).catch(() => {});
         }
       },
     });
@@ -602,46 +627,36 @@ export default function QualificationProvider({ children }: { children: React.Re
     setCalInitialized(true);
   }, []);
 
-  const openCalPopup = useCallback((answers?: QualificationAnswers | null) => {
+  const openCalPopup = useCallback(() => {
     const Cal = (window as any).Cal;
-    const notes = answers ? formatAnswersAsNotes(answers) : undefined;
-    const calLink = notes
-      ? `nexli-automation-6fgn8j/nexli-demo?notes=${encodeURIComponent(notes)}`
-      : 'nexli-automation-6fgn8j/nexli-demo';
-
     if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
       Cal.ns["nexli-demo"]("modal", {
-        calLink,
+        calLink: "nexli-automation-6fgn8j/nexli-demo",
         config: { "layout": "month_view", "theme": theme },
       });
     } else {
-      window.open(`https://cal.com/${calLink}`, "_blank");
+      window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
     }
   }, [theme]);
 
   const openBooking = useCallback(() => {
     if (qualificationStatus === 'qualified') {
-      // Already qualified — go straight to Cal.com with saved answers
-      openCalPopup(qualificationAnswers);
+      openCalPopup();
     } else {
-      // Need to qualify first
       setQualificationStatus('pending');
       setIsOpen(true);
     }
-  }, [qualificationStatus, openCalPopup, qualificationAnswers]);
+  }, [qualificationStatus, openCalPopup]);
 
   const handleResult = useCallback((status: QualificationStatus, answers: QualificationAnswers) => {
     setQualificationStatus(status);
-    setQualificationAnswers(answers);
+    answersRef.current = answers;
     if (status === 'qualified') {
-      // Close modal and open Cal.com with prequalification answers
       setIsOpen(false);
-      // Small delay to let modal close animation finish
       setTimeout(() => {
-        openCalPopup(answers);
+        openCalPopup();
       }, 300);
     }
-    // If not-qualified, keep modal open to show the message
   }, [openCalPopup]);
 
   const closeModal = useCallback(() => {
