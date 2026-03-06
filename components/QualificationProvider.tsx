@@ -605,17 +605,17 @@ export default function QualificationProvider({ children }: { children: React.Re
   const openCalPopup = useCallback((answers?: QualificationAnswers | null) => {
     const Cal = (window as any).Cal;
     const notes = answers ? formatAnswersAsNotes(answers) : undefined;
+    const calLink = notes
+      ? `nexli-automation-6fgn8j/nexli-demo?notes=${encodeURIComponent(notes)}`
+      : 'nexli-automation-6fgn8j/nexli-demo';
 
     if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
       Cal.ns["nexli-demo"]("modal", {
-        calLink: "nexli-automation-6fgn8j/nexli-demo",
+        calLink,
         config: { "layout": "month_view", "theme": theme },
-        ...(notes ? { prefill: { notes } } : {}),
       });
     } else {
-      const url = new URL("https://cal.com/nexli-automation-6fgn8j/nexli-demo");
-      if (notes) url.searchParams.set("notes", notes);
-      window.open(url.toString(), "_blank");
+      window.open(`https://cal.com/${calLink}`, "_blank");
     }
   }, [theme]);
 
