@@ -300,7 +300,7 @@ const DocumentPortal: React.FC = () => {
     const expandedStepCards = [
         { step: '01', title: 'Send Secure Link', description: 'CPA sends a branded, secure upload link to the client via email or SMS. No account creation needed — zero friction.', bg: 'from-cyan-950 via-cyan-900 to-blue-900' },
         { step: '02', title: 'Client Uploads', description: "Client uploads documents through your firm's branded portal. Drag-and-drop, mobile-friendly, instant confirmation.", bg: 'from-blue-950 via-blue-900 to-indigo-900' },
-        { step: '03', title: 'Encrypted & Stored', description: "Files encrypted with AES-256 at rest and TLS in transit. Stored in your firm's isolated vault — never commingled with other firms.", bg: 'from-emerald-950 via-green-900 to-teal-900' },
+        { step: '03', title: 'Encrypted & Stored', description: "Files encrypted with AES-256 (quantum-resistant) at rest and TLS in transit. Stored in your firm's isolated vault — never commingled with other firms.", bg: 'from-emerald-950 via-green-900 to-teal-900' },
         { step: '04', title: 'CPA Notified', description: 'Instant notification when documents arrive. Download securely from your dashboard with a full audit trail.', bg: 'from-amber-950 via-orange-900 to-red-900' },
     ];
     const StepIcons = [Send, Upload, Lock, Bell];
@@ -317,7 +317,7 @@ const DocumentPortal: React.FC = () => {
 
     // Security features
     const securityFeatures = [
-        { icon: <Lock size={16} className="text-cyan-400 md:w-[22px] md:h-[22px]" />, title: 'AES-256 Encryption at Rest', description: 'Every document encrypted with bank-grade encryption before storage.', iconDark: 'bg-cyan-500/10 border-cyan-500/20', iconLight: 'bg-cyan-50 border-cyan-200' },
+        { icon: <Lock size={16} className="text-cyan-400 md:w-[22px] md:h-[22px]" />, title: 'AES-256 Quantum-Resistant Encryption', description: 'Every document encrypted with AES-256 — rated quantum-resistant, meaning your data stays secure even against future quantum computing threats.', iconDark: 'bg-cyan-500/10 border-cyan-500/20', iconLight: 'bg-cyan-50 border-cyan-200' },
         { icon: <ShieldCheck size={16} className="text-blue-400 md:w-[22px] md:h-[22px]" />, title: 'TLS Encryption in Transit', description: 'All uploads protected with the same encryption used by major banks.', iconDark: 'bg-blue-500/10 border-blue-500/20', iconLight: 'bg-blue-50 border-blue-200' },
         { icon: <FolderLock size={16} className="text-emerald-400 md:w-[22px] md:h-[22px]" />, title: 'Per-Firm Isolated Storage', description: "Your clients' documents are never commingled with other firms.", iconDark: 'bg-emerald-500/10 border-emerald-500/20', iconLight: 'bg-emerald-50 border-emerald-200' },
         { icon: <FileCheck size={16} className="text-violet-400 md:w-[22px] md:h-[22px]" />, title: 'IRS Pub 4557 Compliant', description: 'Meets IRS data security requirements for tax professionals.', iconDark: 'bg-violet-500/10 border-violet-500/20', iconLight: 'bg-violet-50 border-violet-200' },

@@ -83,9 +83,10 @@ async function generateVoice(text: string): Promise<string> {
       text,
       model_id: 'eleven_multilingual_v2',
       voice_settings: {
-        stability: 0.5,
-        similarity_boost: 0.75,
-        style: 0.4,
+        stability: 0.35,
+        similarity_boost: 0.7,
+        style: 0.65,
+        speed: 1.10,
       },
     }),
   });

@@ -12,7 +12,7 @@ type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
 interface QualificationAnswers {
   usBased: boolean | null;
   hasClients: boolean | null;
-  isDecisionMaker: boolean | null;
+  decisionRole: string | null;
   annualRevenue: string | null;
   firmServices: string[] | null;
   hasGoogleReviews: boolean | null;
@@ -34,12 +34,6 @@ const qualificationQuestions = [
     question: 'Do you currently have an established client base?',
     description: 'Our systems are built to amplify firms that are already serving clients.',
   },
-  {
-    key: 'isDecisionMaker' as const,
-    icon: <Crown className="text-blue-400" size={20} />,
-    question: 'Are you the firm owner or a decision maker?',
-    description: 'Our strategy sessions are designed for the people who can greenlight and implement changes.',
-  },
 ];
 
 const annualRevenueOptions = [
@@ -51,6 +45,15 @@ const annualRevenueOptions = [
 ];
 
 const DISQUALIFYING_REVENUE = 'under-250k';
+
+const decisionRoleOptions = [
+  { value: 'sole-owner', label: "I'm the sole owner — I make all the decisions" },
+  { value: 'partner-authority', label: "I'm a partner with authority to make this decision" },
+  { value: 'partner-need-approval', label: "I'm a partner but other partners would need to weigh in" },
+  { value: 'not-decision-maker', label: "I'm not involved in decisions like this" },
+];
+
+const DISQUALIFYING_ROLE = 'not-decision-maker';
 
 const firmServiceOptions = [
   { value: 'tax-prep', label: 'Tax preparation & tax planning' },
@@ -80,7 +83,7 @@ async function sendQualificationToGHL(answers: QualificationAnswers, qualified: 
         qualified,
         us_based: answers.usBased,
         has_clients: answers.hasClients,
-        is_decision_maker: answers.isDecisionMaker,
+        decision_role: answers.decisionRole,
         annual_revenue: answers.annualRevenue,
         firm_services: answers.firmServices?.join(', ') ?? '',
         has_google_reviews: answers.hasGoogleReviews,
@@ -117,7 +120,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
   const [answers, setAnswers] = useState<QualificationAnswers>({
     usBased: null,
     hasClients: null,
-    isDecisionMaker: null,
+    decisionRole: null,
     annualRevenue: null,
     firmServices: null,
     hasGoogleReviews: null,
@@ -125,7 +128,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
   });
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  const handleYesNo = (key: 'usBased' | 'hasClients' | 'isDecisionMaker', value: boolean) => {
+  const handleYesNo = (key: 'usBased' | 'hasClients', value: boolean) => {
     const updated = { ...answers, [key]: value };
     setAnswers(updated);
     if (!value) {
@@ -134,6 +137,17 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       return;
     }
     setStep((s) => s + 1);
+  };
+
+  const handleDecisionRole = (value: string) => {
+    const updated = { ...answers, decisionRole: value };
+    setAnswers(updated);
+    if (value === DISQUALIFYING_ROLE) {
+      sendQualificationToGHL(updated, false);
+      onResult('not-qualified');
+    } else {
+      setStep(3);
+    }
   };
 
   const handleAnnualRevenue = (value: string) => {
@@ -212,8 +226,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       </div>
 
       <AnimatePresence mode="wait">
-        {/* Steps 0, 1 & 2: Yes/No */}
-        {step < 3 && (
+        {/* Steps 0 & 1: Yes/No */}
+        {step < 2 && (
           <motion.div
             key={`q-${step}`}
             initial={{ opacity: 0, x: 30 }}
@@ -250,6 +264,43 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
                 <XCircle size={16} className="text-red-400" />
                 No
               </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 2: Decision role */}
+        {step === 2 && (
+          <motion.div
+            key="q-decision"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            <div className="flex items-start gap-3 md:gap-4 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
+                <Crown className="text-blue-400" size={20} />
+              </div>
+              <div>
+                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
+                  What&apos;s your role in the firm&apos;s decision-making?
+                </p>
+                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
+                  This helps us understand who will be involved in evaluating and implementing our system.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2 md:space-y-3">
+              {decisionRoleOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleDecisionRole(opt.value)}
+                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
           </motion.div>
         )}

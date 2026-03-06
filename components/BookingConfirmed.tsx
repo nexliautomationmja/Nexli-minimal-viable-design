@@ -28,24 +28,6 @@ const StepBadge = ({ number, label }: { number: number; label: string }) => (
   </motion.div>
 );
 
-// ---------------------------------------------------------------------------
-// Video Placeholder — premium card style
-// ---------------------------------------------------------------------------
-const VideoPlaceholder = ({ label }: { label: string }) => (
-  <div className="relative w-full aspect-video rounded-xl md:rounded-2xl overflow-hidden group cursor-pointer">
-    <div className="absolute inset-0 bg-gradient-to-br from-green-950 via-emerald-900 to-teal-900" />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-    <div className="relative z-10 flex flex-col items-center justify-center h-full gap-3">
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-2xl"
-      >
-        <Play size={28} className="text-white ml-1" />
-      </motion.div>
-      <span className="text-white/80 text-xs md:text-sm font-bold uppercase tracking-widest">{label}</span>
-    </div>
-  </div>
-);
 
 // ---------------------------------------------------------------------------
 // Voice Message Bubble — iMessage-style audio message
@@ -742,7 +724,16 @@ const BookingConfirmed: React.FC = () => {
             <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
             <div className="relative z-10 p-4 md:p-8">
-              <VideoPlaceholder label="Watch Welcome Video" />
+              <video
+                className="w-full rounded-xl md:rounded-2xl"
+                controls
+                playsInline
+                preload="metadata"
+                poster=""
+              >
+                <source src="/justine-welcome.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
 
               <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
                 A quick welcome from our team. We&apos;ll walk you through what to expect on your strategy session and how to get the most out of it.
@@ -1061,7 +1052,7 @@ const BookingConfirmed: React.FC = () => {
           </div>
         </motion.section>
 
-        {/* ── STEP 2: Digital Rainmaker System Video ── */}
+        {/* ── STEP 2: Digital Rainmaker System Breakdown Video + Interactive Demo ── */}
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1071,6 +1062,28 @@ const BookingConfirmed: React.FC = () => {
         >
           <StepBadge number={2} label="See the Digital Rainmaker System" />
 
+          {/* Demo Breakdown Video */}
+          <div className={`relative max-w-3xl mx-auto rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 mb-10 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
+
+            <div className="relative z-10 p-4 md:p-8">
+              <video
+                className="w-full rounded-xl md:rounded-2xl"
+                controls
+                playsInline
+                preload="metadata"
+              >
+                <source src="/rainmaker-demo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+
+              <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
+                Watch Marcel break down the Digital Rainmaker System — how the website, AI automation, and review engine work together to transform your firm&apos;s inbound pipeline.
+              </p>
+            </div>
+          </div>
+
+          {/* Interactive Demo Tool */}
           <div className="max-w-3xl mx-auto">
             <RainmakerDemo />
           </div>

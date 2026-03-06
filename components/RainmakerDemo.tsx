@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap, ArrowRight, PhoneOff, PhoneIncoming, PhoneMissed,
@@ -7,8 +7,9 @@ import {
   Bot, RotateCcw, Globe, MessageSquare, BarChart3, Star,
   Shield, Upload, FileText, Lock, Eye, Copy, ChevronRight, Brain,
   Download, Search, X, Users, FolderLock, ShieldCheck, History,
-  Key, Bell, ClipboardList, Activity, Camera,
+  Key, Bell, ClipboardList, Activity, Camera, Play, Pause, ChevronDown,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useTheme } from './ThemeProvider';
 import { allForms, allStates, type TaxForm } from '../data/taxForms';
 
@@ -36,6 +37,11 @@ const tabs: { id: ActiveTab; label: string; shortLabel: string; Icon: React.Elem
 const RainmakerDemo: React.FC = () => {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<ActiveTab>('ai-automations');
+
+  // ── Intro voice message state ──
+  const introAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [introPlaying, setIntroPlaying] = useState(false);
+  const [showIntroTranscript, setShowIntroTranscript] = useState(false);
 
   // ── AI Automations state ──
   const [demoTab, setDemoTab] = useState<'missed-call' | 'website-lead'>('missed-call');
@@ -344,11 +350,105 @@ const RainmakerDemo: React.FC = () => {
       <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
       <div className="relative z-10 p-4 md:p-8">
-        {/* System intro */}
-        <div className="text-center mb-6">
-          <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed max-w-xl mx-auto">
-            The Digital Rainmaker System works in three connected pillars. Your website captures leads. AI responds, nurtures, and books them. Smart Reviews builds the reputation that brings the next wave. Explore each pillar below.
-          </p>
+        {/* System intro — title + animated arrow + Justine voice message */}
+        <div className="mb-6">
+          <div className="text-center mb-5">
+            <h3 className={`text-base md:text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+              See How the System Works — <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-500">Hands On</span>
+            </h3>
+            <p className={`text-xs md:text-sm mb-4 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
+              Tap play to hear Justine walk you through it, then explore each pillar yourself.
+            </p>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="flex justify-center"
+            >
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-blue-500 via-violet-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-violet-500/30">
+                <ArrowRight size={18} className="text-white rotate-90" />
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="flex items-start gap-3 max-w-xl mx-auto">
+            <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0 space-y-2">
+              <p className={`text-[10px] font-bold ml-1 ${theme === 'dark' ? 'text-white/40' : 'text-slate-400'}`}>Justine, COO</p>
+              <div className={`rounded-2xl rounded-bl-md px-4 py-3 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!introAudioRef.current) return;
+                      if (introPlaying) {
+                        introAudioRef.current.pause();
+                        setIntroPlaying(false);
+                      } else {
+                        introAudioRef.current.play();
+                        setIntroPlaying(true);
+                      }
+                    }}
+                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors bg-green-500/20 hover:bg-green-500/30"
+                  >
+                    {introPlaying ? (
+                      <Pause size={16} className="text-green-400" />
+                    ) : (
+                      <Play size={16} className="text-green-400 ml-0.5" />
+                    )}
+                  </button>
+
+                  {/* Waveform bars */}
+                  <div className="flex items-center gap-[2px] h-8 flex-1 min-w-0">
+                    {Array.from({ length: 48 }).map((_, i) => {
+                      const h = 20 + Math.sin(i * 0.7) * 35 + Math.sin(i * 1.4) * 20 + Math.cos(i * 0.5) * 10;
+                      return (
+                        <div
+                          key={i}
+                          className={`flex-1 min-w-[2px] rounded-full transition-all duration-200 ${
+                            introPlaying ? 'bg-green-400/90' : 'bg-green-400/40'
+                          }`}
+                          style={{ height: `${Math.max(15, h)}%` }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              <audio
+                ref={introAudioRef}
+                src="/audio/rainmaker-demo-intro.mp3"
+                onEnded={() => setIntroPlaying(false)}
+              />
+
+              {/* Transcript toggle */}
+              <button
+                type="button"
+                onClick={() => setShowIntroTranscript(!showIntroTranscript)}
+                className={`flex items-center gap-1.5 text-xs hover:text-green-400 transition-colors ml-1 ${theme === 'dark' ? 'text-white/30' : 'text-slate-400'}`}
+              >
+                <ChevronDown size={14} className={`transition-transform duration-300 ${showIntroTranscript ? 'rotate-180' : ''}`} />
+                {showIntroTranscript ? 'Hide transcript' : 'Read transcript'}
+              </button>
+
+              <AnimatePresence>
+                {showIntroTranscript && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <div className={`rounded-2xl rounded-bl-md p-4 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
+                      <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                        It starts with a beautifully designed website that captures the leads you&apos;re already getting. From there, AI automations respond, nurture, and push prospects further down the journey to book — automatically. Built into your site is a secure document portal with AES-256 quantum-resistant, military-grade encryption, so only you can see what your clients send. Finally, our Google Review Amplification Engine stacks 4- and 5-star reviews while routing 3 stars and below as private internal feedback — so your reputation only goes up. Explore each pillar below.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
 
         {/* Tab bar */}
@@ -1453,8 +1553,8 @@ const RainmakerDemo: React.FC = () => {
                               <Lock size={24} className="text-cyan-500" style={{ filter: 'drop-shadow(0 0 8px rgba(6,182,212,0.5))' }} />
                             </div>
                           </div>
-                          <h4 className="text-sm font-bold mb-1 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">AES-256 Bank-Grade Encryption</h4>
-                          <p className={`text-[10px] ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Every document encrypted at rest and in transit</p>
+                          <h4 className="text-sm font-bold mb-1 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">AES-256 Quantum-Resistant Encryption</h4>
+                          <p className={`text-[10px] ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Every document encrypted at rest and in transit — rated quantum-resistant</p>
                         </div>
 
                         {/* Compliance Badges */}
@@ -1495,7 +1595,7 @@ const RainmakerDemo: React.FC = () => {
                           <div className="space-y-2">
                             {[
                               { step: 'Client uploads document', color: 'bg-cyan-500', icon: Upload, glow: 'shadow-[0_0_10px_rgba(6,182,212,0.5)]', lineColor: 'from-cyan-500/50 to-emerald-500/50' },
-                              { step: 'Encrypted with AES-256', color: 'bg-emerald-500', icon: Lock, glow: 'shadow-[0_0_10px_rgba(16,185,129,0.5)]', lineColor: 'from-emerald-500/50 to-violet-500/50' },
+                              { step: 'Encrypted with AES-256 (quantum-resistant)', color: 'bg-emerald-500', icon: Lock, glow: 'shadow-[0_0_10px_rgba(16,185,129,0.5)]', lineColor: 'from-emerald-500/50 to-violet-500/50' },
                               { step: 'Stored in firm-isolated vault', color: 'bg-violet-500', icon: FolderLock, glow: 'shadow-[0_0_10px_rgba(139,92,246,0.5)]', lineColor: 'from-violet-500/50 to-blue-500/50' },
                               { step: 'CPA notified instantly', color: 'bg-blue-500', icon: Bell, glow: 'shadow-[0_0_10px_rgba(59,130,246,0.5)]', lineColor: 'from-blue-500/50 to-amber-500/50' },
                               { step: 'CPA downloads securely', color: 'bg-amber-500', icon: Download, glow: 'shadow-[0_0_10px_rgba(245,158,11,0.5)]', lineColor: '' },
