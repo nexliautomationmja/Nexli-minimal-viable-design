@@ -102,15 +102,15 @@ export function updateSEO(config: SEOConfig) {
 
 export function getHomeSEO(): SEOConfig {
   return {
-    title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs, RIAs & Financial Advisors',
-    description: 'Premium website design and AI automation for CPAs, accounting firms, RIAs, and financial advisors. We build high-converting websites that attract high-net-worth clients and automate your practice.',
+    title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs & Accounting Firms',
+    description: 'Premium website design and AI automation for established CPAs and accounting firms. We help firms streamline operations, automate client intake, and scale capacity — so you can serve more clients without adding headcount.',
     canonical: `${BASE_URL}/`,
     jsonLd: [
       {
         '@context': 'https://schema.org',
         '@type': 'VideoObject',
         'name': 'Nexli Automation Hero Video',
-        'description': 'Premium website design and AI automation for CPAs, accounting firms, and financial advisors.',
+        'description': 'Premium website design and AI automation for CPAs and accounting firms.',
         'thumbnailUrl': DEFAULT_OG_IMAGE,
         'uploadDate': '2026-01-01',
         'contentUrl': `${BASE_URL}/hero-video.mp4`,
@@ -130,8 +130,8 @@ export function getHomeSEO(): SEOConfig {
 
 export function getBlogListSEO(): SEOConfig {
   return {
-    title: 'Blog | CPA & Financial Advisor Marketing Insights | Nexli',
-    description: 'Expert insights on CPA website design, accounting firm marketing, financial advisor SEO, AI automation, and lead generation strategies for growing your practice.',
+    title: 'Blog | CPA & Accounting Firm Insights | Nexli',
+    description: 'Expert insights on CPA website design, accounting firm operations, SEO, AI automation, and practice scaling strategies for established firms.',
     canonical: `${BASE_URL}/blog`,
   };
 }
@@ -216,8 +216,8 @@ export function getBlogPostSEO(post: {
 
 export function getPortfolioListSEO(): SEOConfig {
   return {
-    title: 'Portfolio | Premium CPA & Financial Advisor Website Designs | Nexli',
-    description: 'Explore our portfolio of premium website designs for CPAs, accounting firms, RIAs, and financial advisors. Each project is custom-crafted to convert visitors into clients.',
+    title: 'Portfolio | Premium CPA & Accounting Firm Website Designs | Nexli',
+    description: 'Explore our portfolio of premium website designs for CPAs and accounting firms. Each project is custom-crafted to convert visitors into clients.',
     canonical: `${BASE_URL}/portfolio`,
     jsonLd: [
       {
@@ -249,22 +249,22 @@ const PORTFOLIO_META: Record<string, { title: string; description: string }> = {
   },
   'clarity-advisory': {
     title: 'Clarity Advisory | CPA Firm Website Design | Nexli Portfolio',
-    description: 'Explore the custom website design for Clarity Advisory, a CPA firm. Premium digital experience built to attract high-value clients and reflect advisory excellence.',
+    description: 'Explore the custom website design for Clarity Advisory, a CPA firm. Premium digital experience built to convert prospects and reflect advisory excellence.',
   },
   'meridian-financial': {
-    title: 'Meridian Financial | RIA Website Design | Nexli Portfolio',
-    description: 'See the premium website Nexli designed for Meridian Financial, a registered investment advisor. Built to convert affluent prospects into long-term clients.',
+    title: 'Meridian Financial | Accounting Firm Website Design | Nexli Portfolio',
+    description: 'See the premium website Nexli designed for Meridian Financial. Built to convert prospects into long-term clients.',
   },
   'harbor-wealth': {
-    title: 'Harbor Wealth | Wealth Management Website Design | Nexli Portfolio',
-    description: 'Explore the custom website design for Harbor Wealth, a wealth management firm. A premium digital experience that communicates trust and expertise.',
+    title: 'Harbor Wealth | Accounting Firm Website Design | Nexli Portfolio',
+    description: 'Explore the custom website design for Harbor Wealth. A premium digital experience that communicates trust and expertise.',
   },
 };
 
 export function getPortfolioFirmSEO(slug: string): SEOConfig {
   const meta = PORTFOLIO_META[slug] || {
     title: `Portfolio | Nexli`,
-    description: 'Premium website design for financial professionals by Nexli Automation.',
+    description: 'Premium website design for CPAs and accounting firms by Nexli Automation.',
   };
   const canonical = `${BASE_URL}/portfolio/${slug}`;
 
@@ -304,7 +304,7 @@ export function getPortfolioFirmSEO(slug: string): SEOConfig {
 export function getServicesSEO(): SEOConfig {
   return {
     title: 'Digital Rainmaker System | CPA Website Design & AI Automation | Nexli',
-    description: 'The Digital Rainmaker System combines premium website design, AI automation, and Google review amplification to help CPAs and financial advisors attract and convert high-value clients.',
+    description: 'The Digital Rainmaker System combines premium website design, AI automation, and Google review amplification to help established CPA firms streamline operations and scale client capacity.',
     canonical: `${BASE_URL}/rainmaker`,
     jsonLd: [
       {
@@ -331,8 +331,8 @@ export function getServicesSEO(): SEOConfig {
 
 export function getFreeGuideSEO(): SEOConfig {
   return {
-    title: 'Free Guide | How CPAs Can Attract High-Value Clients Online | Nexli',
-    description: 'Download the free guide for CPAs and financial advisors on attracting high-net-worth clients through premium website design and AI-powered automation.',
+    title: 'Free Guide | How Established CPA Firms Scale Client Capacity | Nexli',
+    description: 'Download the free guide for established CPAs and accounting firms on streamlining operations and scaling your practice through premium website design and AI-powered automation.',
     canonical: `${BASE_URL}/free-guide`,
   };
 }
@@ -340,7 +340,7 @@ export function getFreeGuideSEO(): SEOConfig {
 export function getSmartReviewsSEO(): SEOConfig {
   return {
     title: 'Smart Reviews | Automated Google Review Management for CPAs | Nexli',
-    description: 'Automatically request, route, and manage Google reviews for your CPA or financial advisory firm. Build your online reputation and attract new clients on autopilot.',
+    description: 'Automatically request, route, and manage Google reviews for your CPA or accounting firm. Build your online reputation and strengthen trust with the prospects already finding you.',
     canonical: `${BASE_URL}/smart-reviews`,
     jsonLd: [
       {

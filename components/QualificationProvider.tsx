@@ -26,7 +26,7 @@ const qualificationQuestions = [
     key: 'usBased' as const,
     icon: <Building2 className="text-blue-400" size={20} />,
     question: 'Is your firm based in the United States?',
-    description: 'We currently serve US-based CPA firms and financial advisory practices.',
+    description: 'We currently serve US-based CPA firms and accounting practices.',
   },
   {
     key: 'hasClients' as const,

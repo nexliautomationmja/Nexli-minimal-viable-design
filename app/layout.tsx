@@ -10,11 +10,11 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs, RIAs & Financial Advisors',
+    default: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs & Accounting Firms',
     template: '%s',
   },
-  description: 'Premium website design and AI automation for CPAs, accounting firms, RIAs, and financial advisors. We build high-converting websites that attract high-net-worth clients and automate your practice.',
-  keywords: 'CPA website design, accounting firm website, CPA marketing, financial advisor website, RIA website design, CPA lead generation, accounting firm marketing, tax professional website, CPA automation, wealth management website',
+  description: 'Premium website design and AI automation for established CPAs and accounting firms. We help firms streamline operations, automate client intake, and scale capacity — so you can serve more clients without adding headcount.',
+  keywords: 'CPA website design, accounting firm website, CPA automation, CPA practice management, accounting firm operations, tax professional website, CPA workflow automation, accounting firm technology',
   authors: [{ name: 'Nexli Automation' }],
   robots: 'index, follow',
   metadataBase: new URL('https://www.nexli.net'),
@@ -24,16 +24,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: 'https://www.nexli.net/',
-    title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs & Financial Advisors',
-    description: 'Premium website design and AI automation for CPAs, accounting firms, RIAs, and financial advisors. High-converting websites that attract high-net-worth clients.',
+    title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs & Accounting Firms',
+    description: 'Premium website design and AI automation for established CPAs and accounting firms. Streamline operations and scale your client capacity.',
     images: [{ url: '/og-image.png' }],
     siteName: 'Nexli Automation',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs & Financial Advisors',
-    description: 'Premium website design and AI automation for CPAs, accounting firms, RIAs, and financial advisors. High-converting websites that attract high-net-worth clients.',
+    title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs & Accounting Firms',
+    description: 'Premium website design and AI automation for established CPAs and accounting firms. Streamline operations and scale your client capacity.',
     images: ['/og-image.png'],
     site: '@nexliautomation',
   },
@@ -55,7 +55,7 @@ const jsonLd = {
         '@type': 'ImageObject',
         url: 'https://www.nexli.net/logos/nexli-icon-gradient.png',
       },
-      description: 'Premium website design and AI automation for CPAs, accounting firms, RIAs, and financial advisors.',
+      description: 'Premium website design and AI automation for CPAs and accounting firms.',
       email: 'mail@nexli.net',
       sameAs: [],
     },
@@ -65,7 +65,7 @@ const jsonLd = {
       url: 'https://www.nexli.net',
       name: 'Nexli Automation',
       publisher: { '@id': 'https://www.nexli.net/#organization' },
-      description: 'Premium website design and AI automation for CPAs, accounting firms, RIAs, and financial advisors.',
+      description: 'Premium website design and AI automation for CPAs and accounting firms.',
     },
     {
       '@type': 'ProfessionalService',
@@ -74,15 +74,13 @@ const jsonLd = {
       url: 'https://www.nexli.net',
       logo: 'https://www.nexli.net/logos/nexli-icon-gradient.png',
       image: 'https://www.nexli.net/og-image.png',
-      description: 'We build premium websites and AI automation systems for CPAs, accounting firms, RIAs, and financial advisors that attract high-net-worth clients.',
+      description: 'We build premium websites and AI automation systems for established CPAs and accounting firms to streamline operations and scale client capacity.',
       priceRange: '$$$',
       serviceType: [
         'CPA Website Design',
         'Accounting Firm Website Development',
-        'Financial Advisor Website Design',
-        'RIA Website Development',
         'AI Automation for CPAs',
-        'Lead Generation for Accounting Firms',
+        'Practice Automation for Accounting Firms',
         'CPA Marketing Services',
         'Tax Professional Website Design',
       ],
@@ -96,7 +94,7 @@ const jsonLd = {
             itemOffered: {
               '@type': 'Service',
               name: 'Premium Website Design',
-              description: 'Custom, conversion-optimized websites for CPAs and financial advisors that build trust and generate leads.',
+              description: 'Custom, conversion-optimized websites for CPAs and accounting firms that build trust and convert the prospects already finding you.',
             },
           },
           {
@@ -132,10 +130,10 @@ const jsonLd = {
         },
         {
           '@type': 'Question',
-          name: 'How can CPAs generate more leads online?',
+          name: 'How can established CPA firms handle more clients without adding staff?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'CPAs can generate more leads through a combination of SEO-optimized websites, local search optimization, Google Business Profile management, content marketing, automated lead capture systems, and strategic review management.',
+            text: 'Established CPA firms can scale their client capacity through AI-powered automation that handles intake processing, follow-up sequences, appointment scheduling, and client communication — freeing up the team to focus on high-value accounting work instead of administrative tasks.',
           },
         },
         {
@@ -143,7 +141,7 @@ const jsonLd = {
           name: 'What is the Digital Rainmaker System?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'The Digital Rainmaker System is a three-part solution that combines a premium website, AI automation layer for 24/7 lead capture and follow-up, and a Google review amplification engine to systematically grow your CPA or financial advisory practice.',
+            text: 'The Digital Rainmaker System is a three-part solution that combines a premium website, AI automation layer for 24/7 inbound processing and follow-up, and a Google review amplification engine — helping established CPA and accounting firms streamline operations and scale their client capacity.',
           },
         },
       ],

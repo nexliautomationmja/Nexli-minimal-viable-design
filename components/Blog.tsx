@@ -114,7 +114,7 @@ const Blog: React.FC = () => {
               theme === 'dark' ? 'text-neutral-400' : 'text-slate-600'
             }`}
           >
-            Strategies, insights, and best practices for financial advisors ready to elevate their practice with modern technology.
+            Strategies, insights, and best practices for established CPA firms ready to elevate their practice with modern technology.
           </motion.p>
         </div>
       </section>
@@ -214,7 +214,7 @@ const Blog: React.FC = () => {
               Ready to Transform Your Practice?
             </h2>
             <p className="text-sm md:text-lg text-[var(--text-muted)] mb-6 md:mb-10 max-w-2xl mx-auto">
-              Stop reading about success and start experiencing it. Book a consultation to see how Nexli can help you attract better clients and reclaim your time.
+              Stop reading about success and start experiencing it. Book a consultation to see how Nexli can help you serve more clients and reclaim your time.
             </p>
             <button
               onClick={openBooking}

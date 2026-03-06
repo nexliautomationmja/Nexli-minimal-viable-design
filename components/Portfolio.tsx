@@ -27,14 +27,14 @@ const firms = [
   },
   {
     title: 'Meridian Financial',
-    subtitle: 'Registered Investment Advisor',
+    subtitle: 'CPA Firm',
     slug: 'meridian-financial',
     accentColor: '#f97316',
     component: MeridianFinancial,
   },
   {
     title: 'Harbor Wealth',
-    subtitle: 'Wealth Management',
+    subtitle: 'Accounting Firm',
     slug: 'harbor-wealth',
     accentColor: '#84cc16',
     component: HarborWealth,
@@ -128,7 +128,7 @@ const Portfolio: React.FC = () => {
             </motion.div>
 
             <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
-              No templates. No shortcuts. Every website is custom-designed for CPAs, financial advisors, and wealth managers who want a digital presence that matches the caliber of service they deliver.
+              No templates. No shortcuts. Every website is custom-designed for CPAs and accounting firms who want a digital presence that matches the caliber of service they deliver.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">

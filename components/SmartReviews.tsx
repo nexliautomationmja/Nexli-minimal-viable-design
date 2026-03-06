@@ -302,7 +302,7 @@ const SmartReviews: React.FC = () => {
                         </motion.div>
 
                         <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
-                            High-net-worth clients don't settle. Before they ever call your office, they've already checked your reviews. CPAs, advisors, and wealth managers with weak ratings don't make the shortlist — no matter how good they actually are. Smart Reviews puts your reputation on autopilot so your Google profile matches the elite service you deliver.
+                            Prospective clients don't settle. Before they ever call your office, they've already checked your reviews. CPA firms with weak ratings don't make the shortlist — no matter how good they actually are. Smart Reviews puts your reputation on autopilot so your Google profile matches the elite service you deliver.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
@@ -480,7 +480,7 @@ const SmartReviews: React.FC = () => {
                                                                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                                                                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                                             </svg>
-                                                            <span className="text-white/50 text-xs md:text-sm">financial advisor near me</span>
+                                                            <span className="text-white/50 text-xs md:text-sm">best CPA near me</span>
                                                         </motion.div>
 
                                                         {/* Competitor — thriving with 5 stars */}
@@ -491,14 +491,14 @@ const SmartReviews: React.FC = () => {
                                                             className="rounded-xl bg-green-500/10 border border-green-500/30 p-3 md:p-4"
                                                         >
                                                             <div className="text-green-400 text-[10px] md:text-xs mb-1">competitor.com</div>
-                                                            <div className="text-white font-bold text-xs md:text-sm mb-1.5">Their Advisory Firm</div>
+                                                            <div className="text-white font-bold text-xs md:text-sm mb-1.5">Their CPA Firm</div>
                                                             <div className="flex items-center gap-0.5 mb-1">
                                                                 {[1,2,3,4,5].map((s) => (
                                                                     <Star key={s} size={12} className="text-yellow-400 fill-yellow-400" />
                                                                 ))}
                                                                 <span className="text-white/50 text-[10px] md:text-xs ml-1.5">4.9 (128 reviews)</span>
                                                             </div>
-                                                            <p className="text-white/40 text-[10px] md:text-xs">Award-winning wealth management...</p>
+                                                            <p className="text-white/40 text-[10px] md:text-xs">Award-winning accounting services...</p>
                                                         </motion.div>
 
                                                         {/* Your firm — buried with poor rating */}
@@ -1348,7 +1348,7 @@ const SmartReviews: React.FC = () => {
                                                         <div className="flex gap-0.5">{[1,2,3,4,5].map(s => <Star key={s} size={8} className="text-yellow-400 fill-yellow-400" />)}</div>
                                                     </div>
                                                 </div>
-                                                <p className="text-white/40 text-[9px]">"Best financial advisor in the city!"</p>
+                                                <p className="text-white/40 text-[9px]">"Best CPA firm in the city!"</p>
                                             </div>
                                             {/* Auto Schedule */}
                                             <div className="w-[180px] h-[110px] rounded-2xl bg-gradient-to-br from-cyan-500/10 to-teal-500/5 border border-cyan-500/20 p-4 flex flex-col justify-center flex-shrink-0">

@@ -25,7 +25,7 @@ const notifications: NotificationItem[] = [
   {
     icon: <UserPlus className="w-4 h-4 text-white" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.2))' }} />,
     gradient: "linear-gradient(to bottom, #34d399, #059669)",
-    title: "New HNW Client Acquired",
+    title: "New Client Onboarded",
     description: "Dr. Sarah Mitchell — $1.8M portfolio",
     time: "Just now"
   },
@@ -33,7 +33,7 @@ const notifications: NotificationItem[] = [
     icon: <TrendingUp className="w-4 h-4 text-white" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.2))' }} />,
     gradient: "linear-gradient(to bottom, #60a5fa, #2563eb)",
     title: "AUM Milestone Reached",
-    description: "+$4.2M this quarter from web leads",
+    description: "+$4.2M this quarter from inbound pipeline",
     time: "2m ago"
   },
   {
@@ -60,8 +60,8 @@ const notifications: NotificationItem[] = [
   {
     icon: <Mail className="w-4 h-4 text-white" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.2))' }} />,
     gradient: "linear-gradient(to bottom, #22d3ee, #0891b2)",
-    title: "Lead Captured",
-    description: "Downloaded retirement planning guide",
+    title: "Inquiry Auto-Processed",
+    description: "Prospect vetted and qualified by AI",
     time: "24m ago"
   },
   {
@@ -129,7 +129,7 @@ const ResultsShowcase: React.FC = () => {
             </h2>
             <p className="text-lg md:text-xl text-[var(--text-muted)] leading-relaxed mb-6">
               While you focus on serving clients, your digital presence works around the clock —
-              attracting qualified prospects, booking calls, and building trust before you ever
+              capturing inbound inquiries, booking calls, and building trust before you ever
               pick up the phone.
             </p>
             <p className="text-base text-[var(--text-muted)] leading-relaxed hidden md:block">

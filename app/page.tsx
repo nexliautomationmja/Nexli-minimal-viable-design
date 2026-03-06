@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HomeContent from '../components/HomeContent';
 
 export const metadata: Metadata = {
-  title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs, RIAs & Financial Advisors',
-  description: 'Premium website design and AI automation for CPAs, accounting firms, RIAs, and financial advisors. We build high-converting websites that attract high-net-worth clients and automate your practice.',
+  title: 'CPA Website Design & Automation | Nexli | Premium Websites for CPAs & Accounting Firms',
+  description: 'Premium website design and AI automation for established CPAs and accounting firms. We help firms streamline operations, automate client intake, and scale capacity — so you can serve more clients without adding headcount.',
   alternates: { canonical: '/' },
 };
 

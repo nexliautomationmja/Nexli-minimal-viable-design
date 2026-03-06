@@ -9,15 +9,15 @@ const PORTFOLIO_META: Record<string, { title: string; description: string }> = {
   },
   'clarity-advisory': {
     title: 'Clarity Advisory | CPA Firm Website Design | Nexli Portfolio',
-    description: 'Explore the custom website design for Clarity Advisory, a CPA firm. Premium digital experience built to attract high-value clients and reflect advisory excellence.',
+    description: 'Explore the custom website design for Clarity Advisory, a CPA firm. Premium digital experience built to convert prospects and reflect advisory excellence.',
   },
   'meridian-financial': {
-    title: 'Meridian Financial | RIA Website Design | Nexli Portfolio',
-    description: 'See the premium website Nexli designed for Meridian Financial, a registered investment advisor. Built to convert affluent prospects into long-term clients.',
+    title: 'Meridian Financial | Accounting Firm Website Design | Nexli Portfolio',
+    description: 'See the premium website Nexli designed for Meridian Financial. Built to convert prospects into long-term clients.',
   },
   'harbor-wealth': {
-    title: 'Harbor Wealth | Wealth Management Website Design | Nexli Portfolio',
-    description: 'Explore the custom website design for Harbor Wealth, a wealth management firm. A premium digital experience that communicates trust and expertise.',
+    title: 'Harbor Wealth | Accounting Firm Website Design | Nexli Portfolio',
+    description: 'Explore the custom website design for Harbor Wealth. A premium digital experience that communicates trust and expertise.',
   },
 };
 

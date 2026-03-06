@@ -32,7 +32,7 @@ const TermsAndConditions: React.FC = () => {
                     <section className="space-y-4">
                         <h2 className="text-2xl font-bold text-[var(--text-main)]">1. Scope of Service</h2>
                         <p>
-                            Nexli Automation LLC ("Nexli") provides high-end website design, strategic lead nurturing, and AI automation services specifically for wealth managers and financial advisors. By accessing our services, you agree to these terms.
+                            Nexli Automation LLC ("Nexli") provides high-end website design, strategic client nurturing, and AI automation services specifically for CPAs and accounting firms. By accessing our services, you agree to these terms.
                         </p>
                     </section>
 

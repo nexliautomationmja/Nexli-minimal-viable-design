@@ -5,36 +5,36 @@ import { Quote, Star } from 'lucide-react';
 
 const testimonials = [
   {
-    name: "Michael R., CFP",
-    firm: "Summit Wealth Advisors",
+    name: "Michael R., CPA",
+    firm: "Summit Tax Advisors",
     initials: "MR",
     color: "#4F46E5",
-    aum: "$85M AUM",
-    text: "Our old website was 'fine'—but fine doesn't close seven-figure clients. The new site Nexli built positions us as the premium choice we actually are. We've booked 3 new HNW consultations in the first month alone."
+    revenue: "$85M Revenue",
+    text: "Our old website was 'fine'—but fine doesn't close high-value clients. The new site Nexli built positions us as the premium choice we actually are. We've booked 3 new consultations in the first month alone."
   },
   {
-    name: "Sarah L., ChFC",
-    firm: "Lighthouse Financial Group",
+    name: "Sarah L., CPA",
+    firm: "Lighthouse Accounting Group",
     initials: "SL",
     color: "#0891B2",
-    aum: "$120M AUM",
+    revenue: "$120M Revenue",
     text: "I was spending 2+ hours a day on meeting prep and follow-ups. Their automations gave me that time back. Now I actually leave the office at 5pm and my client communication is better than ever."
   },
   {
-    name: "James T., RIA",
-    firm: "Cornerstone Private Wealth",
+    name: "James T., CPA",
+    firm: "Cornerstone Tax Partners",
     initials: "JT",
     color: "#059669",
-    aum: "$200M+ AUM",
+    revenue: "$200M+ Revenue",
     text: "The brand audit was right—we were losing 12+ hours a week to admin. The automated sequences they built now handle lead nurturing 24/7. Our consultation booking rate is up 40%."
   },
   {
-    name: "Patricia M., CFA",
-    firm: "Meridian Capital Partners",
+    name: "Patricia M., EA",
+    firm: "Meridian Accounting Partners",
     initials: "PM",
     color: "#D97706",
-    aum: "$65M AUM",
-    text: "What sold me was that they actually understand our industry. No generic templates—they built systems that work with how advisors actually operate. The ROI was obvious within 60 days."
+    revenue: "$65M Revenue",
+    text: "What sold me was that they actually understand our industry. No generic templates—they built systems that work with how CPA firms actually operate. The ROI was obvious within 60 days."
   }
 ];
 
@@ -64,7 +64,7 @@ const Testimonials: React.FC = () => {
             transition={{ delay: 0.1, ease: "circOut" }}
             className="text-[var(--text-main)] mb-4 md:mb-6 text-2xl md:text-5xl font-bold"
           >
-            Advisors Who Demanded <span className="text-blue-500">More</span>
+            Firms That Demanded <span className="text-blue-500">More</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -73,7 +73,7 @@ const Testimonials: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
           >
-            From elite RIAs to high-growth practices, see how market leaders are reclaiming their time and elevating their status.
+            From established CPA firms to high-growth practices, see how market leaders are reclaiming their time and elevating their operations.
           </motion.p>
         </div>
 
@@ -114,7 +114,7 @@ const Testimonials: React.FC = () => {
                 </div>
                 <div className="sm:text-right">
                   <div className="text-[var(--text-muted)] opacity-50 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-0.5 md:mb-1">Portfolio</div>
-                  <div className="text-blue-400 font-black text-sm md:text-lg">{item.aum}</div>
+                  <div className="text-blue-400 font-black text-sm md:text-lg">{item.revenue}</div>
                 </div>
               </div>
             </motion.div>
@@ -130,7 +130,7 @@ const Testimonials: React.FC = () => {
         >
           {[
             { label: "Firms Served", val: "50+" },
-            { label: "AUM Represented", val: "$2B+" },
+            { label: "Revenue Managed", val: "$2B+" },
             { label: "Weekly Time Saved", val: "12hrs" },
             { label: "Conversion Lift", val: "35%" }
           ].map((stat, i) => (

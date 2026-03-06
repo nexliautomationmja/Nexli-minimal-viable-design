@@ -114,7 +114,7 @@ const FreeGuide: React.FC = () => {
 
                         <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10 inline-block">
                             <p className="text-[var(--text-muted)] text-sm font-bold uppercase tracking-widest">
-                                Built for CPAs, financial advisors & wealth managers who'd rather serve clients than chase admin.
+                                Built for CPAs & accounting firms who'd rather serve clients than chase admin.
                             </p>
                         </div>
                     </motion.div>

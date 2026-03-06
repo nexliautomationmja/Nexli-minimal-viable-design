@@ -99,7 +99,7 @@ const Services: React.FC = () => {
                         >
                             <TrendingUp className="w-8 h-8 text-blue-500 mb-2" />
                             <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-white/70' : 'text-slate-500'}`}>
-                                Attract high-value clients who trust you before the first call
+                                Convert visitors into booked consultations before the first call
                             </p>
                         </motion.div>
                         <motion.div
