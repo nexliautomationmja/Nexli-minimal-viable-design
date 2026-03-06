@@ -141,7 +141,17 @@ interface HarborWealthProps {
 
 const HarborWealth: React.FC<HarborWealthProps> = ({ navigate: navigateProp }) => {
   return (
-    <div className="min-h-screen bg-white font-sans text-black antialiased overflow-x-hidden">
+    <div
+      className="min-h-screen bg-white font-sans text-black antialiased overflow-x-hidden"
+      style={{
+        '--bg-main': '#ffffff',
+        '--text-main': '#0f172a',
+        '--text-muted': 'rgba(15, 23, 42, 0.7)',
+        '--glass-bg': 'rgba(255, 255, 255, 0.7)',
+        '--glass-border': 'rgba(15, 23, 42, 0.1)',
+        colorScheme: 'light',
+      } as React.CSSProperties}
+    >
       <FirmNavbar config={harborConfig} navigate={navigateProp} />
 
       {/* ── Hero Section ─────────────────────────────────────────────────── */}
