@@ -324,128 +324,6 @@ const faqItems = [
   { question: 'My clients are used to how we do things — won\'t this disrupt everything?', audio: '/audio/faq/faq-disruption.mp3' },
 ];
 
-// ---------------------------------------------------------------------------
-// Waveform Visualizer — real-time audio analysis with Web Audio API
-// ---------------------------------------------------------------------------
-interface WaveformProps {
-  audioElement: HTMLAudioElement | null;
-  isActive: boolean;
-  isLoading?: boolean;
-}
-
-const WaveformVisualizer: React.FC<WaveformProps> = ({ audioElement, isActive, isLoading }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const contextRef = useRef<AudioContext | null>(null);
-  const animFrameRef = useRef<number>(0);
-  const tickRef = useRef(0);
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    // Connect audio analyser if we have an audio element
-    if (audioElement && !contextRef.current) {
-      try {
-        const ctx = new AudioContext();
-        const analyser = ctx.createAnalyser();
-        analyser.fftSize = 64;
-        analyser.smoothingTimeConstant = 0.8;
-        const source = ctx.createMediaElementSource(audioElement);
-        source.connect(analyser);
-        analyser.connect(ctx.destination);
-        contextRef.current = ctx;
-        analyserRef.current = analyser;
-        sourceRef.current = source;
-      } catch {
-        // Audio context may fail in some browsers
-      }
-    }
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const draw = () => {
-      tickRef.current++;
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
-
-      const barCount = 24;
-      const gap = 3;
-      const barWidth = (w - gap * (barCount - 1)) / barCount;
-
-      if (isActive && analyserRef.current) {
-        // Real audio data
-        const bufferLength = analyserRef.current.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        analyserRef.current.getByteFrequencyData(dataArray);
-        const step = Math.floor(bufferLength / barCount);
-
-        for (let i = 0; i < barCount; i++) {
-          const value = dataArray[i * step] / 255;
-          const barHeight = Math.max(4, value * h * 0.9);
-          const x = i * (barWidth + gap);
-          const y = (h - barHeight) / 2;
-
-          const gradient = ctx.createLinearGradient(x, y, x, y + barHeight);
-          gradient.addColorStop(0, 'rgba(34, 197, 94, 0.9)');
-          gradient.addColorStop(0.5, 'rgba(16, 185, 129, 0.7)');
-          gradient.addColorStop(1, 'rgba(34, 197, 94, 0.9)');
-
-          ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.roundRect(x, y, barWidth, barHeight, 2);
-          ctx.fill();
-        }
-      } else if (isLoading) {
-        // Animated loading wave
-        const t = tickRef.current * 0.05;
-        for (let i = 0; i < barCount; i++) {
-          const wave = (Math.sin(t - i * 0.3) + 1) / 2;
-          const barHeight = 4 + wave * h * 0.6;
-          const x = i * (barWidth + gap);
-          const y = (h - barHeight) / 2;
-
-          ctx.fillStyle = `rgba(34, 197, 94, ${0.2 + wave * 0.4})`;
-          ctx.beginPath();
-          ctx.roundRect(x, y, barWidth, barHeight, 2);
-          ctx.fill();
-        }
-      } else {
-        // Idle — subtle static bars
-        for (let i = 0; i < barCount; i++) {
-          const barHeight = 4 + Math.sin(i * 0.6) * 4;
-          const x = i * (barWidth + gap);
-          const y = (h - barHeight) / 2;
-
-          ctx.fillStyle = 'rgba(34, 197, 94, 0.15)';
-          ctx.beginPath();
-          ctx.roundRect(x, y, barWidth, barHeight, 2);
-          ctx.fill();
-        }
-      }
-
-      animFrameRef.current = requestAnimationFrame(draw);
-    };
-
-    draw();
-
-    return () => {
-      cancelAnimationFrame(animFrameRef.current);
-    };
-  }, [audioElement, isActive, isLoading]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      width={320}
-      height={40}
-      className="w-full h-10"
-    />
-  );
-};
 
 // ---------------------------------------------------------------------------
 // Main Component
@@ -477,8 +355,9 @@ const BookingConfirmed: React.FC = () => {
   const [showTranscript, setShowTranscript] = useState(false);
 
   // FAQ state
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   const [faqPlaying, setFaqPlaying] = useState<number | null>(null);
+  const [faqTranscriptOpen, setFaqTranscriptOpen] = useState<number | null>(null);
   const faqAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleFaqPlay = (index: number) => {
@@ -1089,48 +968,6 @@ const BookingConfirmed: React.FC = () => {
           </div>
         </motion.section>
 
-        {/* ── STEP 3: Calendar Acceptance ── */}
-        <motion.section
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: 'circOut' }}
-          className="mb-14"
-        >
-          <StepBadge number={3} label="Confirm Your Calendar Invite" />
-
-          <div className={`relative max-w-3xl mx-auto rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
-            <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
-
-            <div className="relative z-10 p-4 md:p-8">
-              <div className="relative w-full aspect-video rounded-xl md:rounded-2xl overflow-hidden mb-6">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-950 via-emerald-900 to-teal-900" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="relative z-10 flex flex-col items-center justify-center h-full gap-3 text-center px-4">
-                  <Calendar size={40} className="text-green-400" style={{ filter: 'drop-shadow(0 0 15px rgba(34, 197, 94, 0.4))' }} />
-                  <span className="text-white/80 text-xs md:text-sm font-bold uppercase tracking-widest">Calendar Acceptance Screenshot</span>
-                  <span className="text-white/50 text-[10px] md:text-xs">Image coming soon</span>
-                </div>
-              </div>
-
-              <div className="space-y-3 md:space-y-4 max-w-xl mx-auto">
-                {[
-                  { num: 1, text: 'Check your email for the calendar invite from Nexli' },
-                  { num: 2, text: 'Click "Accept" to add the session to your calendar' },
-                  { num: 3, text: 'Set a reminder 15 minutes before so you\'re ready' },
-                ].map((item) => (
-                  <div key={item.num} className="flex items-start gap-4 p-3 md:p-4 rounded-xl bg-[var(--glass-bg)] border border-[var(--glass-border)]">
-                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-green-600/20 border border-green-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-green-400 text-xs md:text-sm font-bold">{item.num}</span>
-                    </div>
-                    <p className="text-sm md:text-base text-[var(--text-main)] leading-relaxed">{item.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
         {/* ── FAQ: Justine Voice Responses ── */}
         <motion.section
           initial={{ opacity: 0, y: 40 }}
@@ -1177,39 +1014,70 @@ const BookingConfirmed: React.FC = () => {
                       className="overflow-hidden"
                     >
                       <div className="px-5 md:px-6 pb-5 md:pb-6">
-                        {/* Voice message card */}
-                        <div className="rounded-xl md:rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] p-4 md:p-5">
-                          <div className="flex items-center gap-3 md:gap-4">
-                            {/* Play button */}
+                        <div className="flex items-start gap-3">
+                          <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 min-w-0 space-y-2">
+                            <p className="text-[10px] font-bold ml-1 text-[var(--text-muted)]">Justine, COO</p>
+                            <div className={`rounded-2xl rounded-bl-md px-4 py-3 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
+                              <div className="flex items-center gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => handleFaqPlay(i)}
+                                  className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors bg-green-500/20 hover:bg-green-500/30"
+                                >
+                                  {faqPlaying === i ? (
+                                    <Pause size={16} className="text-green-400" />
+                                  ) : (
+                                    <Play size={16} className="text-green-400 ml-0.5" />
+                                  )}
+                                </button>
+
+                                {/* Waveform bars */}
+                                <div className="flex items-center gap-[2px] h-8 flex-1 min-w-0">
+                                  {Array.from({ length: 48 }).map((_, barIdx) => {
+                                    const h = 20 + Math.sin(barIdx * 0.7) * 35 + Math.sin(barIdx * 1.4) * 20 + Math.cos(barIdx * 0.5) * 10;
+                                    return (
+                                      <div
+                                        key={barIdx}
+                                        className={`flex-1 min-w-[2px] rounded-full transition-all duration-200 ${
+                                          faqPlaying === i ? 'bg-green-400/90' : 'bg-green-400/40'
+                                        }`}
+                                        style={{ height: `${Math.max(15, h)}%` }}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Transcript toggle */}
                             <button
                               type="button"
-                              onClick={() => handleFaqPlay(i)}
-                              className={`flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all ${
-                                faqPlaying === i
-                                  ? 'bg-green-600 shadow-lg shadow-green-600/30'
-                                  : 'bg-green-600 hover:bg-green-500 hover:scale-105 active:scale-95 shadow-lg shadow-green-600/20'
-                              }`}
+                              onClick={() => setFaqTranscriptOpen(faqTranscriptOpen === i ? null : i)}
+                              className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-green-400 transition-colors ml-1"
                             >
-                              {faqPlaying === i ? (
-                                <Pause size={20} className="text-white" />
-                              ) : (
-                                <Play size={20} className="text-white ml-0.5" />
-                              )}
+                              <ChevronDown size={14} className={`transition-transform duration-300 ${faqTranscriptOpen === i ? 'rotate-180' : ''}`} />
+                              {faqTranscriptOpen === i ? 'Hide transcript' : 'Read transcript'}
                             </button>
 
-                            {/* Waveform visualizer */}
-                            <div className="flex-1 min-w-0">
-                              <WaveformVisualizer
-                                audioElement={faqPlaying === i ? faqAudioRef.current : null}
-                                isActive={faqPlaying === i}
-                              />
-                            </div>
+                            <AnimatePresence>
+                              {faqTranscriptOpen === i && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: 'auto' }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  transition={{ duration: 0.3 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className={`rounded-2xl rounded-bl-md p-4 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
+                                    <p className="text-sm text-[var(--text-muted)] leading-relaxed italic">
+                                      Transcript will be available after playback.
+                                    </p>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
-
-                          {/* Status text */}
-                          <p className="text-[10px] md:text-xs mt-3 ml-[3.75rem] md:ml-[4.5rem] font-medium text-[var(--text-muted)]">
-                            {faqPlaying === i ? 'Playing...' : 'Tap play to hear Justine\u2019s answer'}
-                          </p>
                         </div>
                       </div>
                     </motion.div>
