@@ -71,6 +71,28 @@ const goalOptions = [
   { value: DISQUALIFYING_GOAL, label: 'We need help generating new leads and finding clients' },
 ];
 
+// Map raw answer values to human-readable labels for Cal.com notes
+function formatAnswersAsNotes(answers: QualificationAnswers): string {
+  const roleLabel = decisionRoleOptions.find((o) => o.value === answers.decisionRole)?.label ?? answers.decisionRole;
+  const revenueLabel = annualRevenueOptions.find((o) => o.value === answers.annualRevenue)?.label ?? answers.annualRevenue;
+  const servicesLabel = answers.firmServices
+    ?.map((s) => firmServiceOptions.find((o) => o.value === s)?.label ?? s)
+    .join(', ');
+  const goalLabel = goalOptions.find((o) => o.value === answers.goal)?.label ?? answers.goal;
+
+  const lines = [
+    '--- Prequalification Answers ---',
+    `US Based: ${answers.usBased ? 'Yes' : 'No'}`,
+    `Has Established Clients: ${answers.hasClients ? 'Yes' : 'No'}`,
+    `Decision Role: ${roleLabel ?? 'N/A'}`,
+    `Annual Revenue: ${revenueLabel ?? 'N/A'}`,
+    `Firm Services: ${servicesLabel ?? 'N/A'}`,
+    `Google Reviews: ${answers.hasGoogleReviews === null ? 'N/A' : answers.hasGoogleReviews ? 'Yes' : 'No'}`,
+    `Primary Goal: ${goalLabel ?? 'N/A'}`,
+  ];
+  return lines.join('\n');
+}
+
 const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c08ab845-6f7c-4016-bdf0-bbcb6b5782e6';
 
 async function sendQualificationToGHL(answers: QualificationAnswers, qualified: boolean) {
@@ -115,7 +137,7 @@ export const useBooking = () => {
 // ---------------------------------------------------------------------------
 // Qualification Gate (modal version)
 // ---------------------------------------------------------------------------
-function QualificationGateModal({ onResult }: { onResult: (status: QualificationStatus) => void }) {
+function QualificationGateModal({ onResult }: { onResult: (status: QualificationStatus, answers: QualificationAnswers) => void }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<QualificationAnswers>({
     usBased: null,
@@ -133,7 +155,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     setAnswers(updated);
     if (!value) {
       sendQualificationToGHL(updated, false);
-      onResult('not-qualified');
+      onResult('not-qualified', updated);
       return;
     }
     setStep((s) => s + 1);
@@ -144,7 +166,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     setAnswers(updated);
     if (value === DISQUALIFYING_ROLE) {
       sendQualificationToGHL(updated, false);
-      onResult('not-qualified');
+      onResult('not-qualified', updated);
     } else {
       setStep(3);
     }
@@ -155,7 +177,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     setAnswers(updated);
     if (value === DISQUALIFYING_REVENUE) {
       sendQualificationToGHL(updated, false);
-      onResult('not-qualified');
+      onResult('not-qualified', updated);
     } else {
       setStep(4);
     }
@@ -173,7 +195,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     setAnswers(updated);
     if (selectedServices.length === 1 && selectedServices[0] === DISQUALIFYING_SERVICE) {
       sendQualificationToGHL(updated, false);
-      onResult('not-qualified');
+      onResult('not-qualified', updated);
     } else {
       setStep(5);
     }
@@ -190,10 +212,10 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     setAnswers(updated);
     if (value === DISQUALIFYING_GOAL) {
       sendQualificationToGHL(updated, false);
-      onResult('not-qualified');
+      onResult('not-qualified', updated);
     } else {
       sendQualificationToGHL(updated, true);
-      onResult('qualified');
+      onResult('qualified', updated);
     }
   };
 
@@ -530,6 +552,7 @@ export default function QualificationProvider({ children }: { children: React.Re
   const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [qualificationStatus, setQualificationStatus] = useState<QualificationStatus>('pending');
+  const [qualificationAnswers, setQualificationAnswers] = useState<QualificationAnswers | null>(null);
   const [calInitialized, setCalInitialized] = useState(false);
 
   // Initialize Cal.com embed script once
@@ -579,37 +602,43 @@ export default function QualificationProvider({ children }: { children: React.Re
     setCalInitialized(true);
   }, []);
 
-  const openCalPopup = useCallback(() => {
+  const openCalPopup = useCallback((answers?: QualificationAnswers | null) => {
     const Cal = (window as any).Cal;
+    const notes = answers ? formatAnswersAsNotes(answers) : undefined;
+
     if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
       Cal.ns["nexli-demo"]("modal", {
         calLink: "nexli-automation-6fgn8j/nexli-demo",
         config: { "layout": "month_view", "theme": theme },
+        ...(notes ? { prefill: { notes } } : {}),
       });
     } else {
-      window.open("https://cal.com/nexli-automation-6fgn8j/nexli-demo", "_blank");
+      const url = new URL("https://cal.com/nexli-automation-6fgn8j/nexli-demo");
+      if (notes) url.searchParams.set("notes", notes);
+      window.open(url.toString(), "_blank");
     }
   }, [theme]);
 
   const openBooking = useCallback(() => {
     if (qualificationStatus === 'qualified') {
-      // Already qualified — go straight to Cal.com
-      openCalPopup();
+      // Already qualified — go straight to Cal.com with saved answers
+      openCalPopup(qualificationAnswers);
     } else {
       // Need to qualify first
       setQualificationStatus('pending');
       setIsOpen(true);
     }
-  }, [qualificationStatus, openCalPopup]);
+  }, [qualificationStatus, openCalPopup, qualificationAnswers]);
 
-  const handleResult = useCallback((status: QualificationStatus) => {
+  const handleResult = useCallback((status: QualificationStatus, answers: QualificationAnswers) => {
     setQualificationStatus(status);
+    setQualificationAnswers(answers);
     if (status === 'qualified') {
-      // Close modal and open Cal.com
+      // Close modal and open Cal.com with prequalification answers
       setIsOpen(false);
       // Small delay to let modal close animation finish
       setTimeout(() => {
-        openCalPopup();
+        openCalPopup(answers);
       }, 300);
     }
     // If not-qualified, keep modal open to show the message
