@@ -599,8 +599,8 @@ export default function QualificationProvider({ children }: { children: React.Re
 
         // Send prequalification answers to GHL with booking info
         const savedAnswers = answersRef.current;
+        const bookingData = e?.detail?.data ?? {};
         if (savedAnswers) {
-          const bookingData = e?.detail?.data ?? {};
           fetch(GHL_WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -621,6 +621,19 @@ export default function QualificationProvider({ children }: { children: React.Re
             }),
           }).catch(() => {});
         }
+
+        // Redirect to booking-confirmed with attendee info for GHL intel tracking
+        const attendeeEmail = bookingData.booking?.attendees?.[0]?.email
+          || bookingData.attendees?.[0]?.email
+          || '';
+        const attendeeName = bookingData.booking?.attendees?.[0]?.name
+          || bookingData.attendees?.[0]?.name
+          || '';
+        const params = new URLSearchParams();
+        if (attendeeEmail) params.set('email', attendeeEmail);
+        if (attendeeName) params.set('name', attendeeName);
+        const qs = params.toString();
+        window.location.href = `/booking-confirmed${qs ? `?${qs}` : ''}`;
       },
     });
 

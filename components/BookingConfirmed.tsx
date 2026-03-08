@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   CheckCircle, ChevronDown, Play, Send, Calendar,
@@ -326,10 +327,46 @@ const faqItems = [
 
 
 // ---------------------------------------------------------------------------
+// GHL Webhook — send intel form answers to GoHighLevel CRM
+// ---------------------------------------------------------------------------
+const GHL_BOOKING_INTEL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/d8e921e0-2890-4259-8fcb-9e5f339a1c95';
+
+async function sendBookingIntelToGHL(data: {
+  email: string;
+  name: string;
+  challenge: string;
+  outcome: string;
+  priorAttempts: string;
+  inputMode: 'text' | 'voice';
+}) {
+  try {
+    await fetch(GHL_BOOKING_INTEL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: 'booking-intel-form',
+        email: data.email,
+        name: data.name,
+        biggest_challenge: data.challenge,
+        ideal_outcome: data.outcome,
+        prior_attempts: data.priorAttempts,
+        input_mode: data.inputMode,
+        submitted_at: new Date().toISOString(),
+      }),
+    });
+  } catch {
+    // Silently fail — don't block the user experience
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main Component
 // ---------------------------------------------------------------------------
 const BookingConfirmed: React.FC = () => {
   const { theme } = useTheme();
+  const searchParams = useSearchParams();
+  const prospectEmail = searchParams.get('email') || '';
+  const prospectName = searchParams.get('name') || '';
 
   // Input mode toggle
   const [inputMode, setInputMode] = useState<'text' | 'voice'>('text');
@@ -348,6 +385,11 @@ const BookingConfirmed: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Email capture state (shown after AI response)
+  const [prospectEmailInput, setProspectEmailInput] = useState('');
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [emailSending, setEmailSending] = useState(false);
 
   // User voice message state (for iMessage thread after submission)
   const [userAudioUrl, setUserAudioUrl] = useState<string | null>(null);
@@ -426,6 +468,28 @@ const BookingConfirmed: React.FC = () => {
       audioRef.current.play();
       setIsPlaying(true);
     }
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prospectEmailInput) return;
+    setEmailSending(true);
+
+    const payload = inputMode === 'voice'
+      ? { challenge: voiceTranscript || '(Voice message sent)', outcome: '(included in voice response)', priorAttempts: '(included in voice response)' }
+      : intelForm;
+
+    await sendBookingIntelToGHL({
+      email: prospectEmailInput,
+      name: prospectName || prospectEmail || '',
+      challenge: payload.challenge,
+      outcome: payload.outcome,
+      priorAttempts: payload.priorAttempts,
+      inputMode,
+    });
+
+    setEmailSending(false);
+    setEmailSubmitted(true);
   };
 
   const isFormValid = inputMode === 'voice'
@@ -924,6 +988,68 @@ const BookingConfirmed: React.FC = () => {
                         <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-md mx-auto">{aiError}</p>
                       </div>
                     )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Email capture — shown after AI response */}
+              <AnimatePresence>
+                {intelSubmitted && !emailSubmitted && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                    className="mt-6"
+                  >
+                    <div className={`rounded-xl md:rounded-2xl p-5 md:p-6 border ${theme === 'dark' ? 'bg-white/[0.02] border-white/10' : 'bg-slate-50 border-slate-200'}`}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Mail size={16} className="text-green-500" />
+                        <p className="text-sm md:text-base font-bold text-[var(--text-main)]">
+                          Want a copy of your answers &amp; Justine&apos;s response?
+                        </p>
+                      </div>
+                      <p className="text-xs md:text-sm text-[var(--text-muted)] mb-4 leading-relaxed">
+                        Enter your email and we&apos;ll send you everything so you have it before your call.
+                      </p>
+                      <form onSubmit={handleEmailSubmit} className="flex gap-2">
+                        <input
+                          type="email"
+                          required
+                          placeholder="your@email.com"
+                          value={prospectEmailInput}
+                          onChange={(e) => setProspectEmailInput(e.target.value)}
+                          className={`flex-1 px-4 py-2.5 rounded-xl text-sm border bg-transparent outline-none transition-all focus:border-green-500/50 focus:ring-1 focus:ring-green-500/20 ${theme === 'dark' ? 'border-white/10 text-white placeholder:text-white/30' : 'border-slate-300 text-slate-900 placeholder:text-slate-400'}`}
+                        />
+                        <button
+                          type="submit"
+                          disabled={emailSending}
+                          className="px-5 py-2.5 rounded-xl bg-green-600 text-white text-sm font-bold hover:bg-green-500 transition-all disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
+                        >
+                          {emailSending ? (
+                            <Loader2 size={14} className="animate-spin" />
+                          ) : (
+                            <Send size={14} />
+                          )}
+                          Send
+                        </button>
+                      </form>
+                    </div>
+                  </motion.div>
+                )}
+
+                {emailSubmitted && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
+                    className="mt-6"
+                  >
+                    <div className={`rounded-xl md:rounded-2xl p-5 md:p-6 border text-center ${theme === 'dark' ? 'bg-green-500/5 border-green-500/20' : 'bg-green-50 border-green-200'}`}>
+                      <CheckCircle size={24} className="text-green-500 mx-auto mb-2" />
+                      <p className="text-sm font-bold text-[var(--text-main)]">You&apos;re all set!</p>
+                      <p className="text-xs text-[var(--text-muted)] mt-1">Check your inbox — we&apos;ll send a copy before your call.</p>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import BookingConfirmed from '../../components/BookingConfirmed';
 
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function BookingConfirmedPage() {
-  return <BookingConfirmed />;
+  return (
+    <Suspense fallback={null}>
+      <BookingConfirmed />
+    </Suspense>
+  );
 }
