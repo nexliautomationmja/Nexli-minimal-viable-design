@@ -338,6 +338,7 @@ async function sendBookingIntelToGHL(data: {
   outcome: string;
   priorAttempts: string;
   inputMode: 'text' | 'voice';
+  justineResponse: string;
 }) {
   try {
     await fetch(GHL_BOOKING_INTEL_WEBHOOK_URL, {
@@ -350,6 +351,7 @@ async function sendBookingIntelToGHL(data: {
         biggest_challenge: data.challenge,
         ideal_outcome: data.outcome,
         prior_attempts: data.priorAttempts,
+        justine_response: data.justineResponse,
         input_mode: data.inputMode,
         submitted_at: new Date().toISOString(),
       }),
@@ -486,6 +488,7 @@ const BookingConfirmed: React.FC = () => {
       outcome: payload.outcome,
       priorAttempts: payload.priorAttempts,
       inputMode,
+      justineResponse: aiResponse || '',
     });
 
     setEmailSending(false);
