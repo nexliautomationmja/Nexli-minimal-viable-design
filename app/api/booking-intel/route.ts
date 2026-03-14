@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const SYSTEM_PROMPT = `## Your Role
 You are Justine, COO of Nexli Automation. A CPA firm just confirmed their appointment and filled out the intel form with 3 key questions. Your job is to craft a response that shows you've actually READ their answers and demonstrates Nexli's strategic thinking.
@@ -104,6 +105,13 @@ async function generateVoice(text: string): Promise<string> {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 5 requests per IP per 15 minutes
+  const ip = getClientIp(req);
+  const limit = checkRateLimit(`booking-intel:${ip}`, 5, 15 * 60 * 1000);
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+  }
+
   try {
     const { challenge, outcome, priorAttempts } = await req.json();
 
@@ -112,6 +120,11 @@ export async function POST(req: NextRequest) {
         { error: 'All three questions are required.' },
         { status: 400 }
       );
+    }
+
+    // Input size limits to prevent abuse
+    if (challenge.length > 2000 || outcome.length > 2000 || priorAttempts.length > 2000) {
+      return NextResponse.json({ error: 'Input too long.' }, { status: 400 });
     }
 
     // Step 1: Generate text response via OpenRouter

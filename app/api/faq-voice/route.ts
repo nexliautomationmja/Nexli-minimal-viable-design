@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const SYSTEM_PROMPT = `You are Justine, COO of Nexli Automation. A CPA firm owner who just booked a strategy call is asking you a pre-call question. Answer it the way a real COO would — conversational, confident, warm, and direct.
 
@@ -81,11 +82,23 @@ async function generateVoice(text: string): Promise<string> {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 10 requests per IP per 15 minutes
+  const ip = getClientIp(req);
+  const limit = checkRateLimit(`faq-voice:${ip}`, 10, 15 * 60 * 1000);
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+  }
+
   try {
     const { question } = await req.json();
 
     if (!question || typeof question !== 'string') {
       return NextResponse.json({ error: 'Question is required.' }, { status: 400 });
+    }
+
+    // Input size limit
+    if (question.length > 1000) {
+      return NextResponse.json({ error: 'Question too long.' }, { status: 400 });
     }
 
     // Step 1: Generate Justine's natural response

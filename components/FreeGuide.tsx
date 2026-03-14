@@ -33,7 +33,7 @@ const FreeGuide: React.FC = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c82aa21f-f433-4ccf-a379-bbab2bdf965d', {
+            const response = await fetch('/api/forms/guide', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,8 +45,6 @@ const FreeGuide: React.FC = () => {
                     phone: formData.phone,
                     marketingSmsOptIn: formData.marketingSmsOptIn,
                     nonMarketingSmsOptIn: formData.nonMarketingSmsOptIn,
-                    source: 'Free Guide Landing Page',
-                    guideTitle: 'The 5 Automations Every Advisory Firm Needs'
                 }),
             });
 

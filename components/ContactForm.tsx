@@ -41,7 +41,7 @@ const ContactForm: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c08ab845-6f7c-4016-bdf0-bbcb6b5782e6', {
+      const response = await fetch('/api/forms/audit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 10 requests per IP per 15 minutes
+  const ip = getClientIp(req);
+  const limit = checkRateLimit(`tts:${ip}`, 10, 15 * 60 * 1000);
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+  }
+
   try {
     const { text } = await req.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'Text is required.' }, { status: 400 });
+    }
+
+    // Input size limit
+    if (text.length > 5000) {
+      return NextResponse.json({ error: 'Text too long.' }, { status: 400 });
     }
 
     // ElevenLabs Zara voice — Justine's voice
