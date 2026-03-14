@@ -87,7 +87,7 @@ const Hero: React.FC = () => {
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-white mb-6 md:mb-8 text-[28px] sm:text-5xl md:text-5xl font-bold tracking-tight px-4 leading-[1.2] md:leading-[1.1]"
         >
           Stop Losing the Clients <span className="text-blue-500">Already Looking</span><br className="hidden sm:block" />
@@ -97,7 +97,7 @@ const Hero: React.FC = () => {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-white/80 text-sm md:text-xl font-medium max-w-2xl mb-10 md:mb-12 drop-shadow-lg px-4"
         >
           Your firm is already attracting high-value prospects. The problem? Slow follow-ups, manual chaos, and broken systems are letting them slip through the cracks. We build the infrastructure that captures, vets, and nurtures every inbound opportunity — at light speed.
@@ -107,7 +107,7 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mb-8 md:mb-10"
         >
           {[

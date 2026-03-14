@@ -26,7 +26,7 @@ const fadeUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.6, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
   }),
 };
 
@@ -506,7 +506,7 @@ const SummitTaxGroup: React.FC<SummitTaxGroupProps> = ({ navigate }) => {
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white leading-tight tracking-tight"
           >
             Your Taxes. Optimized.
@@ -515,7 +515,7 @@ const SummitTaxGroup: React.FC<SummitTaxGroupProps> = ({ navigate }) => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             className="mt-6 text-lg sm:text-xl text-white/80 max-w-xl mx-auto leading-relaxed"
           >
             Strategic tax planning and advisory for businesses and individuals.
@@ -525,7 +525,7 @@ const SummitTaxGroup: React.FC<SummitTaxGroupProps> = ({ navigate }) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             className="mt-10 flex flex-wrap justify-center gap-4"
           >
             <button

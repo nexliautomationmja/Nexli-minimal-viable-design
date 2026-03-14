@@ -42,7 +42,7 @@ export const BackgroundGradientAnimation = ({
   const curY = useRef(0);
   const tgX = useRef(0);
   const tgY = useRef(0);
-  const animationFrameId = useRef<number>();
+  const animationFrameId = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     document.body.style.setProperty(

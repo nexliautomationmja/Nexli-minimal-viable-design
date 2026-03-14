@@ -170,7 +170,7 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-5xl md:text-7xl font-light leading-tight mb-8"
           style={{ fontFamily: serif, color: cream }}
         >
@@ -183,7 +183,7 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto"
           style={{ fontFamily: sans, color: creamDark }}
         >
@@ -195,7 +195,7 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="mb-10"
         >
           <button
@@ -216,7 +216,7 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="max-w-md mx-auto"
         >
           <div
@@ -237,9 +237,10 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
               style={{
                 background: `${gold}25`,
                 border: `1px solid ${gold}40`,
+                color: cream,
               }}
             >
-              <ArrowUp className="opacity-70" style={{ color: cream } as any} />
+              <ArrowUp className="opacity-70" />
             </div>
           </div>
         </motion.div>
@@ -426,7 +427,7 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
               <motion.div
                 key={i}
                 variants={fadeUp}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
                 className="rounded-2xl p-6 relative"
                 style={{
                   background: `linear-gradient(135deg, ${navy}cc 0%, ${navyLight}ee 100%)`,
@@ -499,7 +500,7 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
                 transition={{
                   duration: 0.7,
                   delay: i * 0.1,
-                  ease: [0.16, 1, 0.3, 1],
+                  ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
                 }}
               >
                 <div
@@ -570,7 +571,7 @@ const ClarityAdvisory: React.FC<ClarityAdvisoryProps> = ({ navigate: navigatePro
               <motion.div
                 key={i}
                 variants={fadeUp}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
                 className="rounded-2xl p-6"
                 style={{
                   background: `linear-gradient(135deg, ${navyLight}cc 0%, ${navy}ee 100%)`,

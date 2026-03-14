@@ -37,6 +37,9 @@
   ],
   "exclude": [
     "node_modules",
-    "dashboard"
+    "dashboard",
+    "src",
+    "drizzle.config.ts",
+    "scripts"
   ]
 }

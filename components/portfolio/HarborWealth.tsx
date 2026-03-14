@@ -161,7 +161,7 @@ const HarborWealth: React.FC<HarborWealthProps> = ({ navigate: navigateProp }) =
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] tracking-tight text-black"
           >
             Wealth for here,
@@ -175,7 +175,7 @@ const HarborWealth: React.FC<HarborWealthProps> = ({ navigate: navigateProp }) =
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             className="mt-8 text-lg md:text-xl text-gray-500 max-w-xl mx-auto leading-relaxed"
           >
             40 countries. Global markets. Get the wealth management built to grow
@@ -186,7 +186,7 @@ const HarborWealth: React.FC<HarborWealthProps> = ({ navigate: navigateProp }) =
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <button className="px-8 py-3.5 bg-[#84cc16] text-black font-semibold rounded-full text-base hover:bg-[#65a30d] transition-colors">
@@ -200,7 +200,7 @@ const HarborWealth: React.FC<HarborWealthProps> = ({ navigate: navigateProp }) =
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             className="mt-16 md:mt-20"
           >
             <GlobeIllustration />

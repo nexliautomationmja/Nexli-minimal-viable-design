@@ -171,7 +171,7 @@ const ValueProposition: React.FC = () => {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="flex items-center gap-4 mb-4 md:mb-6">
                     <div className="p-2 md:p-3 bg-blue-500/10 rounded-lg md:rounded-2xl border border-blue-500/20">
-                      {React.cloneElement(point.icon as React.ReactElement, { size: 20, className: 'text-blue-400' })}
+                      {React.cloneElement(point.icon as React.ReactElement<any>, { size: 20, className: 'text-blue-400' })}
                     </div>
                     <div>
                       <span className="text-blue-400 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] block mb-1">The High-End Fix</span>

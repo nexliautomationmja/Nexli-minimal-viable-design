@@ -40,12 +40,12 @@ const Navbar: React.FC = () => {
     setTimeout(() => setEmailCopied(false), 2000);
   }, []);
 
-  const navLinks = [
-    { label: 'Rainmaker™', view: 'services' as const },
-    { label: 'Portfolio', view: 'portfolio' as const },
-    { label: 'AI Automations', view: 'aiAutomations' as const },
-    { label: 'Doc Portal', view: 'documentPortal' as const },
-    { label: 'Google Reviews', view: 'smartReviews' as const, hasGoogleIcon: true },
+  const navLinks: { label: string; view: string; hasGoogleIcon?: boolean }[] = [
+    { label: 'Rainmaker™', view: 'services' },
+    { label: 'Portfolio', view: 'portfolio' },
+    { label: 'AI Automations', view: 'aiAutomations' },
+    { label: 'Doc Portal', view: 'documentPortal' },
+    { label: 'Google Reviews', view: 'smartReviews', hasGoogleIcon: true },
     { label: 'Free Guide', view: 'guide' as const },
   ];
 
