@@ -40,13 +40,14 @@ const Navbar: React.FC = () => {
     setTimeout(() => setEmailCopied(false), 2000);
   }, []);
 
-  const navLinks: { label: string; view: string; hasGoogleIcon?: boolean }[] = [
+  const navLinks: { label: string; view: string; href?: string; hasGoogleIcon?: boolean }[] = [
     { label: 'Rainmaker™', view: 'services' },
     { label: 'Portfolio', view: 'portfolio' },
     { label: 'AI Automations', view: 'aiAutomations' },
     { label: 'Doc Portal', view: 'documentPortal' },
     { label: 'Google Reviews', view: 'smartReviews', hasGoogleIcon: true },
     { label: 'Free Guide', view: 'guide' as const },
+    { label: 'Client Portal', view: 'clientPortal', href: 'https://portal.nexli.net/portal' },
   ];
 
   const navigateTo = (view: string) => {
@@ -56,7 +57,11 @@ const Navbar: React.FC = () => {
 
   const handleNavClick = (link: typeof navLinks[0]) => {
     setIsOpen(false);
-    navigateTo(link.view);
+    if (link.href) {
+      window.open(link.href, '_blank', 'noopener,noreferrer');
+    } else {
+      navigateTo(link.view);
+    }
   };
 
   return (
