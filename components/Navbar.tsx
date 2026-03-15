@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronRight, Sun, Moon, Mail, Check } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { useBooking } from './QualificationProvider';
 
 const VIEW_TO_PATH: Record<string, string> = {
   home: '/',
@@ -27,6 +28,7 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { openBooking } = useBooking();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -185,24 +187,7 @@ const Navbar: React.FC = () => {
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  if (pathname !== '/') {
-                    router.push('/');
-                    setTimeout(() => {
-                      const isMobile = window.innerWidth < 768;
-                      if (isMobile) {
-                        document.getElementById('book-mobile')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      } else {
-                        document.getElementById('book')?.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }, 500);
-                  } else {
-                    const isMobile = window.innerWidth < 768;
-                    if (isMobile) {
-                      document.getElementById('book-mobile')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    } else {
-                      document.getElementById('book')?.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }
+                  openBooking();
                 }}
                 className="bg-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap"
               >
