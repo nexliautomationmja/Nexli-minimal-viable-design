@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
     { label: 'Rainmaker™', view: 'services' },
     { label: 'Portfolio', view: 'portfolio' },
     { label: 'AI Automations', view: 'aiAutomations' },
-    { label: 'Doc Portal', view: 'documentPortal' },
+    { label: 'Dashboard', view: 'documentPortal' },
     { label: 'Google Reviews', view: 'smartReviews', hasGoogleIcon: true },
     { label: 'Free Guide', view: 'guide' as const },
     { label: 'Client Portal', view: 'clientPortal', href: 'https://portal.nexli.net/portal' },
