@@ -41,15 +41,18 @@ const TermsAndConditions: React.FC = () => {
                         <p className="text-[var(--text-main)] font-medium">
                             We operate on a transparent performance-based and retainer model:
                         </p>
+                        <p className="text-[var(--text-main)] font-medium">
+                            All sales are final.
+                        </p>
                         <ul className="list-disc pl-6 space-y-3">
                             <li>
-                                <strong className="text-[var(--text-main)]">Setup Fee:</strong> A non-refundable strategic setup fee is required upfront before work commences. This covers the initial audit, custom architecture design, and systems integration.
+                                <strong className="text-[var(--text-main)]">Setup Fee:</strong> A strategic setup fee is required upfront. This covers the initial audit, custom architecture design, and systems integration. Setup fees are non-refundable once project work has commenced.
                             </li>
                             <li>
-                                <strong className="text-[var(--text-main)]">Monthly Retainer:</strong> Upon completion of the initial setup and "go-live," the client moves to a monthly recurring retainer. This covers ongoing automation maintenance, CRM management, hosting, and continuous optimization.
+                                <strong className="text-[var(--text-main)]">Monthly Retainer:</strong> Upon completion of the initial setup and "go-live," the client moves to a monthly recurring retainer. This covers ongoing automation maintenance, CRM management, hosting, and continuous optimization. Monthly subscription fees are non-refundable.
                             </li>
                             <li>
-                                <strong className="text-[var(--text-main)]">Cancellation:</strong> Monthly retainers may be cancelled with 30 days written notice.
+                                <strong className="text-[var(--text-main)]">Cancellation:</strong> Clients may cancel future monthly billing with 30 days written notice.
                             </li>
                         </ul>
                     </section>
