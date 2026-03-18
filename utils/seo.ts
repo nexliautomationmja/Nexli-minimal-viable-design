@@ -369,7 +369,7 @@ export function getDocumentPortalSEO(): SEOConfig {
   return {
     title: 'Secure Document Portal | CPA Client Document Collection | Nexli',
     description: 'Collect client tax documents securely through your firm\'s branded portal. AES-256 encryption, per-firm isolated storage, IRS Pub 4557 compliant. No more emailing W-2s.',
-    canonical: `${BASE_URL}/document-portal`,
+    canonical: `${BASE_URL}/client-dashboard`,
     jsonLd: [
       {
         '@context': 'https://schema.org',
@@ -384,8 +384,8 @@ export function getDocumentPortalSEO(): SEOConfig {
           {
             '@type': 'ListItem',
             'position': 2,
-            'name': 'Document Portal',
-            'item': `${BASE_URL}/document-portal`,
+            'name': 'Client Dashboard',
+            'item': `${BASE_URL}/client-dashboard`,
           },
         ],
       },

@@ -1620,8 +1620,8 @@ const RainmakerDemo: React.FC = () => {
                 </div>
               </div>
 
-              <a href="/document-portal" className="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-cyan-400 transition-colors mt-4">
-                Explore the full Document Portal page
+              <a href="/client-dashboard" className="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-cyan-400 transition-colors mt-4">
+                Explore the full Client Dashboard page
                 <ChevronRight size={12} />
               </a>
             </motion.div>

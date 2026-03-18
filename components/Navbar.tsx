@@ -15,7 +15,7 @@ const VIEW_TO_PATH: Record<string, string> = {
   guide: '/free-guide',
   aiAutomations: '/ai-automations',
   smartReviews: '/smart-reviews',
-  documentPortal: '/document-portal',
+  clientDashboard: '/client-dashboard',
   privacy: '/privacy',
   terms: '/terms',
 };
@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
     { label: 'Rainmaker™', view: 'services' },
     { label: 'Portfolio', view: 'portfolio' },
     { label: 'AI Automations', view: 'aiAutomations' },
-    { label: 'Dashboard', view: 'documentPortal' },
+    { label: 'Dashboard', view: 'clientDashboard' },
     { label: 'Google Reviews', view: 'smartReviews', hasGoogleIcon: true },
     { label: 'Free Guide', view: 'guide' as const },
     { label: 'Client Portal', view: 'clientPortal', href: 'https://portal.nexli.net/portal' },

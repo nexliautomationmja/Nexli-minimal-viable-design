@@ -21,7 +21,7 @@ const VIEW_TO_PATH: Record<string, string> = {
   blog: '/blog',
   guide: '/free-guide',
   smartReviews: '/smart-reviews',
-  documentPortal: '/document-portal',
+  clientDashboard: '/client-dashboard',
   privacy: '/privacy',
   terms: '/terms',
   portfolioFirm: '/portfolio',
