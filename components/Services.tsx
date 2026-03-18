@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield, Droplets, Monitor } from 'lucide-react';
+import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield, Droplets, Monitor, LayoutDashboard } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import { Timeline } from './ui/Timeline';
@@ -131,8 +131,8 @@ const Services: React.FC = () => {
             content: (
                 <div>
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
-                            <Cpu className="w-6 h-6 text-cyan-500" />
+                        <div className="p-2 rounded-xl bg-violet-500/10 border border-violet-500/20">
+                            <Cpu className="w-6 h-6 text-violet-500" />
                         </div>
                         <h4 className={`text-xl md:text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                             An AI Automation Layer
@@ -152,12 +152,12 @@ const Services: React.FC = () => {
                             "Secure client document collection"
                         ].map((benefit, i) => (
                             <div key={i} className="flex items-start gap-2 text-sm">
-                                <CheckCircle size={16} className="text-cyan-500 shrink-0 mt-0.5" />
+                                <CheckCircle size={16} className="text-violet-500 shrink-0 mt-0.5" />
                                 <span className={theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}>{benefit}</span>
                             </div>
                         ))}
                     </div>
-                    <div className={`rounded-2xl p-6 border ${theme === 'dark' ? 'bg-gradient-to-br from-cyan-950/50 to-blue-950/50 border-white/10' : 'bg-gradient-to-br from-cyan-50 to-blue-50 border-slate-200'}`}>
+                    <div className={`rounded-2xl p-6 border ${theme === 'dark' ? 'bg-gradient-to-br from-violet-950/50 to-purple-950/50 border-white/10' : 'bg-gradient-to-br from-violet-50 to-purple-50 border-slate-200'}`}>
                         <div className="flex flex-wrap gap-4 justify-center">
                             {[
                                 { icon: Clock, label: "24/7 Response" },
@@ -175,7 +175,7 @@ const Services: React.FC = () => {
                                     className="flex flex-col items-center gap-2"
                                 >
                                     <div className={`p-3 rounded-xl ${theme === 'dark' ? 'bg-white/10' : 'bg-white shadow-sm'}`}>
-                                        <item.icon className="w-6 h-6 text-cyan-500" />
+                                        <item.icon className="w-6 h-6 text-violet-500" />
                                     </div>
                                     <span className={`text-xs font-semibold ${theme === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>
                                         {item.label}
@@ -185,24 +185,24 @@ const Services: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Document Portal callout */}
+                    {/* Client Dashboard callout */}
                     <div className={`rounded-2xl p-5 mt-6 border-2 border-dashed ${theme === 'dark' ? 'border-cyan-500/30 bg-cyan-500/5' : 'border-cyan-500/40 bg-cyan-50'}`}>
                         <div className="flex items-start gap-3">
                             <div className="p-2 rounded-lg bg-cyan-500/20 shrink-0">
-                                <Shield className="w-5 h-5 text-cyan-500" />
+                                <LayoutDashboard className="w-5 h-5 text-cyan-500" />
                             </div>
                             <div>
                                 <p className={`font-bold mb-1 ${theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'}`}>
-                                    Secure Document Collection
+                                    Client Dashboard & Portal
                                 </p>
                                 <p className={`text-sm mb-2 ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
-                                    Stop emailing W-2s. Collect client documents through your firm's own branded portal with AES-256 encryption and per-firm isolated storage.
+                                    Invoicing, engagement letters, document collection, and secure messaging — all in one branded portal your clients actually enjoy using.
                                 </p>
                                 <button
                                     onClick={() => router.push('/client-dashboard')}
                                     className="inline-flex items-center gap-1.5 text-cyan-500 text-sm font-bold hover:text-cyan-400 transition-colors bg-transparent border-none p-0 cursor-pointer"
                                 >
-                                    See the Demo
+                                    See the Dashboard
                                     <ArrowRight size={14} />
                                 </button>
                             </div>
@@ -211,7 +211,7 @@ const Services: React.FC = () => {
 
                     <button
                         onClick={() => router.push('/ai-automations')}
-                        className="inline-flex items-center gap-1.5 text-cyan-500 text-sm font-bold hover:text-cyan-400 transition-colors bg-transparent border-none p-0 cursor-pointer mt-6"
+                        className="inline-flex items-center gap-1.5 text-violet-500 text-sm font-bold hover:text-violet-400 transition-colors bg-transparent border-none p-0 cursor-pointer mt-6"
                     >
                         See AI Automations
                         <ArrowRight size={14} />
@@ -333,7 +333,7 @@ const Services: React.FC = () => {
     const heroSubIcons = [
         { Icon: Monitor, color: 'blue', label: 'Website' },
         { Icon: Bot, color: 'violet', label: 'AI' },
-        { Icon: Shield, color: 'cyan', label: 'Portal' },
+        { Icon: LayoutDashboard, color: 'cyan', label: 'Dashboard' },
         { Icon: null, color: 'amber', label: 'Reviews', isGoogle: true },
     ];
 
