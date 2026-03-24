@@ -114,6 +114,13 @@ const platformCards = [
             'Clients upload W-2s, 1099s, and statements through your branded portal. Encrypted, organized by client, and ready when you need them. No email attachments ever again.',
         color: 'indigo',
     },
+    {
+        icon: <Shield className="w-4 h-4 md:w-5 md:h-5" />,
+        title: 'Quantum-Resistant Security',
+        description:
+            'Every file, message, and document is protected with AES-256 encryption — a standard classified as quantum-resistant. Your clients\' data stays secure today and against tomorrow\'s threats.',
+        color: 'violet',
+    },
 ];
 
 const colorMap: Record<string, { iconDark: string; iconLight: string; text: string }> = {
@@ -122,6 +129,7 @@ const colorMap: Record<string, { iconDark: string; iconLight: string; text: stri
     sky: { iconDark: 'bg-sky-500/10 border-sky-500/20', iconLight: 'bg-sky-50 border-sky-200', text: 'text-sky-400' },
     blue: { iconDark: 'bg-blue-500/10 border-blue-500/20', iconLight: 'bg-blue-50 border-blue-200', text: 'text-blue-400' },
     indigo: { iconDark: 'bg-indigo-500/10 border-indigo-500/20', iconLight: 'bg-indigo-50 border-indigo-200', text: 'text-indigo-400' },
+    violet: { iconDark: 'bg-violet-500/10 border-violet-500/20', iconLight: 'bg-violet-50 border-violet-200', text: 'text-violet-400' },
 };
 
 // ── How It Works — Expanding Step Cards ─────────────────
