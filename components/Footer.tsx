@@ -60,6 +60,14 @@ const Footer: React.FC = () => {
             >
               Terms and Conditions
             </Link>
+            <a
+              href="https://portal.nexli.net/portal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-500 transition-colors uppercase tracking-[0.2em]"
+            >
+              Client Portal
+            </a>
             <div className="text-green-500/50 flex items-center gap-2">
               <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
               A2P COMPLIANT

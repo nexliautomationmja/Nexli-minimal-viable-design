@@ -49,7 +49,6 @@ const Navbar: React.FC = () => {
     { label: 'Dashboard', view: 'clientDashboard' },
     { label: 'Google Reviews', view: 'smartReviews', hasGoogleIcon: true },
     { label: 'Free Guide', view: 'guide' as const },
-    { label: 'Client Portal', view: 'clientPortal', href: 'https://portal.nexli.net/portal' },
   ];
 
   const navigateTo = (view: string) => {
