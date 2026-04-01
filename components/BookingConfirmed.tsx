@@ -10,7 +10,8 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useTheme } from './ThemeProvider';
-import RainmakerDemo from './RainmakerDemo';
+import DashboardDemo from './DashboardDemo';
+
 
 // ---------------------------------------------------------------------------
 // Step Badge — matches section badge pattern from AI Automations
@@ -674,10 +675,10 @@ const BookingConfirmed: React.FC = () => {
                 className="w-full rounded-xl md:rounded-2xl"
                 controls
                 playsInline
-                preload="metadata"
-                poster=""
+                preload="auto"
+                crossOrigin="anonymous"
               >
-                <source src="/justine-welcome.mp4" type="video/mp4" />
+                <source src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/justine-welcome.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
 
@@ -1091,10 +1092,9 @@ const BookingConfirmed: React.FC = () => {
             </div>
           </div>
 
-          {/* Interactive Demo Tool */}
-          <div className="max-w-3xl mx-auto">
-            <RainmakerDemo />
-          </div>
+          {/* Interactive Dashboard Demo */}
+          <DashboardDemo />
+
         </motion.section>
 
         {/* ── FAQ: Justine Voice Responses ── */}

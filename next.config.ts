@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
-              "media-src 'self' blob: data:",
+              "media-src 'self' blob: data: https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev",
               "connect-src 'self' https://openrouter.ai https://api.elevenlabs.io https://www.google-analytics.com https://www.facebook.com",
               "frame-src 'self' https://www.youtube.com https://player.vimeo.com",
               "object-src 'none'",
