@@ -570,7 +570,7 @@ export default function QualificationProvider({ children }: { children: React.Re
           cal.loaded = true;
         }
         if (ar[0] === L) {
-          const api = function () { p(api, arguments); };
+          const api: any = function () { p(api, arguments); };
           const namespace = ar[1];
           api.q = api.q || [];
           if (typeof namespace === "string") {
