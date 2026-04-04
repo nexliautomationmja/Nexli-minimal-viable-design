@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield, Droplets, Monitor, LayoutDashboard } from 'lucide-react';
+import { ArrowRight, Globe, Cpu, Star, CheckCircle, Zap, Clock, Bot, Calendar, Send, TrendingUp, FileText, Shield, Droplets, Monitor, LayoutDashboard, Users, PenLine, MessageSquare, Upload, CreditCard } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import { Timeline } from './ui/Timeline';
@@ -185,30 +185,6 @@ const Services: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Client Dashboard callout */}
-                    <div className={`rounded-2xl p-5 mt-6 border-2 border-dashed ${theme === 'dark' ? 'border-cyan-500/30 bg-cyan-500/5' : 'border-cyan-500/40 bg-cyan-50'}`}>
-                        <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-lg bg-cyan-500/20 shrink-0">
-                                <LayoutDashboard className="w-5 h-5 text-cyan-500" />
-                            </div>
-                            <div>
-                                <p className={`font-bold mb-1 ${theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'}`}>
-                                    Client Dashboard & Portal
-                                </p>
-                                <p className={`text-sm mb-2 ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
-                                    Invoicing, engagement letters, document collection, and secure messaging — all in one branded portal your clients actually enjoy using.
-                                </p>
-                                <button
-                                    onClick={() => router.push('/client-dashboard')}
-                                    className="inline-flex items-center gap-1.5 text-cyan-500 text-sm font-bold hover:text-cyan-400 transition-colors bg-transparent border-none p-0 cursor-pointer"
-                                >
-                                    See the Dashboard
-                                    <ArrowRight size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
                     <button
                         onClick={() => router.push('/ai-automations')}
                         className="inline-flex items-center gap-1.5 text-violet-500 text-sm font-bold hover:text-violet-400 transition-colors bg-transparent border-none p-0 cursor-pointer mt-6"
@@ -216,6 +192,125 @@ const Services: React.FC = () => {
                         See AI Automations
                         <ArrowRight size={14} />
                     </button>
+
+                    {/* ── Client Dashboard & Portal — THE CENTERPIECE ── */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.7, ease: 'circOut' }}
+                        className="relative mt-10 rounded-3xl overflow-hidden p-[1.5px]"
+                    >
+                        {/* Animated shimmer border */}
+                        <span
+                            className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] opacity-90"
+                            style={{
+                                background: 'conic-gradient(from 0deg at 50% 50%, #06B6D4, #3B82F6, #8B5CF6, #06B6D4, #3B82F6, #06B6D4)'
+                            }}
+                        />
+                        <span
+                            className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] blur-xl opacity-30"
+                            style={{
+                                background: 'conic-gradient(from 0deg at 50% 50%, #06B6D4, #3B82F6, #8B5CF6, #06B6D4, #3B82F6, #06B6D4)'
+                            }}
+                        />
+
+                        {/* Inner content */}
+                        <div className={`relative z-10 rounded-[22px] p-6 md:p-10 ${theme === 'dark' ? 'bg-gradient-to-br from-slate-950 via-cyan-950/40 to-slate-950' : 'bg-gradient-to-br from-white via-cyan-50/80 to-white'}`}>
+                            {/* Ambient glow */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
+                            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 blur-[80px] rounded-full pointer-events-none" />
+
+                            {/* Header */}
+                            <div className="relative z-10 flex flex-col items-center text-center mb-8">
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    whileInView={{ scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                                    className="relative mb-4"
+                                >
+                                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center ${theme === 'dark' ? 'bg-cyan-500/20 border border-cyan-500/30' : 'bg-cyan-100 border border-cyan-200'}`}
+                                        style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}
+                                    >
+                                        <LayoutDashboard className="w-8 h-8 md:w-10 md:h-10 text-cyan-500" />
+                                    </div>
+                                    {/* Pulse ring */}
+                                    <span className="absolute inset-0 rounded-2xl animate-ping opacity-20 bg-cyan-500" style={{ animationDuration: '3s' }} />
+                                </motion.div>
+
+                                {/* Badge */}
+                                <div className="relative inline-flex items-center mb-4 rounded-full overflow-hidden p-[1px]">
+                                    <span
+                                        className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+                                        style={{
+                                            background: 'conic-gradient(from 0deg at 50% 50%, #06B6D4, #3B82F6, #8B5CF6, #06B6D4)'
+                                        }}
+                                    />
+                                    <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+                                        <Star size={12} className="text-cyan-400 fill-cyan-400" />
+                                        <span className={`text-[10px] font-black tracking-[0.15em] uppercase ${theme === 'dark' ? 'text-cyan-300' : 'text-cyan-600'}`}>The Centerpiece</span>
+                                    </span>
+                                </div>
+
+                                <h3 className={`text-2xl md:text-3xl font-black tracking-tight mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                    Client Dashboard & Portal
+                                </h3>
+                                <p className={`text-sm md:text-base max-w-lg leading-relaxed ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
+                                    The command center your firm deserves. Invoicing, engagement letters, document collection, and secure messaging — all in one branded portal your clients actually enjoy using.
+                                </p>
+                            </div>
+
+                            {/* Feature grid */}
+                            <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mb-8">
+                                {[
+                                    { icon: CreditCard, label: "Invoicing & Payments", desc: "Get paid faster" },
+                                    { icon: PenLine, label: "Engagement Letters", desc: "E-sign in seconds" },
+                                    { icon: Upload, label: "Document Collection", desc: "Secure uploads" },
+                                    { icon: MessageSquare, label: "Client Messaging", desc: "In-portal chat" },
+                                    { icon: Users, label: "Client Portal", desc: "Branded experience" },
+                                    { icon: Shield, label: "Bank-Level Security", desc: "Encrypted & safe" },
+                                ].map((feature, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: 0.3 + i * 0.08 }}
+                                        className={`group rounded-2xl p-4 border transition-all duration-300 hover:scale-[1.03] ${theme === 'dark'
+                                            ? 'bg-white/5 border-white/10 hover:bg-cyan-500/10 hover:border-cyan-500/30'
+                                            : 'bg-white border-slate-200 hover:bg-cyan-50 hover:border-cyan-300 shadow-sm'
+                                        }`}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-colors ${theme === 'dark'
+                                            ? 'bg-cyan-500/15 group-hover:bg-cyan-500/25'
+                                            : 'bg-cyan-100 group-hover:bg-cyan-200'
+                                        }`}>
+                                            <feature.icon className="w-5 h-5 text-cyan-500" />
+                                        </div>
+                                        <p className={`text-sm font-bold mb-0.5 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                            {feature.label}
+                                        </p>
+                                        <p className={`text-xs ${theme === 'dark' ? 'text-neutral-400' : 'text-slate-500'}`}>
+                                            {feature.desc}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            {/* CTA */}
+                            <div className="relative z-10 flex justify-center">
+                                <button
+                                    onClick={() => router.push('/client-dashboard')}
+                                    className="inline-flex items-center gap-2 bg-cyan-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold hover:bg-cyan-400 hover:scale-[1.03] active:scale-[0.98] transition-all shadow-xl shadow-cyan-500/25 group"
+                                >
+                                    <LayoutDashboard size={16} />
+                                    See the Dashboard
+                                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             ),
         },

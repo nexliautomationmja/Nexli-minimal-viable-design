@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowRight, TrendingUp, ShieldCheck, CalendarX, Repeat } from 'lucide-react';
+import { ArrowRight, TrendingUp, ShieldCheck, CalendarX, Repeat, Droplets } from 'lucide-react';
 import { useBooking } from './QualificationProvider';
 
 const Hero: React.FC = () => {
@@ -139,7 +139,7 @@ const Hero: React.FC = () => {
             <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
           </button>
           <button
-            onClick={() => router.push('/portfolio')}
+            onClick={() => router.push('/rainmaker')}
             className="relative flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-blue-400 overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-transform group cursor-pointer border-none bg-transparent"
           >
             {/* Shimmer border effect */}
@@ -155,8 +155,8 @@ const Hero: React.FC = () => {
             <span className="absolute inset-[1.5px] rounded-full bg-black/80 backdrop-blur-md" />
             {/* Content */}
             <span className="relative z-10 flex items-center gap-2 md:gap-3">
-              View Portfolio
-              <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
+              <Droplets size={16} className="md:size-[18px]" />
+              Rainmaker System
             </span>
           </button>
         </motion.div>
