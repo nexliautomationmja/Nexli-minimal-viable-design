@@ -90,15 +90,15 @@ const Services: React.FC = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-2 md:gap-4">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className={`rounded-xl p-4 border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'}`}
+                            className={`rounded-xl p-3 md:p-4 border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'}`}
                         >
-                            <TrendingUp className="w-8 h-8 text-blue-500 mb-2" />
-                            <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-white/70' : 'text-slate-500'}`}>
+                            <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-blue-500 mb-2" />
+                            <p className={`text-[11px] md:text-xs font-semibold ${theme === 'dark' ? 'text-white/70' : 'text-slate-500'}`}>
                                 Convert visitors into booked consultations before the first call
                             </p>
                         </motion.div>
@@ -107,10 +107,10 @@ const Services: React.FC = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.1 }}
-                            className={`rounded-xl p-4 border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'}`}
+                            className={`rounded-xl p-3 md:p-4 border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'}`}
                         >
-                            <Zap className="w-8 h-8 text-cyan-500 mb-2" />
-                            <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-white/70' : 'text-slate-500'}`}>
+                            <Zap className="w-6 h-6 md:w-8 md:h-8 text-cyan-500 mb-2" />
+                            <p className={`text-[11px] md:text-xs font-semibold ${theme === 'dark' ? 'text-white/70' : 'text-slate-500'}`}>
                                 Stand out from competitors with outdated sites
                             </p>
                         </motion.div>
@@ -157,8 +157,8 @@ const Services: React.FC = () => {
                             </div>
                         ))}
                     </div>
-                    <div className={`rounded-2xl p-6 border ${theme === 'dark' ? 'bg-gradient-to-br from-violet-950/50 to-purple-950/50 border-white/10' : 'bg-gradient-to-br from-violet-50 to-purple-50 border-slate-200'}`}>
-                        <div className="flex flex-wrap gap-4 justify-center">
+                    <div className={`rounded-2xl p-4 md:p-6 border ${theme === 'dark' ? 'bg-gradient-to-br from-violet-950/50 to-purple-950/50 border-white/10' : 'bg-gradient-to-br from-violet-50 to-purple-50 border-slate-200'}`}>
+                        <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
                             {[
                                 { icon: Clock, label: "24/7 Response" },
                                 { icon: Bot, label: "AI Assistant" },
@@ -199,7 +199,7 @@ const Services: React.FC = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.7, ease: 'circOut' }}
-                        className="relative mt-10 rounded-3xl overflow-hidden p-[1.5px]"
+                        className="relative mt-8 md:mt-10 rounded-2xl md:rounded-3xl overflow-hidden p-[1.5px]"
                     >
                         {/* Animated shimmer border */}
                         <span
@@ -216,31 +216,31 @@ const Services: React.FC = () => {
                         />
 
                         {/* Inner content */}
-                        <div className={`relative z-10 rounded-[22px] p-6 md:p-10 ${theme === 'dark' ? 'bg-gradient-to-br from-slate-950 via-cyan-950/40 to-slate-950' : 'bg-gradient-to-br from-white via-cyan-50/80 to-white'}`}>
+                        <div className={`relative z-10 rounded-[14px] md:rounded-[22px] p-4 md:p-10 ${theme === 'dark' ? 'bg-gradient-to-br from-slate-950 via-cyan-950/40 to-slate-950' : 'bg-gradient-to-br from-white via-cyan-50/80 to-white'}`}>
                             {/* Ambient glow */}
                             <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
                             <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 blur-[80px] rounded-full pointer-events-none" />
 
                             {/* Header */}
-                            <div className="relative z-10 flex flex-col items-center text-center mb-8">
+                            <div className="relative z-10 flex flex-col items-center text-center mb-5 md:mb-8">
                                 <motion.div
                                     initial={{ scale: 0 }}
                                     whileInView={{ scale: 1 }}
                                     viewport={{ once: true }}
                                     transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                                    className="relative mb-4"
+                                    className="relative mb-3 md:mb-4"
                                 >
-                                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center ${theme === 'dark' ? 'bg-cyan-500/20 border border-cyan-500/30' : 'bg-cyan-100 border border-cyan-200'}`}
+                                    <div className={`w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-2xl flex items-center justify-center ${theme === 'dark' ? 'bg-cyan-500/20 border border-cyan-500/30' : 'bg-cyan-100 border border-cyan-200'}`}
                                         style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}
                                     >
-                                        <LayoutDashboard className="w-8 h-8 md:w-10 md:h-10 text-cyan-500" />
+                                        <LayoutDashboard className="w-7 h-7 md:w-10 md:h-10 text-cyan-500" />
                                     </div>
                                     {/* Pulse ring */}
                                     <span className="absolute inset-0 rounded-2xl animate-ping opacity-20 bg-cyan-500" style={{ animationDuration: '3s' }} />
                                 </motion.div>
 
                                 {/* Badge */}
-                                <div className="relative inline-flex items-center mb-4 rounded-full overflow-hidden p-[1px]">
+                                <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
                                     <span
                                         className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
                                         style={{
@@ -253,16 +253,16 @@ const Services: React.FC = () => {
                                     </span>
                                 </div>
 
-                                <h3 className={`text-2xl md:text-3xl font-black tracking-tight mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                <h3 className={`text-xl md:text-3xl font-black tracking-tight mb-2 md:mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                                     Client Dashboard & Portal
                                 </h3>
-                                <p className={`text-sm md:text-base max-w-lg leading-relaxed ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
+                                <p className={`text-xs md:text-base max-w-lg leading-relaxed ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
                                     The command center your firm deserves. Invoicing, engagement letters, document collection, and secure messaging — all in one branded portal your clients actually enjoy using.
                                 </p>
                             </div>
 
                             {/* Feature grid */}
-                            <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mb-8">
+                            <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-4 mb-6 md:mb-8">
                                 {[
                                     { icon: CreditCard, label: "Invoicing & Payments", desc: "Get paid faster" },
                                     { icon: PenLine, label: "Engagement Letters", desc: "E-sign in seconds" },
@@ -277,21 +277,21 @@ const Services: React.FC = () => {
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: 0.3 + i * 0.08 }}
-                                        className={`group rounded-2xl p-4 border transition-all duration-300 hover:scale-[1.03] ${theme === 'dark'
+                                        className={`group rounded-xl md:rounded-2xl p-3 md:p-4 border transition-all duration-300 hover:scale-[1.03] ${theme === 'dark'
                                             ? 'bg-white/5 border-white/10 hover:bg-cyan-500/10 hover:border-cyan-500/30'
                                             : 'bg-white border-slate-200 hover:bg-cyan-50 hover:border-cyan-300 shadow-sm'
                                         }`}
                                     >
-                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-colors ${theme === 'dark'
+                                        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-3 transition-colors ${theme === 'dark'
                                             ? 'bg-cyan-500/15 group-hover:bg-cyan-500/25'
                                             : 'bg-cyan-100 group-hover:bg-cyan-200'
                                         }`}>
-                                            <feature.icon className="w-5 h-5 text-cyan-500" />
+                                            <feature.icon className="w-4 h-4 md:w-5 md:h-5 text-cyan-500" />
                                         </div>
-                                        <p className={`text-sm font-bold mb-0.5 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                        <p className={`text-xs md:text-sm font-bold mb-0.5 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                                             {feature.label}
                                         </p>
-                                        <p className={`text-xs ${theme === 'dark' ? 'text-neutral-400' : 'text-slate-500'}`}>
+                                        <p className={`text-[11px] md:text-xs ${theme === 'dark' ? 'text-neutral-400' : 'text-slate-500'}`}>
                                             {feature.desc}
                                         </p>
                                     </motion.div>
@@ -302,7 +302,7 @@ const Services: React.FC = () => {
                             <div className="relative z-10 flex justify-center">
                                 <button
                                     onClick={() => router.push('/client-dashboard')}
-                                    className="inline-flex items-center gap-2 bg-cyan-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold hover:bg-cyan-400 hover:scale-[1.03] active:scale-[0.98] transition-all shadow-xl shadow-cyan-500/25 group"
+                                    className="inline-flex items-center gap-2 bg-cyan-500 text-white px-5 md:px-8 py-2.5 md:py-4 rounded-full text-xs md:text-sm font-bold hover:bg-cyan-400 hover:scale-[1.03] active:scale-[0.98] transition-all shadow-xl shadow-cyan-500/25 group"
                                 >
                                     <LayoutDashboard size={16} />
                                     See the Dashboard
@@ -331,7 +331,7 @@ const Services: React.FC = () => {
                     </p>
 
                     {/* The Secret Weapon callout */}
-                    <div className={`rounded-2xl p-5 mb-6 border-2 border-dashed ${theme === 'dark' ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-yellow-500/40 bg-yellow-50'}`}>
+                    <div className={`rounded-xl md:rounded-2xl p-4 md:p-5 mb-6 border-2 border-dashed ${theme === 'dark' ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-yellow-500/40 bg-yellow-50'}`}>
                         <div className="flex items-start gap-3">
                             <div className="p-2 rounded-lg bg-yellow-500/20">
                                 <Zap className="w-5 h-5 text-yellow-500" />
@@ -445,9 +445,9 @@ const Services: React.FC = () => {
     return (
         <div className="pb-20 overflow-hidden">
             {/* ── SECTION 1: Hero — two-column layout matching other pages ── */}
-            <section className="min-h-screen bg-[var(--bg-main)] transition-colors duration-300 pt-32 pb-20">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24">
+            <section className="min-h-screen bg-[var(--bg-main)] transition-colors duration-300 pt-24 md:pt-32 pb-10 md:pb-20">
+                <div className="max-w-7xl mx-auto px-4 md:px-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center mb-12 md:mb-24">
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -536,7 +536,7 @@ const Services: React.FC = () => {
                                 </div>
                             </motion.div>
 
-                            <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
+                            <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-6 md:mb-8 max-w-xl leading-relaxed">
                                 Your firm&apos;s business amplification system. A premium website, AI automation, and Google review engine — working together to process, vet, and nurture every inbound opportunity at light speed.
                             </p>
 
@@ -618,8 +618,8 @@ const Services: React.FC = () => {
             </section>
 
             {/* Closing CTA Section */}
-            <section className="px-4 md:px-6 mt-16 md:mt-32 text-center">
-                <div className="max-w-4xl mx-auto p-6 md:p-20 rounded-[1.5rem] md:rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden group">
+            <section className="px-3 md:px-6 mt-12 md:mt-32 text-center">
+                <div className="max-w-4xl mx-auto p-5 md:p-20 rounded-[1.25rem] md:rounded-[3rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none" />
 
                     <motion.div
