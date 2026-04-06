@@ -116,9 +116,9 @@ const platformCards = [
     },
     {
         icon: <Shield className="w-4 h-4 md:w-5 md:h-5" />,
-        title: 'Quantum-Resistant Security',
+        title: 'Bank-Level Security',
         description:
-            'Every file, message, and document is protected with AES-256 encryption — a standard classified as quantum-resistant. Your clients\' data stays secure today and against tomorrow\'s threats.',
+            'Every file, message, and document is protected with AES-256 encryption — the same standard trusted by banks and the U.S. government. Your clients\' data stays secure end-to-end.',
         color: 'violet',
     },
 ];

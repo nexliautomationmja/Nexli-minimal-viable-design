@@ -441,7 +441,7 @@ const RainmakerDemo: React.FC = () => {
                   >
                     <div className={`rounded-2xl rounded-bl-md p-4 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
                       <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-                        It starts with a beautifully designed website that captures the leads you&apos;re already getting. From there, AI automations respond, nurture, and push prospects further down the journey to book — automatically. Built into your site is a secure document portal with AES-256 quantum-resistant, military-grade encryption, so only you can see what your clients send. Finally, our Google Review Amplification Engine stacks 4- and 5-star reviews while routing 3 stars and below as private internal feedback — so your reputation only goes up. Explore each pillar below.
+                        It starts with a beautifully designed website that captures the leads you&apos;re already getting. From there, AI automations respond, nurture, and push prospects further down the journey to book — automatically. Built into your site is a secure document portal with AES-256 bank-level encryption, so only you can see what your clients send. Finally, our Google Review Amplification Engine stacks 4- and 5-star reviews while routing 3 stars and below as private internal feedback — so your reputation only goes up. Explore each pillar below.
                       </p>
                     </div>
                   </motion.div>
@@ -1553,8 +1553,8 @@ const RainmakerDemo: React.FC = () => {
                               <Lock size={24} className="text-cyan-500" style={{ filter: 'drop-shadow(0 0 8px rgba(6,182,212,0.5))' }} />
                             </div>
                           </div>
-                          <h4 className="text-sm font-bold mb-1 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">AES-256 Quantum-Resistant Encryption</h4>
-                          <p className={`text-[10px] ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Every document encrypted at rest and in transit — rated quantum-resistant</p>
+                          <h4 className="text-sm font-bold mb-1 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">AES-256 Bank-Level Encryption</h4>
+                          <p className={`text-[10px] ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Every document encrypted at rest and in transit — the standard trusted by banks</p>
                         </div>
 
                         {/* Compliance Badges */}
@@ -1595,7 +1595,7 @@ const RainmakerDemo: React.FC = () => {
                           <div className="space-y-2">
                             {[
                               { step: 'Client uploads document', color: 'bg-cyan-500', icon: Upload, glow: 'shadow-[0_0_10px_rgba(6,182,212,0.5)]', lineColor: 'from-cyan-500/50 to-emerald-500/50' },
-                              { step: 'Encrypted with AES-256 (quantum-resistant)', color: 'bg-emerald-500', icon: Lock, glow: 'shadow-[0_0_10px_rgba(16,185,129,0.5)]', lineColor: 'from-emerald-500/50 to-violet-500/50' },
+                              { step: 'Encrypted with AES-256 (bank-level)', color: 'bg-emerald-500', icon: Lock, glow: 'shadow-[0_0_10px_rgba(16,185,129,0.5)]', lineColor: 'from-emerald-500/50 to-violet-500/50' },
                               { step: 'Stored in firm-isolated vault', color: 'bg-violet-500', icon: FolderLock, glow: 'shadow-[0_0_10px_rgba(139,92,246,0.5)]', lineColor: 'from-violet-500/50 to-blue-500/50' },
                               { step: 'CPA notified instantly', color: 'bg-blue-500', icon: Bell, glow: 'shadow-[0_0_10px_rgba(59,130,246,0.5)]', lineColor: 'from-blue-500/50 to-amber-500/50' },
                               { step: 'CPA downloads securely', color: 'bg-amber-500', icon: Download, glow: 'shadow-[0_0_10px_rgba(245,158,11,0.5)]', lineColor: '' },
