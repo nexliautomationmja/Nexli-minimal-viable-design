@@ -1081,13 +1081,14 @@ const BookingConfirmed: React.FC = () => {
                 controls
                 playsInline
                 preload="metadata"
+                crossOrigin="anonymous"
               >
-                <source src="/rainmaker-demo.mp4" type="video/mp4" />
+                <source src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/justine-full-demo.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
 
               <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
-                Watch Marcel break down the Digital Rainmaker System — how the website, AI automation, and review engine work together to transform your firm&apos;s inbound pipeline.
+                Watch Justine walk you through the full Digital Rainmaker System demo — how the website, AI automation, and review engine work together to transform your firm&apos;s inbound pipeline.
               </p>
             </div>
           </div>
