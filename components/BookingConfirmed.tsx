@@ -1088,7 +1088,7 @@ const BookingConfirmed: React.FC = () => {
               </video>
 
               <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
-                Watch Justine walk you through the full Digital Rainmaker System demo — how the website, AI automation, and review engine work together to transform your firm&apos;s inbound pipeline.
+                Watch Justine break down the client dashboard — the heart of the Digital Rainmaker System and the command center your firm will run from every day.
               </p>
             </div>
           </div>
