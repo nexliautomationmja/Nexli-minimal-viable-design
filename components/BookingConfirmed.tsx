@@ -6,7 +6,8 @@ import {
   CheckCircle, ChevronDown, Play, Send, Calendar,
   HelpCircle, Mail, Loader2, Volume2, Pause,
   Mic, Square, Type, AudioLines, ArrowRight,
-  Sparkles, Video, ClipboardCheck, MessageSquare
+  Sparkles, Video, ClipboardCheck, MessageSquare,
+  Globe, LayoutDashboard, Zap, Shield, PenLine, Receipt, Star
 } from 'lucide-react';
 import Image from 'next/image';
 import { useTheme } from './ThemeProvider';
@@ -1090,6 +1091,114 @@ const BookingConfirmed: React.FC = () => {
               <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
                 Watch Justine break down the client dashboard — the heart of the Digital Rainmaker System and the command center your firm will run from every day.
               </p>
+            </div>
+          </div>
+
+          {/* ── What's Included — preempts "do I need a new website?" objection ── */}
+          <div className="max-w-5xl mx-auto mb-16 md:mb-20">
+            <p className="text-center text-[10px] md:text-xs font-black tracking-[0.2em] uppercase text-[var(--text-muted)] mb-3">
+              Everything Included
+            </p>
+            <h3 className="text-center text-xl md:text-3xl font-bold text-[var(--text-main)] mb-3 md:mb-4 tracking-tight">
+              The dashboard is just <span className="text-green-500">one piece</span>
+            </h3>
+            <p className="text-center text-sm md:text-base text-[var(--text-muted)] max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed">
+              Every Digital Rainmaker System is built on a foundation of tools that work together — no patching together third-party software, no keeping your old website on life support.
+            </p>
+
+            {/* Featured card: Brand-new website — the hero of the section */}
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+              className="relative mb-6 md:mb-8 rounded-2xl md:rounded-[2rem] overflow-hidden p-[2px] shadow-2xl shadow-green-500/25 isolate"
+            >
+              {/* Animated shimmering conic-gradient border */}
+              <span
+                className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-90 pointer-events-none"
+                style={{
+                  background: 'conic-gradient(from 0deg at 50% 50%, #22C55E, #10B981, #059669, #34D399, #22C55E)',
+                }}
+              />
+              <span
+                className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-2xl opacity-50 pointer-events-none"
+                style={{
+                  background: 'conic-gradient(from 0deg at 50% 50%, #22C55E, #10B981, #059669, #34D399, #22C55E)',
+                }}
+              />
+
+              {/* Inner card surface */}
+              <div className={`relative rounded-2xl md:rounded-[calc(2rem-2px)] p-6 md:p-12 overflow-hidden ${theme === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+                {/* Ambient green auras */}
+                <div className="absolute -top-24 -right-24 w-80 h-80 bg-green-500/25 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-emerald-500/15 blur-[120px] rounded-full pointer-events-none" />
+
+                {/* Foundation badge — top-center */}
+                <div className="relative z-10 flex justify-center mb-6 md:mb-8">
+                  <span className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-green-500/15 border border-green-500/40 text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase shadow-lg shadow-green-500/10 backdrop-blur-sm">
+                    <Sparkles size={12} className="animate-pulse" />
+                    The Foundation of the System
+                  </span>
+                </div>
+
+                <div className="relative z-10 flex flex-col items-center text-center gap-5 md:gap-6">
+                  {/* Hero icon with glow */}
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-green-500/40 blur-2xl rounded-full scale-150" />
+                    <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 border border-green-300/50 flex items-center justify-center shadow-2xl shadow-green-500/50">
+                      <Globe size={32} className="text-white md:hidden" strokeWidth={2.25} />
+                      <Globe size={40} className="text-white hidden md:block" strokeWidth={2.25} />
+                    </div>
+                  </div>
+
+                  <div className="max-w-2xl">
+                    <h4
+                      className="text-2xl md:text-4xl font-black text-[var(--text-main)] mb-3 md:mb-4 leading-[1.1] tracking-tight"
+                      style={{ fontFamily: "'Syne', sans-serif" }}
+                    >
+                      A Brand-New, <span className="text-green-500">Conversion-Built Website</span>
+                    </h4>
+                    <p className="text-sm md:text-lg text-[var(--text-muted)] leading-relaxed mb-5 md:mb-7">
+                      Yes — the system includes a fully redesigned website, built from the ground up. It&apos;s the foundation that lets the dashboard, AI automations, and lead capture work as one seamless experience. You won&apos;t need to keep your old site running.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
+                      {['SEO-optimized', 'Mobile-first', 'Conversion-built', 'Hosted & maintained'].map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/30 text-[10px] md:text-xs font-bold text-green-400"
+                        >
+                          <CheckCircle size={12} />
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Secondary cards grid — everything else in the system */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+              {[
+                { Icon: LayoutDashboard, title: 'Client Dashboard', desc: 'The command center you just watched Justine break down — run your entire firm from one place.' },
+                { Icon: Zap, title: 'AI Automations', desc: 'Missed-call recovery, lead nurturing, and 24/7 follow-up that never drops a prospect.' },
+                { Icon: Shield, title: 'Secure Document Portal', desc: 'Bank-level encrypted file sharing — send, receive, and store client documents safely.' },
+                { Icon: PenLine, title: 'E-Signature & Engagements', desc: 'Send, sign, and store engagement letters in minutes — no DocuSign subscription needed.' },
+                { Icon: Receipt, title: 'Invoicing & Payments', desc: 'Get paid faster with built-in invoicing and Stripe checkout, wired directly into the dashboard.' },
+                { Icon: Star, title: 'Smart Review Engine', desc: 'Automatically request and respond to client reviews to build your reputation on autopilot.' },
+              ].map(({ Icon, title, desc }) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] p-4 md:p-5 hover:border-green-500/30 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-3">
+                    <Icon size={18} className="text-green-400" />
+                  </div>
+                  <h4 className="text-sm md:text-base font-bold text-[var(--text-main)] mb-1.5">{title}</h4>
+                  <p className="text-xs md:text-sm text-[var(--text-muted)] leading-relaxed">{desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 
