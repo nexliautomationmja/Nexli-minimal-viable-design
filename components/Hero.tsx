@@ -90,8 +90,8 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-white mb-6 md:mb-8 text-[28px] sm:text-5xl md:text-5xl font-bold tracking-tight px-4 leading-[1.2] md:leading-[1.1]"
         >
-          Stop Losing the Clients <span className="text-blue-500">Already Looking</span><br className="hidden sm:block" />
-          for You.
+          The Top 5% of CPA Firms Don&rsquo;t Have Better Accountants.<br className="hidden sm:block" />
+          They Have <span className="text-blue-500">Better Systems</span>.
         </motion.h1>
 
         <motion.p
@@ -100,7 +100,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-white/80 text-sm md:text-xl font-medium max-w-2xl mb-10 md:mb-12 drop-shadow-lg px-4"
         >
-          Your firm is already attracting high-value prospects. The problem? Slow follow-ups, manual chaos, and broken systems are letting them slip through the cracks. We build the infrastructure that captures, vets, and nurtures every inbound opportunity — at light speed.
+          You&rsquo;re running your firm across 6 disconnected tools. The Digital Rainmaker System replaces them with one.
         </motion.p>
 
         {/* Trust Signals — No Contracts */}
