@@ -100,7 +100,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-white text-base md:text-2xl font-bold max-w-2xl mb-10 md:mb-12 drop-shadow-lg px-4"
         >
-          You&rsquo;re running your firm across <span className="text-blue-500">6 disconnected tools</span>. The Digital Rainmaker System replaces them <span className="text-blue-500">with one</span>.
+          You&rsquo;re running your firm across 6 disconnected tools. The Digital Rainmaker System replaces them with one.
         </motion.p>
 
         {/* Trust Signals — No Contracts */}
