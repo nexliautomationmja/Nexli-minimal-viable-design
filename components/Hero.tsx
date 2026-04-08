@@ -88,10 +88,10 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-          className="text-white mb-6 md:mb-8 text-[22px] sm:text-5xl md:text-5xl font-bold tracking-tight px-4 leading-[1.2] md:leading-[1.1]"
+          className="text-white mb-6 md:mb-8 text-[28px] sm:text-5xl md:text-5xl font-bold tracking-tight px-4 leading-[1.2] md:leading-[1.1]"
         >
-          You&rsquo;re running your firm across <span className="text-blue-500">6 disconnected tools</span>.<br className="hidden sm:block" />
-          The Digital Rainmaker System replaces them <span className="text-blue-500">with one</span>.
+          The <span className="text-blue-500">Top 5%</span> of CPA Firms Don&rsquo;t Have Better Accountants.<br className="hidden sm:block" />
+          They Have <span className="text-blue-500">Better Systems</span>.
         </motion.h1>
 
         <motion.p
@@ -100,7 +100,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="text-white text-base md:text-2xl font-bold max-w-2xl mb-10 md:mb-12 drop-shadow-lg px-4"
         >
-          The <span className="text-blue-500">Top 5%</span> of CPA Firms Don&rsquo;t Have Better Accountants. They Have <span className="text-blue-500">Better Systems</span>.
+          You&rsquo;re running your firm across <span className="text-blue-500">6 disconnected tools</span>. The Digital Rainmaker System replaces them <span className="text-blue-500">with one</span>.
         </motion.p>
 
         {/* Trust Signals — No Contracts */}
