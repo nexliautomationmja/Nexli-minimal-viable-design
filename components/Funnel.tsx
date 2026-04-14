@@ -8,7 +8,9 @@ import {
   Users, FileText, PenLine, MessageSquare, Upload,
   PhoneOff, CalendarCheck, CheckCircle,
   Droplets, Bot, LayoutDashboard,
+  Search, Wrench, Rocket, ChevronDown,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 
@@ -146,6 +148,9 @@ const HeroSection: React.FC = () => {
             Book Your Free Strategy Call
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
           </button>
+          <p className="mt-3 text-xs sm:text-sm text-[var(--text-muted)] font-medium">
+            No obligation. No pitch. Just a custom roadmap for your firm.
+          </p>
         </motion.div>
       </div>
     </section>
@@ -288,7 +293,7 @@ const SolutionSection: React.FC = () => {
       iconBorder: isDark ? 'rgba(59,130,246,0.3)' : 'rgba(59,130,246,0.4)',
       iconText: isDark ? '#60a5fa' : '#3b82f6',
       iconShadow: 'rgba(37, 99, 235, 0.3)',
-      description: 'Professional design that positions you as a premium firm — not just another CPA competing on price.',
+      description: 'A modern, conversion-focused website that makes high-value prospects choose YOU — not the competitor with 60+ reviews.',
     },
     {
       heroIcon: LayoutDashboard,
@@ -459,6 +464,402 @@ const SolutionSection: React.FC = () => {
             Book Your Free Strategy Call
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
           </button>
+          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6b7280' }}>
+            No obligation. No pitch. Just a custom roadmap for your firm.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 4: HOW IT WORKS — 3 Steps
+// ─────────────────────────────────────────────────────────────────────────────
+const HowItWorksSection: React.FC = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const steps = [
+    {
+      icon: Search,
+      number: '01',
+      title: 'Strategy Call',
+      color: isDark ? '#60a5fa' : '#3b82f6',
+      glow: 'rgba(59, 130, 246, 0.4)',
+      bg: isDark ? 'rgba(59,130,246,0.1)' : 'rgba(59,130,246,0.08)',
+      border: isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.15)',
+      description: 'We audit your current setup and map out a custom plan for your firm — tailored to your clients, your workflow, and your growth goals.',
+    },
+    {
+      icon: Wrench,
+      number: '02',
+      title: 'Build & Integrate',
+      color: isDark ? '#a78bfa' : '#8b5cf6',
+      glow: 'rgba(139, 92, 246, 0.4)',
+      bg: isDark ? 'rgba(139,92,246,0.1)' : 'rgba(139,92,246,0.08)',
+      border: isDark ? 'rgba(139,92,246,0.2)' : 'rgba(139,92,246,0.15)',
+      description: 'We design your site, build your dashboard, and set up your automations — all done-for-you. You review, we refine, and we launch.',
+    },
+    {
+      icon: Rocket,
+      number: '03',
+      title: 'Launch & Scale',
+      color: isDark ? '#34d399' : '#10b981',
+      glow: 'rgba(16, 185, 129, 0.4)',
+      bg: isDark ? 'rgba(16,185,129,0.1)' : 'rgba(16,185,129,0.08)',
+      border: isDark ? 'rgba(16,185,129,0.2)' : 'rgba(16,185,129,0.15)',
+      description: 'You go live with a modern system that runs 24/7. Your clients experience premium service. You focus on high-value work, not admin chaos.',
+    },
+  ];
+
+  return (
+    <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full blur-[100px] bg-blue-500/8 pointer-events-none" />
+
+      <div className="relative z-10 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-10 sm:mb-14 md:mb-20"
+        >
+          <h2
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-4 sm:mb-6"
+            style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
+          >
+            Here&apos;s How We{' '}
+            <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+              Make It Happen
+            </span>
+          </h2>
+          <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
+            No generic templates. No DIY confusion. Just a proven process that gets your firm modernized fast.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+          {steps.map((step, i) => {
+            const StepIcon = step.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                className="relative rounded-2xl sm:rounded-3xl border p-6 sm:p-8 text-center"
+                style={{ backgroundColor: step.bg, borderColor: step.border }}
+              >
+                <div
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border flex items-center justify-center mx-auto mb-4 sm:mb-5"
+                  style={{ backgroundColor: step.bg, borderColor: step.border }}
+                >
+                  <StepIcon size={28} style={{ color: step.color, filter: `drop-shadow(0 0 10px ${step.glow})` }} />
+                </div>
+                <span className="text-xs font-bold tracking-widest uppercase mb-2 block" style={{ color: step.color }}>
+                  Step {step.number}
+                </span>
+                <h3
+                  className="text-lg sm:text-xl font-bold mb-3"
+                  style={{ color: '#ffffff' }}
+                >
+                  {step.title}
+                </h3>
+                <p className="text-sm sm:text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {step.description}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 5A: FOUNDER AUTHORITY
+// ─────────────────────────────────────────────────────────────────────────────
+const FounderSection: React.FC = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  return (
+    <section className="relative py-14 sm:py-20 md:py-24 px-4" style={{ backgroundColor: isDark ? 'var(--bg-main)' : '#ffffff' }}>
+      <div className="relative z-10 max-w-3xl mx-auto text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Profile photo bubble */}
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-5 rounded-full overflow-hidden border-2" style={{ borderColor: isDark ? 'rgba(96,165,250,0.4)' : 'rgba(59,130,246,0.3)', boxShadow: `0 0 24px ${isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.15)'}` }}>
+            <Image
+              src="/Founder Photos/marcel-headshot.png"
+              alt="Marcel Allen, Founder of Nexli"
+              fill
+              className="object-cover object-top"
+              sizes="112px"
+            />
+          </div>
+          <p className="text-xs sm:text-sm font-semibold tracking-wide uppercase mb-6" style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6b7280' }}>
+            Marcel Allen — CEO &amp; Founder
+          </p>
+          <h2
+            className="text-xl sm:text-2xl md:text-3xl font-black leading-tight mb-6 sm:mb-8"
+            style={{ fontFamily: "'Syne', sans-serif", color: isDark ? '#ffffff' : '#1a2332' }}
+          >
+            Built by Someone Who&apos;s Seen{' '}
+            <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+              CPA Firm Chaos from the Inside
+            </span>
+          </h2>
+          <div className="space-y-5 text-left sm:text-center">
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed" style={{ color: isDark ? '#ffffff' : '#1a2332' }}>
+              I&apos;m Marcel. My wife has been in CPA firms for four years — she&apos;s now the COO of one — and I&apos;ve watched her live through every problem this system solves.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed" style={{ color: isDark ? '#ffffff' : '#1a2332' }}>
+              The 70-hour weeks during tax season. Clients who wait until the last minute to send documents. Email inboxes that turn into black holes. Talented CPAs losing deals to competitors with better websites and more Google reviews.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed" style={{ color: isDark ? '#ffffff' : '#1a2332' }}>
+              The expertise is there. The client work is world-class. But the systems? Broken or nonexistent.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed" style={{ color: isDark ? '#ffffff' : '#1a2332' }}>
+              So I built the Digital Rainmaker System — the infrastructure a modern CPA firm should have. A professional website. A client portal that eliminates email chaos. Automations that handle follow-ups. A review engine that builds your reputation while you focus on client work.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed font-semibold" style={{ color: isDark ? 'rgba(255,255,255,0.9)' : '#1a2332' }}>
+              No fluff. No complexity. Just the system that lets talented CPAs compete at the highest level — without burning out their team.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 5B: TIMELINE — What Happens When You Implement
+// ─────────────────────────────────────────────────────────────────────────────
+const TimelineSection: React.FC = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const milestones = [
+    {
+      label: 'Week 1-2',
+      title: 'Launch',
+      color: isDark ? '#60a5fa' : '#3b82f6',
+      dot: isDark ? 'rgba(59,130,246,0.3)' : 'rgba(59,130,246,0.2)',
+      description: 'Your site goes live. Clients start using the dashboard. You save 5-10 hours per week immediately.',
+    },
+    {
+      label: 'Month 1',
+      title: 'Automation Takes Over',
+      color: isDark ? '#a78bfa' : '#8b5cf6',
+      dot: isDark ? 'rgba(139,92,246,0.3)' : 'rgba(139,92,246,0.2)',
+      description: 'Follow-ups, onboarding, and reminders run automatically. You stop chasing clients — the system does it.',
+    },
+    {
+      label: 'Month 2+',
+      title: 'Reviews & Reputation Grow',
+      color: isDark ? '#fbbf24' : '#f59e0b',
+      dot: isDark ? 'rgba(251,191,36,0.3)' : 'rgba(251,191,36,0.2)',
+      description: 'Your Google review count climbs. High-value prospects see a modern firm and choose you over competitors.',
+    },
+    {
+      label: 'Month 3+',
+      title: 'You Scale',
+      color: isDark ? '#34d399' : '#10b981',
+      dot: isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.2)',
+      description: 'You\'re attracting premium clients, spending less time on admin, and focusing on growth. Your firm feels like a modern business, not a grind.',
+    },
+  ];
+
+  return (
+    <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full blur-[100px] bg-blue-500/8 pointer-events-none" />
+
+      <div className="relative z-10 max-w-3xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight text-center mb-10 sm:mb-14"
+          style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
+        >
+          Here&apos;s What Happens When You{' '}
+          <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+            Implement the System
+          </span>
+        </motion.h2>
+
+        <div className="relative pl-8 sm:pl-10">
+          {/* Vertical line */}
+          <div
+            className="absolute left-3 sm:left-4 top-2 bottom-2 w-px"
+            style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.15)' }}
+          />
+
+          <div className="space-y-8 sm:space-y-10">
+            {milestones.map((m, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                className="relative"
+              >
+                {/* Dot on the timeline */}
+                <div
+                  className="absolute -left-8 sm:-left-10 top-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 flex items-center justify-center"
+                  style={{ backgroundColor: m.dot, borderColor: m.color }}
+                >
+                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style={{ backgroundColor: m.color }} />
+                </div>
+
+                <span className="text-xs font-bold tracking-widest uppercase mb-1 block" style={{ color: m.color }}>
+                  {m.label}
+                </span>
+                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2" style={{ color: '#ffffff' }}>
+                  {m.title}
+                </h3>
+                <p className="text-sm sm:text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {m.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 6: FAQ
+// ─────────────────────────────────────────────────────────────────────────────
+const FAQSection: React.FC = () => {
+  const { theme } = useTheme();
+  const { openBooking } = useBooking();
+  const isDark = theme === 'dark';
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const faqs = [
+    {
+      q: 'How long does the setup process take?',
+      a: 'Most firms go live within 2-4 weeks, depending on customization needs.',
+    },
+    {
+      q: 'Do I need to be tech-savvy to use the system?',
+      a: 'Nope. We handle the build and setup. You just use it. If you can send an email, you can use the dashboard.',
+    },
+    {
+      q: 'What if I already have a website?',
+      a: 'No problem. We can rebuild or integrate the dashboard into your existing site — whatever makes sense for your firm.',
+    },
+    {
+      q: 'Is this only for large firms?',
+      a: 'Not at all. Whether you\'re a solo CPA or a 20-person firm, the system scales to fit your needs.',
+    },
+    {
+      q: 'What happens on the strategy call?',
+      a: 'We\'ll audit your current setup, identify gaps, and map out a custom plan. No hard sell — just a clear roadmap.',
+    },
+  ];
+
+  return (
+    <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
+      <div className="relative z-10 max-w-3xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight text-center mb-8 sm:mb-12"
+          style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
+        >
+          Frequently Asked{' '}
+          <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            Questions
+          </span>
+        </motion.h2>
+
+        <div className="space-y-3 sm:space-y-4">
+          {faqs.map((faq, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                className="w-full text-left rounded-xl sm:rounded-2xl border px-5 py-4 sm:px-6 sm:py-5 flex items-center justify-between gap-4 cursor-pointer transition-colors"
+                style={{
+                  backgroundColor: openIndex === i
+                    ? 'rgba(59,130,246,0.1)'
+                    : 'rgba(255,255,255,0.03)',
+                  borderColor: openIndex === i
+                    ? 'rgba(59,130,246,0.3)'
+                    : 'rgba(255,255,255,0.08)',
+                }}
+              >
+                <span className="text-sm sm:text-base font-semibold" style={{ color: '#ffffff' }}>
+                  {faq.q}
+                </span>
+                <ChevronDown
+                  size={20}
+                  style={{
+                    color: 'rgba(255,255,255,0.5)',
+                    transform: openIndex === i ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease',
+                    flexShrink: 0,
+                  }}
+                />
+              </button>
+              <AnimatePresence>
+                {openIndex === i && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="px-5 sm:px-6 pt-3 pb-1 text-sm sm:text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      {faq.a}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Final CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mt-10 sm:mt-14"
+        >
+          <button
+            onClick={() => openBooking()}
+            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
+          >
+            Book Your Free Strategy Call
+            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            No obligation. No pitch. Just a custom roadmap for your firm.
+          </p>
         </motion.div>
       </div>
     </section>
@@ -474,6 +875,10 @@ const Funnel: React.FC = () => {
       <HeroSection />
       <ProblemSection />
       <SolutionSection />
+      <HowItWorksSection />
+      <FounderSection />
+      <TimelineSection />
+      <FAQSection />
     </div>
   );
 };
