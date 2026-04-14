@@ -649,24 +649,19 @@ export default function QualificationProvider({ children }: { children: React.Re
 
     const fallbackUrl = `https://cal.com/${calLink}`;
 
-    // Retry up to 5 times (50ms apart) in case Cal embed is still initializing
-    let attempts = 0;
-    const tryOpen = () => {
-      const Cal = (window as any).Cal;
-      if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-        Cal.ns["nexli-demo"]("modal", {
-          calLink,
-          config: { "layout": "month_view", "theme": theme },
-        });
-      } else if (attempts < 5) {
-        attempts++;
-        setTimeout(tryOpen, 100);
-      } else {
-        // Fallback: open Cal.com in a new tab
-        window.open(fallbackUrl, "_blank");
-      }
-    };
-    tryOpen();
+    const Cal = (window as any).Cal;
+    console.log('[Nexli] openCalPopup called', { Cal: !!Cal, ns: Cal?.ns, nexliDemo: Cal?.ns?.["nexli-demo"], calLink });
+
+    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
+      console.log('[Nexli] Calling Cal.ns["nexli-demo"]("modal", ...)');
+      Cal.ns["nexli-demo"]("modal", {
+        calLink,
+        config: { "layout": "month_view", "theme": theme },
+      });
+    } else {
+      console.log('[Nexli] Cal embed not ready, opening fallback URL');
+      window.location.href = fallbackUrl;
+    }
   }, [theme]);
 
   const openBooking = useCallback(() => {
