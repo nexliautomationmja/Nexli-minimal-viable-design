@@ -677,6 +677,13 @@ export default function QualificationProvider({ children }: { children: React.Re
     setQualificationStatus(status);
     answersRef.current = answers;
     if (status === 'qualified') {
+      // Fire Meta Pixel Lead event — qualified prospect
+      if (typeof (window as any).fbq === 'function') {
+        (window as any).fbq('track', 'Lead', {
+          content_name: 'Qualified CPA Firm',
+          content_category: 'Qualification',
+        });
+      }
       setIsOpen(false);
       setTimeout(() => {
         openCalPopup();

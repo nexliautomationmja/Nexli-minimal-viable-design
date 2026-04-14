@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
               "media-src 'self' blob: data: https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev",
-              "connect-src 'self' https://openrouter.ai https://api.elevenlabs.io https://www.google-analytics.com https://www.facebook.com https://services.leadconnectorhq.com https://app.cal.com https://portal.nexli.net",
+              "connect-src 'self' https://openrouter.ai https://api.elevenlabs.io https://www.google-analytics.com https://www.facebook.com https://connect.facebook.net https://services.leadconnectorhq.com https://app.cal.com https://portal.nexli.net",
               "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://app.cal.com",
               "object-src 'none'",
               "base-uri 'self'",

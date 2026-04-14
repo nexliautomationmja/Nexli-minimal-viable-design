@@ -870,6 +870,15 @@ const FAQSection: React.FC = () => {
 // MAIN FUNNEL COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 const Funnel: React.FC = () => {
+  useEffect(() => {
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'ViewContent', {
+        content_name: 'Funnel Landing Page',
+        content_category: 'Landing Page',
+      });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen">
       <HeroSection />
