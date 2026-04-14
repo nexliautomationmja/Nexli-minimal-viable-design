@@ -641,21 +641,32 @@ export default function QualificationProvider({ children }: { children: React.Re
   }, []);
 
   const openCalPopup = useCallback(() => {
-    const Cal = (window as any).Cal;
     const savedAnswers = answersRef.current;
     const notes = savedAnswers ? formatAnswersAsNotes(savedAnswers) : undefined;
     const calLink = notes
       ? `nexli-automation-6fgn8j/nexli-demo?notes=${encodeURIComponent(notes)}`
       : 'nexli-automation-6fgn8j/nexli-demo';
 
-    if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
-      Cal.ns["nexli-demo"]("modal", {
-        calLink,
-        config: { "layout": "month_view", "theme": theme },
-      });
-    } else {
-      window.open(`https://cal.com/${calLink}`, "_blank");
-    }
+    const fallbackUrl = `https://cal.com/${calLink}`;
+
+    // Retry up to 5 times (50ms apart) in case Cal embed is still initializing
+    let attempts = 0;
+    const tryOpen = () => {
+      const Cal = (window as any).Cal;
+      if (Cal && Cal.ns && Cal.ns["nexli-demo"]) {
+        Cal.ns["nexli-demo"]("modal", {
+          calLink,
+          config: { "layout": "month_view", "theme": theme },
+        });
+      } else if (attempts < 5) {
+        attempts++;
+        setTimeout(tryOpen, 100);
+      } else {
+        // Fallback: open Cal.com in a new tab
+        window.open(fallbackUrl, "_blank");
+      }
+    };
+    tryOpen();
   }, [theme]);
 
   const openBooking = useCallback(() => {
@@ -674,7 +685,7 @@ export default function QualificationProvider({ children }: { children: React.Re
       setIsOpen(false);
       setTimeout(() => {
         openCalPopup();
-      }, 300);
+      }, 500);
     }
   }, [openCalPopup]);
 
