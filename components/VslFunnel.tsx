@@ -194,6 +194,59 @@ const HeroSection: React.FC = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// TRUST BAR — Enterprise-grade authority signals
+// ─────────────────────────────────────────────────────────────────────────────
+const TrustBar: React.FC = () => (
+  <section className="relative py-10 sm:py-14 px-4">
+    <div className="max-w-4xl mx-auto text-center">
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-6 sm:mb-8"
+        style={{ color: 'rgba(255,255,255,0.35)' }}
+      >
+        Built on enterprise-grade infrastructure trusted by:
+      </motion.p>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="flex items-center justify-center gap-8 sm:gap-12 md:gap-16 flex-wrap"
+        style={{ opacity: 0.35 }}
+      >
+        {/* Google */}
+        <svg className="h-6 sm:h-7" viewBox="0 0 272 92" fill="currentColor" style={{ color: 'rgba(255,255,255,0.9)' }}>
+          <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
+          <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
+          <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" />
+          <path d="M225 3v65h-9.5V3h9.5z" />
+          <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" />
+          <path d="M35.29 41.19V32H67.4c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.7.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.09-.01z" />
+        </svg>
+        {/* Stripe */}
+        <svg className="h-6 sm:h-7" viewBox="0 0 60 25" fill="currentColor" style={{ color: 'rgba(255,255,255,0.9)' }}>
+          <path d="M5 10.2c0-.7.6-1 1.5-1 1.3 0 3 .4 4.3 1.1V6.7c-1.5-.6-2.9-.8-4.3-.8C3.2 5.9.8 7.8.8 10.4c0 4.1 5.6 3.4 5.6 5.2 0 .8-.7 1.1-1.7 1.1-1.5 0-3.4-.6-4.9-1.4v3.6c1.7.7 3.3 1 4.9 1 3.4 0 5.7-1.7 5.7-4.4 0-4.4-5.7-3.6-5.4-5.3zM14.4 2.7l-4 .9v3.8h-1.7v3.3h1.7v5c0 3.5 1.7 4.2 4 4.2 1.2 0 2.1-.3 2.1-.3v-3.2s-.5.1-1 .1c-1.1 0-1.5-.5-1.5-1.5v-4.4h2.5V7.4h-2.5l.4-4.7zM23.2 5.6l-.3 1.7h-2v3.3h4.3v9.3h4.1V10.6h2.6V7.3h-2.6V6.2c0-1 .4-1.5 1.4-1.5.5 0 1 .1 1 .1V1.5s-.7-.2-1.7-.2c-3 0-4.8 1.4-4.8 4.3zM33 7.3h4.1v12.6H33V7.3zM33 2.5h4.1v3.3H33V2.5zM39.2 13.7c0-3.9 2.8-6.5 5.8-6.5 1.8 0 3 .8 3.7 1.6l-.2-1.4h3.9v12.4h-3.9l.2-1.4c-.8.9-2.1 1.7-3.8 1.7-3 0-5.7-2.7-5.7-6.4zm9.7 0c0-2.1-1.3-3.5-3-3.5s-3 1.4-3 3.5 1.3 3.5 3 3.5 3-1.4 3-3.5zM60 19.9h-4.1V14c0-2.2-.8-3-2.1-3-1.4 0-2.4 1-2.4 2.9v6h-4.1V7.3h3.9l-.2 1.5c.9-1 2.2-1.7 3.8-1.7 2.9 0 5.2 1.8 5.2 5.7v7.1z" />
+        </svg>
+        {/* GoHighLevel (text mark) */}
+        <span
+          className="text-sm sm:text-base font-black tracking-tight"
+          style={{ color: 'rgba(255,255,255,0.9)', fontFamily: "'Syne', sans-serif" }}
+        >
+          GoHighLevel
+        </span>
+        {/* AWS */}
+        <svg className="h-6 sm:h-7" viewBox="0 0 80 48" fill="currentColor" style={{ color: 'rgba(255,255,255,0.9)' }}>
+          <path d="M22.7 20.3c0 .7.1 1.3.2 1.8.2.5.4 1 .7 1.6.1.2.1.4.1.5 0 .2-.1.4-.4.6l-1.3.9c-.2.1-.3.2-.5.2-.2 0-.4-.1-.6-.3-.3-.3-.5-.6-.7-1-.2-.4-.4-.8-.6-1.3-1.5 1.7-3.3 2.6-5.5 2.6-1.6 0-2.8-.5-3.8-1.4-1-.9-1.5-2.2-1.5-3.7 0-1.6.6-3 1.7-3.9 1.2-1 2.7-1.5 4.7-1.5.7 0 1.3.1 2 .1.7.1 1.4.2 2.2.4v-1.4c0-1.5-.3-2.5-1-3.2-.6-.7-1.8-1-3.3-1-.7 0-1.5.1-2.2.3-.8.2-1.5.4-2.2.8-.3.2-.6.3-.7.3-.2.1-.3.1-.4.1-.3 0-.5-.2-.5-.7v-1c0-.4.1-.6.2-.8.1-.1.4-.3.8-.5 1-.5 2.2-.9 3.4-1.2 1.2-.3 2.5-.5 3.9-.5 3 0 5.2.7 6.5 2 1.3 1.4 2 3.4 2 6.1v8h.1zm-7.6 2.8c.6 0 1.3-.1 2-.3.7-.2 1.3-.7 1.9-1.3.3-.4.6-.9.7-1.4.1-.6.2-1.2.2-2v-1c-.6-.1-1.2-.2-1.8-.3-.6-.1-1.2-.1-1.8-.1-1.3 0-2.2.2-2.8.7-.6.5-1 1.2-1 2.2 0 .9.2 1.6.7 2.1.5.4 1.2.4 1.9.4zm15.1 2c-.4 0-.7-.1-.8-.2-.2-.2-.3-.5-.5-1l-5.2-17.1c-.2-.5-.2-.9-.2-1 0-.4.2-.6.6-.6h2c.4 0 .7.1.9.2.2.2.3.5.4 1l3.7 14.6 3.5-14.6c.1-.5.3-.8.4-1 .2-.2.5-.2.9-.2h1.7c.4 0 .7.1.9.2.2.2.3.5.4 1l3.5 14.8L45 6.7c.1-.5.3-.8.5-1 .2-.2.5-.2.8-.2h1.9c.4 0 .6.2.6.6 0 .1 0 .3-.1.4 0 .2-.1.4-.2.6l-5.4 17.1c-.1.5-.3.8-.5 1-.2.2-.5.2-.8.2h-1.8c-.4 0-.7-.1-.9-.2-.2-.2-.3-.5-.4-1l-3.4-14.2-3.4 14.2c-.1.5-.3.8-.4 1-.2.2-.5.2-.9.2h-1.8v.1zM58.8 25.5c-1 0-2-.1-2.9-.4-.9-.3-1.7-.6-2.2-1-.3-.2-.5-.4-.6-.6-.1-.2-.1-.4-.1-.5V22c0-.5.2-.7.5-.7.1 0 .3 0 .4.1.1.1.3.2.5.3.7.3 1.5.6 2.3.8.8.2 1.6.3 2.4.3 1.3 0 2.3-.2 3-.7.7-.5 1.1-1.1 1.1-2 0-.6-.2-1.1-.6-1.5-.4-.4-1.2-.8-2.3-1.1l-3.3-1c-1.7-.5-2.9-1.3-3.7-2.3-.8-1-1.2-2.1-1.2-3.3 0-1 .2-1.8.6-2.6.4-.7 1-1.4 1.7-1.9.7-.5 1.5-.9 2.4-1.2.9-.3 1.9-.4 2.9-.4.5 0 1 0 1.6.1.5.1 1 .2 1.5.3.5.1.9.3 1.3.4.4.2.7.3 1 .5.3.2.5.4.6.6.1.2.2.4.2.7v1c0 .5-.2.7-.5.7-.2 0-.5-.1-.9-.3-1.5-.7-3.1-1-4.8-1-1.1 0-2 .2-2.7.6-.7.4-1 1-1 1.8 0 .6.2 1.1.7 1.5.5.4 1.3.8 2.5 1.2l3.2 1c1.6.5 2.8 1.2 3.6 2.2.7.9 1.1 2 1.1 3.3 0 1-.2 1.9-.6 2.7-.4.8-1 1.5-1.8 2-.8.6-1.6 1-2.6 1.3-1.1.2-2.1.4-3.3.4z" />
+        </svg>
+      </motion.div>
+    </div>
+  </section>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 // SECTION 2: THE TRANSFORMATION — 4 Business Outcomes
 // ─────────────────────────────────────────────────────────────────────────────
 const TransformationSection: React.FC = () => {
@@ -559,7 +612,7 @@ const ProjectionSection: React.FC = () => {
             </span>
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Based on results from firms we&apos;ve partnered with, here&apos;s the measurable impact you can expect within your first quarter.
+            Based on how the system is engineered to work, here is the measurable impact a typical established CPA firm can expect within their first quarter.
           </p>
         </motion.div>
 
@@ -637,7 +690,80 @@ const ProjectionSection: React.FC = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 6: FAQ — Adapted for Premium Positioning
+// SECTION 6: FOUNDER STORY — Origin + Trust
+// ─────────────────────────────────────────────────────────────────────────────
+const FounderStorySection: React.FC = () => (
+  <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] rounded-full blur-[100px] bg-blue-500/6 pointer-events-none" />
+
+    <div className="relative z-10 max-w-3xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-8 sm:mb-10"
+      >
+        {/* Headshot */}
+        <div className="mx-auto mb-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2" style={{ borderColor: 'rgba(59,130,246,0.3)' }}>
+          <img
+            src="/Founder Photos/marcel-headshot.png"
+            alt="Marcel Allen, CEO & Founder of Nexli"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <h2
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3"
+          style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
+        >
+          Built by Someone Who&apos;s Seen CPA Firm Chaos{' '}
+          <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            from the Inside
+          </span>
+        </h2>
+        <p className="text-xs sm:text-sm font-semibold tracking-[0.15em] uppercase" style={{ color: '#60a5fa' }}>
+          Marcel Allen — CEO &amp; Founder
+        </p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className="space-y-5 text-sm sm:text-base md:text-lg leading-relaxed"
+        style={{ color: 'rgba(255,255,255,0.75)' }}
+      >
+        <p>
+          I&apos;m Marcel. My wife has been in CPA firms for four years — she&apos;s now the COO of
+          one — and I&apos;ve watched her live through every problem this system solves.
+        </p>
+        <p>
+          The 70-hour weeks during tax season. Clients who wait until the last minute to send
+          documents. Email inboxes that turn into black holes. Talented CPAs losing deals to
+          competitors with better websites and more Google reviews.
+        </p>
+        <p>
+          The expertise is there. The client work is world-class. But the systems? Broken or
+          nonexistent.
+        </p>
+        <p>
+          So I built the <span className="font-semibold" style={{ color: '#ffffff' }}>Digital Rainmaker System</span> —
+          the infrastructure a modern CPA firm should have. A professional website. A client portal
+          that eliminates email chaos. Automations that handle follow-ups. A review engine that
+          builds your reputation while you focus on client work.
+        </p>
+        <p style={{ color: 'rgba(255,255,255,0.9)' }} className="font-medium">
+          No fluff. No complexity. Just the system that lets talented CPAs compete at the highest
+          level — without burning out their team.
+        </p>
+      </motion.div>
+    </div>
+  </section>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 7: FAQ — Adapted for Premium Positioning
 // ─────────────────────────────────────────────────────────────────────────────
 const FAQSection: React.FC = () => {
   const { openBooking } = useBooking();
@@ -953,6 +1079,59 @@ const ExitIntentPopup: React.FC = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// STICKY CTA BAR — Appears after scrolling past hero
+// ────────────��────────────────────────────────────────────────────────────────
+const StickyCTA: React.FC = () => {
+  const { openBooking } = useBooking();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show once user scrolls past ~600px (roughly past the hero)
+      setVisible(window.scrollY > 600);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ y: 80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 80, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed bottom-0 left-0 right-0 z-[100] border-t"
+          style={{
+            backgroundColor: 'rgba(10,15,28,0.85)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            borderColor: 'rgba(255,255,255,0.08)',
+          }}
+        >
+          <div className="max-w-5xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-4">
+            <p
+              className="hidden sm:block text-sm md:text-base font-semibold"
+              style={{ color: 'rgba(255,255,255,0.7)' }}
+            >
+              Ready to modernize your firm?
+            </p>
+            <button
+              onClick={() => openBooking()}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer"
+            >
+              See If Your Firm Qualifies
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN VSL FUNNEL COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 const VslFunnel: React.FC = () => {
@@ -966,14 +1145,17 @@ const VslFunnel: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-14 sm:pb-16">
       <StaticLogo />
       <HeroSection />
+      <TrustBar />
       <TransformationSection />
       <CostOfInactionSection />
       <ROISection />
       <ProjectionSection />
+      <FounderStorySection />
       <FAQSection />
+      <StickyCTA />
       <ExitIntentPopup />
     </div>
   );
