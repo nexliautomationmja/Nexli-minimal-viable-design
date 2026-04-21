@@ -1,50 +1,20 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle, XCircle, Building2, Users, Target, DollarSign, Briefcase, Star, Crown, X } from 'lucide-react';
+import { ArrowRight, CheckCircle, XCircle, Building2, Target, DollarSign, Crown, X } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 
 // ---------------------------------------------------------------------------
-// Qualification types & data
+// Qualification types & data — Optimized 4-step "High-Signal" funnel
 // ---------------------------------------------------------------------------
 type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
 
 interface QualificationAnswers {
   usBased: boolean | null;
-  hasClients: boolean | null;
   decisionRole: string | null;
   annualRevenue: string | null;
-  firmServices: string[] | null;
-  hasGoogleReviews: boolean | null;
   goal: string | null;
 }
-
-const DISQUALIFYING_GOAL = 'lead-generation';
-
-const qualificationQuestions = [
-  {
-    key: 'usBased' as const,
-    icon: <Building2 className="text-blue-400" size={20} />,
-    question: 'Is your firm based in the United States?',
-    description: 'We currently serve US-based CPA firms and accounting practices.',
-  },
-  {
-    key: 'hasClients' as const,
-    icon: <Users className="text-blue-400" size={20} />,
-    question: 'Do you currently have an established client base?',
-    description: 'Our systems are built to amplify firms that are already serving clients.',
-  },
-];
-
-const annualRevenueOptions = [
-  { value: 'under-250k', label: 'Under $250K per year' },
-  { value: '250k-500k', label: '$250K – $500K per year' },
-  { value: '500k-1m', label: '$500K – $1M per year' },
-  { value: '1m-5m', label: '$1M – $5M per year' },
-  { value: '5m+', label: '$5M+ per year' },
-];
-
-const DISQUALIFYING_REVENUE = 'under-250k';
 
 const decisionRoleOptions = [
   { value: 'sole-owner', label: "I'm the sole owner — I make all the decisions" },
@@ -55,19 +25,20 @@ const decisionRoleOptions = [
 
 const DISQUALIFYING_ROLE = 'not-decision-maker';
 
-const firmServiceOptions = [
-  { value: 'tax-prep', label: 'Tax preparation & tax planning' },
-  { value: 'advisory', label: 'Advisory & consulting services' },
-  { value: 'financial-services', label: 'Financial services (audits, assurance, compilations)' },
-  { value: 'bookkeeping-only', label: 'Bookkeeping & payroll services' },
+const annualRevenueOptions = [
+  { value: 'under-250k', label: 'Under $250K per year' },
+  { value: '250k-500k', label: '$250K – $500K per year' },
+  { value: '500k-1m', label: '$500K – $1M per year' },
+  { value: '1m-5m', label: '$1M – $5M per year' },
+  { value: '5m+', label: '$5M+ per year' },
 ];
 
-const DISQUALIFYING_SERVICE = 'bookkeeping-only';
+const DISQUALIFYING_GOAL = 'generate-leads';
 
 const goalOptions = [
-  { value: 'process-nurture', label: 'Better systems to process & nurture inbound inquiries' },
   { value: 'streamline-ops', label: 'Streamline operations and reduce manual work' },
-  { value: 'digital-presence', label: "Amplify our firm's digital presence & client experience" },
+  { value: 'more-reviews', label: 'Get more Google reviews and improve our reputation' },
+  { value: 'better-website', label: 'Upgrade our website and digital presence' },
   { value: DISQUALIFYING_GOAL, label: 'We need help generating new leads and finding clients' },
 ];
 
@@ -75,19 +46,13 @@ const goalOptions = [
 function formatAnswersAsNotes(answers: QualificationAnswers): string {
   const roleLabel = decisionRoleOptions.find((o) => o.value === answers.decisionRole)?.label ?? answers.decisionRole;
   const revenueLabel = annualRevenueOptions.find((o) => o.value === answers.annualRevenue)?.label ?? answers.annualRevenue;
-  const servicesLabel = answers.firmServices
-    ?.map((s) => firmServiceOptions.find((o) => o.value === s)?.label ?? s)
-    .join(', ');
   const goalLabel = goalOptions.find((o) => o.value === answers.goal)?.label ?? answers.goal;
 
   const lines = [
     '--- Prequalification Answers ---',
     `US Based: ${answers.usBased ? 'Yes' : 'No'}`,
-    `Has Established Clients: ${answers.hasClients ? 'Yes' : 'No'}`,
     `Decision Role: ${roleLabel ?? 'N/A'}`,
     `Annual Revenue: ${revenueLabel ?? 'N/A'}`,
-    `Firm Services: ${servicesLabel ?? 'N/A'}`,
-    `Google Reviews: ${answers.hasGoogleReviews === null ? 'N/A' : answers.hasGoogleReviews ? 'Yes' : 'No'}`,
     `Primary Goal: ${goalLabel ?? 'N/A'}`,
   ];
   return lines.join('\n');
@@ -104,11 +69,8 @@ async function sendQualificationToGHL(answers: QualificationAnswers, qualified: 
         source: 'qualification-gate',
         qualified,
         us_based: answers.usBased,
-        has_clients: answers.hasClients,
         decision_role: answers.decisionRole,
         annual_revenue: answers.annualRevenue,
-        firm_services: answers.firmServices?.join(', ') ?? '',
-        has_google_reviews: answers.hasGoogleReviews,
         goal: answers.goal,
         submitted_at: new Date().toISOString(),
       }),
@@ -141,26 +103,24 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<QualificationAnswers>({
     usBased: null,
-    hasClients: null,
     decisionRole: null,
     annualRevenue: null,
-    firmServices: null,
-    hasGoogleReviews: null,
     goal: null,
   });
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  const handleYesNo = (key: 'usBased' | 'hasClients', value: boolean) => {
-    const updated = { ...answers, [key]: value };
+  // Step 0: Geography — hard disqualifier
+  const handleUsBased = (value: boolean) => {
+    const updated = { ...answers, usBased: value };
     setAnswers(updated);
     if (!value) {
       sendQualificationToGHL(updated, false);
       onResult('not-qualified', updated);
-      return;
+    } else {
+      setStep(1);
     }
-    setStep((s) => s + 1);
   };
 
+  // Step 1: Authority — disqualifies non-decision-makers
   const handleDecisionRole = (value: string) => {
     const updated = { ...answers, decisionRole: value };
     setAnswers(updated);
@@ -168,45 +128,18 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       sendQualificationToGHL(updated, false);
       onResult('not-qualified', updated);
     } else {
-      setStep(3);
+      setStep(2);
     }
   };
 
+  // Step 2: Budget — all pass through (under-250k is noted but not disqualifying)
   const handleAnnualRevenue = (value: string) => {
     const updated = { ...answers, annualRevenue: value };
     setAnswers(updated);
-    if (value === DISQUALIFYING_REVENUE) {
-      sendQualificationToGHL(updated, false);
-      onResult('not-qualified', updated);
-    } else {
-      setStep(4);
-    }
+    setStep(3);
   };
 
-  const toggleService = (value: string) => {
-    setSelectedServices((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-    );
-  };
-
-  const handleFirmServicesContinue = () => {
-    if (selectedServices.length === 0) return;
-    const updated = { ...answers, firmServices: selectedServices };
-    setAnswers(updated);
-    if (selectedServices.length === 1 && selectedServices[0] === DISQUALIFYING_SERVICE) {
-      sendQualificationToGHL(updated, false);
-      onResult('not-qualified', updated);
-    } else {
-      setStep(5);
-    }
-  };
-
-  const handleGoogleReviews = (value: boolean) => {
-    const updated = { ...answers, hasGoogleReviews: value };
-    setAnswers(updated);
-    setStep(6);
-  };
-
+  // Step 3: Intent — disqualifies lead-generation seekers
   const handleGoal = (value: string) => {
     const updated = { ...answers, goal: value };
     setAnswers(updated);
@@ -219,7 +152,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     }
   };
 
-  const totalSteps = 7;
+  const totalSteps = 4;
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
@@ -248,10 +181,10 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       </div>
 
       <AnimatePresence mode="wait">
-        {/* Steps 0 & 1: Yes/No */}
-        {step < 2 && (
+        {/* Step 0: US-based (hard disqualifier) */}
+        {step === 0 && (
           <motion.div
-            key={`q-${step}`}
+            key="q-us"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
@@ -260,27 +193,27 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           >
             <div className="flex items-start gap-3 md:gap-4">
               <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                {qualificationQuestions[step].icon}
+                <Building2 className="text-blue-400" size={20} />
               </div>
               <div>
                 <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  {qualificationQuestions[step].question}
+                  Is your firm based in the United States?
                 </p>
                 <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  {qualificationQuestions[step].description}
+                  We currently serve US-based CPA firms and accounting practices.
                 </p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <button
-                onClick={() => handleYesNo(qualificationQuestions[step].key, true)}
+                onClick={() => handleUsBased(true)}
                 className="flex items-center justify-center gap-2 p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-bold text-sm md:text-base hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.98] transition-all cursor-pointer"
               >
                 <CheckCircle size={16} className="text-green-500" />
                 Yes
               </button>
               <button
-                onClick={() => handleYesNo(qualificationQuestions[step].key, false)}
+                onClick={() => handleUsBased(false)}
                 className="flex items-center justify-center gap-2 p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-bold text-sm md:text-base hover:border-red-500/40 hover:bg-red-500/5 active:scale-[0.98] transition-all cursor-pointer"
               >
                 <XCircle size={16} className="text-red-400" />
@@ -290,8 +223,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 2: Decision role */}
-        {step === 2 && (
+        {/* Step 1: Decision role (disqualifies non-decision-makers) */}
+        {step === 1 && (
           <motion.div
             key="q-decision"
             initial={{ opacity: 0, x: 30 }}
@@ -327,8 +260,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 3: Annual revenue */}
-        {step === 3 && (
+        {/* Step 2: Annual revenue (all pass through — informational) */}
+        {step === 2 && (
           <motion.div
             key="q-revenue"
             initial={{ opacity: 0, x: 30 }}
@@ -346,7 +279,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
                   What is your firm&apos;s approximate annual revenue?
                 </p>
                 <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  This helps us understand if our system is the right investment for your firm right now.
+                  This helps us tailor the strategy session to your firm&apos;s size and goals.
                 </p>
               </div>
             </div>
@@ -364,113 +297,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 4: Firm services (multi-select) */}
-        {step === 4 && (
-          <motion.div
-            key="q-services"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            <div className="flex items-start gap-3 md:gap-4 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Briefcase className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  What are your firm&apos;s primary services?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  Select all that apply. Our system is built around document-heavy practices that collect forms, tax records, and financial documents from clients.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-              {firmServiceOptions.map((opt) => {
-                const isSelected = selectedServices.includes(opt.value);
-                return (
-                  <button
-                    key={opt.value}
-                    onClick={() => toggleService(opt.value)}
-                    className={`w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border font-medium text-xs md:text-sm active:scale-[0.99] transition-all cursor-pointer flex items-center gap-3 ${
-                      isSelected
-                        ? 'border-blue-500/50 bg-blue-500/10 text-[var(--text-main)]'
-                        : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] hover:border-blue-500/40 hover:bg-blue-500/5'
-                    }`}
-                  >
-                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                      isSelected ? 'border-blue-500 bg-blue-500' : 'border-[var(--text-muted)]/30'
-                    }`}>
-                      {isSelected && (
-                        <CheckCircle size={14} className="text-white" />
-                      )}
-                    </div>
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-            <button
-              onClick={handleFirmServicesContinue}
-              disabled={selectedServices.length === 0}
-              className={`w-full flex items-center justify-center gap-2 p-3 md:p-4 rounded-xl md:rounded-2xl text-sm font-bold transition-all ${
-                selectedServices.length > 0
-                  ? 'bg-blue-600 text-white hover:bg-blue-500 active:scale-[0.98] shadow-lg shadow-blue-600/20 cursor-pointer'
-                  : 'bg-[var(--glass-bg)] text-[var(--text-muted)] border border-[var(--glass-border)] cursor-not-allowed opacity-50'
-              }`}
-            >
-              Continue
-              <ArrowRight size={16} />
-            </button>
-          </motion.div>
-        )}
-
-        {/* Step 5: Google Reviews */}
-        {step === 5 && (
-          <motion.div
-            key="q-reviews"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-6"
-          >
-            <div className="flex items-start gap-3 md:gap-4">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Star className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  Does your firm currently have a Google Business Profile with reviews?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  Google reviews are a key part of how high-value clients evaluate firms online. This helps us understand your current presence.
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
-              <button
-                onClick={() => handleGoogleReviews(true)}
-                className="flex items-center justify-center gap-2 p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-bold text-sm md:text-base hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.98] transition-all cursor-pointer"
-              >
-                <CheckCircle size={16} className="text-green-500" />
-                Yes
-              </button>
-              <button
-                onClick={() => handleGoogleReviews(false)}
-                className="flex items-center justify-center gap-2 p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-bold text-sm md:text-base hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.98] transition-all cursor-pointer"
-              >
-                <XCircle size={16} className="text-red-400" />
-                No
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Step 6: Goal selection */}
-        {step === 6 && (
+        {/* Step 3: Primary goal (disqualifies lead-generation seekers) */}
+        {step === 3 && (
           <motion.div
             key="q-goal"
             initial={{ opacity: 0, x: 30 }}
@@ -485,7 +313,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
               </div>
               <div>
                 <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  Which best describes what you&apos;re looking for?
+                  What is your primary goal right now?
                 </p>
                 <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
                   This helps us prepare for your strategy session.
@@ -553,8 +381,6 @@ export default function QualificationProvider({ children }: { children: React.Re
   const [isOpen, setIsOpen] = useState(false);
   const [qualificationStatus, setQualificationStatus] = useState<QualificationStatus>('pending');
   const answersRef = useRef<QualificationAnswers | null>(null);
-  const [calInitialized, setCalInitialized] = useState(false);
-
   // Initialize Cal.com embed script once
   useEffect(() => {
     (function (C: any, A: string, L: string) {
@@ -610,11 +436,8 @@ export default function QualificationProvider({ children }: { children: React.Re
               booking_uid: bookingData.uid ?? '',
               booking_confirmed: bookingData.confirmed ?? true,
               us_based: savedAnswers.usBased,
-              has_clients: savedAnswers.hasClients,
               decision_role: savedAnswers.decisionRole,
               annual_revenue: savedAnswers.annualRevenue,
-              firm_services: savedAnswers.firmServices?.join(', ') ?? '',
-              has_google_reviews: savedAnswers.hasGoogleReviews,
               goal: savedAnswers.goal,
               qualification_notes: formatAnswersAsNotes(savedAnswers),
               submitted_at: new Date().toISOString(),
@@ -637,7 +460,6 @@ export default function QualificationProvider({ children }: { children: React.Re
       },
     });
 
-    setCalInitialized(true);
   }, []);
 
   const openCalPopup = useCallback(() => {
