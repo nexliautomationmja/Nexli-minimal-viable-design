@@ -2,11 +2,19 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
 import SocialDock from './SocialDock';
 
+// Routes where the footer should be completely hidden (dedicated funnels)
+const HIDDEN_FOOTER_ROUTES = ['/vslfunnel'];
+
 const Footer: React.FC = () => {
   const { theme } = useTheme();
+  const pathname = usePathname();
+
+  // Hide footer on dedicated funnel pages to remove exit paths
+  if (HIDDEN_FOOTER_ROUTES.includes(pathname)) return null;
 
   return (
     <footer className="py-20 border-t border-[var(--glass-border)] bg-[var(--footer-bg)] relative overflow-hidden transition-colors duration-300">

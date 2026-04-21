@@ -24,6 +24,9 @@ const PATH_TO_VIEW: Record<string, string> = Object.fromEntries(
   Object.entries(VIEW_TO_PATH).map(([k, v]) => [v, k])
 );
 
+// Routes where the navbar should be completely hidden (dedicated funnels)
+const HIDDEN_NAV_ROUTES = ['/vslfunnel'];
+
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
@@ -31,6 +34,9 @@ const Navbar: React.FC = () => {
   const { openBooking } = useBooking();
   const router = useRouter();
   const pathname = usePathname();
+
+  // Hide navbar entirely on dedicated funnel pages
+  if (HIDDEN_NAV_ROUTES.includes(pathname)) return null;
 
   // Derive currentView from pathname
   const currentView = PATH_TO_VIEW[pathname] || 'home';

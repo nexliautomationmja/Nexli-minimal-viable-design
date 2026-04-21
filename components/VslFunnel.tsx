@@ -6,10 +6,40 @@ import {
   ArrowRight, Shield, Clock, TrendingUp, Star,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
-  Zap,
+  Zap, CalendarCheck,
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STATIC LOGO — Non-linking brand anchor (replaces Navbar on funnel pages)
+// ─────────────────────────────────────────────────────────────────────────────
+const StaticLogo: React.FC = () => (
+  <div className="fixed top-6 left-6 md:top-8 md:left-8 z-[110]">
+    <div
+      className="flex items-center gap-2 backdrop-blur-md px-3 py-2 md:px-4 md:py-2 rounded-full border"
+      style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.05)' }}
+    >
+      <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <linearGradient id="logo-grad-vsl" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#2563EB" />
+            <stop offset="100%" stopColor="#06B6D4" />
+          </linearGradient>
+        </defs>
+        <path d="M4 36L20 24L4 12L4 20L12 24L4 28L4 36Z" fill="#2563EB" />
+        <path d="M12 36L28 24L12 12L12 18L18 24L12 30L12 36Z" fill="url(#logo-grad-vsl)" />
+        <path d="M20 36L44 24L20 12L20 18L32 24L20 30L20 36Z" fill="#06B6D4" />
+      </svg>
+      <span
+        className="text-sm md:text-xl font-black tracking-tighter text-white"
+        style={{ fontFamily: "'Syne', sans-serif" }}
+      >
+        NEXLI
+      </span>
+    </div>
+  </div>
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 1: HERO — ROI Headline + Video + Qualification CTA
@@ -451,6 +481,162 @@ const ROISection: React.FC = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SECTION 5: PROJECTION FRAMEWORK — "What to Expect in Your First 90 Days"
+// ─────────────────────────────────────────────────────────────────────────────
+const ProjectionSection: React.FC = () => {
+  const { openBooking } = useBooking();
+
+  const projections = [
+    {
+      icon: Star,
+      label: 'Reputation Multiplier',
+      metric: '40+',
+      unit: 'Google Reviews',
+      description:
+        'Our automated review engine routes your happiest clients to Google — building the social proof that makes high-net-worth prospects choose you over competitors.',
+      color: '#fbbf24',
+    },
+    {
+      icon: Shield,
+      label: 'Command Center',
+      metric: '75',
+      unit: 'Hours Saved',
+      description:
+        'Secure document collection, instant e-signatures, and automated invoicing eliminate the admin that keeps your team from billable work.',
+      color: '#22d3ee',
+    },
+    {
+      icon: Bot,
+      label: '24/7 Intake Engine',
+      metric: '100%',
+      unit: 'Unqualified Filtered',
+      description:
+        'Intelligent sequences vet every inbound lead — only qualified, high-value prospects make it to your calendar.',
+      color: '#a78bfa',
+    },
+    {
+      icon: Monitor,
+      label: 'Premium Trust Asset',
+      metric: '2-3x',
+      unit: 'Booking Likelihood',
+      description:
+        'A conversion-optimized digital presence that turns cold traffic into booked consultations before you pick up the phone.',
+      color: '#60a5fa',
+    },
+  ];
+
+  return (
+    <section className="relative py-14 sm:py-20 px-4" style={{ backgroundColor: 'var(--bg-main)' }}>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full blur-[120px] bg-blue-500/6 pointer-events-none" />
+
+      <div className="relative z-10 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-10 sm:mb-14"
+        >
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-5"
+            style={{
+              backgroundColor: 'rgba(16,185,129,0.1)',
+              borderColor: 'rgba(16,185,129,0.25)',
+            }}
+          >
+            <CalendarCheck size={14} style={{ color: '#34d399' }} />
+            <span className="text-xs sm:text-sm font-semibold tracking-wide" style={{ color: '#34d399' }}>
+              90-Day Projection
+            </span>
+          </div>
+          <h2
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-4"
+            style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
+          >
+            What to Expect in Your{' '}
+            <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+              First 90 Days
+            </span>
+          </h2>
+          <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Based on results from firms we&apos;ve partnered with, here&apos;s the measurable impact you can expect within your first quarter.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 mb-10 sm:mb-14">
+          {projections.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="relative rounded-2xl sm:rounded-3xl border p-6 sm:p-8"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.03)',
+                  borderColor: 'rgba(255,255,255,0.08)',
+                }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ backgroundColor: `${p.color}18` }}
+                  >
+                    <Icon size={20} style={{ color: p.color }} />
+                  </div>
+                  <span
+                    className="text-xs font-semibold tracking-wide uppercase"
+                    style={{ color: p.color }}
+                  >
+                    {p.label}
+                  </span>
+                </div>
+                <div className="mb-3">
+                  <span
+                    className="text-3xl sm:text-4xl font-black"
+                    style={{ color: p.color, fontFamily: "'Syne', sans-serif" }}
+                  >
+                    {p.metric}
+                  </span>
+                  <span className="text-sm font-semibold ml-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    {p.unit}
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                  {p.description}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <button
+            onClick={() => openBooking()}
+            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
+          >
+            See If Your Firm Qualifies
+            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            We only partner with established CPA firms. No startups. No high-pressure pitch.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // SECTION 6: FAQ — Adapted for Premium Positioning
 // ─────────────────────────────────────────────────────────────────────────────
 const FAQSection: React.FC = () => {
@@ -781,10 +967,12 @@ const VslFunnel: React.FC = () => {
 
   return (
     <div className="min-h-screen">
+      <StaticLogo />
       <HeroSection />
       <TransformationSection />
       <CostOfInactionSection />
       <ROISection />
+      <ProjectionSection />
       <FAQSection />
       <ExitIntentPopup />
     </div>
