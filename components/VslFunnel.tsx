@@ -3,13 +3,23 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Shield, Clock, TrendingUp, Star,
+  ArrowRight, Shield, Clock, TrendingUp,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck,
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
+
+// Google "G" icon matching lucide-react component interface
+const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" style={style} fill="none">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+  </svg>
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATIC LOGO — Non-linking brand anchor (replaces Navbar on funnel pages)
@@ -227,9 +237,12 @@ const TrustBar: React.FC = () => (
           <path d="M35.29 41.19V32H67.4c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.7.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.09-.01z" />
         </svg>
         {/* Stripe */}
-        <svg className="h-6 sm:h-7" viewBox="0 0 60 25" fill="currentColor" style={{ color: 'rgba(255,255,255,0.9)' }}>
-          <path d="M5 10.2c0-.7.6-1 1.5-1 1.3 0 3 .4 4.3 1.1V6.7c-1.5-.6-2.9-.8-4.3-.8C3.2 5.9.8 7.8.8 10.4c0 4.1 5.6 3.4 5.6 5.2 0 .8-.7 1.1-1.7 1.1-1.5 0-3.4-.6-4.9-1.4v3.6c1.7.7 3.3 1 4.9 1 3.4 0 5.7-1.7 5.7-4.4 0-4.4-5.7-3.6-5.4-5.3zM14.4 2.7l-4 .9v3.8h-1.7v3.3h1.7v5c0 3.5 1.7 4.2 4 4.2 1.2 0 2.1-.3 2.1-.3v-3.2s-.5.1-1 .1c-1.1 0-1.5-.5-1.5-1.5v-4.4h2.5V7.4h-2.5l.4-4.7zM23.2 5.6l-.3 1.7h-2v3.3h4.3v9.3h4.1V10.6h2.6V7.3h-2.6V6.2c0-1 .4-1.5 1.4-1.5.5 0 1 .1 1 .1V1.5s-.7-.2-1.7-.2c-3 0-4.8 1.4-4.8 4.3zM33 7.3h4.1v12.6H33V7.3zM33 2.5h4.1v3.3H33V2.5zM39.2 13.7c0-3.9 2.8-6.5 5.8-6.5 1.8 0 3 .8 3.7 1.6l-.2-1.4h3.9v12.4h-3.9l.2-1.4c-.8.9-2.1 1.7-3.8 1.7-3 0-5.7-2.7-5.7-6.4zm9.7 0c0-2.1-1.3-3.5-3-3.5s-3 1.4-3 3.5 1.3 3.5 3 3.5 3-1.4 3-3.5zM60 19.9h-4.1V14c0-2.2-.8-3-2.1-3-1.4 0-2.4 1-2.4 2.9v6h-4.1V7.3h3.9l-.2 1.5c.9-1 2.2-1.7 3.8-1.7 2.9 0 5.2 1.8 5.2 5.7v7.1z" />
-        </svg>
+        <span
+          className="text-sm sm:text-base font-black tracking-tight"
+          style={{ color: 'rgba(255,255,255,0.9)', fontFamily: "'Syne', sans-serif" }}
+        >
+          Stripe
+        </span>
         {/* GoHighLevel (text mark) */}
         <span
           className="text-sm sm:text-base font-black tracking-tight"
@@ -237,10 +250,20 @@ const TrustBar: React.FC = () => (
         >
           GoHighLevel
         </span>
+        {/* Claude / Anthropic */}
+        <span
+          className="text-sm sm:text-base font-black tracking-tight"
+          style={{ color: 'rgba(255,255,255,0.9)', fontFamily: "'Syne', sans-serif" }}
+        >
+          Claude
+        </span>
         {/* AWS */}
-        <svg className="h-6 sm:h-7" viewBox="0 0 80 48" fill="currentColor" style={{ color: 'rgba(255,255,255,0.9)' }}>
-          <path d="M22.7 20.3c0 .7.1 1.3.2 1.8.2.5.4 1 .7 1.6.1.2.1.4.1.5 0 .2-.1.4-.4.6l-1.3.9c-.2.1-.3.2-.5.2-.2 0-.4-.1-.6-.3-.3-.3-.5-.6-.7-1-.2-.4-.4-.8-.6-1.3-1.5 1.7-3.3 2.6-5.5 2.6-1.6 0-2.8-.5-3.8-1.4-1-.9-1.5-2.2-1.5-3.7 0-1.6.6-3 1.7-3.9 1.2-1 2.7-1.5 4.7-1.5.7 0 1.3.1 2 .1.7.1 1.4.2 2.2.4v-1.4c0-1.5-.3-2.5-1-3.2-.6-.7-1.8-1-3.3-1-.7 0-1.5.1-2.2.3-.8.2-1.5.4-2.2.8-.3.2-.6.3-.7.3-.2.1-.3.1-.4.1-.3 0-.5-.2-.5-.7v-1c0-.4.1-.6.2-.8.1-.1.4-.3.8-.5 1-.5 2.2-.9 3.4-1.2 1.2-.3 2.5-.5 3.9-.5 3 0 5.2.7 6.5 2 1.3 1.4 2 3.4 2 6.1v8h.1zm-7.6 2.8c.6 0 1.3-.1 2-.3.7-.2 1.3-.7 1.9-1.3.3-.4.6-.9.7-1.4.1-.6.2-1.2.2-2v-1c-.6-.1-1.2-.2-1.8-.3-.6-.1-1.2-.1-1.8-.1-1.3 0-2.2.2-2.8.7-.6.5-1 1.2-1 2.2 0 .9.2 1.6.7 2.1.5.4 1.2.4 1.9.4zm15.1 2c-.4 0-.7-.1-.8-.2-.2-.2-.3-.5-.5-1l-5.2-17.1c-.2-.5-.2-.9-.2-1 0-.4.2-.6.6-.6h2c.4 0 .7.1.9.2.2.2.3.5.4 1l3.7 14.6 3.5-14.6c.1-.5.3-.8.4-1 .2-.2.5-.2.9-.2h1.7c.4 0 .7.1.9.2.2.2.3.5.4 1l3.5 14.8L45 6.7c.1-.5.3-.8.5-1 .2-.2.5-.2.8-.2h1.9c.4 0 .6.2.6.6 0 .1 0 .3-.1.4 0 .2-.1.4-.2.6l-5.4 17.1c-.1.5-.3.8-.5 1-.2.2-.5.2-.8.2h-1.8c-.4 0-.7-.1-.9-.2-.2-.2-.3-.5-.4-1l-3.4-14.2-3.4 14.2c-.1.5-.3.8-.4 1-.2.2-.5.2-.9.2h-1.8v.1zM58.8 25.5c-1 0-2-.1-2.9-.4-.9-.3-1.7-.6-2.2-1-.3-.2-.5-.4-.6-.6-.1-.2-.1-.4-.1-.5V22c0-.5.2-.7.5-.7.1 0 .3 0 .4.1.1.1.3.2.5.3.7.3 1.5.6 2.3.8.8.2 1.6.3 2.4.3 1.3 0 2.3-.2 3-.7.7-.5 1.1-1.1 1.1-2 0-.6-.2-1.1-.6-1.5-.4-.4-1.2-.8-2.3-1.1l-3.3-1c-1.7-.5-2.9-1.3-3.7-2.3-.8-1-1.2-2.1-1.2-3.3 0-1 .2-1.8.6-2.6.4-.7 1-1.4 1.7-1.9.7-.5 1.5-.9 2.4-1.2.9-.3 1.9-.4 2.9-.4.5 0 1 0 1.6.1.5.1 1 .2 1.5.3.5.1.9.3 1.3.4.4.2.7.3 1 .5.3.2.5.4.6.6.1.2.2.4.2.7v1c0 .5-.2.7-.5.7-.2 0-.5-.1-.9-.3-1.5-.7-3.1-1-4.8-1-1.1 0-2 .2-2.7.6-.7.4-1 1-1 1.8 0 .6.2 1.1.7 1.5.5.4 1.3.8 2.5 1.2l3.2 1c1.6.5 2.8 1.2 3.6 2.2.7.9 1.1 2 1.1 3.3 0 1-.2 1.9-.6 2.7-.4.8-1 1.5-1.8 2-.8.6-1.6 1-2.6 1.3-1.1.2-2.1.4-3.3.4z" />
-        </svg>
+        <span
+          className="text-sm sm:text-base font-black tracking-tight"
+          style={{ color: 'rgba(255,255,255,0.9)', fontFamily: "'Syne', sans-serif" }}
+        >
+          AWS
+        </span>
       </motion.div>
     </div>
   </section>
@@ -276,7 +299,7 @@ const TransformationSection: React.FC = () => {
         'Intelligent sequences that vet, nurture, and book qualified prospects while you sleep.',
     },
     {
-      icon: Star,
+      icon: GoogleG,
       label: 'The Reputation Multiplier',
       sublabel: 'Google Review Engine',
       color: '#fbbf24',
@@ -541,7 +564,7 @@ const ProjectionSection: React.FC = () => {
 
   const projections = [
     {
-      icon: Star,
+      icon: GoogleG,
       label: 'Reputation Multiplier',
       metric: '40+',
       unit: 'Google Reviews',
