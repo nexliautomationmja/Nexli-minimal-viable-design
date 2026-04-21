@@ -783,9 +783,9 @@ const FounderStorySection: React.FC = () => (
         {/* Headshot */}
         <div className="mx-auto mb-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2" style={{ borderColor: 'rgba(59,130,246,0.3)' }}>
           <img
-            src="/Founder Photos/marcel-headshot.png"
+            src="/Founder Photos/marcel-headshot-2.png"
             alt="Marcel Allen, CEO & Founder of Nexli"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-top"
           />
         </div>
         <h2
