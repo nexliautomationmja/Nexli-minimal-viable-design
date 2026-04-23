@@ -346,10 +346,15 @@ const TrustBar: React.FC = () => (
         100% { transform: translateX(-50%); }
       }
       /* -50% moves 2 of the 4 sets offscreen, leaving 2 visible = seamless */
-      /* Animation speed is 18s on all devices for consistency */
+      /* Faster animation on mobile (10s), desktop speed (18s) */
       .animate-marquee {
-        animation: marquee 18s linear infinite;
+        animation: marquee 10s linear infinite;
         will-change: transform;
+      }
+      @media (min-width: 640px) {
+        .animate-marquee {
+          animation: marquee 18s linear infinite;
+        }
       }
       .animate-marquee:hover {
         animation-play-state: paused;
