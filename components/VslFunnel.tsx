@@ -317,9 +317,9 @@ const TrustBar: React.FC = () => (
 
     {/* Marquee container */}
     <div className="relative">
-      {/* Fade edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10" style={{ background: 'linear-gradient(to right, var(--bg-main), transparent)' }} />
-      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10" style={{ background: 'linear-gradient(to left, var(--bg-main), transparent)' }} />
+      {/* Fade edges - narrower on mobile for better logo visibility */}
+      <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-24 z-10" style={{ background: 'linear-gradient(to right, var(--bg-main), transparent)' }} />
+      <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-24 z-10" style={{ background: 'linear-gradient(to left, var(--bg-main), transparent)' }} />
 
       {/* Scrolling track */}
       <div className="flex animate-marquee">
@@ -346,9 +346,9 @@ const TrustBar: React.FC = () => (
         100% { transform: translateX(-50%); }
       }
       /* -50% moves 2 of the 4 sets offscreen, leaving 2 visible = seamless */
-      /* Faster animation on mobile (10s), desktop speed (18s) */
+      /* Slower on mobile (14s) for better logo visibility, desktop speed (18s) */
       .animate-marquee {
-        animation: marquee 10s linear infinite;
+        animation: marquee 14s linear infinite;
         will-change: transform;
       }
       @media (min-width: 640px) {
