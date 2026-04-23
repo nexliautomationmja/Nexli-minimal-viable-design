@@ -6,7 +6,7 @@ import {
   ArrowRight, Shield, Clock, TrendingUp,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
-  Zap, CalendarCheck, Star,
+  Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
@@ -408,6 +408,131 @@ const GoogleReviewAnimation = () => {
   );
 };
 
+// Advisory Clients Animation Component
+const AdvisoryClientsAnimation = () => {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 md:gap-5 py-4 md:py-8">
+      <motion.div
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+      >
+        <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#001a0d] border-2 border-[#00D632]/30"
+          style={{ filter: 'drop-shadow(0 0 24px rgba(0, 214, 50, 0.5))' }}
+        >
+          <ContactRound className="w-9 h-9 md:w-14 md:h-14 text-[#00D632]" strokeWidth={2} />
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.4 }}
+        className="text-center"
+      >
+        <p className="text-3xl md:text-5xl font-black mb-2"
+          style={{
+            color: '#00D632',
+            fontFamily: "'Syne', sans-serif",
+            filter: 'drop-shadow(0 0 20px rgba(0, 214, 50, 0.4))'
+          }}
+        >
+          4-5
+        </p>
+        <p className="text-xs md:text-sm font-semibold text-white/70">
+          New Advisory Clients
+        </p>
+      </motion.div>
+    </div>
+  );
+};
+
+// Hours Saved Animation Component
+const HoursSavedAnimation = () => {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 md:gap-5 py-4 md:py-8">
+      <motion.div
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+      >
+        <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#0a1628] border-2 border-[#3b82f6]/30"
+          style={{ filter: 'drop-shadow(0 0 24px rgba(59, 130, 246, 0.5))' }}
+        >
+          <Save className="w-9 h-9 md:w-14 md:h-14 text-[#3b82f6]" strokeWidth={2} />
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.4 }}
+        className="text-center"
+      >
+        <p className="text-3xl md:text-5xl font-black mb-2"
+          style={{
+            color: '#3b82f6',
+            fontFamily: "'Syne', sans-serif",
+            filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))'
+          }}
+        >
+          10+
+        </p>
+        <p className="text-xs md:text-sm font-semibold text-white/70">
+          Hours Saved Per Week
+        </p>
+      </motion.div>
+    </div>
+  );
+};
+
+// Google Reviews Simplified Animation Component
+const GoogleReviewsSimpleAnimation = () => {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 md:gap-5 py-4 md:py-8">
+      <motion.div
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+      >
+        <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#1a1400] border-2 border-[#fbbf24]/30"
+          style={{ filter: 'drop-shadow(0 0 24px rgba(251, 191, 36, 0.5))' }}
+        >
+          <svg className="w-9 h-9 md:w-14 md:h-14" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+          </svg>
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.4 }}
+        className="text-center"
+      >
+        <p className="text-3xl md:text-5xl font-black mb-2"
+          style={{
+            color: '#fbbf24',
+            fontFamily: "'Syne', sans-serif",
+            filter: 'drop-shadow(0 0 20px rgba(251, 191, 36, 0.4))'
+          }}
+        >
+          3x
+        </p>
+        <p className="text-xs md:text-sm font-semibold text-white/70">
+          Google Review Growth
+        </p>
+      </motion.div>
+    </div>
+  );
+};
+
 const TransformationSection: React.FC = () => {
   return (
     <section className="relative py-14 sm:py-20 px-4" style={{ backgroundColor: 'var(--bg-main)' }}>
@@ -440,52 +565,40 @@ const TransformationSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: 'circOut' }}
-            className="relative rounded-2xl md:rounded-3xl overflow-hidden p-[1.5px]"
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#60a5fa]/20 p-6 md:p-8"
           >
-            <span
-              className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] opacity-90"
-              style={{ background: 'conic-gradient(from 0deg at 50% 50%, #60a5fa, #3b82f6, #8b5cf6, #60a5fa)' }}
-            />
-            <span
-              className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] blur-xl opacity-30"
-              style={{ background: 'conic-gradient(from 0deg at 50% 50%, #60a5fa, #3b82f6, #8b5cf6, #60a5fa)' }}
-            />
-            <div className="relative z-10 rounded-[14px] md:rounded-[22px] p-6 md:p-8 bg-gradient-to-br from-slate-950 via-blue-950/40 to-slate-950">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 blur-[80px] rounded-full pointer-events-none" />
-              <div className="relative z-10 flex flex-col items-center text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                  className="relative mb-3 md:mb-4"
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="mb-4 md:mb-5"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#0a1628] border-2 border-[#60a5fa]/30"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(96, 165, 250, 0.5))' }}
                 >
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center bg-blue-500/20 border border-blue-500/30"
-                    style={{ filter: 'drop-shadow(0 0 20px rgba(96, 165, 250, 0.3))' }}
-                  >
-                    <Monitor className="w-7 h-7 md:w-8 md:h-8 text-blue-400" />
-                  </div>
-                  <span className="absolute inset-0 rounded-2xl animate-ping opacity-20 bg-blue-500" style={{ animationDuration: '3s' }} />
-                </motion.div>
-
-                <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
-                  <span
-                    className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
-                    style={{ background: 'conic-gradient(from 0deg at 50% 50%, #60a5fa, #3b82f6, #60a5fa)' }}
-                  />
-                  <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
-                    <Star size={12} className="text-blue-400 fill-blue-400" />
-                    <span className="text-[10px] font-black tracking-[0.15em] uppercase text-blue-300">Premium Trust Asset</span>
-                  </span>
+                  <Monitor className="w-9 h-9 md:w-11 md:h-11 text-[#60a5fa]" strokeWidth={2} />
                 </div>
+              </motion.div>
 
-                <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
-                  Custom Website
-                </h3>
-                <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                  A premium, mobile-optimized website that positions you as a modern, sophisticated firm — not a template, but a trust-building asset.
-                </p>
+              <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #60a5fa, #3b82f6, #60a5fa)' }}
+                />
+                <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+                  <Star size={12} className="text-blue-400 fill-blue-400" />
+                  <span className="text-[10px] font-black tracking-[0.15em] uppercase text-blue-300">Premium Trust Asset</span>
+                </span>
               </div>
+
+              <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
+                Custom Website
+              </h3>
+              <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
+                A premium, mobile-optimized website that positions you as a modern, sophisticated firm — not a template, but a trust-building asset.
+              </p>
             </div>
           </motion.div>
 
@@ -495,52 +608,40 @@ const TransformationSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: 'circOut', delay: 0.1 }}
-            className="relative rounded-2xl md:rounded-3xl overflow-hidden p-[1.5px]"
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#06B6D4]/20 p-6 md:p-8"
           >
-            <span
-              className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] opacity-90"
-              style={{ background: 'conic-gradient(from 0deg at 50% 50%, #06B6D4, #3B82F6, #8B5CF6, #06B6D4)' }}
-            />
-            <span
-              className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] blur-xl opacity-30"
-              style={{ background: 'conic-gradient(from 0deg at 50% 50%, #06B6D4, #3B82F6, #8B5CF6, #06B6D4)' }}
-            />
-            <div className="relative z-10 rounded-[14px] md:rounded-[22px] p-6 md:p-8 bg-gradient-to-br from-slate-950 via-cyan-950/40 to-slate-950">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-cyan-500/10 blur-[80px] rounded-full pointer-events-none" />
-              <div className="relative z-10 flex flex-col items-center text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                  className="relative mb-3 md:mb-4"
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="mb-4 md:mb-5"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#0a2832] border-2 border-[#06B6D4]/30"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(6, 182, 212, 0.5))' }}
                 >
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center bg-cyan-500/20 border border-cyan-500/30"
-                    style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}
-                  >
-                    <Shield className="w-7 h-7 md:w-8 md:h-8 text-cyan-500" />
-                  </div>
-                  <span className="absolute inset-0 rounded-2xl animate-ping opacity-20 bg-cyan-500" style={{ animationDuration: '3s' }} />
-                </motion.div>
-
-                <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
-                  <span
-                    className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
-                    style={{ background: 'conic-gradient(from 0deg at 50% 50%, #06B6D4, #3B82F6, #8B5CF6, #06B6D4)' }}
-                  />
-                  <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
-                    <Star size={12} className="text-cyan-400 fill-cyan-400" />
-                    <span className="text-[10px] font-black tracking-[0.15em] uppercase text-cyan-300">The Centerpiece</span>
-                  </span>
+                  <LayoutDashboard className="w-9 h-9 md:w-11 md:h-11 text-[#06B6D4]" strokeWidth={2} />
                 </div>
+              </motion.div>
 
-                <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
-                  Client Dashboard & Portal
-                </h3>
-                <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                  The command center your firm deserves. Invoicing, engagement letters, document collection, and secure messaging — all in one branded portal.
-                </p>
+              <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #06B6D4, #3B82F6, #8B5CF6, #06B6D4)' }}
+                />
+                <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+                  <Star size={12} className="text-cyan-400 fill-cyan-400" />
+                  <span className="text-[10px] font-black tracking-[0.15em] uppercase text-cyan-300">The Centerpiece</span>
+                </span>
               </div>
+
+              <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
+                Client Dashboard & Portal
+              </h3>
+              <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
+                The command center your firm deserves. Invoicing, engagement letters, document collection, and secure messaging — all in one branded portal.
+              </p>
             </div>
           </motion.div>
 
@@ -550,90 +651,88 @@ const TransformationSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: 'circOut', delay: 0.2 }}
-            className="relative rounded-2xl md:rounded-3xl overflow-hidden p-[1.5px]"
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#a78bfa]/20 p-6 md:p-8"
           >
-            <span
-              className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] opacity-90"
-              style={{ background: 'conic-gradient(from 0deg at 50% 50%, #a78bfa, #8b5cf6, #6366f1, #a78bfa)' }}
-            />
-            <span
-              className="absolute inset-[-200%] animate-[shimmer_6s_linear_infinite] blur-xl opacity-30"
-              style={{ background: 'conic-gradient(from 0deg at 50% 50%, #a78bfa, #8b5cf6, #6366f1, #a78bfa)' }}
-            />
-            <div className="relative z-10 rounded-[14px] md:rounded-[22px] p-6 md:p-8 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/10 blur-[80px] rounded-full pointer-events-none" />
-              <div className="relative z-10 flex flex-col items-center text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                  className="relative mb-3 md:mb-4"
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="mb-4 md:mb-5"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#1a0a28] border-2 border-[#a78bfa]/30"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(167, 139, 250, 0.5))' }}
                 >
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center bg-purple-500/20 border border-purple-500/30"
-                    style={{ filter: 'drop-shadow(0 0 20px rgba(167, 139, 250, 0.3))' }}
-                  >
-                    <Bot className="w-7 h-7 md:w-8 md:h-8 text-purple-400" />
-                  </div>
-                  <span className="absolute inset-0 rounded-2xl animate-ping opacity-20 bg-purple-500" style={{ animationDuration: '3s' }} />
-                </motion.div>
-
-                <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
-                  <span
-                    className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
-                    style={{ background: 'conic-gradient(from 0deg at 50% 50%, #a78bfa, #8b5cf6, #a78bfa)' }}
-                  />
-                  <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
-                    <Star size={12} className="text-purple-400 fill-purple-400" />
-                    <span className="text-[10px] font-black tracking-[0.15em] uppercase text-purple-300">24/7 Intake Engine</span>
-                  </span>
+                  <Bot className="w-9 h-9 md:w-11 md:h-11 text-[#a78bfa]" strokeWidth={2} />
                 </div>
+              </motion.div>
 
-                <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
-                  AI Automations
-                </h3>
-                <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                  Intelligent workflows that capture leads, qualify prospects, and nurture relationships while you sleep — no manual follow-up required.
-                </p>
+              <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #a78bfa, #8b5cf6, #a78bfa)' }}
+                />
+                <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+                  <Star size={12} className="text-purple-400 fill-purple-400" />
+                  <span className="text-[10px] font-black tracking-[0.15em] uppercase text-purple-300">24/7 Intake Engine</span>
+                </span>
               </div>
+
+              <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
+                AI Automations
+              </h3>
+              <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
+                Intelligent workflows that capture leads, qualify prospects, and nurture relationships while you sleep — no manual follow-up required.
+              </p>
             </div>
           </motion.div>
 
-          {/* Card 4: Google Reviews (Exact Match from Rainmaker) */}
+          {/* Card 4: Google Reviews */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: 'circOut', delay: 0.3 }}
-            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10"
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#fbbf24]/20 p-6 md:p-8"
           >
-            <GoogleReviewAnimation />
-            <div className="px-4 pb-4 md:px-6 md:pb-6 flex items-center justify-center">
+            <div className="flex flex-col items-center text-center">
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                className="relative inline-flex items-center rounded-full overflow-hidden p-[1px] md:p-[1.5px]"
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="mb-4 md:mb-5"
               >
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)' }}
-                />
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)' }}
-                />
-                <span className="relative z-10 inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-[var(--bg-main)]">
-                  <svg className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.10z" fill="#4285F4" />
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#1a1400] border-2 border-[#fbbf24]/30"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(251, 191, 36, 0.5))' }}
+                >
+                  <svg className="w-9 h-9 md:w-14 md:h-14" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                   </svg>
-                  <span className="text-[var(--text-main)] text-[10px] md:text-sm font-black tracking-[0.1em] md:tracking-[0.15em] uppercase">Google Reviews</span>
-                </span>
+                </div>
               </motion.div>
+
+              <div className="relative inline-flex items-center mb-3 md:mb-4 rounded-full overflow-hidden p-[1px]">
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)' }}
+                />
+                <span className="relative z-10 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+                  <Star size={12} className="text-yellow-400 fill-yellow-400" />
+                  <span className="text-[10px] font-black tracking-[0.15em] uppercase text-yellow-300">Reputation Multiplier</span>
+                </span>
+              </div>
+
+              <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
+                Google Review Engine
+              </h3>
+              <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
+                Our automated review engine routes your happiest clients to Google — building the social proof that makes high-net-worth prospects choose you over competitors.
+              </p>
             </div>
           </motion.div>
         </div>
@@ -731,17 +830,13 @@ const CostOfInactionSection: React.FC = () => {
 // SECTION 4: ROI JUSTIFICATION — The Math
 // ─────────────────────────────────────────────────────────────────────────────
 const ROISection: React.FC = () => {
-  const stats = [
-    { value: '4-5', label: 'New Advisory Clients', sublabel: 'to pay for the entire system' },
-    { value: '10+', label: 'Hours Saved Per Week', sublabel: 'on admin and document chasing' },
-    { value: '3x', label: 'Google Review Growth', sublabel: 'within the first 90 days' },
-  ];
-
   return (
-    <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full blur-[100px] bg-blue-500/8 pointer-events-none" />
+    <section className="relative py-14 sm:py-20 md:py-28 px-4" style={{ backgroundColor: 'var(--bg-main)' }}>
+      {/* Ambient background glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full blur-[120px] bg-emerald-500/8 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[300px] rounded-full blur-[100px] bg-blue-500/6 pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto">
+      <div className="relative z-10 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -754,7 +849,7 @@ const ROISection: React.FC = () => {
             style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
           >
             The Math{' '}
-            <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+            <span style={{ color: '#00D632' }}>
               Speaks for Itself
             </span>
           </h2>
@@ -764,55 +859,179 @@ const ROISection: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mb-10 sm:mb-14">
-          {stats.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
-              className="text-center rounded-2xl sm:rounded-3xl border p-6 sm:p-8"
-              style={{
-                backgroundColor: 'rgba(16,185,129,0.08)',
-                borderColor: 'rgba(16,185,129,0.2)',
-              }}
-            >
-              <span
-                className="text-3xl sm:text-4xl md:text-5xl font-black block mb-2"
-                style={{ color: '#34d399', fontFamily: "'Syne', sans-serif" }}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-10 sm:mb-14">
+          {/* Advisory Clients Card - Special Design */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: 'circOut' }}
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#00D632]/20"
+          >
+            <AdvisoryClientsAnimation />
+            <div className="px-4 pb-4 md:px-6 md:pb-6 flex items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                className="relative inline-flex items-center rounded-full overflow-hidden p-[1px] md:p-[1.5px]"
               >
-                {s.value}
-              </span>
-              <span className="text-sm sm:text-base font-semibold block mb-1" style={{ color: '#ffffff' }}>
-                {s.label}
-              </span>
-              <span className="text-xs block" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                {s.sublabel}
-              </span>
-            </motion.div>
-          ))}
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #00D632, #00ff3c, #00D632, #00ff3c, #00D632)' }}
+                />
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #00D632, #00ff3c, #00D632, #00ff3c, #00D632)' }}
+                />
+                <span className="relative z-10 inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-[var(--bg-main)]">
+                  <ContactRound className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0 text-[#00D632]" strokeWidth={2.5} />
+                  <span className="text-[var(--text-main)] text-[10px] md:text-sm font-black tracking-[0.1em] md:tracking-[0.15em] uppercase">New Clients</span>
+                </span>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Hours Saved Card - Special Design */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: 'circOut', delay: 0.15 }}
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#3b82f6]/20"
+          >
+            <HoursSavedAnimation />
+            <div className="px-4 pb-4 md:px-6 md:pb-6 flex items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                className="relative inline-flex items-center rounded-full overflow-hidden p-[1px] md:p-[1.5px]"
+              >
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #3b82f6, #60a5fa, #3b82f6, #60a5fa, #3b82f6)' }}
+                />
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #3b82f6, #60a5fa, #3b82f6, #60a5fa, #3b82f6)' }}
+                />
+                <span className="relative z-10 inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-[var(--bg-main)]">
+                  <Save className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0 text-[#3b82f6]" strokeWidth={2.5} />
+                  <span className="text-[var(--text-main)] text-[10px] md:text-sm font-black tracking-[0.1em] md:tracking-[0.15em] uppercase">Time Saved</span>
+                </span>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Google Reviews Card - Special Design */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: 'circOut', delay: 0.3 }}
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#fbbf24]/20"
+          >
+            <GoogleReviewsSimpleAnimation />
+            <div className="px-4 pb-4 md:px-6 md:pb-6 flex items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                className="relative inline-flex items-center rounded-full overflow-hidden p-[1px] md:p-[1.5px]"
+              >
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)' }}
+                />
+                <span
+                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
+                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)' }}
+                />
+                <span className="relative z-10 inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-[var(--bg-main)]">
+                  <svg className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.10z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                  <span className="text-[var(--text-main)] text-[10px] md:text-sm font-black tracking-[0.1em] md:tracking-[0.15em] uppercase">Reviews</span>
+                </span>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
 
-        {/* ROI Callout */}
+        {/* Enhanced ROI Callout with shimmer border */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="rounded-2xl sm:rounded-3xl border p-6 sm:p-8 text-center"
-          style={{
-            backgroundColor: 'rgba(59,130,246,0.08)',
-            borderColor: 'rgba(59,130,246,0.2)',
-          }}
+          transition={{ duration: 0.7, ease: 'circOut' }}
+          className="relative rounded-2xl md:rounded-3xl overflow-hidden p-[1.5px]"
         >
-          <p className="text-sm sm:text-base md:text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            <span className="font-bold" style={{ color: '#60a5fa' }}>Consider this:</span>{' '}
-            The average high-value advisory client brings $5,000-$15,000+ in annual revenue.
-            If your new digital presence, automated intake, and review engine help you land
-            even a handful of these clients, the system doesn&apos;t just pay for itself — it
-            becomes your highest-ROI investment.
-          </p>
+          {/* Cash App Green shimmer border */}
+          <span
+            className="absolute inset-[-200%] animate-[shimmer_8s_linear_infinite] opacity-70"
+            style={{
+              background: 'conic-gradient(from 0deg at 50% 50%, #00D632, #00ff3c, #00D632, #00ff3c, #00D632)'
+            }}
+          />
+          <span
+            className="absolute inset-[-200%] animate-[shimmer_8s_linear_infinite] blur-2xl opacity-20"
+            style={{
+              background: 'conic-gradient(from 0deg at 50% 50%, #00D632, #00ff3c, #00D632, #00ff3c, #00D632)'
+            }}
+          />
+
+          <div className="relative z-10 rounded-[14px] md:rounded-[22px] p-6 md:p-10 bg-gradient-to-br from-slate-950 via-slate-900/80 to-slate-950">
+            {/* Ambient glows */}
+            <div className="absolute top-0 left-0 w-48 h-48 blur-[80px] rounded-full pointer-events-none"
+              style={{ backgroundColor: 'rgba(0, 214, 50, 0.1)' }}
+            />
+            <div className="absolute bottom-0 right-0 w-48 h-48 blur-[80px] rounded-full pointer-events-none"
+              style={{ backgroundColor: 'rgba(0, 214, 50, 0.08)' }}
+            />
+
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+              {/* Icon badge */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                whileInView={{ scale: 1, rotate: 0 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="flex-shrink-0"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#001a0d] border-2 border-[#00D632]/30"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(0, 214, 50, 0.4))' }}
+                >
+                  <DollarSign className="w-9 h-9 md:w-11 md:h-11 text-[#00D632]" strokeWidth={2.5} />
+                </div>
+              </motion.div>
+
+              {/* Text content */}
+              <div className="flex-1">
+                <p className="text-xs md:text-sm font-black tracking-[0.1em] uppercase mb-2"
+                  style={{ color: '#00D632' }}
+                >
+                  ROI Reality Check
+                </p>
+                <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-200">
+                  The average high-value advisory client brings{' '}
+                  <span className="font-bold text-white">
+                    $5,000-$15,000+
+                  </span>{' '}
+                  in annual revenue. If your new digital presence, automated intake, and review engine help you land
+                  even a handful of these clients, the system doesn&apos;t just pay for itself — it
+                  becomes your{' '}
+                  <span className="font-bold" style={{ color: '#00D632' }}>highest-ROI investment</span>.
+                </p>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
@@ -976,28 +1195,122 @@ const ProjectionSection: React.FC = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 6: FOUNDER STORY — Origin + Trust
+// STORY VIDEO MODAL — Instagram/Facebook style story viewer
 // ─────────────────────────────────────────────────────────────────────────────
-const FounderStorySection: React.FC = () => (
-  <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] rounded-full blur-[100px] bg-blue-500/6 pointer-events-none" />
+const StoryVideoModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [progress, setProgress] = useState(0);
 
-    <div className="relative z-10 max-w-3xl mx-auto">
+  useEffect(() => {
+    if (isOpen && videoRef.current) {
+      videoRef.current.play();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const updateProgress = () => {
+      const progress = (video.currentTime / video.duration) * 100;
+      setProgress(progress);
+    };
+
+    video.addEventListener('timeupdate', updateProgress);
+    return () => video.removeEventListener('timeupdate', updateProgress);
+  }, []);
+
+  if (!isOpen) return null;
+
+  return (
+    <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-8 sm:mb-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95"
+        onClick={onClose}
       >
-        {/* Headshot */}
-        <div className="mx-auto mb-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2" style={{ borderColor: 'rgba(59,130,246,0.3)' }}>
-          <img
-            src="/Founder Photos/marcel-headshot-2.png"
-            alt="Marcel Allen, CEO & Founder of Nexli"
-            className="w-full h-full object-cover object-top"
+        {/* Progress bar */}
+        <div className="absolute top-4 left-4 right-4 h-0.5 bg-white/30 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-white"
+            style={{ width: `${progress}%` }}
+            transition={{ duration: 0.1 }}
           />
         </div>
+
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+        >
+          <X className="w-6 h-6 text-white" />
+        </button>
+
+        {/* Video container */}
+        <motion.div
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          exit={{ scale: 0.9 }}
+          className="relative w-full max-w-md mx-4 aspect-[9/16] rounded-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            playsInline
+            onEnded={onClose}
+          >
+            <source src="/justine-welcome-original.mp4" type="video/mp4" />
+          </video>
+
+          {/* Tap zones for navigation */}
+          <div className="absolute inset-0 flex">
+            <div className="flex-1" onClick={onClose} />
+            <div className="flex-1" onClick={onClose} />
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 6: FOUNDER STORY — Origin + Trust
+// ─────────────────────────────────────────────────────────────────────────────
+const FounderStorySection: React.FC = () => {
+  const [isStoryOpen, setIsStoryOpen] = useState(false);
+
+  return (
+    <>
+      <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] rounded-full blur-[100px] bg-blue-500/6 pointer-events-none" />
+
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-8 sm:mb-10"
+          >
+            {/* Headshot with story ring */}
+            <div
+              className="mx-auto mb-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full p-[3px] cursor-pointer hover:scale-105 transition-transform"
+              style={{
+                background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+              }}
+              onClick={() => setIsStoryOpen(true)}
+            >
+              <div className="w-full h-full rounded-full overflow-hidden border-[3px] border-[#1a2332]">
+                <img
+                  src="/Founder Photos/marcel-headshot-2.png"
+                  alt="Marcel Allen, CEO & Founder of Nexli"
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+            </div>
         <h2
           className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3"
           style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
@@ -1046,7 +1359,11 @@ const FounderStorySection: React.FC = () => (
       </motion.div>
     </div>
   </section>
-);
+
+      <StoryVideoModal isOpen={isStoryOpen} onClose={() => setIsStoryOpen(false)} />
+    </>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 7: FAQ — Adapted for Premium Positioning
