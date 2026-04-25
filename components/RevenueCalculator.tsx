@@ -2,106 +2,96 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, TrendingUp, X } from 'lucide-react';
+import { ArrowRight, Lock, TrendingUp, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useBooking } from './QualificationProvider';
+
+type CalculatorState = 'input' | 'capture' | 'results';
 
 const RevenueCalculator: React.FC = () => {
   const { openBooking } = useBooking();
-  const [showResults, setShowResults] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailCaptured, setEmailCaptured] = useState(false);
+
+  // State management
+  const [currentState, setCurrentState] = useState<CalculatorState>('input');
   const [submitting, setSubmitting] = useState(false);
 
-  // Form inputs - SIMPLIFIED TO 3 QUESTIONS
+  // Form inputs - State 1
   const [annualRevenue, setAnnualRevenue] = useState('');
   const [adminHours, setAdminHours] = useState('');
-  const [currentReviews, setCurrentReviews] = useState('');
+  const [hourlyRate, setHourlyRate] = useState('');
 
-  // Calculate growth opportunity using industry benchmarks
-  const calculateOpportunity = () => {
+  // Form inputs - State 2
+  const [firstName, setFirstName] = useState('');
+  const [email, setEmail] = useState('');
+
+  // Calculate all metrics
+  const calculateMetrics = () => {
     const revenue = parseFloat(annualRevenue) || 0;
     const hours = parseFloat(adminHours) || 0;
-    const reviews = parseFloat(currentReviews) || 0;
+    const rate = parseFloat(hourlyRate) || 0;
 
-    // Calculate implied hourly rate based on firm size
-    let hourlyRate = 150;
-    if (revenue > 1000000) hourlyRate = 200;
-    else if (revenue > 500000) hourlyRate = 175;
-
-    // Time waste cost
-    const timeWasteCost = hours * hourlyRate * 52;
-
-    // INDUSTRY BENCHMARK: Lost opportunity cost
-    const estimatedInquiries = revenue < 500000 ? 8 : revenue < 1000000 ? 12 : 15;
-    const avgClientValue = Math.max(revenue / 50, 3000);
-    const conversionLoss = 0.27;
-    const lostOpportunityCost = estimatedInquiries * conversionLoss * avgClientValue * 12;
-
-    // Review gap impact
-    const reviewGap = Math.max(0, 50 - reviews);
-    const reviewImpact = reviewGap * 2400;
-
-    // Total annual opportunity
-    const totalOpportunity = timeWasteCost + lostOpportunityCost + reviewImpact;
+    const annualAdminCost = hours * rate * 52;
+    const fiveYearLoss = annualAdminCost * 5;
+    const clientRetentionRisk = revenue * 0.15;
+    const missedAdvisoryCapacity = (hours / 5) * rate * 52;
+    const totalOpportunity = annualAdminCost + clientRetentionRisk + missedAdvisoryCapacity;
 
     return {
-      lostOpportunityCost,
-      timeWasteCost,
-      reviewImpact,
+      annualAdminCost,
+      fiveYearLoss,
+      clientRetentionRisk,
+      missedAdvisoryCapacity,
       totalOpportunity,
-      reviewGap,
-      estimatedInquiries,
-      hourlyRate,
     };
   };
 
-  const results = calculateOpportunity();
+  const metrics = calculateMetrics();
 
+  // State 1: Calculate button handler
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
-    setShowResults(true);
+    if (!annualRevenue || !adminHours || !hourlyRate) return;
+    setCurrentState('capture');
   };
 
+  // State 2: Email capture handler
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || submitting) return;
+    if (!firstName || !email || submitting) return;
     setSubmitting(true);
 
     try {
       // Fire Meta Pixel lead event
       if (typeof (window as any).fbq === 'function') {
         (window as any).fbq('track', 'Lead', {
-          content_name: 'Growth Opportunity Calculator',
+          content_name: 'Revenue Leak Calculator',
           content_category: 'Lead Magnet',
-          value: results.totalOpportunity,
+          value: metrics.totalOpportunity,
         });
       }
 
-      // Send to GHL webhook with calculator data
+      // Send to GHL webhook
       await fetch('https://services.leadconnectorhq.com/hooks/aFlQmmyaRZncBaqSQz2L/webhook-trigger/d22e5d91-61de-46ac-ad9a-8e7a6e7a0fa1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           firstName,
-          lastName,
           email,
           source: 'revenuecalc-page',
-          lead_magnet: 'Growth Opportunity Calculator',
+          lead_magnet: 'Revenue Leak Calculator',
           annual_revenue: annualRevenue,
           admin_hours: adminHours,
-          current_reviews: currentReviews,
-          total_opportunity: results.totalOpportunity.toFixed(0),
-          time_waste_cost: results.timeWasteCost.toFixed(0),
-          lost_opportunity_cost: results.lostOpportunityCost.toFixed(0),
-          review_impact: results.reviewImpact.toFixed(0),
+          hourly_rate: hourlyRate,
+          annual_admin_cost: metrics.annualAdminCost.toFixed(0),
+          five_year_loss: metrics.fiveYearLoss.toFixed(0),
+          client_retention_risk: metrics.clientRetentionRisk.toFixed(0),
+          missed_advisory_capacity: metrics.missedAdvisoryCapacity.toFixed(0),
+          total_opportunity: metrics.totalOpportunity.toFixed(0),
         }),
       });
 
-      setEmailCaptured(true);
-    } catch {
-      setEmailCaptured(true);
+      setCurrentState('results');
+    } catch (error) {
+      console.error('Failed to submit:', error);
     } finally {
       setSubmitting(false);
     }
@@ -120,363 +110,349 @@ const RevenueCalculator: React.FC = () => {
     <section className="relative min-h-screen py-14 sm:py-20 md:py-28 px-4" style={{ backgroundColor: '#0a1018' }}>
       {/* Background effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] bg-red-500/8 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] bg-orange-500/6 pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10 sm:mb-12"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-4 sm:mb-6 border" style={{ backgroundColor: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.2)' }}>
-            <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: '#ef4444' }} />
-            <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase" style={{ color: '#ef4444' }}>
-              Free Revenue Diagnostic
-            </span>
-          </div>
-          <h1
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-3 sm:mb-4"
-            style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
-          >
-            How Much Revenue Are You{' '}
-            <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-              Bleeding?
-            </span>
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            See exactly how much growth you&apos;re leaving on the table with outdated systems. Takes 60 seconds.
-          </p>
-        </motion.div>
-
-        {/* Calculator Form */}
-        {!showResults ? (
-          <motion.form
-            onSubmit={handleCalculate}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="rounded-2xl sm:rounded-3xl border p-6 sm:p-8 md:p-10"
-            style={{
-              backgroundColor: 'rgba(15,23,42,0.6)',
-              borderColor: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(20px)',
-            }}
-          >
-            <div className="space-y-5 sm:space-y-6 mb-6 sm:mb-8">
-              {/* Annual Revenue */}
-              <div>
-                <label className="block text-sm font-semibold mb-2" style={{ color: '#ffffff' }}>
-                  Current annual revenue
-                </label>
-                <input
-                  type="number"
-                  value={annualRevenue}
-                  onChange={(e) => setAnnualRevenue(e.target.value)}
-                  placeholder="e.g., 500000"
-                  required
-                  min="0"
-                  className="w-full rounded-xl px-4 py-3 text-base font-medium outline-none transition-all"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#ffffff',
-                  }}
-                />
-                <p className="mt-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  Helps us calculate your firm's opportunity
-                </p>
-              </div>
-
-              {/* Admin Hours */}
-              <div>
-                <label className="block text-sm font-semibold mb-2" style={{ color: '#ffffff' }}>
-                  Hours per week on manual tasks
-                </label>
-                <input
-                  type="number"
-                  value={adminHours}
-                  onChange={(e) => setAdminHours(e.target.value)}
-                  placeholder="e.g., 15"
-                  required
-                  min="0"
-                  className="w-full rounded-xl px-4 py-3 text-base font-medium outline-none transition-all"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#ffffff',
-                  }}
-                />
-                <p className="mt-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  Email follow-ups, document collection, data entry, scheduling
-                </p>
-              </div>
-
-              {/* Current Reviews */}
-              <div>
-                <label className="block text-sm font-semibold mb-2" style={{ color: '#ffffff' }}>
-                  Current Google reviews
-                </label>
-                <input
-                  type="number"
-                  value={currentReviews}
-                  onChange={(e) => setCurrentReviews(e.target.value)}
-                  placeholder="e.g., 12"
-                  required
-                  min="0"
-                  className="w-full rounded-xl px-4 py-3 text-base font-medium outline-none transition-all"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#ffffff',
-                  }}
-                />
-                <p className="mt-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  Your competitors average 50+
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-8 py-4 rounded-xl text-base sm:text-lg font-bold cursor-pointer transition-all flex items-center justify-center gap-2"
-            >
-              Calculate My Growth Opportunity
-              <ArrowRight size={20} />
-            </button>
-          </motion.form>
-        ) : (
-          /* Results Display */
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-6"
-          >
-            {/* Total Opportunity - Hero Number */}
+      <div className="relative max-w-4xl mx-auto">
+        <AnimatePresence mode="wait">
+          {/* STATE 1: INPUT FORM */}
+          {currentState === 'input' && (
             <motion.div
+              key="input"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-center rounded-2xl sm:rounded-3xl border p-8 sm:p-10 md:p-12"
-              style={{
-                backgroundColor: 'rgba(239,68,68,0.05)',
-                borderColor: 'rgba(239,68,68,0.2)',
-              }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
             >
-              <p className="text-sm sm:text-base font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Based on firms your size
-              </p>
-              <p
-                className="text-5xl sm:text-6xl md:text-7xl font-black mb-3"
-                style={{
-                  fontFamily: "'Syne', sans-serif",
-                  background: 'linear-gradient(to right, #ef4444, #f97316)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
+              <div className="text-center mb-10 sm:mb-14">
+                <motion.h1
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6"
+                  style={{
+                    background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #f06595 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  Calculate Your Firm's Revenue Leak
+                </motion.h1>
+                <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+                  See exactly how much growth your firm is leaving on the table with outdated systems
+                </p>
+              </div>
+
+              <motion.form
+                onSubmit={handleCalculate}
+                className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl"
               >
-                {formatCurrency(results.totalOpportunity)}
-              </p>
-              <p className="text-sm sm:text-base" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                Annual growth opportunity with better systems
-              </p>
+                <div className="space-y-6">
+                  {/* Question 1: Annual Revenue */}
+                  <div>
+                    <label className="block text-base sm:text-lg font-semibold text-white mb-3">
+                      What is your firm's annual revenue?
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">$</span>
+                      <input
+                        type="number"
+                        value={annualRevenue}
+                        onChange={(e) => setAnnualRevenue(e.target.value)}
+                        placeholder="500000"
+                        className="w-full pl-8 pr-4 py-4 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white text-lg focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 transition-all"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Question 2: Admin Hours */}
+                  <div>
+                    <label className="block text-base sm:text-lg font-semibold text-white mb-2">
+                      How many hours per week does your team spend on manual admin tasks?
+                    </label>
+                    <p className="text-sm text-gray-400 mb-3">Email follow-ups, document collection, data entry, scheduling</p>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        value={adminHours}
+                        onChange={(e) => setAdminHours(e.target.value)}
+                        placeholder="15"
+                        className="w-full px-4 py-4 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white text-lg focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 transition-all"
+                        required
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">hours/week</span>
+                    </div>
+                  </div>
+
+                  {/* Question 3: Hourly Billing Rate */}
+                  <div>
+                    <label className="block text-base sm:text-lg font-semibold text-white mb-3">
+                      What is your average hourly billing rate?
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">$</span>
+                      <input
+                        type="number"
+                        value={hourlyRate}
+                        onChange={(e) => setHourlyRate(e.target.value)}
+                        placeholder="250"
+                        className="w-full pl-8 pr-4 py-4 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white text-lg focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 transition-all"
+                        required
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">/hour</span>
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <motion.button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white px-8 py-5 rounded-xl text-lg font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-orange-600/25 flex items-center justify-center gap-3 mt-8"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Calculate My Growth Opportunity
+                    <ArrowRight size={22} />
+                  </motion.button>
+                </div>
+              </motion.form>
             </motion.div>
+          )}
 
-            {/* Breakdown */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="rounded-xl sm:rounded-2xl border p-5 sm:p-6"
-                style={{
-                  backgroundColor: 'rgba(15,23,42,0.6)',
-                  borderColor: 'rgba(239,68,68,0.2)',
-                }}
-              >
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Conversion Gap
-                </p>
-                <p className="text-2xl sm:text-3xl font-black mb-1" style={{ color: '#ef4444' }}>
-                  {formatCurrency(results.lostOpportunityCost)}
-                </p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  From slow follow-up (industry avg)
-                </p>
-              </motion.div>
+          {/* STATE 2: LEAD CAPTURE GATE */}
+          {currentState === 'capture' && (
+            <motion.div
+              key="capture"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="text-center mb-10 sm:mb-14">
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/30 rounded-full px-6 py-3 mb-6"
+                >
+                  <AlertCircle className="text-red-400" size={20} />
+                  <span className="text-red-300 font-semibold">Revenue Leak Detected</span>
+                </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="rounded-xl sm:rounded-2xl border p-5 sm:p-6"
-                style={{
-                  backgroundColor: 'rgba(15,23,42,0.6)',
-                  borderColor: 'rgba(239,68,68,0.2)',
-                }}
-              >
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Time Recapture
-                </p>
-                <p className="text-2xl sm:text-3xl font-black mb-1" style={{ color: '#f97316' }}>
-                  {formatCurrency(results.timeWasteCost)}
-                </p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Value of automating manual work
-                </p>
-              </motion.div>
+                <motion.h2
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  Your firm has an estimated{' '}
+                  <span
+                    className="block mt-2 text-5xl sm:text-6xl md:text-7xl"
+                    style={{
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #f06595 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
+                    {formatCurrency(metrics.annualAdminCost)}
+                  </span>
+                  <span className="block mt-2 text-2xl sm:text-3xl text-gray-300">revenue leak</span>
+                </motion.h2>
 
-              <motion.div
+                <motion.p
+                  className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  Enter your details to unlock your full personalized Revenue Leak Report and see exactly where you are losing money.
+                </motion.p>
+              </div>
+
+              <motion.form
+                onSubmit={handleEmailSubmit}
+                className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl max-w-2xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="rounded-xl sm:rounded-2xl border p-5 sm:p-6"
-                style={{
-                  backgroundColor: 'rgba(15,23,42,0.6)',
-                  borderColor: 'rgba(239,68,68,0.2)',
-                }}
               >
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Trust Deficit
-                </p>
-                <p className="text-2xl sm:text-3xl font-black mb-1" style={{ color: '#fb923c' }}>
-                  {formatCurrency(results.reviewImpact)}
-                </p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  {results.reviewGap} reviews behind competitors
-                </p>
-              </motion.div>
-            </div>
-
-            {/* Email Capture */}
-            {!emailCaptured ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="rounded-2xl sm:rounded-3xl border p-6 sm:p-8"
-                style={{
-                  backgroundColor: 'rgba(15,23,42,0.8)',
-                  borderColor: 'rgba(59,130,246,0.2)',
-                }}
-              >
-                <h3 className="text-xl sm:text-2xl font-black mb-2" style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}>
-                  Get Your Full Diagnostic Report
-                </h3>
-                <p className="text-sm sm:text-base mb-5" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  Enter your info to receive a detailed breakdown + our proven playbook to capture this opportunity.
-                </p>
-
-                <form onSubmit={handleEmailSubmit} className="space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-5">
+                  {/* First Name */}
+                  <div>
+                    <label className="block text-base font-semibold text-white mb-2">
+                      First Name
+                    </label>
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="First name"
+                      placeholder="John"
+                      className="w-full px-4 py-4 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white text-lg focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
                       required
-                      className="rounded-xl px-4 py-3 text-base font-medium outline-none"
-                      style={{
-                        backgroundColor: 'rgba(255,255,255,0.06)',
-                        border: '1px solid rgba(255,255,255,0.12)',
-                        color: '#ffffff',
-                      }}
-                    />
-                    <input
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      placeholder="Last name"
-                      required
-                      className="rounded-xl px-4 py-3 text-base font-medium outline-none"
-                      style={{
-                        backgroundColor: 'rgba(255,255,255,0.06)',
-                        border: '1px solid rgba(255,255,255,0.12)',
-                        color: '#ffffff',
-                      }}
                     />
                   </div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Work email"
-                    required
-                    className="w-full rounded-xl px-4 py-3 text-base font-medium outline-none"
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                      color: '#ffffff',
-                    }}
-                  />
-                  <button
+
+                  {/* Work Email */}
+                  <div>
+                    <label className="block text-base font-semibold text-white mb-2">
+                      Work Email
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="john@yourfirm.com"
+                      className="w-full px-4 py-4 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white text-lg focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                      required
+                    />
+                  </div>
+
+                  {/* CTA Button */}
+                  <motion.button
                     type="submit"
                     disabled={submitting}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl text-base font-bold cursor-pointer transition-colors disabled:opacity-50"
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-8 py-5 rounded-xl text-lg font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 flex items-center justify-center gap-3 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ scale: submitting ? 1 : 1.02 }}
+                    whileTap={{ scale: submitting ? 1 : 0.98 }}
                   >
-                    {submitting ? 'Sending...' : 'Send My Report'}
-                  </button>
-                </form>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="rounded-2xl sm:rounded-3xl border p-6 sm:p-8 text-center"
-                style={{
-                  backgroundColor: 'rgba(16,185,129,0.08)',
-                  borderColor: 'rgba(16,185,129,0.2)',
-                }}
-              >
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(16,185,129,0.15)' }}>
-                  <TrendingUp size={32} style={{ color: '#10b981' }} />
+                    {submitting ? 'Unlocking...' : 'Unlock My Full Report'}
+                    <ArrowRight size={22} />
+                  </motion.button>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-black mb-2" style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}>
-                  Check Your Inbox
-                </h3>
-                <p className="text-sm sm:text-base mb-6" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  Your full diagnostic report is on its way. Now let&apos;s talk about capturing this opportunity.
-                </p>
-              </motion.div>
-            )}
+              </motion.form>
+            </motion.div>
+          )}
 
-            {/* CTA */}
+          {/* STATE 3: RESULT REVEAL (Strategic Blurring) */}
+          {currentState === 'results' && (
             <motion.div
+              key="results"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="text-center pt-4"
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
             >
-              <button
-                onClick={openBooking}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-8 py-4 rounded-xl text-base sm:text-lg font-bold cursor-pointer transition-all"
-              >
-                Get Your Custom Strategy Session
-                <ArrowRight size={20} />
-              </button>
-              <p className="mt-3 text-xs sm:text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Book a call to see exactly how to capture this growth
-              </p>
-            </motion.div>
+              <div className="text-center mb-10 sm:mb-14">
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-6 py-3 mb-6"
+                >
+                  <CheckCircle2 className="text-green-400" size={20} />
+                  <span className="text-green-300 font-semibold">Report Unlocked</span>
+                </motion.div>
 
-            {/* Recalculate */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="text-center"
-            >
-              <button
-                onClick={() => setShowResults(false)}
-                className="text-sm font-semibold underline cursor-pointer"
-                style={{ color: 'rgba(255,255,255,0.5)' }}
+                <motion.h2
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  Your Revenue Leak Report
+                </motion.h2>
+
+                <motion.p
+                  className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  Here's what your firm is losing to inefficient systems
+                </motion.p>
+              </div>
+
+              {/* Metrics Dashboard */}
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
               >
-                Recalculate with different numbers
-              </button>
+                {/* Metric 1: Annual Admin Cost (CLEAR) */}
+                <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-red-200">Annual Admin Cost</h3>
+                  </div>
+                  <p className="text-4xl font-bold text-red-400 mb-2">
+                    {formatCurrency(metrics.annualAdminCost)}
+                  </p>
+                  <p className="text-sm text-gray-400">Wasted on manual tasks per year</p>
+                </div>
+
+                {/* Metric 2: 5-Year Compounding Loss (CLEAR) */}
+                <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-red-200">5-Year Compounding Loss</h3>
+                  </div>
+                  <p className="text-4xl font-bold text-red-400 mb-2">
+                    {formatCurrency(metrics.fiveYearLoss)}
+                  </p>
+                  <p className="text-sm text-gray-400">Total impact over 5 years</p>
+                </div>
+
+                {/* Metric 3: Client Retention Risk (BLURRED) */}
+                <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-300">Client Retention Risk</h3>
+                    <Lock className="text-gray-500" size={20} />
+                  </div>
+                  <p className="text-4xl font-bold text-gray-400 mb-2 select-none" style={{ filter: 'blur(6px)' }}>
+                    {formatCurrency(metrics.clientRetentionRisk)}
+                  </p>
+                  <p className="text-sm text-gray-500">Annual revenue at risk</p>
+                </div>
+
+                {/* Metric 4: Missed Advisory Capacity (BLURRED) */}
+                <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-300">Missed Advisory Capacity</h3>
+                    <Lock className="text-gray-500" size={20} />
+                  </div>
+                  <p className="text-4xl font-bold text-gray-400 mb-2 select-none" style={{ filter: 'blur(6px)' }}>
+                    {formatCurrency(metrics.missedAdvisoryCapacity)}
+                  </p>
+                  <p className="text-sm text-gray-500">Lost advisory opportunity</p>
+                </div>
+
+                {/* Metric 5: Total Opportunity Score (HEAVILY BLURRED) */}
+                <div className="md:col-span-2 bg-gradient-to-br from-gray-900/70 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 relative">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-xl font-bold text-gray-300">Total Opportunity Score</h3>
+                    <Lock className="text-gray-500" size={24} />
+                  </div>
+                  <p className="text-6xl font-bold text-gray-400 mb-3 select-none" style={{ filter: 'blur(10px)' }}>
+                    {formatCurrency(metrics.totalOpportunity)}
+                  </p>
+                  <p className="text-base text-gray-500">Complete growth potential unlocked with optimization</p>
+                </div>
+              </motion.div>
+
+              {/* Final CTA */}
+              <motion.div
+                className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-8 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <CheckCircle2 className="text-blue-400 mx-auto mb-4" size={48} />
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                  Your Full Revenue Leak Report Has Been Sent
+                </h3>
+                <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
+                  Book your free firm audit to walk through every number with our team and unlock your complete breakdown.
+                </p>
+                <motion.button
+                  onClick={() => openBooking()}
+                  className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-10 py-5 rounded-xl text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  See If Your Firm Qualifies
+                  <TrendingUp size={24} />
+                </motion.button>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
