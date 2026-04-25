@@ -59,6 +59,102 @@ const HeroSection: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
 
+  // Video tracking state
+  const [sessionId, setSessionId] = useState<string>('');
+  const [lastTrackedTime, setLastTrackedTime] = useState(0);
+  const milestonesTracked = useRef<Set<number>>(new Set());
+
+  // Generate or retrieve session ID
+  useEffect(() => {
+    let id = localStorage.getItem('vsl_session_id');
+    if (!id) {
+      id = `vsl_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('vsl_session_id', id);
+    }
+    setSessionId(id);
+
+    // Check if there's a saved position and restore it
+    const savedPosition = localStorage.getItem(`vsl_position_${id}`);
+    if (savedPosition && videoRef.current) {
+      videoRef.current.currentTime = parseFloat(savedPosition);
+    }
+  }, []);
+
+  // Track video event
+  const trackEvent = useCallback(async (eventType: string, data: any = {}) => {
+    if (!sessionId) return;
+
+    try {
+      await fetch('/api/vsl/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: sessionId,
+          event_type: eventType,
+          video_position: videoRef.current?.currentTime || 0,
+          video_duration: videoRef.current?.duration || 0,
+          ...data,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to track video event:', error);
+    }
+  }, [sessionId]);
+
+  // Video event handlers
+  const handlePlay = () => {
+    trackEvent('play');
+  };
+
+  const handlePause = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    trackEvent('pause', {
+      completion_percentage: (video.currentTime / video.duration) * 100,
+    });
+
+    // Save position
+    localStorage.setItem(`vsl_position_${sessionId}`, video.currentTime.toString());
+  };
+
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video || !sessionId) return;
+
+    const currentTime = video.currentTime;
+    const duration = video.duration;
+    const completionPercentage = (currentTime / duration) * 100;
+
+    // Track progress every 10 seconds
+    if (currentTime - lastTrackedTime >= 10) {
+      trackEvent('progress', { completion_percentage: completionPercentage });
+      setLastTrackedTime(currentTime);
+    }
+
+    // Track milestones (25%, 50%, 75%, 100%)
+    const milestones = [25, 50, 75, 100];
+    milestones.forEach(milestone => {
+      if (completionPercentage >= milestone && !milestonesTracked.current.has(milestone)) {
+        milestonesTracked.current.add(milestone);
+        trackEvent('milestone', {
+          milestone,
+          completion_percentage: completionPercentage,
+        });
+      }
+    });
+
+    // Save position every few seconds
+    if (Math.floor(currentTime) % 5 === 0) {
+      localStorage.setItem(`vsl_position_${sessionId}`, currentTime.toString());
+    }
+  };
+
+  const handleEnded = () => {
+    trackEvent('complete', { completion_percentage: 100 });
+    localStorage.removeItem(`vsl_position_${sessionId}`);
+  };
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -154,6 +250,10 @@ const HeroSection: React.FC = () => {
                   playsInline
                   preload="auto"
                   crossOrigin="anonymous"
+                  onPlay={handlePlay}
+                  onPause={handlePause}
+                  onTimeUpdate={handleTimeUpdate}
+                  onEnded={handleEnded}
                 >
                   <source
                     src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/olivia-landing-page.mp4"
@@ -335,8 +435,8 @@ const TrustBar: React.FC = () => (
 
       {/* Scrolling track */}
       <div className="flex animate-marquee">
-        {/* Duplicate 4x for seamless loop on wide screens */}
-        {[0, 1, 2, 3].map((setIndex) => (
+        {/* Duplicate 2x for seamless infinite loop */}
+        {[0, 1].map((setIndex) => (
           <div key={setIndex} className="flex shrink-0 items-center gap-14 sm:gap-20 md:gap-24 px-7 sm:px-10">
             {trustLogos.map((partner, i) => (
               <div
@@ -357,7 +457,7 @@ const TrustBar: React.FC = () => (
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
       }
-      /* -50% moves 2 of the 4 sets offscreen, leaving 2 visible = seamless */
+      /* -50% moves the first set completely offscreen, revealing identical second set = seamless loop */
       /* Slower on mobile (14s) for better logo visibility, desktop speed (18s) */
       .animate-marquee {
         animation: marquee 14s linear infinite;
@@ -1571,6 +1671,22 @@ const ExitIntentPopup: React.FC = () => {
         (window as any).fbq('track', 'Lead', {
           content_name: 'CPA Automation Blueprint',
           content_category: 'Exit Intent',
+        });
+      }
+
+      // Associate email with VSL tracking session
+      const sessionId = localStorage.getItem('vsl_session_id');
+      if (sessionId) {
+        await fetch('/api/vsl/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session_id: sessionId,
+            event_type: 'email_captured',
+            email,
+            video_position: 0,
+            video_duration: 0,
+          }),
         });
       }
 

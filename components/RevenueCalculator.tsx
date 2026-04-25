@@ -161,7 +161,7 @@ const RevenueCalculator: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen py-14 sm:py-20 md:py-28 px-4" style={{ backgroundColor: '#0a1018' }}>
+    <section className="relative min-h-screen py-8 sm:py-12 md:py-16 lg:py-12 px-4" style={{ backgroundColor: '#0a1018' }}>
       {/* Background effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] bg-orange-500/8 pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] bg-blue-500/6 pointer-events-none" />
@@ -177,9 +177,9 @@ const RevenueCalculator: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
             >
-              <div className="text-center mb-10 sm:mb-14">
+              <div className="text-center mb-6 sm:mb-8 lg:mb-6">
                 <motion.h1
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4"
                   style={{
                     background: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%)',
                     WebkitBackgroundClip: 'text',
@@ -196,9 +196,9 @@ const RevenueCalculator: React.FC = () => {
 
               <motion.form
                 onSubmit={handleCalculate}
-                className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl"
+                className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-7 md:p-8 shadow-2xl"
               >
-                <div className="space-y-6">
+                <div className="space-y-5">
                   {/* Question 1: Annual Revenue */}
                   <div>
                     <label className="block text-base sm:text-lg font-semibold text-white mb-3">
@@ -305,19 +305,19 @@ const RevenueCalculator: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
             >
-              <div className="text-center mb-10 sm:mb-14">
+              <div className="text-center mb-6 sm:mb-8 lg:mb-6">
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-6 py-3 mb-6"
+                  className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-6 py-3 mb-4"
                 >
                   <AlertCircle className="text-orange-400" size={20} />
                   <span className="text-orange-300 font-semibold">Capacity Analysis Complete</span>
                 </motion.div>
 
                 <motion.h2
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3"
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.3 }}
@@ -338,7 +338,7 @@ const RevenueCalculator: React.FC = () => {
                 </motion.h2>
 
                 <motion.div
-                  className="mt-8 mb-6"
+                  className="mt-5 mb-5"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
@@ -385,12 +385,12 @@ const RevenueCalculator: React.FC = () => {
 
               <motion.form
                 onSubmit={handleEmailSubmit}
-                className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl max-w-2xl mx-auto"
+                className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-7 md:p-8 shadow-2xl max-w-2xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                <div className="mb-6 text-center">
+                <div className="mb-5 text-center">
                   <h3 className="text-xl font-bold text-white mb-2">
                     Unlock Your Full Capacity Audit
                   </h3>
@@ -455,19 +455,19 @@ const RevenueCalculator: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
             >
-              <div className="text-center mb-10 sm:mb-14">
+              <div className="text-center mb-6 sm:mb-8 lg:mb-6">
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-6 py-3 mb-6"
+                  className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-6 py-3 mb-4"
                 >
                   <CheckCircle2 className="text-green-400" size={20} />
                   <span className="text-green-300 font-semibold">Complete Audit Unlocked</span>
                 </motion.div>
 
                 <motion.h2
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white"
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 text-white"
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.3 }}
