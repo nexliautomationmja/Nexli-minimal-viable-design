@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import ThemeProvider from '../components/ThemeProvider';
 import QualificationProvider from '../components/QualificationProvider';
-import Navbar from '../components/Navbar';
+import ConditionalNavbar from '../components/ConditionalNavbar';
 import Footer from '../components/Footer';
 import './globals.css';
 
@@ -184,7 +184,7 @@ export default function RootLayout({
           <QualificationProvider>
             <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300">
               {children}
-              <Navbar />
+              <ConditionalNavbar />
               <Footer />
             </div>
           </QualificationProvider>
