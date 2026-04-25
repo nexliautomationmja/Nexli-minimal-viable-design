@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-// TODO: Re-enable database once migration is complete
-// import { db } from '../../../../dashboard/src/db';
-// import { vslTracking } from '../../../../dashboard/src/db/schema';
+import { getDb } from '../../../../lib/db';
+import { vslTracking } from '../../../../lib/vsl-schema';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,30 +23,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TEMPORARY: Just log to console until DB is ready
-    console.log('VSL Tracking Event:', {
-      session_id,
-      event_type,
-      video_position,
-      email,
-      completion_percentage,
-      milestone,
+    // Get database connection
+    const db = getDb();
+
+    if (!db) {
+      // Fallback: just log if DB not available
+      console.log('VSL Tracking Event (no DB):', {
+        session_id,
+        event_type,
+        video_position,
+        email,
+        completion_percentage,
+        milestone,
+      });
+      return NextResponse.json({ success: true, persisted: false });
+    }
+
+    // Insert tracking event to database
+    await db.insert(vslTracking).values({
+      sessionId: session_id,
+      eventType: event_type,
+      videoPosition: video_position || 0,
+      videoDuration: video_duration || 0,
+      completionPercentage: completion_percentage || 0,
+      milestone: milestone || null,
+      email: email || null,
+      userAgent: request.headers.get('user-agent') || null,
+      ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null,
     });
 
-    // TODO: Uncomment when DB is ready
-    // await db.insert(vslTracking).values({
-    //   sessionId: session_id,
-    //   eventType: event_type,
-    //   videoPosition: video_position || 0,
-    //   videoDuration: video_duration || 0,
-    //   completionPercentage: completion_percentage || 0,
-    //   milestone: milestone || null,
-    //   email: email || null,
-    //   userAgent: request.headers.get('user-agent') || null,
-    //   ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null,
-    // });
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, persisted: true });
   } catch (error) {
     console.error('VSL tracking error:', error);
     return NextResponse.json(
@@ -71,32 +76,35 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // TODO: Re-enable when DB is ready
-    console.log('VSL Tracking Query:', { sessionId, email });
+    // Get database connection
+    const db = getDb();
 
-    // Return empty data for now
-    return NextResponse.json({
-      data: [],
-      message: 'Database not yet connected - tracking will be enabled after migration'
-    });
+    if (!db) {
+      return NextResponse.json({
+        data: [],
+        message: 'Database not yet connected'
+      });
+    }
 
-    // TODO: Uncomment when DB is ready
-    // const { eq } = await import('drizzle-orm');
-    // let trackingData;
-    // if (sessionId) {
-    //   trackingData = await db
-    //     .select()
-    //     .from(vslTracking)
-    //     .where(eq(vslTracking.sessionId, sessionId))
-    //     .orderBy(vslTracking.createdAt);
-    // } else if (email) {
-    //   trackingData = await db
-    //     .select()
-    //     .from(vslTracking)
-    //     .where(eq(vslTracking.email, email))
-    //     .orderBy(vslTracking.createdAt);
-    // }
-    // return NextResponse.json({ data: trackingData });
+    // Query tracking data
+    const { eq, desc } = await import('drizzle-orm');
+
+    let trackingData;
+    if (sessionId) {
+      trackingData = await db
+        .select()
+        .from(vslTracking)
+        .where(eq(vslTracking.sessionId, sessionId))
+        .orderBy(desc(vslTracking.createdAt));
+    } else if (email) {
+      trackingData = await db
+        .select()
+        .from(vslTracking)
+        .where(eq(vslTracking.email, email))
+        .orderBy(desc(vslTracking.createdAt));
+    }
+
+    return NextResponse.json({ data: trackingData });
   } catch (error) {
     console.error('VSL tracking retrieval error:', error);
     return NextResponse.json(
