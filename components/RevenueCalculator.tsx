@@ -551,53 +551,61 @@ const RevenueCalculator: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 4. CLIENT RETENTION RISK (BLURRED) */}
-                <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 relative">
+                {/* 4. CLIENT RETENTION RISK (UNLOCKED) */}
+                <div className="bg-gradient-to-br from-yellow-900/30 to-orange-900/20 backdrop-blur-sm border border-yellow-500/30 rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-semibold text-gray-300">Client Retention Risk</h3>
-                    <Lock className="text-gray-500" size={20} />
+                    <h3 className="text-lg font-semibold text-yellow-200">Client Retention Risk</h3>
                   </div>
-                  <p className="text-4xl font-bold text-gray-400 mb-2 select-none" style={{ filter: 'blur(6px)' }}>
+                  <p className="text-4xl font-bold text-yellow-400 mb-2">
                     {formatCurrency(metrics.clientRetentionRisk)}
                   </p>
-                  <p className="text-sm text-gray-500 mb-3">Annual revenue at risk from responsiveness gaps</p>
-                  <div className="text-xs text-gray-600 bg-gray-800/30 rounded-lg p-3">
-                    <p className="font-semibold mb-1">🔒 Unlock on Call:</p>
-                    <p>Retention Health Grade: {metrics.retentionGrade} — Moving to Grade A = 25% profit boost</p>
+                  <p className="text-sm text-gray-400 mb-3">Annual revenue at risk from responsiveness gaps</p>
+                  <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                    <p className="font-semibold text-gray-400 mb-1">⚠️ Retention Health Grade: {metrics.retentionGrade}</p>
+                    <p>With {metrics.missedRequests} weekly missed requests, you're at risk of losing {((metrics.clientRetentionRisk / metrics.annualRevenue) * 100).toFixed(1)}% of annual revenue. Moving to Grade A = 25% profit boost.</p>
                   </div>
                 </div>
 
-                {/* 5. MISSED ADVISORY REVENUE (BLURRED) */}
-                <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 relative">
+                {/* 5. MISSED ADVISORY REVENUE (UNLOCKED) */}
+                <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-semibold text-gray-300">Missed Advisory Revenue</h3>
-                    <Lock className="text-gray-500" size={20} />
+                    <h3 className="text-lg font-semibold text-green-200">Missed Advisory Revenue</h3>
                   </div>
-                  <p className="text-4xl font-bold text-gray-400 mb-2 select-none" style={{ filter: 'blur(6px)' }}>
+                  <p className="text-4xl font-bold text-green-400 mb-2">
                     {formatCurrency(metrics.missedAdvisoryRevenue)}
                   </p>
-                  <p className="text-sm text-gray-500 mb-3">High-margin opportunity from freed capacity</p>
-                  <div className="text-xs text-gray-600 bg-gray-800/30 rounded-lg p-3">
-                    <p className="font-semibold mb-1">🔒 Unlock on Call:</p>
-                    <p>If freed capacity redirected to advisory services at $250/hr (30-50% margins)</p>
+                  <p className="text-sm text-gray-400 mb-3">High-margin opportunity from freed capacity</p>
+                  <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                    <p className="font-semibold text-gray-400 mb-1">💰 Untapped Potential:</p>
+                    <p>Your team wastes {metrics.wastedCapacityHours} hrs/week on admin. Redirecting just 50% to advisory work at $250/hr = {formatCurrency(metrics.missedAdvisoryRevenue)} annual revenue at 30-50% margins.</p>
                   </div>
                 </div>
 
-                {/* 6. TOTAL OPPORTUNITY SCORE (HEAVILY BLURRED) */}
-                <div className="md:col-span-2 bg-gradient-to-br from-gray-900/70 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 relative">
+                {/* 6. TOTAL OPPORTUNITY SCORE (UNLOCKED - THE BIG REVEAL!) */}
+                <div className="md:col-span-2 bg-gradient-to-br from-purple-900/40 to-blue-900/30 backdrop-blur-sm border border-purple-500/40 rounded-2xl p-8">
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-xl font-bold text-gray-300">Total Growth Potential</h3>
-                    <Lock className="text-gray-500" size={24} />
+                    <h3 className="text-xl font-bold text-purple-200">Total Growth Potential</h3>
+                    <TrendingUp className="text-purple-400" size={24} />
                   </div>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-2xl text-gray-500">Your Total Opportunity:</span>
-                    <p className="text-6xl font-bold text-gray-400 select-none" style={{ filter: 'blur(10px)' }}>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-3 mb-4">
+                    <span className="text-xl sm:text-2xl text-gray-300">Your Total Opportunity:</span>
+                    <p className="text-5xl sm:text-6xl md:text-7xl font-bold"
+                       style={{
+                         background: 'linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #3b82f6 100%)',
+                         WebkitBackgroundClip: 'text',
+                         WebkitTextFillColor: 'transparent',
+                         backgroundClip: 'text',
+                       }}>
                       {formatCurrency(metrics.totalOpportunity)}
                     </p>
                   </div>
-                  <p className="text-base text-gray-500 mt-4">
-                    Complete capacity optimization + advisory migration + retention improvement — without hiring
+                  <p className="text-base text-gray-300 mb-4">
+                    Annual revenue you could unlock through capacity optimization + advisory migration + retention improvement — without adding headcount
                   </p>
+                  <div className="text-sm text-gray-400 bg-gray-800/50 rounded-lg p-4">
+                    <p className="font-semibold text-purple-300 mb-2">🚀 What This Means for Your Firm:</p>
+                    <p>This is {((metrics.totalOpportunity / metrics.annualRevenue) * 100).toFixed(0)}% of your current revenue — achievable by automating the {metrics.wastedCapacityHours} hrs/week your team spends on manual admin, improving response times from Grade {metrics.retentionGrade} to Grade A, and redirecting freed capacity to high-margin advisory work.</p>
+                  </div>
                 </div>
               </motion.div>
 

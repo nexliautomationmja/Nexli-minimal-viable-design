@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '../../../../dashboard/src/db';
-import { vslTracking } from '../../../../dashboard/src/db/schema';
+// TODO: Re-enable database once migration is complete
+// import { db } from '../../../../dashboard/src/db';
+// import { vslTracking } from '../../../../dashboard/src/db/schema';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,18 +24,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Insert tracking event
-    await db.insert(vslTracking).values({
-      sessionId: session_id,
-      eventType: event_type,
-      videoPosition: video_position || 0,
-      videoDuration: video_duration || 0,
-      completionPercentage: completion_percentage || 0,
-      milestone: milestone || null,
-      email: email || null,
-      userAgent: request.headers.get('user-agent') || null,
-      ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null,
+    // TEMPORARY: Just log to console until DB is ready
+    console.log('VSL Tracking Event:', {
+      session_id,
+      event_type,
+      video_position,
+      email,
+      completion_percentage,
+      milestone,
     });
+
+    // TODO: Uncomment when DB is ready
+    // await db.insert(vslTracking).values({
+    //   sessionId: session_id,
+    //   eventType: event_type,
+    //   videoPosition: video_position || 0,
+    //   videoDuration: video_duration || 0,
+    //   completionPercentage: completion_percentage || 0,
+    //   milestone: milestone || null,
+    //   email: email || null,
+    //   userAgent: request.headers.get('user-agent') || null,
+    //   ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null,
+    // });
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -60,25 +71,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Query tracking data
-    const { eq } = await import('drizzle-orm');
+    // TODO: Re-enable when DB is ready
+    console.log('VSL Tracking Query:', { sessionId, email });
 
-    let trackingData;
-    if (sessionId) {
-      trackingData = await db
-        .select()
-        .from(vslTracking)
-        .where(eq(vslTracking.sessionId, sessionId))
-        .orderBy(vslTracking.createdAt);
-    } else if (email) {
-      trackingData = await db
-        .select()
-        .from(vslTracking)
-        .where(eq(vslTracking.email, email))
-        .orderBy(vslTracking.createdAt);
-    }
+    // Return empty data for now
+    return NextResponse.json({
+      data: [],
+      message: 'Database not yet connected - tracking will be enabled after migration'
+    });
 
-    return NextResponse.json({ data: trackingData });
+    // TODO: Uncomment when DB is ready
+    // const { eq } = await import('drizzle-orm');
+    // let trackingData;
+    // if (sessionId) {
+    //   trackingData = await db
+    //     .select()
+    //     .from(vslTracking)
+    //     .where(eq(vslTracking.sessionId, sessionId))
+    //     .orderBy(vslTracking.createdAt);
+    // } else if (email) {
+    //   trackingData = await db
+    //     .select()
+    //     .from(vslTracking)
+    //     .where(eq(vslTracking.email, email))
+    //     .orderBy(vslTracking.createdAt);
+    // }
+    // return NextResponse.json({ data: trackingData });
   } catch (error) {
     console.error('VSL tracking retrieval error:', error);
     return NextResponse.json(
