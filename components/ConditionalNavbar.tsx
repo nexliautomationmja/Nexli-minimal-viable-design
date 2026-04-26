@@ -7,7 +7,7 @@ export default function ConditionalNavbar() {
   const pathname = usePathname();
 
   // Don't show navbar on funnel pages
-  if (pathname === '/revenuecalc' || pathname === '/booking-confirmed' || pathname === '/vslfunnel') {
+  if (pathname === '/revenuecalc' || pathname === '/booking-confirmed' || pathname === '/vslfunnel' || pathname === '/qualify') {
     return null;
   }
 

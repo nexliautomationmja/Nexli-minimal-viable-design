@@ -102,6 +102,11 @@ const RevenueCalculator: React.FC = () => {
     setCurrentState('capture');
   };
 
+  // Helper function to format numbers with commas
+  const formatNumberWithCommas = (num: number): string => {
+    return Math.round(num).toLocaleString('en-US');
+  };
+
   // State 2: Email capture handler
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,15 +136,15 @@ const RevenueCalculator: React.FC = () => {
           team_size: teamSize,
           missed_requests: missedRequests,
           current_reviews: currentReviews,
-          annual_admin_cost: metrics.annualAdminCost.toFixed(0),
-          five_year_loss: metrics.fiveYearLoss.toFixed(0),
+          annual_admin_cost: formatNumberWithCommas(metrics.annualAdminCost),
+          five_year_loss: formatNumberWithCommas(metrics.fiveYearLoss),
           review_gap: metrics.reviewGap,
           target_reviews: metrics.targetReviews,
           discovery_calls_lost: metrics.discoveryCallsLost,
-          client_retention_risk: metrics.clientRetentionRisk.toFixed(0),
+          client_retention_risk: formatNumberWithCommas(metrics.clientRetentionRisk),
           retention_grade: metrics.retentionGrade,
-          missed_advisory_revenue: metrics.missedAdvisoryRevenue.toFixed(0),
-          total_opportunity: metrics.totalOpportunity.toFixed(0),
+          missed_advisory_revenue: formatNumberWithCommas(metrics.missedAdvisoryRevenue),
+          total_opportunity: formatNumberWithCommas(metrics.totalOpportunity),
         }),
       });
 
