@@ -1500,10 +1500,6 @@ const FAQSection: React.FC = () => {
       a: 'This is a done-for-you business infrastructure build — not a website project or a software subscription. We design, build, and integrate your entire client-facing system: website, portal, automations, and review engine. You get a custom-built system, not a template.',
     },
     {
-      q: 'What does the investment look like?',
-      a: 'The Digital Rainmaker System is a premium, done-for-you engagement. Setup begins at $15,000 with an ongoing partnership retainer. We\'ll discuss the exact scope and pricing on your strategy call based on your firm\'s specific needs.',
-    },
-    {
       q: 'How long does the implementation take?',
       a: 'Most firms go live within 2-4 weeks. We handle everything — design, development, integrations, automations — so there\'s minimal disruption to your practice.',
     },
