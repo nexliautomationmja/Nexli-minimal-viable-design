@@ -119,7 +119,7 @@ const RevenueCalculator: React.FC = () => {
       }
 
       // Send to GHL webhook
-      await fetch('https://services.leadconnectorhq.com/hooks/aFlQmmyaRZncBaqSQz2L/webhook-trigger/d22e5d91-61de-46ac-ad9a-8e7a6e7a0fa1', {
+      await fetch('https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c08fe1c0-c919-413f-a4c6-54d70232c07f', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
