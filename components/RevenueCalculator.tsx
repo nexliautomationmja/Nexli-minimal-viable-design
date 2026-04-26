@@ -296,7 +296,7 @@ const RevenueCalculator: React.FC = () => {
             </motion.div>
           )}
 
-          {/* STATE 2: LEAD CAPTURE GATE */}
+          {/* STATE 2: LEAD CAPTURE GATE WITH ALL 6 BLURRED CARDS */}
           {currentState === 'capture' && (
             <motion.div
               key="capture"
@@ -317,72 +317,146 @@ const RevenueCalculator: React.FC = () => {
                 </motion.div>
 
                 <motion.h2
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3"
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 text-white"
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.3 }}
                 >
-                  Your firm is wasting{' '}
-                  <span
-                    className="block mt-2 text-5xl sm:text-6xl md:text-7xl"
-                    style={{
-                      background: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
-                    {formatCurrency(metrics.annualAdminCost)}
-                  </span>
-                  <span className="block mt-2 text-2xl sm:text-3xl text-gray-300">on manual admin tasks annually</span>
+                  Your Capacity Audit Report
                 </motion.h2>
-
-                <motion.div
-                  className="mt-5 mb-5"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <p className="text-xl sm:text-2xl text-gray-300 mb-3">Plus you're</p>
-                  <div className="flex items-center justify-center gap-4 mb-3">
-                    <svg width="120" height="40" viewBox="0 0 272 92" fill="none">
-                      <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335"/>
-                      <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#FBBC05"/>
-                      <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#4285F4"/>
-                      <path d="M225 3v65h-9.5V3h9.5z" fill="#34A853"/>
-                      <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
-                      <path d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
-                    </svg>
-                    <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#FBBC05]">
-                      {metrics.reviewGap}
-                    </span>
-                  </div>
-                  <p className="text-xl sm:text-2xl text-gray-300">reviews behind competitors</p>
-                  <p className="text-base sm:text-lg text-gray-400 mt-4">
-                    Missing ~{metrics.discoveryCallsLost} discovery calls per month from lower search visibility
-                  </p>
-                </motion.div>
 
                 <motion.p
                   className="text-lg text-gray-300 max-w-2xl mx-auto"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  Enter your details to unlock your complete capacity audit
+                  Enter your email below to unlock the full numbers
                 </motion.p>
-
-                <motion.div
-                  className="mt-6 inline-flex items-center gap-2 text-sm text-gray-400"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <BarChart3 size={16} />
-                  <span>Based on {metrics.wastedCapacityHours} hrs/week at ${metrics.blendedRate}/hr blended rate</span>
-                </motion.div>
               </div>
 
+              {/* ALL 6 METRICS WITH BLURRED NUMBERS */}
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                {/* 1. ANNUAL ADMIN COST (BLURRED) */}
+                <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-red-200">Annual Admin Cost</h3>
+                    <Lock className="text-red-300/50" size={20} />
+                  </div>
+                  <p className="text-4xl font-bold text-red-400 mb-2 blur-sm select-none">
+                    {formatCurrency(metrics.annualAdminCost)}
+                  </p>
+                  <p className="text-sm text-gray-400 mb-3">Wasted on manual tasks per year</p>
+                  <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                    <p className="font-semibold text-gray-400 mb-1">📊 What's Causing This:</p>
+                    <p>Manual client communication consuming billable capacity</p>
+                  </div>
+                </div>
+
+                {/* 2. 5-YEAR COMPOUNDING LOSS (BLURRED) */}
+                <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-red-200">5-Year Compounding Loss</h3>
+                    <Lock className="text-red-300/50" size={20} />
+                  </div>
+                  <p className="text-4xl font-bold text-red-400 mb-2 blur-sm select-none">
+                    {formatCurrency(metrics.fiveYearLoss)}
+                  </p>
+                  <p className="text-sm text-gray-400 mb-3">Total firm value impact over 5 years</p>
+                  <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                    <p className="font-semibold text-gray-400 mb-1">💡 What This Means:</p>
+                    <p>Calculated at 1.2x revenue valuation multiple — real enterprise value lost</p>
+                  </div>
+                </div>
+
+                {/* 3. GOOGLE REVIEW GAP (BLURRED) */}
+                <div className="bg-gradient-to-br from-blue-900/30 to-indigo-900/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6 relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-blue-200">Google Review Gap</h3>
+                    <Lock className="text-blue-300/50" size={20} />
+                  </div>
+                  <p className="text-5xl sm:text-6xl md:text-7xl font-bold mb-2 blur-md select-none"
+                     style={{
+                       background: 'linear-gradient(135deg, #4285F4 0%, #34A853 35%, #FBBC05 65%, #EA4335 100%)',
+                       WebkitBackgroundClip: 'text',
+                       WebkitTextFillColor: 'transparent',
+                       backgroundClip: 'text',
+                     }}>
+                    {metrics.reviewGap}
+                  </p>
+                  <p className="text-sm text-gray-400 mb-3">reviews behind top competitors</p>
+                  <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                    <p className="font-semibold text-gray-400 mb-1">🎯 Impact:</p>
+                    <p>Costing discovery calls per month from lower Local Pack visibility</p>
+                  </div>
+                </div>
+
+                {/* 4. CLIENT RETENTION RISK (BLURRED) */}
+                <div className="bg-gradient-to-br from-yellow-900/30 to-orange-900/20 backdrop-blur-sm border border-yellow-500/30 rounded-2xl p-6 relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-yellow-200">Client Retention Risk</h3>
+                    <Lock className="text-yellow-300/50" size={20} />
+                  </div>
+                  <p className="text-4xl font-bold text-yellow-400 mb-2 blur-sm select-none">
+                    {formatCurrency(metrics.clientRetentionRisk)}
+                  </p>
+                  <p className="text-sm text-gray-400 mb-3">Annual revenue at risk from responsiveness gaps</p>
+                  <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                    <p className="font-semibold text-gray-400 mb-1">⚠️ Retention Health Grade:</p>
+                    <p>Risk of losing revenue percentage. Moving to Grade A = 25% profit boost</p>
+                  </div>
+                </div>
+
+                {/* 5. MISSED ADVISORY REVENUE (BLURRED) */}
+                <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6 relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-green-200">Missed Advisory Revenue</h3>
+                    <Lock className="text-green-300/50" size={20} />
+                  </div>
+                  <p className="text-4xl font-bold text-green-400 mb-2 blur-sm select-none">
+                    {formatCurrency(metrics.missedAdvisoryRevenue)}
+                  </p>
+                  <p className="text-sm text-gray-400 mb-3">High-margin opportunity from freed capacity</p>
+                  <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                    <p className="font-semibold text-gray-400 mb-1">💰 Untapped Potential:</p>
+                    <p>Redirecting freed time to advisory work = annual revenue at 30-50% margins</p>
+                  </div>
+                </div>
+
+                {/* 6. TOTAL OPPORTUNITY SCORE (BLURRED - THE BIG REVEAL!) */}
+                <div className="md:col-span-2 bg-gradient-to-br from-purple-900/40 to-blue-900/30 backdrop-blur-sm border border-purple-500/40 rounded-2xl p-8 relative">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-xl font-bold text-purple-200">Total Growth Potential</h3>
+                    <Lock className="text-purple-300/50" size={24} />
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-3 mb-4">
+                    <span className="text-xl sm:text-2xl text-gray-300">Your Total Opportunity:</span>
+                    <p className="text-5xl sm:text-6xl md:text-7xl font-bold blur-md select-none"
+                       style={{
+                         background: 'linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #3b82f6 100%)',
+                         WebkitBackgroundClip: 'text',
+                         WebkitTextFillColor: 'transparent',
+                         backgroundClip: 'text',
+                       }}>
+                      {formatCurrency(metrics.totalOpportunity)}
+                    </p>
+                  </div>
+                  <p className="text-base text-gray-300 mb-4">
+                    Annual revenue you could unlock through capacity optimization + advisory migration + retention improvement
+                  </p>
+                  <div className="text-sm text-gray-400 bg-gray-800/50 rounded-lg p-4">
+                    <p className="font-semibold text-purple-300 mb-2">🚀 What This Means for Your Firm:</p>
+                    <p>Achievable by automating manual admin, improving response times, and redirecting freed capacity to high-margin advisory work</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* EMAIL CAPTURE FORM */}
               <motion.form
                 onSubmit={handleEmailSubmit}
                 className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-7 md:p-8 shadow-2xl max-w-2xl mx-auto"
@@ -392,10 +466,10 @@ const RevenueCalculator: React.FC = () => {
               >
                 <div className="mb-5 text-center">
                   <h3 className="text-xl font-bold text-white mb-2">
-                    Unlock Your Full Capacity Audit
+                    Unlock Your Full Numbers
                   </h3>
                   <p className="text-gray-400">
-                    See your 5-year firm value impact, client retention risk, missed advisory revenue, and complete growth potential
+                    See your exact metrics and get a copy of your complete capacity audit report
                   </p>
                 </div>
 
@@ -446,7 +520,7 @@ const RevenueCalculator: React.FC = () => {
             </motion.div>
           )}
 
-          {/* STATE 3: RESULT REVEAL (Your Exact 6-Metric Structure) */}
+          {/* STATE 3: RESULT REVEAL (UNBLURRED - THE BIG REVEAL!) */}
           {currentState === 'results' && (
             <motion.div
               key="results"
@@ -485,7 +559,7 @@ const RevenueCalculator: React.FC = () => {
                 </motion.p>
               </div>
 
-              {/* Metrics Dashboard - YOUR EXACT 6-METRIC STRUCTURE */}
+              {/* ALL 6 METRICS UNBLURRED */}
               <motion.div
                 className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
                 initial={{ opacity: 0, y: 20 }}
@@ -496,6 +570,7 @@ const RevenueCalculator: React.FC = () => {
                 <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg font-semibold text-red-200">Annual Admin Cost</h3>
+                    <CheckCircle2 className="text-green-400" size={20} />
                   </div>
                   <p className="text-4xl font-bold text-red-400 mb-2">
                     {formatCurrency(metrics.annualAdminCost)}
@@ -511,6 +586,7 @@ const RevenueCalculator: React.FC = () => {
                 <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg font-semibold text-red-200">5-Year Compounding Loss</h3>
+                    <CheckCircle2 className="text-green-400" size={20} />
                   </div>
                   <p className="text-4xl font-bold text-red-400 mb-2">
                     {formatCurrency(metrics.fiveYearLoss)}
@@ -522,11 +598,12 @@ const RevenueCalculator: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 3. GOOGLE REVIEW GAP (CLEAR - NEW!) */}
+                {/* 3. GOOGLE REVIEW GAP (CLEAR) */}
                 <div className="bg-gradient-to-br from-blue-900/30 to-indigo-900/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg font-semibold text-blue-200">Google Review Gap</h3>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="text-green-400" size={20} />
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -551,10 +628,11 @@ const RevenueCalculator: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 4. CLIENT RETENTION RISK (UNLOCKED) */}
+                {/* 4. CLIENT RETENTION RISK (CLEAR) */}
                 <div className="bg-gradient-to-br from-yellow-900/30 to-orange-900/20 backdrop-blur-sm border border-yellow-500/30 rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg font-semibold text-yellow-200">Client Retention Risk</h3>
+                    <CheckCircle2 className="text-green-400" size={20} />
                   </div>
                   <p className="text-4xl font-bold text-yellow-400 mb-2">
                     {formatCurrency(metrics.clientRetentionRisk)}
@@ -562,14 +640,15 @@ const RevenueCalculator: React.FC = () => {
                   <p className="text-sm text-gray-400 mb-3">Annual revenue at risk from responsiveness gaps</p>
                   <div className="text-xs text-gray-500 bg-gray-800/50 rounded-lg p-3">
                     <p className="font-semibold text-gray-400 mb-1">⚠️ Retention Health Grade: {metrics.retentionGrade}</p>
-                    <p>With {metrics.missedRequests} weekly missed requests, you're at risk of losing {((metrics.clientRetentionRisk / metrics.annualRevenue) * 100).toFixed(1)}% of annual revenue. Moving to Grade A = 25% profit boost.</p>
+                    <p>With {missedRequests} weekly missed requests, you're at risk of losing {((metrics.clientRetentionRisk / parseFloat(annualRevenue || '1')) * 100).toFixed(1)}% of annual revenue. Moving to Grade A = 25% profit boost.</p>
                   </div>
                 </div>
 
-                {/* 5. MISSED ADVISORY REVENUE (UNLOCKED) */}
+                {/* 5. MISSED ADVISORY REVENUE (CLEAR) */}
                 <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg font-semibold text-green-200">Missed Advisory Revenue</h3>
+                    <CheckCircle2 className="text-green-400" size={20} />
                   </div>
                   <p className="text-4xl font-bold text-green-400 mb-2">
                     {formatCurrency(metrics.missedAdvisoryRevenue)}
@@ -581,11 +660,14 @@ const RevenueCalculator: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 6. TOTAL OPPORTUNITY SCORE (UNLOCKED - THE BIG REVEAL!) */}
+                {/* 6. TOTAL OPPORTUNITY SCORE (CLEAR - THE BIG REVEAL!) */}
                 <div className="md:col-span-2 bg-gradient-to-br from-purple-900/40 to-blue-900/30 backdrop-blur-sm border border-purple-500/40 rounded-2xl p-8">
                   <div className="flex items-start justify-between mb-4">
                     <h3 className="text-xl font-bold text-purple-200">Total Growth Potential</h3>
-                    <TrendingUp className="text-purple-400" size={24} />
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="text-green-400" size={24} />
+                      <TrendingUp className="text-purple-400" size={24} />
+                    </div>
                   </div>
                   <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-3 mb-4">
                     <span className="text-xl sm:text-2xl text-gray-300">Your Total Opportunity:</span>
@@ -604,7 +686,7 @@ const RevenueCalculator: React.FC = () => {
                   </p>
                   <div className="text-sm text-gray-400 bg-gray-800/50 rounded-lg p-4">
                     <p className="font-semibold text-purple-300 mb-2">🚀 What This Means for Your Firm:</p>
-                    <p>This is {((metrics.totalOpportunity / metrics.annualRevenue) * 100).toFixed(0)}% of your current revenue — achievable by automating the {metrics.wastedCapacityHours} hrs/week your team spends on manual admin, improving response times from Grade {metrics.retentionGrade} to Grade A, and redirecting freed capacity to high-margin advisory work.</p>
+                    <p>This is {((metrics.totalOpportunity / parseFloat(annualRevenue || '1')) * 100).toFixed(0)}% of your current revenue — achievable by automating the {metrics.wastedCapacityHours} hrs/week your team spends on manual admin, improving response times from Grade {metrics.retentionGrade} to Grade A, and redirecting freed capacity to high-margin advisory work.</p>
                   </div>
                 </div>
               </motion.div>
@@ -621,7 +703,7 @@ const RevenueCalculator: React.FC = () => {
                   Your Full Capacity Audit Has Been Sent
                 </h3>
                 <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-                  Book your free capacity audit call to unlock the blurred metrics and walk through exactly where your bottlenecks are — plus get a custom roadmap to capture this growth in the next 90 days.
+                  Book your free capacity audit call to walk through exactly where your bottlenecks are — plus get a custom roadmap to capture this growth in the next 90 days.
                 </p>
                 <motion.button
                   onClick={() => openBooking()}

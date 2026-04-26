@@ -113,7 +113,7 @@ export function getHomeSEO(): SEOConfig {
         'description': 'Premium website design and AI automation for CPAs and accounting firms.',
         'thumbnailUrl': DEFAULT_OG_IMAGE,
         'uploadDate': '2026-01-01',
-        'contentUrl': `${BASE_URL}/hero-video.mp4`,
+        'contentUrl': 'https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/hero-video.mp4',
         'embedUrl': `${BASE_URL}/`,
         'publisher': {
           '@type': 'Organization',

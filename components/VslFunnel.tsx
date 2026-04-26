@@ -1380,7 +1380,7 @@ const StoryVideoModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ i
             playsInline
             onEnded={onClose}
           >
-            <source src="/justine-welcome-original.mp4" type="video/mp4" />
+            <source src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/justine-welcome.mp4" type="video/mp4" />
           </video>
 
           {/* Tap zones for navigation */}

@@ -25,3 +25,17 @@ dist-ssr
 *.sw?
 .vercel
 .env*.local
+
+# Video files (served from Cloudflare R2)
+*.mp4
+*.mov
+*.MOV
+*.MP4
+*.avi
+*.webm
+
+# Large brand assets
+Nexli Brand Assets/
+
+# Cloudflare Workers local dev
+.wrangler/
