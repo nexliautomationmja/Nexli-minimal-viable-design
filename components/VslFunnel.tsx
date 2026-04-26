@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Shield, Clock, TrendingUp,
+  ArrowRight, Shield, Clock, TrendingUp, Droplets,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
@@ -193,15 +193,17 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-6 md:mb-8"
-          style={{
-            backgroundColor: 'rgba(59,130,246,0.1)',
-            borderColor: 'rgba(59,130,246,0.25)',
-          }}
+          className="relative inline-flex items-center mb-6 md:mb-8 rounded-full overflow-hidden p-[1px]"
         >
-          <Shield size={14} style={{ color: '#60a5fa' }} />
-          <span className="text-xs sm:text-sm font-semibold tracking-wide" style={{ color: '#60a5fa' }}>
-            Built Exclusively for Established CPA Firms
+          <span
+            className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+            style={{ background: 'conic-gradient(from 0deg at 50% 50%, #60a5fa, #3b82f6, #60a5fa)' }}
+          />
+          <span className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+            <Shield size={14} className="text-blue-400" />
+            <span className="text-xs sm:text-sm font-black tracking-wide uppercase text-blue-300">
+              Built Exclusively for Established CPA Firms
+            </span>
           </span>
         </motion.div>
 
@@ -288,13 +290,13 @@ const HeroSection: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="space-y-4"
         >
-          {/* Revenue Calculator Button */}
+          {/* The Hidden Drain Button */}
           <a
             href="/revenuecalc"
             className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-red-600/25 group cursor-pointer"
           >
-            How Much Am I Bleeding?
-            <TrendingUp size={22} className="group-hover:translate-y-[-2px] transition-transform" />
+            Find My Hidden Drain
+            <Droplets size={22} className="group-hover:translate-y-[-2px] transition-transform" />
           </a>
 
           {/* Booking Button */}

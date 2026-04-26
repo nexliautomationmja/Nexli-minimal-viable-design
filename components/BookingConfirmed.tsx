@@ -33,6 +33,37 @@ const StepBadge = ({ number, label }: { number: number; label: string }) => (
 
 
 // ---------------------------------------------------------------------------
+// STATIC LOGO — Non-linking brand anchor (replaces Navbar on funnel pages)
+// ---------------------------------------------------------------------------
+const StaticLogo: React.FC = () => (
+  <div className="fixed top-6 left-6 md:top-8 md:left-8 z-[110]">
+    <div
+      className="flex items-center gap-2 backdrop-blur-md px-3 py-2 md:px-4 md:py-2 rounded-full border"
+      style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.05)' }}
+    >
+      <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <linearGradient id="logo-grad-booking" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#2563EB" />
+            <stop offset="100%" stopColor="#06B6D4" />
+          </linearGradient>
+        </defs>
+        <path d="M4 36L20 24L4 12L4 20L12 24L4 28L4 36Z" fill="#2563EB" />
+        <path d="M12 36L28 24L12 12L12 18L18 24L12 30L12 36Z" fill="url(#logo-grad-booking)" />
+        <path d="M20 36L44 24L20 12L20 18L32 24L20 30L20 36Z" fill="#06B6D4" />
+      </svg>
+      <span
+        className="text-sm md:text-xl font-black tracking-tighter text-white"
+        style={{ fontFamily: "'Syne', sans-serif" }}
+      >
+        NEXLI
+      </span>
+    </div>
+  </div>
+);
+
+
+// ---------------------------------------------------------------------------
 // Voice Message Bubble — iMessage-style audio message
 // ---------------------------------------------------------------------------
 const VoiceMessageBubble: React.FC<{
@@ -507,8 +538,9 @@ const BookingConfirmed: React.FC = () => {
   const heroIcons = [CheckCircle, Video, ClipboardCheck, MessageSquare, Calendar];
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] transition-colors duration-300 pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="min-h-screen bg-[var(--bg-main)] transition-colors duration-300 pb-20">
+      <StaticLogo />
+      <div className="max-w-7xl mx-auto px-6 pt-20">
 
         {/* ── SECTION 1: Hero — two-column layout matching AI Automations ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24">

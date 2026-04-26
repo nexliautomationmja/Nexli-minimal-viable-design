@@ -6,8 +6,8 @@ import Navbar from './Navbar';
 export default function ConditionalNavbar() {
   const pathname = usePathname();
 
-  // Don't show navbar on revenue calculator page
-  if (pathname === '/revenuecalc') {
+  // Don't show navbar on funnel pages
+  if (pathname === '/revenuecalc' || pathname === '/booking-confirmed' || pathname === '/vslfunnel') {
     return null;
   }
 
