@@ -254,8 +254,6 @@ const HeroSection: React.FC = () => {
                   }}
                   streamType="on-demand"
                   accentColor="#3b82f6"
-                  primaryColor="#2563EB"
-                  secondaryColor="#06B6D4"
                   className="w-full rounded-xl md:rounded-2xl"
                   style={{ aspectRatio: '16/9' }}
                   onPlay={handlePlay}
