@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
+import MuxPlayer from '@mux/mux-player-react';
 
 // Google "G" icon matching lucide-react component interface
 const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
@@ -56,7 +57,7 @@ const StaticLogo: React.FC = () => (
 // ─────────────────────────────────────────────────────────────────────────────
 const HeroSection: React.FC = () => {
   const { openBooking } = useBooking();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
 
   // Video tracking state
@@ -245,24 +246,20 @@ const HeroSection: React.FC = () => {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none bg-blue-500/5" />
             <div className="relative z-10 p-2.5 sm:p-4 md:p-8">
               <div className="relative">
-                <video
+                <MuxPlayer
                   ref={videoRef}
+                  playbackId="dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"
+                  metadata={{
+                    video_title: "Nexli Digital Rainmaker System",
+                  }}
+                  streamType="on-demand"
                   className="w-full rounded-xl md:rounded-2xl"
-                  controls
-                  playsInline
-                  preload="auto"
-                  crossOrigin="anonymous"
+                  style={{ aspectRatio: '16/9' }}
                   onPlay={handlePlay}
                   onPause={handlePause}
                   onTimeUpdate={handleTimeUpdate}
                   onEnded={handleEnded}
-                >
-                  <source
-                    src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/olivia-landing-page.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
+                />
                 <AnimatePresence>
                   {isMuted && (
                     <motion.button
