@@ -19,7 +19,7 @@ const painPoints = [
     ],
     icon: <Monitor className="text-orange-500" size={32} />,
     color: "from-orange-500/20",
-    video: "/videos/premium-firm.mp4",
+    video: "https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/premium-firm.mp4",
     image: "/logos/Nexli Value Prop 1 .webp",
     mobileImage: "/logos/Nexli Value Prop 1-mobile.webp"
   },
@@ -38,7 +38,7 @@ const painPoints = [
     ],
     icon: <Bot className="text-blue-500" size={32} />,
     color: "from-blue-500/20",
-    video: "/videos/beach-video-cpa-5s.mp4",
+    video: "https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/beach-video-cpa-5s.mp4",
     image: "/logos/Nexli Value Prop 2.webp",
     mobileImage: "/logos/Nexli Value Prop 2-mobile.webp"
   },
@@ -59,7 +59,7 @@ const painPoints = [
     ],
     icon: <Zap className="text-green-500" size={32} />,
     color: "from-green-500/20",
-    video: "/videos/value-prop-2.mp4",
+    video: "https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/value-prop-2.mp4",
     image: "/logos/Nexli Value Prop Section 3.webp",
     mobileImage: "/logos/Nexli Value Prop 3-mobile.webp"
   }
