@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Full Capacity Report</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
+
+  <!-- Container -->
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0a0a;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <!-- Main Content -->
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Header / Logo -->
+          <tr>
+            <td style="padding: 0 0 30px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="200" style="display: block; margin: 0 auto; max-width: 100%; height: auto;" />
+            </td>
+          </tr>
+
+          <!-- Title -->
+          <tr>
+            <td style="padding: 0 0 30px 0; text-align: center;">
+              <h2 style="margin: 0 0 10px 0; font-size: 28px; font-weight: 800; color: #ffffff;">Your Full Capacity Report 🔑</h2>
+              <p style="margin: 0; font-size: 16px; color: #9ca3af;">Here's what you're leaving on the table, {{inboundWebhookRequest.firstName}}</p>
+            </td>
+          </tr>
+
+          <!-- Introduction Text -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.6; color: #d1d5db;">Thanks for completing the Revenue Leak Calculator.</p>
+              <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #d1d5db;">Based on your inputs, here's a breakdown of exactly where your firm is bleeding revenue — and what you could be capturing if you had the right infrastructure in place.</p>
+            </td>
+          </tr>
+
+          <!-- Metrics Grid -->
+          <tr>
+            <td>
+
+              <!-- Row 1: Annual Admin Cost + 5-Year Loss -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <!-- Annual Admin Cost -->
+                  <td width="48%" style="vertical-align: top; padding-bottom: 20px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(135deg, rgba(127, 29, 29, 0.3) 0%, rgba(124, 45, 18, 0.2) 100%); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 16px; padding: 20px;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #fecaca;">Annual Admin Cost</p>
+                          <p style="margin: 0 0 8px 0; font-size: 32px; font-weight: 800; color: #f87171;">${{inboundWebhookRequest.annual_admin_cost}}</p>
+                          <p style="margin: 0; font-size: 12px; color: #d1d5db;">Time wasted on manual tasks</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="4%"></td>
+                  <!-- 5-Year Compounding Loss -->
+                  <td width="48%" style="vertical-align: top; padding-bottom: 20px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(135deg, rgba(127, 29, 29, 0.3) 0%, rgba(124, 45, 18, 0.2) 100%); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 16px; padding: 20px;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #fecaca;">5-Year Compounding Loss</p>
+                          <p style="margin: 0 0 8px 0; font-size: 32px; font-weight: 800; color: #f87171;">${{inboundWebhookRequest.five_year_loss}}</p>
+                          <p style="margin: 0; font-size: 12px; color: #d1d5db;">Cost of inefficiency over 5 years</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Row 2: Google Review Gap -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td>
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.3) 0%, rgba(49, 46, 129, 0.2) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 24px; text-align: center;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #bfdbfe;">Google Review Gap</p>
+                          <p style="margin: 0 0 12px 0; font-size: 56px; font-weight: 800; color: #60a5fa;">{{inboundWebhookRequest.review_gap}}</p>
+                          <p style="margin: 0; font-size: 12px; color: #9ca3af;">Missing <strong style="color: #60a5fa;">{{inboundWebhookRequest.discovery_calls_lost}}</strong> discovery calls/year</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Row 3: Client Retention Risk + Missed Advisory Revenue -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <!-- Client Retention Risk -->
+                  <td width="48%" style="vertical-align: top; padding-bottom: 20px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(135deg, rgba(113, 63, 18, 0.3) 0%, rgba(124, 45, 18, 0.2) 100%); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 16px; padding: 20px;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #fef08a;">Client Retention Risk</p>
+                          <p style="margin: 0 0 8px 0; font-size: 32px; font-weight: 800; color: #facc15;">${{inboundWebhookRequest.client_retention_risk}}</p>
+                          <p style="margin: 0; font-size: 12px; color: #d1d5db;">Annual churn risk from service gaps</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="4%"></td>
+                  <!-- Missed Advisory Revenue -->
+                  <td width="48%" style="vertical-align: top; padding-bottom: 20px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(135deg, rgba(20, 83, 45, 0.3) 0%, rgba(6, 78, 59, 0.2) 100%); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 20px;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #bbf7d0;">Missed Advisory Revenue</p>
+                          <p style="margin: 0 0 8px 0; font-size: 32px; font-weight: 800; color: #34d399;">${{inboundWebhookRequest.missed_advisory_revenue}}</p>
+                          <p style="margin: 0; font-size: 12px; color: #d1d5db;">High-value work you could capture</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Row 4: Total Growth Potential -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td>
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(135deg, rgba(88, 28, 135, 0.4) 0%, rgba(30, 58, 138, 0.3) 100%); border: 2px solid rgba(168, 85, 247, 0.4); border-radius: 16px; padding: 28px; text-align: center;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #e9d5ff;">💰 TOTAL GROWTH POTENTIAL</p>
+                          <p style="margin: 0 0 12px 0; font-size: 48px; font-weight: 900; color: #c084fc;">${{inboundWebhookRequest.total_opportunity}}</p>
+                          <p style="margin: 0; font-size: 14px; color: #d1d5db;">Annual revenue opportunity you're currently leaving on the table</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Next Steps -->
+          <tr>
+            <td style="padding: 20px 0 30px 0;">
+              <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.6; color: #d1d5db;">These aren't just numbers — they represent real revenue that's slipping through the cracks every single day.</p>
+              <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #d1d5db;">Want to walk through these numbers with me and see exactly how to recover this capacity? Book a free firm audit below.</p>
+            </td>
+          </tr>
+
+          <!-- CTA Button -->
+          <tr>
+            <td style="padding: 0 0 40px 0; text-align: center;">
+              <a href="https://www.nexli.net/vslfunnel" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #2563EB 100%); color: #ffffff; font-size: 18px; font-weight: 700; text-decoration: none; padding: 18px 48px; border-radius: 9999px; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);">Book Your Free Firm Audit →</a>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 20px 0; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+              <p style="margin: 0 0 10px 0; font-size: 14px; color: #9ca3af;">Marcel Allen | Nexli Automation</p>
+              <p style="margin: 0; font-size: 12px; color: #6b7280;">Built exclusively for established CPA firms</p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

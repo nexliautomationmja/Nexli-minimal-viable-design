@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>This Is the Last Time I'll Reach Out</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
+
+  <!-- Container -->
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0a0a;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <!-- Main Content -->
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Header / Logo -->
+          <tr>
+            <td style="padding: 0 0 30px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="160" style="display: block; margin: 0 auto; max-width: 100%; height: auto;" />
+            </td>
+          </tr>
+
+          <!-- Greeting -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; color: #9ca3af;">{{inboundWebhookRequest.firstName}},</p>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 0 0 20px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.7; color: #d1d5db;">This is the last time I'll reach out.</p>
+
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.7; color: #d1d5db;">Two weeks ago, I sent you your full capacity report. You saw the numbers:</p>
+            </td>
+          </tr>
+
+          <!-- Quick Stats -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td width="50%" style="padding: 0 10px 10px 0; vertical-align: top;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; border-radius: 8px; padding: 15px;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 5px 0; font-size: 12px; color: #fecaca; text-transform: uppercase; letter-spacing: 0.5px;">Admin Cost</p>
+                          <p style="margin: 0; font-size: 24px; font-weight: 800; color: #f87171;">${{inboundWebhookRequest.annual_admin_cost}}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="50%" style="padding: 0 0 10px 10px; vertical-align: top;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: rgba(168, 85, 247, 0.1); border-left: 3px solid #a855f7; border-radius: 8px; padding: 15px;">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 5px 0; font-size: 12px; color: #e9d5ff; text-transform: uppercase; letter-spacing: 0.5px;">Total Opportunity</p>
+                          <p style="margin: 0; font-size: 24px; font-weight: 800; color: #c084fc;">${{inboundWebhookRequest.total_opportunity}}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Message -->
+          <tr>
+            <td style="padding: 0 0 20px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.7; color: #d1d5db;">I showed you exactly how to recover <strong style="color: #c084fc;">${{inboundWebhookRequest.total_opportunity}}</strong> in annual opportunity.</p>
+
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.7; color: #d1d5db;">I explained the system. I broke down the ROI. I addressed the objections.</p>
+
+              <p style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.7; color: #d1d5db;">I won't keep filling your inbox.</p>
+            </td>
+          </tr>
+
+          <!-- Decision Time -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(49, 46, 129, 0.1) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 24px; text-align: center;">
+                <tr>
+                  <td>
+                    <p style="margin: 0 0 15px 0; font-size: 17px; line-height: 1.6; color: #ffffff; font-weight: 600;">If the timing is right, let's talk.</p>
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #9ca3af;">If not, I hope the report was useful.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Final CTA -->
+          <tr>
+            <td style="padding: 0 0 40px 0; text-align: center;">
+              <p style="margin: 0 0 20px 0; font-size: 14px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Final Chance</p>
+              <a href="https://www.nexli.net/vslfunnel" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #2563EB 100%); color: #ffffff; font-size: 18px; font-weight: 700; text-decoration: none; padding: 18px 48px; border-radius: 9999px; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);">See If Your Firm Qualifies →</a>
+            </td>
+          </tr>
+
+          <!-- Signature -->
+          <tr>
+            <td style="padding: 0 0 20px 0;">
+              <p style="margin: 0 0 5px 0; font-size: 16px; color: #ffffff; font-weight: 600;">Marcel Allen</p>
+              <p style="margin: 0; font-size: 14px; color: #9ca3af;">Founder, Nexli Automation</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 20px 0; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+              <p style="margin: 0; font-size: 12px; color: #6b7280;">Built exclusively for established CPA firms</p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
