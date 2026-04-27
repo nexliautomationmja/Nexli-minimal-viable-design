@@ -25,10 +25,10 @@ const Hero: React.FC = () => {
             playsInline
             className="hidden md:block w-full h-full object-cover mix-blend-screen dark:mix-blend-screen opacity-90 scale-105"
           >
-            <source src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/hero-video.mp4" type="video/mp4" />
+            <source src="/hero-video.mp4" type="video/mp4" />
           </video>
 
-          {/* Mobile Video - Using same source for now as mobile asset was empty */}
+          {/* Mobile Video */}
           <video
             autoPlay
             loop
@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
             playsInline
             className="block md:hidden w-full h-full object-cover mix-blend-screen dark:mix-blend-screen opacity-95"
           >
-            <source src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/hero-video.mp4" type="video/mp4" />
+            <source src="/hero-video-mobile.mp4" type="video/mp4" />
           </video>
         </div>
 
