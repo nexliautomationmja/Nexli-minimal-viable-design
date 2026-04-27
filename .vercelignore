@@ -1,10 +1,13 @@
-# Video files (served from Cloudflare R2)
-*.mp4
+# Large video files (keep essential homepage videos)
+# *.mp4 files in public/ are now included for homepage
 *.mov
 *.MOV
 *.MP4
 *.avi
 *.webm
+
+# Exclude large brand asset videos
+Nexli Brand Assets/**/*.mp4
 
 # Large brand assets
 Nexli Brand Assets/
