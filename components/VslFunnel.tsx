@@ -1313,95 +1313,10 @@ const ProjectionSection: React.FC = () => {
 
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STORY VIDEO MODAL — Instagram/Facebook style story viewer
-// ─────────────────────────────────────────────────────────────────────────────
-const StoryVideoModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    if (isOpen && videoRef.current) {
-      videoRef.current.play();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const updateProgress = () => {
-      const progress = (video.currentTime / video.duration) * 100;
-      setProgress(progress);
-    };
-
-    video.addEventListener('timeupdate', updateProgress);
-    return () => video.removeEventListener('timeupdate', updateProgress);
-  }, []);
-
-  if (!isOpen) return null;
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95"
-        onClick={onClose}
-      >
-        {/* Progress bar */}
-        <div className="absolute top-4 left-4 right-4 h-0.5 bg-white/30 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-white"
-            style={{ width: `${progress}%` }}
-            transition={{ duration: 0.1 }}
-          />
-        </div>
-
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 hover:bg-black/70 transition-colors"
-        >
-          <X className="w-6 h-6 text-white" />
-        </button>
-
-        {/* Video container */}
-        <motion.div
-          initial={{ scale: 0.9 }}
-          animate={{ scale: 1 }}
-          exit={{ scale: 0.9 }}
-          className="relative w-full max-w-md mx-4 aspect-[9/16] rounded-2xl overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            playsInline
-            onEnded={onClose}
-          >
-            <source src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/justine-welcome.mp4" type="video/mp4" />
-          </video>
-
-          {/* Tap zones for navigation */}
-          <div className="absolute inset-0 flex">
-            <div className="flex-1" onClick={onClose} />
-            <div className="flex-1" onClick={onClose} />
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
 // SECTION 6: FOUNDER STORY — Origin + Trust
 // ─────────────────────────────────────────────────────────────────────────────
 const FounderStorySection: React.FC = () => {
-  const [isStoryOpen, setIsStoryOpen] = useState(false);
-
   return (
-    <>
       <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] rounded-full blur-[100px] bg-blue-500/6 pointer-events-none" />
 
@@ -1413,21 +1328,13 @@ const FounderStorySection: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-8 sm:mb-10"
           >
-            {/* Headshot with story ring */}
-            <div
-              className="mx-auto mb-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full p-[3px] cursor-pointer hover:scale-105 transition-transform"
-              style={{
-                background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
-              }}
-              onClick={() => setIsStoryOpen(true)}
-            >
-              <div className="w-full h-full rounded-full overflow-hidden border-[3px] border-[#1a2332]">
-                <img
-                  src="/Founder Photos/marcel-headshot-2.png"
-                  alt="Marcel Allen, CEO & Founder of Nexli"
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
+            {/* Headshot */}
+            <div className="mx-auto mb-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-[3px] border-blue-500/30">
+              <img
+                src="/Founder Photos/marcel-headshot-2.png"
+                alt="Marcel Allen, CEO & Founder of Nexli"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
         <h2
           className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3"
@@ -1477,9 +1384,6 @@ const FounderStorySection: React.FC = () => {
       </motion.div>
     </div>
   </section>
-
-      <StoryVideoModal isOpen={isStoryOpen} onClose={() => setIsStoryOpen(false)} />
-    </>
   );
 };
 
@@ -1668,6 +1572,9 @@ const ExitIntentPopup: React.FC = () => {
           content_name: 'CPA Automation Blueprint',
           content_category: 'Exit Intent',
         });
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Meta Pixel: Lead event fired (CPA Automation Blueprint - Exit Intent)');
+        }
       }
 
       // Associate email with VSL tracking session
@@ -1874,6 +1781,9 @@ const VslFunnel: React.FC = () => {
         content_name: 'VSL Funnel Landing Page (Variant B)',
         content_category: 'Landing Page',
       });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Meta Pixel: ViewContent event fired (VSL Funnel Landing Page)');
+      }
     }
   }, []);
 
