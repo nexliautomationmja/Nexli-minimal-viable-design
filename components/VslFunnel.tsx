@@ -1508,13 +1508,10 @@ const FAQSection: React.FC = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// EXIT-INTENT POPUP — Lead Capture
+// EXIT-INTENT POPUP — Revenue Calculator CTA
 // ─────────────────────────────────────────────────────────────────────────────
 const ExitIntentPopup: React.FC = () => {
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const hasTriggered = useRef(false);
 
   useEffect(() => {
@@ -1560,59 +1557,6 @@ const ExitIntentPopup: React.FC = () => {
     sessionStorage.setItem('nexli-exit-dismissed', '1');
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || submitting) return;
-    setSubmitting(true);
-
-    try {
-      // Fire Meta Pixel lead event
-      if (typeof (window as any).fbq === 'function') {
-        (window as any).fbq('track', 'Lead', {
-          content_name: 'CPA Automation Blueprint',
-          content_category: 'Exit Intent',
-        });
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Meta Pixel: Lead event fired (CPA Automation Blueprint - Exit Intent)');
-        }
-      }
-
-      // Associate email with VSL tracking session
-      const sessionId = localStorage.getItem('vsl_session_id');
-      if (sessionId) {
-        await fetch('/api/vsl/track', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            session_id: sessionId,
-            event_type: 'email_captured',
-            email,
-            video_position: 0,
-            video_duration: 0,
-          }),
-        });
-      }
-
-      // Send to GHL webhook
-      await fetch('https://services.leadconnectorhq.com/hooks/aFlQmmyaRZncBaqSQz2L/webhook-trigger/d22e5d91-61de-46ac-ad9a-8e7a6e7a0fa1', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          source: 'vslfunnel-exit-intent',
-          lead_magnet: 'CPA Firm Automation Blueprint',
-        }),
-      });
-
-      setSubmitted(true);
-    } catch {
-      // Still mark as submitted so user gets confirmation
-      setSubmitted(true);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
     <AnimatePresence>
       {show && (
@@ -1647,70 +1591,28 @@ const ExitIntentPopup: React.FC = () => {
               <X size={16} style={{ color: 'rgba(255,255,255,0.5)' }} />
             </button>
 
-            {!submitted ? (
-              <>
-                {/* Headline */}
-                <h3
-                  className="text-xl sm:text-2xl font-black mb-2"
-                  style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
-                >
-                  Wait — Before You Go.
-                </h3>
-                <p className="text-sm sm:text-base font-semibold mb-4" style={{ color: '#60a5fa' }}>
-                  Download the <em>CPA Firm Automation Blueprint</em>.
-                </p>
-                <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  See the exact 4-step system we use to help established firms save 10+ hours
-                  a week and generate 5-star Google reviews on autopilot.
-                </p>
+            <h3
+              className="text-xl sm:text-2xl font-black mb-3"
+              style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
+            >
+              Want to See How Much Your Firm Is Losing?
+            </h3>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              Most CPA firms are leaking <span style={{ color: '#f87171', fontWeight: 700 }}>$50K–$200K+ per year</span> to
+              manual workflows, missed follow-ups, and inefficient onboarding. Find out your number in 60 seconds.
+            </p>
 
-                {/* Email Form */}
-                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your work email"
-                    required
-                    className="flex-1 rounded-xl px-4 py-3 text-sm font-medium outline-none transition-colors"
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                      color: '#ffffff',
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl text-sm font-bold cursor-pointer transition-colors disabled:opacity-50 whitespace-nowrap"
-                  >
-                    {submitting ? 'Sending...' : 'Get the Free Blueprint'}
-                  </button>
-                </form>
+            <a
+              href="/revenuecalc"
+              onClick={handleDismiss}
+              className="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center px-6 py-3.5 rounded-xl text-sm font-bold cursor-pointer transition-colors"
+            >
+              Calculate My Revenue Leak
+            </a>
 
-                <p className="mt-3 text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                  No spam. Unsubscribe anytime.
-                </p>
-              </>
-            ) : (
-              <div className="text-center py-4">
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-                  style={{ backgroundColor: 'rgba(16,185,129,0.15)' }}
-                >
-                  <Zap size={24} style={{ color: '#34d399' }} />
-                </div>
-                <h3
-                  className="text-xl font-bold mb-2"
-                  style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
-                >
-                  Check Your Inbox
-                </h3>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  The CPA Firm Automation Blueprint is on its way.
-                </p>
-              </div>
-            )}
+            <p className="mt-3 text-xs text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              Free. No email required. Takes 60 seconds.
+            </p>
           </motion.div>
         </motion.div>
       )}
