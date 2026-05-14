@@ -132,11 +132,16 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     }
   };
 
-  // Step 2: Budget — all pass through (under-250k is noted but not disqualifying)
+  // Step 2: Budget — under-250k is a hard disqualifier
   const handleAnnualRevenue = (value: string) => {
     const updated = { ...answers, annualRevenue: value };
     setAnswers(updated);
-    setStep(3);
+    if (value === 'under-250k') {
+      sendQualificationToGHL(updated, false);
+      onResult('not-qualified', updated);
+    } else {
+      setStep(3);
+    }
   };
 
   // Step 3: Intent — disqualifies lead-generation seekers
@@ -413,15 +418,11 @@ export default function QualificationProvider({ children }: { children: React.Re
     const Cal = (window as any).Cal;
     Cal("init", "nexli-demo", { origin: "https://app.cal.com" });
 
-    // Track successful bookings with Facebook Pixel + send prequalification data to GHL
+    // Send prequalification data to GHL on successful booking, then redirect to /thank-you
+    // (Meta pixel Lead + Schedule events now fire on the /thank-you page instead)
     Cal("on", {
       action: "bookingSuccessful",
       callback: (e: any) => {
-        if (typeof (window as any).fbq === 'function') {
-          (window as any).fbq('track', 'Schedule', {
-            content_name: 'Strategy Session Booking',
-          });
-        }
 
         // Send prequalification answers to GHL with booking info
         const savedAnswers = answersRef.current;
@@ -445,7 +446,8 @@ export default function QualificationProvider({ children }: { children: React.Re
           }).catch(() => {});
         }
 
-        // Redirect to booking-confirmed with attendee info for GHL intel tracking
+        // Redirect to thank-you page (fires Meta Lead + Schedule pixel events)
+        // then thank-you page links to /booking-confirmed for call prep
         const attendeeEmail = bookingData.booking?.attendees?.[0]?.email
           || bookingData.attendees?.[0]?.email
           || '';
@@ -456,7 +458,7 @@ export default function QualificationProvider({ children }: { children: React.Re
         if (attendeeEmail) params.set('email', attendeeEmail);
         if (attendeeName) params.set('name', attendeeName);
         const qs = params.toString();
-        window.location.href = `/booking-confirmed${qs ? `?${qs}` : ''}`;
+        window.location.href = `/thank-you${qs ? `?${qs}` : ''}`;
       },
     });
 
@@ -499,12 +501,15 @@ export default function QualificationProvider({ children }: { children: React.Re
     setQualificationStatus(status);
     answersRef.current = answers;
     if (status === 'qualified') {
-      // Fire Meta Pixel Lead event — qualified prospect
+      // Fire Meta Pixel CompleteRegistration — qualification form completed (no contact data captured yet)
       if (typeof (window as any).fbq === 'function') {
-        (window as any).fbq('track', 'Lead', {
+        (window as any).fbq('track', 'CompleteRegistration', {
           content_name: 'Qualified CPA Firm',
           content_category: 'Qualification',
         });
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Meta Pixel: CompleteRegistration event fired (Qualification Form)');
+        }
       }
       setIsOpen(false);
       setTimeout(() => {
