@@ -55,7 +55,12 @@ const StaticLogo: React.FC = () => (
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 1: HERO — ROI Headline + Video + Qualification CTA
 // ─────────────────────────────────────────────────────────────────────────────
-const HeroSection: React.FC = () => {
+interface HeroProps {
+  headline?: React.ReactNode;
+  subheadline?: string;
+}
+
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline }) => {
   const { openBooking } = useBooking();
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -156,21 +161,13 @@ const HeroSection: React.FC = () => {
     localStorage.removeItem(`vsl_position_${sessionId}`);
   };
 
+  // Don't autoplay — let the user press play
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     video.muted = false;
     video.volume = 1;
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => setIsMuted(false))
-        .catch(() => {
-          video.muted = true;
-          setIsMuted(true);
-          video.play().catch(() => {});
-        });
-    }
+    setIsMuted(false);
   }, []);
 
   const handleUnmute = () => {
@@ -216,10 +213,14 @@ const HeroSection: React.FC = () => {
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 md:mb-8"
           style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
         >
-          Stop Losing High-Value Clients to Firms With{' '}
-          <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-            Better Systems
-          </span>
+          {headline || (
+            <>
+              Stop Losing High-Value Clients to Firms With{' '}
+              <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                Better Systems
+              </span>
+            </>
+          )}
         </motion.h1>
 
         {/* Subheadline */}
@@ -230,9 +231,7 @@ const HeroSection: React.FC = () => {
           className="text-base md:text-lg max-w-2xl mx-auto mb-10 md:mb-14 leading-relaxed"
           style={{ color: 'rgba(255,255,255,0.7)' }}
         >
-          The Digital Rainmaker System is a complete, done-for-you infrastructure that
-          automates your intake, secures your documents, and engineers 5-star Google reviews
-          on autopilot. Built exclusively for established CPA firms.
+          {subheadline || 'The Digital Rainmaker System is a complete, done-for-you infrastructure that automates your intake, secures your documents, and engineers 5-star Google reviews on autopilot. Built exclusively for established CPA firms.'}
         </motion.p>
 
         {/* Video Player */}
@@ -1674,25 +1673,74 @@ const StickyCTA: React.FC = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// URGENCY PILL — Sticky scarcity badge (top-right)
+// ─────────────────────────────────────────────────────────────────────────────
+const UrgencyPill: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4 }}
+          className="fixed top-6 right-6 md:top-8 md:right-8 z-[110]"
+        >
+          <div
+            className="flex items-center gap-2 px-3.5 py-2 rounded-full border backdrop-blur-md shadow-lg"
+            style={{
+              backgroundColor: 'rgba(239,68,68,0.12)',
+              borderColor: 'rgba(239,68,68,0.3)',
+              boxShadow: '0 4px 20px rgba(239,68,68,0.15)',
+            }}
+          >
+            <span
+              className="w-2 h-2 rounded-full bg-red-500 animate-pulse"
+            />
+            <span className="text-[11px] sm:text-xs font-bold text-red-400 tracking-wide uppercase">
+              Only 3 spots left this month
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN VSL FUNNEL COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-const VslFunnel: React.FC = () => {
+interface VslFunnelProps {
+  headline?: React.ReactNode;
+  subheadline?: string;
+  variant?: string;
+}
+
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A' }) => {
   useEffect(() => {
     if (typeof (window as any).fbq === 'function') {
       (window as any).fbq('track', 'ViewContent', {
-        content_name: 'VSL Funnel Landing Page (Variant B)',
+        content_name: `VSL Funnel Landing Page (Variant ${variant})`,
         content_category: 'Landing Page',
       });
       if (process.env.NODE_ENV === 'development') {
-        console.log('Meta Pixel: ViewContent event fired (VSL Funnel Landing Page)');
+        console.log(`Meta Pixel: ViewContent event fired (VSL Funnel Landing Page - Variant ${variant})`);
       }
     }
-  }, []);
+  }, [variant]);
 
   return (
     <div className="min-h-screen pb-14 sm:pb-16">
       <StaticLogo />
-      <HeroSection />
+      <UrgencyPill />
+      <HeroSection headline={headline} subheadline={subheadline} />
       <TrustBar />
       <TransformationSection />
       <CostOfInactionSection />

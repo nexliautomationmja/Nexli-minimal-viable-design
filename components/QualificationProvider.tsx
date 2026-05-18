@@ -144,17 +144,12 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     }
   };
 
-  // Step 3: Intent — disqualifies lead-generation seekers
+  // Step 3: Intent — all goals qualify (lead-gen seekers are now valid prospects)
   const handleGoal = (value: string) => {
     const updated = { ...answers, goal: value };
     setAnswers(updated);
-    if (value === DISQUALIFYING_GOAL) {
-      sendQualificationToGHL(updated, false);
-      onResult('not-qualified', updated);
-    } else {
-      sendQualificationToGHL(updated, true);
-      onResult('qualified', updated);
-    }
+    sendQualificationToGHL(updated, true);
+    onResult('qualified', updated);
   };
 
   const totalSteps = 4;
