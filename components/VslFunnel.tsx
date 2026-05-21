@@ -81,10 +81,9 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
     }
     setSessionId(id);
 
-    // Check if there's a saved position and restore it
-    const savedPosition = localStorage.getItem(`vsl_position_${id}`);
-    if (savedPosition && videoRef.current) {
-      videoRef.current.currentTime = parseFloat(savedPosition);
+    // Always start from the beginning
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
     }
   }, []);
 
@@ -121,9 +120,6 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
     trackEvent('pause', {
       completion_percentage: (video.currentTime / video.duration) * 100,
     });
-
-    // Save position
-    localStorage.setItem(`vsl_position_${sessionId}`, video.currentTime.toString());
   };
 
   const handleTimeUpdate = () => {
@@ -152,15 +148,10 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
       }
     });
 
-    // Save position every few seconds
-    if (Math.floor(currentTime) % 5 === 0) {
-      localStorage.setItem(`vsl_position_${sessionId}`, currentTime.toString());
-    }
   };
 
   const handleEnded = () => {
     trackEvent('complete', { completion_percentage: 100 });
-    localStorage.removeItem(`vsl_position_${sessionId}`);
   };
 
   // Don't autoplay — let the user press play
