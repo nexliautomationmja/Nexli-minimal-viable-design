@@ -5,7 +5,9 @@ import VslFunnel from '../../components/VslFunnel';
 export default function VslFunnelAds() {
   return (
     <VslFunnel
-      variant="B"
+      variant="Ads"
+      muxPlaybackId="4VURlgj96a94Ro8U3qwxG01L4hNUEAyMZ3I02ItScldMs"
+      videoTitle="Jasmine VSL - CPA Ads"
       headline={
         <>
           Why CPA Firms That Run Ads Without This System Are{' '}

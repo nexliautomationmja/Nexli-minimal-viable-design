@@ -58,9 +58,11 @@ const StaticLogo: React.FC = () => (
 interface HeroProps {
   headline?: React.ReactNode;
   subheadline?: string;
+  muxPlaybackId?: string;
+  videoTitle?: string;
 }
 
-const HeroSection: React.FC<HeroProps> = ({ headline, subheadline }) => {
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle }) => {
   const { openBooking } = useBooking();
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -247,9 +249,9 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline }) => {
               <div className="relative">
                 <MuxPlayer
                   ref={videoRef}
-                  playbackId="dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"
+                  playbackId={muxPlaybackId || "dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"}
                   metadata={{
-                    video_title: "Nexli Digital Rainmaker System",
+                    video_title: videoTitle || "Nexli Digital Rainmaker System",
                   }}
                   streamType="on-demand"
                   accentColor="#3b82f6"
@@ -1721,9 +1723,11 @@ interface VslFunnelProps {
   headline?: React.ReactNode;
   subheadline?: string;
   variant?: string;
+  muxPlaybackId?: string;
+  videoTitle?: string;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A' }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle }) => {
   useEffect(() => {
     if (typeof (window as any).fbq === 'function') {
       (window as any).fbq('track', 'ViewContent', {
@@ -1740,7 +1744,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
     <div className="min-h-screen pb-14 sm:pb-16">
       <StaticLogo />
       <UrgencyPill />
-      <HeroSection headline={headline} subheadline={subheadline} />
+      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} />
       <TrustBar />
       <TransformationSection />
       <CostOfInactionSection />
