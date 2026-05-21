@@ -1698,7 +1698,7 @@ const UrgencyPill: React.FC = () => {
               className="w-2 h-2 rounded-full bg-red-500 animate-pulse"
             />
             <span className="text-[11px] sm:text-xs font-bold text-red-400 tracking-wide uppercase">
-              Only 3 spots left this month
+              Only accepting 1 firm this month
             </span>
           </div>
         </motion.div>
