@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import { trackMetaEvent, generateEventId } from '@/lib/meta-events';
 
 export default function ThankYouClient() {
   const hasFired = useRef(false);
@@ -10,22 +11,18 @@ export default function ThankYouClient() {
     if (hasFired.current) return;
     hasFired.current = true;
 
-    if (typeof (window as any).fbq === 'function') {
-      // Fire Lead event
-      (window as any).fbq('track', 'Lead', {
-        content_name: 'Strategy Session Booking',
-        content_category: 'Booking',
-      });
+    // Fire QualifiedLead event — anyone reaching this page passed qualification + booked
+    const leadEventId = generateEventId();
+    trackMetaEvent('QualifiedLead', {
+      content_name: 'Strategy Session Booking',
+      content_category: 'Booking',
+    }, leadEventId);
 
-      // Fire Schedule event (website schedules)
-      (window as any).fbq('track', 'Schedule', {
-        content_name: 'Strategy Session Booking',
-      });
-
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Meta Pixel: Lead + Schedule events fired (Thank You page)');
-      }
-    }
+    // Fire Schedule event with dedup eventId
+    const scheduleEventId = generateEventId();
+    trackMetaEvent('Schedule', {
+      content_name: 'Strategy Session Booking',
+    }, scheduleEventId);
   }, []);
 
   return (

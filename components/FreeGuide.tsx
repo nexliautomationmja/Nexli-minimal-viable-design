@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, Send, ArrowRight, Download } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { trackLeadEvent } from '@/lib/meta-events';
 
 const FreeGuide: React.FC = () => {
     const router = useRouter();
@@ -33,6 +34,9 @@ const FreeGuide: React.FC = () => {
         setLoading(true);
 
         try {
+            // Fire browser pixel event with dedup eventId + capture attribution
+            const { eventId, attribution } = trackLeadEvent('Free Guide - 5 Automations');
+
             const response = await fetch('/api/forms/guide', {
                 method: 'POST',
                 headers: {
@@ -45,15 +49,12 @@ const FreeGuide: React.FC = () => {
                     phone: formData.phone,
                     marketingSmsOptIn: formData.marketingSmsOptIn,
                     nonMarketingSmsOptIn: formData.nonMarketingSmsOptIn,
+                    event_id: eventId,
+                    attribution,
                 }),
             });
 
             if (response.ok) {
-                if (typeof (window as any).fbq === 'function') {
-                  (window as any).fbq('track', 'Lead', {
-                    content_name: 'Free Guide - 5 Automations',
-                  });
-                }
                 setSubmitted(true);
             } else {
                 throw new Error('Form submission failed');

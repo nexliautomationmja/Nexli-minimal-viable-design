@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackMetaEvent } from '@/lib/meta-events';
 import {
   ArrowRight, Globe, Zap, VolumeX,
   Monitor, Layout, Code, Palette,
@@ -871,12 +872,10 @@ const FAQSection: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 const Funnel: React.FC = () => {
   useEffect(() => {
-    if (typeof (window as any).fbq === 'function') {
-      (window as any).fbq('track', 'ViewContent', {
-        content_name: 'Funnel Landing Page',
-        content_category: 'Landing Page',
-      });
-    }
+    trackMetaEvent('ViewContent', {
+      content_name: 'Funnel Landing Page',
+      content_category: 'Landing Page',
+    });
   }, []);
 
   return (

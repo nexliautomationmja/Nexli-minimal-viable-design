@@ -3,6 +3,8 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle, XCircle, Building2, Target, DollarSign, Crown, X } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { trackMetaEvent, generateEventId } from '@/lib/meta-events';
+import { getAttribution } from '@/lib/attribution';
 
 // ---------------------------------------------------------------------------
 // Qualification types & data — Optimized 5-step "High-Signal" funnel
@@ -79,9 +81,29 @@ function formatAnswersAsNotes(answers: QualificationAnswers): string {
 
 const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c08ab845-6f7c-4016-bdf0-bbcb6b5782e6';
 
-async function sendQualificationToGHL(answers: QualificationAnswers, qualified: boolean) {
+async function sendQualificationToServer(answers: QualificationAnswers, qualified: boolean, eventId?: string) {
+  const attribution = getAttribution();
   try {
-    await fetch(GHL_WEBHOOK_URL, {
+    // Send to server route (handles GHL webhook, DB insert, scoring, CAPI)
+    await fetch('/api/forms/qualification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        qualified,
+        us_based: answers.usBased,
+        decision_role: answers.decisionRole,
+        goal: answers.goal,
+        goal_tag: answers.goalTag,
+        problem_duration: answers.problemDuration,
+        annual_revenue: answers.annualRevenue,
+        event_id: eventId || null,
+        attribution,
+      }),
+    });
+  } catch {
+    // Silently fail — don't block the user experience
+    // Fallback: try direct GHL webhook
+    fetch(GHL_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -95,9 +117,7 @@ async function sendQualificationToGHL(answers: QualificationAnswers, qualified: 
         annual_revenue: answers.annualRevenue,
         submitted_at: new Date().toISOString(),
       }),
-    });
-  } catch {
-    // Silently fail — don't block the user experience
+    }).catch(() => {});
   }
 }
 
@@ -136,7 +156,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     const updated = { ...answers, usBased: value };
     setAnswers(updated);
     if (!value) {
-      sendQualificationToGHL(updated, false);
+      sendQualificationToServer(updated, false);
       onResult('not-qualified', updated);
     } else {
       setStep(1);
@@ -148,7 +168,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     const updated = { ...answers, decisionRole: value };
     setAnswers(updated);
     if (value === DISQUALIFYING_ROLE) {
-      sendQualificationToGHL(updated, false);
+      sendQualificationToServer(updated, false);
       onResult('not-qualified', updated);
     } else {
       setStep(2);
@@ -174,10 +194,10 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     const updated = { ...answers, annualRevenue: value };
     setAnswers(updated);
     if (value === DISQUALIFYING_REVENUE) {
-      sendQualificationToGHL(updated, false);
+      sendQualificationToServer(updated, false);
       onResult('not-qualified', updated);
     } else {
-      sendQualificationToGHL(updated, true);
+      sendQualificationToServer(updated, true);
       onResult('qualified', updated);
     }
   };
@@ -565,16 +585,14 @@ export default function QualificationProvider({ children }: { children: React.Re
     setQualificationStatus(status);
     answersRef.current = answers;
     if (status === 'qualified') {
-      // Fire Meta Pixel CompleteRegistration — qualification form completed (no contact data captured yet)
-      if (typeof (window as any).fbq === 'function') {
-        (window as any).fbq('track', 'CompleteRegistration', {
-          content_name: 'Qualified CPA Firm',
-          content_category: 'Qualification',
-        });
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Meta Pixel: CompleteRegistration event fired (Qualification Form)');
-        }
-      }
+      // Fire Meta Pixel CompleteRegistration with dedup eventId
+      const eventId = generateEventId();
+      trackMetaEvent('CompleteRegistration', {
+        content_name: 'Qualified CPA Firm',
+        content_category: 'Qualification',
+      }, eventId);
+      // Pass eventId to server so CAPI can deduplicate
+      sendQualificationToServer(answers, true, eventId);
       setIsOpen(false);
       setTimeout(() => {
         openCalPopup();

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Send, CheckCircle } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import { trackLeadEvent } from '@/lib/meta-events';
 
 const ContactForm: React.FC = () => {
   const router = useRouter();
@@ -41,20 +42,22 @@ const ContactForm: React.FC = () => {
     setLoading(true);
 
     try {
+      // Fire browser pixel event with dedup eventId + capture attribution
+      const { eventId, attribution } = trackLeadEvent('Website Brand Audit');
+
       const response = await fetch('/api/forms/audit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          event_id: eventId,
+          attribution,
+        }),
       });
 
       if (response.ok) {
-        if (typeof (window as any).fbq === 'function') {
-          (window as any).fbq('track', 'SubmitApplication', {
-            content_name: 'Website Brand Audit',
-          });
-        }
         setSubmitted(true);
       } else {
         console.error('Webhook submission failed');

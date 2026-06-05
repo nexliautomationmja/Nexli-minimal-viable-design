@@ -6,6 +6,7 @@ import ThemeProvider from '../components/ThemeProvider';
 import QualificationProvider from '../components/QualificationProvider';
 import ConditionalNavbar from '../components/ConditionalNavbar';
 import Footer from '../components/Footer';
+import AttributionCapture from '../components/AttributionCapture';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -175,7 +176,7 @@ export default function RootLayout({
             height="1"
             width="1"
             style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=910151701422761&ev=PageView&noscript=1"
+            src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_META_PIXEL_ID || '910151701422761'}&ev=PageView&noscript=1`}
             alt=""
           />
         </noscript>
@@ -192,9 +193,10 @@ export default function RootLayout({
 
         <SpeedInsights />
         <Analytics />
+        <AttributionCapture />
 
-        {/* Meta Pixel Script */}
-        <Script id="meta-pixel" strategy="afterInteractive">
+        {/* Meta Pixel Script — beforeInteractive so fbq stub is available for useEffect calls */}
+        <Script id="meta-pixel" strategy="beforeInteractive">
           {`!function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -203,7 +205,7 @@ export default function RootLayout({
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window, document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', '910151701422761');
+          fbq('init', '${process.env.NEXT_PUBLIC_META_PIXEL_ID || '910151701422761'}');
           fbq('track', 'PageView');`}
         </Script>
 

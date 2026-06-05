@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Lock, TrendingUp, CheckCircle2, AlertCircle, BarChart3, Star } from 'lucide-react';
 import { useBooking } from './QualificationProvider';
+import { trackLeadEvent } from '@/lib/meta-events';
 
 type CalculatorState = 'input' | 'capture' | 'results';
 
@@ -114,22 +115,18 @@ const RevenueCalculator: React.FC = () => {
     setSubmitting(true);
 
     try {
-      // Fire Meta Pixel lead event
-      if (typeof (window as any).fbq === 'function') {
-        (window as any).fbq('track', 'Lead', {
-          content_name: 'Growth Ceiling Calculator',
-          content_category: 'Lead Magnet',
-          value: metrics.totalOpportunity,
-        });
-      }
+      // Fire browser pixel event with dedup eventId + capture attribution
+      const { eventId, attribution } = trackLeadEvent('Growth Ceiling Calculator');
 
-      // Send to GHL webhook
-      await fetch('https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c08fe1c0-c919-413f-a4c6-54d70232c07f', {
+      // Send to server-side route (handles GHL webhook, DB insert, scoring, CAPI)
+      await fetch('/api/forms/revenue-calc', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           firstName,
           email,
+          event_id: eventId,
+          attribution,
           source: 'revenuecalc-page',
           lead_magnet: 'Growth Ceiling Calculator',
           annual_revenue: annualRevenue,
