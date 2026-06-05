@@ -40,7 +40,7 @@ export default function QualifyPage() {
           See If Your Firm Qualifies
         </h2>
         <p className="text-lg text-gray-400 mb-8">
-          Answer 4 quick questions to see if you're eligible for a strategy call
+          Answer 5 quick questions to see if you're eligible for a strategy call
         </p>
 
         {/* Loading state while modal opens */}

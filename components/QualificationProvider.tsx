@@ -5,15 +5,18 @@ import { ArrowRight, CheckCircle, XCircle, Building2, Target, DollarSign, Crown,
 import { useTheme } from './ThemeProvider';
 
 // ---------------------------------------------------------------------------
-// Qualification types & data — Optimized 4-step "High-Signal" funnel
+// Qualification types & data — Optimized 5-step "High-Signal" funnel
+// Geography → Authority → Intent → Duration → Revenue
 // ---------------------------------------------------------------------------
 type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
 
 interface QualificationAnswers {
   usBased: boolean | null;
   decisionRole: string | null;
-  annualRevenue: string | null;
   goal: string | null;
+  goalTag: string | null;
+  problemDuration: string | null;
+  annualRevenue: string | null;
 }
 
 const decisionRoleOptions = [
@@ -25,35 +28,51 @@ const decisionRoleOptions = [
 
 const DISQUALIFYING_ROLE = 'not-decision-maker';
 
+const goalOptions = [
+  { value: 'generate-leads', label: 'We need help generating new leads and finding clients' },
+  { value: 'better-website', label: 'Upgrade our website and digital presence' },
+  { value: 'streamline-ops', label: 'Streamline operations and reduce manual work' },
+  { value: 'more-reviews', label: 'Get more Google reviews and improve our reputation' },
+];
+
+const goalTagMap: Record<string, string> = {
+  'generate-leads': 'hot_full_system',
+  'better-website': 'warm_full_system',
+  'streamline-ops': 'warm_automations',
+  'more-reviews': 'soft_single_pillar',
+};
+
+const problemDurationOptions = [
+  { value: 'just-started', label: 'Just started looking' },
+  { value: 'few-months', label: 'A few months' },
+  { value: '6-12-months', label: '6–12 months' },
+  { value: 'over-a-year', label: 'Over a year' },
+];
+
 const annualRevenueOptions = [
-  { value: 'under-250k', label: 'Under $250K per year' },
-  { value: '250k-500k', label: '$250K – $500K per year' },
+  { value: 'under-500k', label: 'Under $500K per year' },
   { value: '500k-1m', label: '$500K – $1M per year' },
   { value: '1m-5m', label: '$1M – $5M per year' },
   { value: '5m+', label: '$5M+ per year' },
 ];
 
-const DISQUALIFYING_GOAL = 'generate-leads';
-
-const goalOptions = [
-  { value: 'streamline-ops', label: 'Streamline operations and reduce manual work' },
-  { value: 'more-reviews', label: 'Get more Google reviews and improve our reputation' },
-  { value: 'better-website', label: 'Upgrade our website and digital presence' },
-  { value: DISQUALIFYING_GOAL, label: 'We need help generating new leads and finding clients' },
-];
+const DISQUALIFYING_REVENUE = 'under-500k';
 
 // Map raw answer values to human-readable labels for Cal.com notes
 function formatAnswersAsNotes(answers: QualificationAnswers): string {
   const roleLabel = decisionRoleOptions.find((o) => o.value === answers.decisionRole)?.label ?? answers.decisionRole;
-  const revenueLabel = annualRevenueOptions.find((o) => o.value === answers.annualRevenue)?.label ?? answers.annualRevenue;
   const goalLabel = goalOptions.find((o) => o.value === answers.goal)?.label ?? answers.goal;
+  const durationLabel = problemDurationOptions.find((o) => o.value === answers.problemDuration)?.label ?? answers.problemDuration;
+  const revenueLabel = annualRevenueOptions.find((o) => o.value === answers.annualRevenue)?.label ?? answers.annualRevenue;
 
   const lines = [
     '--- Prequalification Answers ---',
     `US Based: ${answers.usBased ? 'Yes' : 'No'}`,
     `Decision Role: ${roleLabel ?? 'N/A'}`,
-    `Annual Revenue: ${revenueLabel ?? 'N/A'}`,
     `Primary Goal: ${goalLabel ?? 'N/A'}`,
+    `Goal Tag: ${answers.goalTag ?? 'N/A'}`,
+    `Problem Duration: ${durationLabel ?? 'N/A'}`,
+    `Annual Revenue: ${revenueLabel ?? 'N/A'}`,
   ];
   return lines.join('\n');
 }
@@ -70,8 +89,10 @@ async function sendQualificationToGHL(answers: QualificationAnswers, qualified: 
         qualified,
         us_based: answers.usBased,
         decision_role: answers.decisionRole,
-        annual_revenue: answers.annualRevenue,
         goal: answers.goal,
+        goal_tag: answers.goalTag,
+        problem_duration: answers.problemDuration,
+        annual_revenue: answers.annualRevenue,
         submitted_at: new Date().toISOString(),
       }),
     });
@@ -104,8 +125,10 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
   const [answers, setAnswers] = useState<QualificationAnswers>({
     usBased: null,
     decisionRole: null,
-    annualRevenue: null,
     goal: null,
+    goalTag: null,
+    problemDuration: null,
+    annualRevenue: null,
   });
 
   // Step 0: Geography — hard disqualifier
@@ -132,27 +155,34 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     }
   };
 
-  // Step 2: Budget — under-250k is a hard disqualifier
+  // Step 2: Intent — no disqualifiers; store goal + derived tag
+  const handleGoal = (value: string) => {
+    const updated = { ...answers, goal: value, goalTag: goalTagMap[value] ?? null };
+    setAnswers(updated);
+    setStep(3);
+  };
+
+  // Step 3: Duration — no disqualifiers; informational
+  const handleProblemDuration = (value: string) => {
+    const updated = { ...answers, problemDuration: value };
+    setAnswers(updated);
+    setStep(4);
+  };
+
+  // Step 4: Revenue — under-500k is a hard disqualifier
   const handleAnnualRevenue = (value: string) => {
     const updated = { ...answers, annualRevenue: value };
     setAnswers(updated);
-    if (value === 'under-250k') {
+    if (value === DISQUALIFYING_REVENUE) {
       sendQualificationToGHL(updated, false);
       onResult('not-qualified', updated);
     } else {
-      setStep(3);
+      sendQualificationToGHL(updated, true);
+      onResult('qualified', updated);
     }
   };
 
-  // Step 3: Intent — all goals qualify (lead-gen seekers are now valid prospects)
-  const handleGoal = (value: string) => {
-    const updated = { ...answers, goal: value };
-    setAnswers(updated);
-    sendQualificationToGHL(updated, true);
-    onResult('qualified', updated);
-  };
-
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
@@ -260,8 +290,82 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 2: Annual revenue (all pass through — informational) */}
+        {/* Step 2: Intent — no disqualifiers; tags the lead */}
         {step === 2 && (
+          <motion.div
+            key="q-goal"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            <div className="flex items-start gap-3 md:gap-4 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
+                <Target className="text-blue-400" size={20} />
+              </div>
+              <div>
+                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
+                  What&apos;s the main thing you&apos;re trying to fix?
+                </p>
+                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
+                  This helps us prepare for your strategy session.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2 md:space-y-3">
+              {goalOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleGoal(opt.value)}
+                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 3: Duration — no disqualifiers; informational */}
+        {step === 3 && (
+          <motion.div
+            key="q-duration"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            <div className="flex items-start gap-3 md:gap-4 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
+                <Target className="text-blue-400" size={20} />
+              </div>
+              <div>
+                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
+                  How long has this been a problem you&apos;ve wanted to solve?
+                </p>
+                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
+                  No wrong answer — we just want to understand where you are.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2 md:space-y-3">
+              {problemDurationOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleProblemDuration(opt.value)}
+                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 4: Revenue — under-500k is a hard disqualifier */}
+        {step === 4 && (
           <motion.div
             key="q-revenue"
             initial={{ opacity: 0, x: 30 }}
@@ -288,43 +392,6 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
                 <button
                   key={opt.value}
                   onClick={() => handleAnnualRevenue(opt.value)}
-                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Step 3: Primary goal (disqualifies lead-generation seekers) */}
-        {step === 3 && (
-          <motion.div
-            key="q-goal"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            <div className="flex items-start gap-3 md:gap-4 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Target className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  What is your primary goal right now?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  This helps us prepare for your strategy session.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-              {goalOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => handleGoal(opt.value)}
                   className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
                 >
                   {opt.label}
@@ -433,8 +500,10 @@ export default function QualificationProvider({ children }: { children: React.Re
               booking_confirmed: bookingData.confirmed ?? true,
               us_based: savedAnswers.usBased,
               decision_role: savedAnswers.decisionRole,
-              annual_revenue: savedAnswers.annualRevenue,
               goal: savedAnswers.goal,
+              goal_tag: savedAnswers.goalTag,
+              problem_duration: savedAnswers.problemDuration,
+              annual_revenue: savedAnswers.annualRevenue,
               qualification_notes: formatAnswersAsNotes(savedAnswers),
               submitted_at: new Date().toISOString(),
             }),
