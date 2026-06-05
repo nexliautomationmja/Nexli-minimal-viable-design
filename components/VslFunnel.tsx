@@ -8,6 +8,7 @@ import {
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
 } from 'lucide-react';
+import { trackMetaEvent } from '@/lib/meta-events';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
@@ -1686,7 +1687,9 @@ const UrgencyPill: React.FC = () => {
           transition={{ duration: 0.4 }}
           className="fixed top-6 right-6 md:top-8 md:right-8 z-[110]"
         >
-          <div
+          <motion.div
+            animate={{ opacity: [1, 0.5, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             className="flex items-center gap-2 px-3.5 py-2 rounded-full border backdrop-blur-md shadow-lg"
             style={{
               backgroundColor: 'rgba(239,68,68,0.12)',
@@ -1698,9 +1701,9 @@ const UrgencyPill: React.FC = () => {
               className="w-2 h-2 rounded-full bg-red-500 animate-pulse"
             />
             <span className="text-[11px] sm:text-xs font-bold text-red-400 tracking-wide uppercase">
-              Only accepting 1 firm this month
+              1 more firm spot available
             </span>
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -1720,15 +1723,10 @@ interface VslFunnelProps {
 
 const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle }) => {
   useEffect(() => {
-    if (typeof (window as any).fbq === 'function') {
-      (window as any).fbq('track', 'ViewContent', {
-        content_name: `VSL Funnel Landing Page (Variant ${variant})`,
-        content_category: 'Landing Page',
-      });
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`Meta Pixel: ViewContent event fired (VSL Funnel Landing Page - Variant ${variant})`);
-      }
-    }
+    trackMetaEvent('ViewContent', {
+      content_name: `VSL Funnel Landing Page (Variant ${variant})`,
+      content_category: 'Landing Page',
+    });
   }, [variant]);
 
   return (
