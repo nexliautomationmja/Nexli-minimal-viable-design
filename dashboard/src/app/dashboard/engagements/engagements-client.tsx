@@ -99,8 +99,10 @@ export function EngagementsClient() {
     setSelectedTemplate(templateId);
     const tmpl = templates.find((t) => t.id === templateId);
     if (tmpl) {
-      if (isStarterTemplate(tmpl) && includeAds) {
-        setContent(generateStarterContent(adsTier));
+      if (isStarterTemplate(tmpl)) {
+        // Always use the full Starter content (which includes every legal
+        // clause); only inject the ad management addendum when it's selected.
+        setContent(includeAds ? generateStarterContent(adsTier) : STARTER_DRS_TEMPLATE_CONTENT);
       } else {
         setContent(tmpl.content);
       }
