@@ -8,14 +8,13 @@ export default function VslFunnelAdvisory() {
       variant="Advisory"
       headline={
         <>
-          Stop Being a Tax-Prep Firm That{' '}
+          If You Could Clone Your 5 Best Clients, Would Your Firm Still Feel{' '}
           <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-            Resents Its Own Clients
-          </span>{' '}
-          — There&apos;s a Better Business Model on the Other Side
+            Broken?
+          </span>
         </>
       }
-      subheadline="Tax-prep clients haggle over $400, vanish after April, and leave you dreading every season. Advisory clients pay 10x more, stay year-round, and actually value your expertise. The difference isn't luck — it's infrastructure."
+      subheadline="Your best clients pay more, trust your advice, and stay longer. The problem is your current marketing is not built to attract enough of them. Nexli installs the systems that help established CPA firms become the obvious choice for premium advisory clients."
     />
   );
 }
