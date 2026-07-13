@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Shield, Clock, TrendingUp, Droplets,
+  ArrowRight, Shield, Flame, Clock, TrendingUp, Droplets,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
@@ -61,9 +61,27 @@ interface HeroProps {
   subheadline?: string;
   muxPlaybackId?: string;
   videoTitle?: string;
+  eyebrowText?: React.ReactNode;
+  eyebrowIcon?: React.ElementType;
+  eyebrowTone?: 'blue' | 'orange';
+  showHiddenDrain?: boolean;
 }
 
-const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle }) => {
+const EYEBROW_TONES = {
+  blue: {
+    border: 'conic-gradient(from 0deg at 50% 50%, #60a5fa, #3b82f6, #60a5fa)',
+    icon: 'text-blue-400',
+    text: 'text-blue-300',
+  },
+  orange: {
+    border: 'conic-gradient(from 0deg at 50% 50%, #fbbf24, #f97316, #fbbf24)',
+    icon: 'text-orange-400',
+    text: 'text-orange-300',
+  },
+} as const;
+
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true }) => {
+  const eyebrow = EYEBROW_TONES[eyebrowTone] ?? EYEBROW_TONES.blue;
   const { openBooking } = useBooking();
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -189,12 +207,12 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
         >
           <span
             className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
-            style={{ background: 'conic-gradient(from 0deg at 50% 50%, #60a5fa, #3b82f6, #60a5fa)' }}
+            style={{ background: eyebrow.border }}
           />
           <span className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
-            <Shield size={14} className="text-blue-400" />
-            <span className="text-xs sm:text-sm font-black tracking-wide uppercase text-blue-300">
-              Built Exclusively for Established CPA Firms
+            <EyebrowIcon size={14} className={eyebrow.icon} />
+            <span className={`text-xs sm:text-sm font-black tracking-wide uppercase ${eyebrow.text}`}>
+              {eyebrowText}
             </span>
           </span>
         </motion.div>
@@ -282,13 +300,15 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           className="space-y-4"
         >
           {/* The Hidden Drain Button */}
-          <a
-            href="/revenuecalc"
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-red-600/25 group cursor-pointer"
-          >
-            Find My Hidden Drain
-            <Droplets size={22} className="group-hover:translate-y-[-2px] transition-transform" />
-          </a>
+          {showHiddenDrain && (
+            <a
+              href="/revenuecalc"
+              className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-red-600/25 group cursor-pointer"
+            >
+              Find My Hidden Drain
+              <Droplets size={22} className="group-hover:translate-y-[-2px] transition-transform" />
+            </a>
+          )}
 
           {/* Booking Button */}
           <button
@@ -1719,9 +1739,14 @@ interface VslFunnelProps {
   variant?: string;
   muxPlaybackId?: string;
   videoTitle?: string;
+  eyebrowText?: React.ReactNode;
+  eyebrowIcon?: React.ElementType;
+  eyebrowTone?: 'blue' | 'orange';
+  showHiddenDrain?: boolean;
+  showExitIntent?: boolean;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1733,7 +1758,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
     <div className="min-h-screen pb-14 sm:pb-16">
       <StaticLogo />
       <UrgencyPill />
-      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} />
+      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} />
       <TrustBar />
       <TransformationSection />
       <CostOfInactionSection />
@@ -1742,7 +1767,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <FounderStorySection />
       <FAQSection />
       <StickyCTA />
-      <ExitIntentPopup />
+      {showExitIntent && <ExitIntentPopup />}
     </div>
   );
 };
