@@ -1,6 +1,6 @@
 'use client';
 
-import { Flame } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import VslFunnel from '../../components/VslFunnel';
 
 export default function VslFunnelBetterClients() {
@@ -9,16 +9,17 @@ export default function VslFunnelBetterClients() {
       variant="BetterClients"
       muxPlaybackId="4VURlgj96a94Ro8U3qwxG01L4hNUEAyMZ3I02ItScldMs"
       videoTitle="Jasmine VSL - CPA Ads"
-      eyebrowText="Stop Setting Your Ad Budget on Fire"
-      eyebrowIcon={Flame}
-      eyebrowTone="orange"
+      eyebrowText="For Firms Done Chasing $800 Clients"
+      eyebrowIcon={TrendingUp}
+      eyebrowTone="emerald"
       showHiddenDrain={false}
       showExitIntent={false}
       headline={
         <>
-          Without This System, You&apos;ll{' '}
+          Stop Competing for the $800 Client.{' '}
+          Get Positioned for the{' '}
           <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-            Burn Money on Ads
+            $8,000 One
           </span>
         </>
       }

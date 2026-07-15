@@ -63,7 +63,7 @@ interface HeroProps {
   videoTitle?: string;
   eyebrowText?: React.ReactNode;
   eyebrowIcon?: React.ElementType;
-  eyebrowTone?: 'blue' | 'orange';
+  eyebrowTone?: 'blue' | 'orange' | 'emerald';
   showHiddenDrain?: boolean;
 }
 
@@ -77,6 +77,11 @@ const EYEBROW_TONES = {
     border: 'conic-gradient(from 0deg at 50% 50%, #fbbf24, #f97316, #fbbf24)',
     icon: 'text-orange-400',
     text: 'text-orange-300',
+  },
+  emerald: {
+    border: 'conic-gradient(from 0deg at 50% 50%, #34d399, #10b981, #34d399)',
+    icon: 'text-emerald-400',
+    text: 'text-emerald-300',
   },
 } as const;
 
@@ -1741,7 +1746,7 @@ interface VslFunnelProps {
   videoTitle?: string;
   eyebrowText?: React.ReactNode;
   eyebrowIcon?: React.ElementType;
-  eyebrowTone?: 'blue' | 'orange';
+  eyebrowTone?: 'blue' | 'orange' | 'emerald';
   showHiddenDrain?: boolean;
   showExitIntent?: boolean;
 }
