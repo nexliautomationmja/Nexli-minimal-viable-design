@@ -1731,7 +1731,7 @@ const UrgencyPill: React.FC = () => {
               className="w-2 h-2 rounded-full bg-red-500 animate-pulse"
             />
             <span className="text-[11px] sm:text-xs font-bold text-red-400 tracking-wide uppercase">
-              1 more firm spot available
+              3 firm spots left
             </span>
           </motion.div>
         </motion.div>
