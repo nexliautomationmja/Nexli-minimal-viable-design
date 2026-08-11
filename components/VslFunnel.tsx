@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Shield, Flame, Clock, TrendingUp, Droplets,
+  ArrowRight, Shield, Clock, TrendingUp, Droplets,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
@@ -63,7 +63,7 @@ interface HeroProps {
   videoTitle?: string;
   eyebrowText?: React.ReactNode;
   eyebrowIcon?: React.ElementType;
-  eyebrowTone?: 'blue' | 'orange' | 'emerald';
+  eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
 }
 
@@ -82,6 +82,11 @@ const EYEBROW_TONES = {
     border: 'conic-gradient(from 0deg at 50% 50%, #34d399, #10b981, #34d399)',
     icon: 'text-emerald-400',
     text: 'text-emerald-300',
+  },
+  violet: {
+    border: 'conic-gradient(from 0deg at 50% 50%, #a78bfa, #7c3aed, #a78bfa)',
+    icon: 'text-violet-400',
+    text: 'text-violet-300',
   },
 } as const;
 
@@ -1746,7 +1751,7 @@ interface VslFunnelProps {
   videoTitle?: string;
   eyebrowText?: React.ReactNode;
   eyebrowIcon?: React.ElementType;
-  eyebrowTone?: 'blue' | 'orange' | 'emerald';
+  eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
   showExitIntent?: boolean;
 }

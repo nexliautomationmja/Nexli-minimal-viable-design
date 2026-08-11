@@ -1,20 +1,31 @@
 'use client';
 
+import { Award } from 'lucide-react';
 import VslFunnel from '../../components/VslFunnel';
 
 export default function VslFunnelAdvisory() {
   return (
     <VslFunnel
       variant="Advisory"
+      eyebrowText="For Firms Who Want S-Tier Clients"
+      eyebrowIcon={Award}
+      eyebrowTone="violet"
+      showHiddenDrain={false}
+      showExitIntent={false}
       headline={
         <>
-          If You Could Clone Your 5 Best Clients, Would Your Firm Still Feel{' '}
-          <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-            Broken?
-          </span>
+          Attract{' '}
+          <span className="bg-gradient-to-r from-violet-400 to-indigo-500 bg-clip-text text-transparent">
+            S-Tier Clients
+          </span>{' '}
+          Who Can Pay a{' '}
+          <span className="bg-gradient-to-r from-violet-400 to-indigo-500 bg-clip-text text-transparent">
+            $9,400 Invoice
+          </span>{' '}
+          for Your Advice — No Time Wasted
         </>
       }
-      subheadline="Your best clients pay more, trust your advice, and stay longer. The problem is your current marketing is not built to attract enough of them. Nexli installs the systems that help established CPA firms become the obvious choice for premium advisory clients."
+      subheadline="Fewer clients. Higher fees. Deeper relationships. This is advisory."
     />
   );
 }
