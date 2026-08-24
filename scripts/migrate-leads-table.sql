@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS leads (
   problem_duration TEXT,
   budget_range TEXT,
   timeline TEXT,
+  tax_savings TEXT,
+  tax_savings_tag TEXT,
 
   -- Lead classification
   lead_score TEXT,           -- 'raw' | 'qualified' | 'disqualified'
@@ -71,3 +73,4 @@ CREATE INDEX IF NOT EXISTS leads_meta_event_id_idx ON leads (meta_event_id);
 CREATE INDEX IF NOT EXISTS leads_lead_score_idx ON leads (lead_score);
 CREATE INDEX IF NOT EXISTS leads_created_idx ON leads (created_at);
 CREATE INDEX IF NOT EXISTS leads_fbclid_idx ON leads (fbclid);
+CREATE INDEX IF NOT EXISTS leads_tax_savings_tag_idx ON leads (tax_savings_tag);

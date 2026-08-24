@@ -7,8 +7,8 @@ import { trackMetaEvent, generateEventId } from '@/lib/meta-events';
 import { getAttribution } from '@/lib/attribution';
 
 // ---------------------------------------------------------------------------
-// Qualification types & data — Optimized 5-step "High-Signal" funnel
-// Geography → Authority → Intent → Duration → Revenue
+// Qualification types & data — Optimized 6-step "High-Signal" funnel
+// Geography → Authority → Intent → Duration → Revenue → Tax-Planning Value
 // ---------------------------------------------------------------------------
 type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
 
@@ -19,6 +19,8 @@ interface QualificationAnswers {
   goalTag: string | null;
   problemDuration: string | null;
   annualRevenue: string | null;
+  taxSavings: string | null;
+  taxSavingsTag: string | null;
 }
 
 const decisionRoleOptions = [
@@ -60,12 +62,27 @@ const annualRevenueOptions = [
 
 const DISQUALIFYING_REVENUE = 'under-500k';
 
+const taxSavingsOptions = [
+  { value: '100k-plus', label: '$100K+ saved in a single engagement' },
+  { value: '50k-100k', label: '$50K – $100K' },
+  { value: '10k-50k', label: '$10K – $50K' },
+  { value: 'under-10k', label: "Under $10K — or we don't do much tax planning yet" },
+];
+
+const taxSavingsTagMap: Record<string, string> = {
+  '100k-plus': 'taxplan_elite',
+  '50k-100k': 'taxplan_strong',
+  '10k-50k': 'taxplan_developing',
+  'under-10k': 'taxplan_compliance',
+};
+
 // Map raw answer values to human-readable labels for Cal.com notes
 function formatAnswersAsNotes(answers: QualificationAnswers): string {
   const roleLabel = decisionRoleOptions.find((o) => o.value === answers.decisionRole)?.label ?? answers.decisionRole;
   const goalLabel = goalOptions.find((o) => o.value === answers.goal)?.label ?? answers.goal;
   const durationLabel = problemDurationOptions.find((o) => o.value === answers.problemDuration)?.label ?? answers.problemDuration;
   const revenueLabel = annualRevenueOptions.find((o) => o.value === answers.annualRevenue)?.label ?? answers.annualRevenue;
+  const taxSavingsLabel = taxSavingsOptions.find((o) => o.value === answers.taxSavings)?.label ?? answers.taxSavings;
 
   const lines = [
     '--- Prequalification Answers ---',
@@ -75,6 +92,7 @@ function formatAnswersAsNotes(answers: QualificationAnswers): string {
     `Goal Tag: ${answers.goalTag ?? 'N/A'}`,
     `Problem Duration: ${durationLabel ?? 'N/A'}`,
     `Annual Revenue: ${revenueLabel ?? 'N/A'}`,
+    `Biggest Tax Savings: ${taxSavingsLabel ?? 'N/A'}`,
   ];
   return lines.join('\n');
 }
@@ -96,6 +114,8 @@ async function sendQualificationToServer(answers: QualificationAnswers, qualifie
         goal_tag: answers.goalTag,
         problem_duration: answers.problemDuration,
         annual_revenue: answers.annualRevenue,
+        tax_savings: answers.taxSavings,
+        tax_savings_tag: answers.taxSavingsTag,
         event_id: eventId || null,
         attribution,
       }),
@@ -115,6 +135,8 @@ async function sendQualificationToServer(answers: QualificationAnswers, qualifie
         goal_tag: answers.goalTag,
         problem_duration: answers.problemDuration,
         annual_revenue: answers.annualRevenue,
+        tax_savings: answers.taxSavings,
+        tax_savings_tag: answers.taxSavingsTag,
         submitted_at: new Date().toISOString(),
       }),
     }).catch(() => {});
@@ -149,6 +171,8 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     goalTag: null,
     problemDuration: null,
     annualRevenue: null,
+    taxSavings: null,
+    taxSavingsTag: null,
   });
 
   // Step 0: Geography — hard disqualifier
@@ -197,12 +221,19 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
       sendQualificationToServer(updated, false);
       onResult('not-qualified', updated);
     } else {
-      sendQualificationToServer(updated, true);
-      onResult('qualified', updated);
+      setStep(5);
     }
   };
 
-  const totalSteps = 5;
+  // Step 5: Tax-planning value — no disqualifiers; store answer + derived segment tag, then finalize
+  const handleTaxSavings = (value: string) => {
+    const updated = { ...answers, taxSavings: value, taxSavingsTag: taxSavingsTagMap[value] ?? null };
+    setAnswers(updated);
+    sendQualificationToServer(updated, true);
+    onResult('qualified', updated);
+  };
+
+  const totalSteps = 6;
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
@@ -412,6 +443,43 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
                 <button
                   key={opt.value}
                   onClick={() => handleAnnualRevenue(opt.value)}
+                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 5: Tax-planning value (segmentation tag, not a disqualifier) */}
+        {step === 5 && (
+          <motion.div
+            key="q-taxplan"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            <div className="flex items-start gap-3 md:gap-4 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
+                <Crown className="text-blue-400" size={20} />
+              </div>
+              <div>
+                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
+                  What&apos;s the most you&apos;ve ever saved a single client through tax planning?
+                </p>
+                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
+                  This tells us how much advisory value you&apos;re already creating — and where the ceiling is.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2 md:space-y-3">
+              {taxSavingsOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleTaxSavings(opt.value)}
                   className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
                 >
                   {opt.label}
