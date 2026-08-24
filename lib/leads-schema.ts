@@ -31,6 +31,8 @@ export const leads = pgTable(
     problemDuration: text("problem_duration"),
     budgetRange: text("budget_range"),
     timeline: text("timeline"),
+    taxSavings: text("tax_savings"),
+    taxSavingsTag: text("tax_savings_tag"),
 
     // Lead classification
     leadScore: text("lead_score"), // 'raw' | 'qualified' | 'disqualified'

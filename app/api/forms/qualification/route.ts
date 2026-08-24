@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
       typeof body.problem_duration === "string" ? body.problem_duration.trim() : null;
     const annualRevenue =
       typeof body.annual_revenue === "string" ? body.annual_revenue.trim() : null;
+    const taxSavings =
+      typeof body.tax_savings === "string" ? body.tax_savings.trim() : null;
+    const taxSavingsTag =
+      typeof body.tax_savings_tag === "string" ? body.tax_savings_tag.trim() : null;
     const qualified = body.qualified === true;
     const eventId =
       typeof body.event_id === "string" ? body.event_id : null;
@@ -67,6 +71,8 @@ export async function POST(req: NextRequest) {
             goal,
             goalTag,
             problemDuration,
+            taxSavings,
+            taxSavingsTag,
             leadScore: scoring.classification,
             disqualifyReason:
               scoring.classification === "disqualified" ? scoring.reason : null,
@@ -105,6 +111,8 @@ export async function POST(req: NextRequest) {
         goal_tag: goalTag,
         problem_duration: problemDuration,
         annual_revenue: annualRevenue,
+        tax_savings: taxSavings,
+        tax_savings_tag: taxSavingsTag,
         lead_score: scoring.classification,
         // Attribution for GHL
         utm_source: attribution.utm_source || null,
@@ -138,6 +146,8 @@ export async function POST(req: NextRequest) {
           goal,
           goal_tag: goalTag,
           problem_duration: problemDuration,
+          tax_savings: taxSavings,
+          tax_savings_tag: taxSavingsTag,
         },
       }).catch(() => {});
     }
@@ -163,6 +173,7 @@ export async function POST(req: NextRequest) {
           annual_revenue: annualRevenue,
           decision_role: decisionRole,
           goal_tag: goalTag,
+          tax_savings_tag: taxSavingsTag,
         },
       }).catch(() => {});
     }
