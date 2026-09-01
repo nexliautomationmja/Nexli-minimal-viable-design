@@ -79,9 +79,9 @@ const EYEBROW_TONES = {
     text: 'text-orange-300',
   },
   emerald: {
-    border: 'conic-gradient(from 0deg at 50% 50%, #34d399, #10b981, #34d399)',
-    icon: 'text-emerald-400',
-    text: 'text-emerald-300',
+    border: 'conic-gradient(from 0deg at 50% 50%, #22c55e, #047857, #22c55e)',
+    icon: 'text-green-500',
+    text: 'text-green-400',
   },
   violet: {
     border: 'conic-gradient(from 0deg at 50% 50%, #a78bfa, #7c3aed, #a78bfa)',
