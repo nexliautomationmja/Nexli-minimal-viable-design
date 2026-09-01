@@ -7,7 +7,7 @@ export default function VslFunnelBetterClients() {
   return (
     <VslFunnel
       variant="BetterClients"
-      muxPlaybackId="4VURlgj96a94Ro8U3qwxG01L4hNUEAyMZ3I02ItScldMs"
+      muxPlaybackId="sOp7S00u00HppAiF4VmSzuC2liXPqZmYiaRSXlHkCUcC8"
       videoTitle="Jasmine VSL - CPA Ads"
       eyebrowText="For Firms Done Chasing $800 Clients"
       eyebrowIcon={TrendingUp}
