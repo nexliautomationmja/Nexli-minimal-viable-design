@@ -323,7 +323,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           {/* Booking Button */}
           <button
             onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-green-600 hover:bg-green-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-green-600/25 group cursor-pointer"
           >
             See If Your Firm Qualifies
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
@@ -694,7 +694,7 @@ const TransformationSection: React.FC = () => {
             </span>
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            One system with a single job: put high-income taxpayers who&apos;ve been overpaying the IRS for years on your calendar — pre-qualified and ready to pay premium fees for real planning.
+            One complete, done-for-you system: we build the machine that attracts high-income taxpayers who&apos;ve been overpaying the IRS, run the ads, qualify the leads, and book them on your calendar.
           </p>
         </motion.div>
 
@@ -1311,7 +1311,7 @@ const ProjectionSection: React.FC = () => {
         >
           <button
             onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-green-600 hover:bg-green-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-green-600/25 group cursor-pointer"
           >
             See If Your Firm Qualifies
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
@@ -1507,7 +1507,7 @@ const FAQSection: React.FC = () => {
         >
           <button
             onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-green-600 hover:bg-green-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-green-600/25 group cursor-pointer"
           >
             See If Your Firm Qualifies
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
@@ -1675,7 +1675,7 @@ const StickyCTA: React.FC = () => {
             </p>
             <button
               onClick={() => openBooking()}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-green-600/20 group cursor-pointer"
             >
               See If Your Firm Qualifies
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
