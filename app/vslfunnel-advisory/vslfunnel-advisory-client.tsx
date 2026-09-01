@@ -7,6 +7,7 @@ export default function VslFunnelAdvisory() {
   return (
     <VslFunnel
       variant="Advisory"
+      muxPlaybackId="4PgKxwgHpzxGaVZgWeZoTBYGl31nev23IMiD8kiZFb00"
       eyebrowText="For Firms Who Want S-Tier Clients"
       eyebrowIcon={Award}
       eyebrowTone="violet"
