@@ -16,7 +16,7 @@ export default function VslFunnelOfferClient() {
       showExitIntent={false}
       headline={
         <>
-          We Book 6-and-7-Figure Taxpayers Who{' '}
+          The System that Books 6-and-7-Figure Taxpayers Who{' '}
           <span className="bg-gradient-to-r from-green-500 to-emerald-700 bg-clip-text text-transparent">
             Overpay the IRS
           </span>{' '}
