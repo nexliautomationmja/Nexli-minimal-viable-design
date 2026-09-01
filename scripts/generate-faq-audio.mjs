@@ -1,5 +1,5 @@
-// One-time script to generate pre-recorded Justine FAQ voice messages via ElevenLabs
-// Usage: node scripts/generate-faq-audio.mjs
+// One-time script to generate pre-recorded Daniela FAQ voice messages via ElevenLabs
+// Usage: ELEVENLABS_API_KEY=... node scripts/generate-faq-audio.mjs
 
 import fs from 'fs';
 import path from 'path';
@@ -8,8 +8,12 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'audio', 'faq');
 
-const ELEVENLABS_API_KEY = 'sk_ec25f83327c746782ecd46ca698e706da6469cf00c4b228d';
-const VOICE_ID = 'jqcCZkN6Knx8BJ5TBdYR'; // Justine's voice (Zara)
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+if (!ELEVENLABS_API_KEY) {
+  console.error('Missing ELEVENLABS_API_KEY env var.');
+  process.exit(1);
+}
+const VOICE_ID = 'tJ2B69tloiOhZn8Gk9Lp'; // Daniela's voice
 
 const faqScripts = [
   {
@@ -75,7 +79,7 @@ async function main() {
   // Ensure output directory exists
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
-  console.log(`\nGenerating ${faqScripts.length} FAQ audio files with Justine's voice...\n`);
+  console.log(`\nGenerating ${faqScripts.length} FAQ audio files with Daniela's voice...\n`);
 
   let success = 0;
   for (const script of faqScripts) {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const SYSTEM_PROMPT = `## Your Role
-You are Justine, COO of Nexli Automation. A CPA firm just confirmed their appointment and filled out the intel form with 3 key questions. Your job is to craft a response that shows you've actually READ their answers and demonstrates Nexli's strategic thinking.
+You are Daniela, COO of Nexli Automation. A CPA firm just confirmed their appointment and filled out the intel form with 3 key questions. Your job is to craft a response that shows you've actually READ their answers and demonstrates Nexli's strategic thinking.
 
 ## How You Respond
 - Lead with what caught your attention. Pick the most interesting thing from their responses and lead with that. "The fact that you're still manually handling tax season workflows tells me everything I need to know about the opportunity here."
@@ -38,7 +38,7 @@ You are Justine, COO of Nexli Automation. A CPA firm just confirmed their appoin
 - This response sets the tone for the sales call
 - Your goal is to position Nexli as the strategic partner who "gets it"
 - After reading your response, they should scroll down to watch the Digital Rainmaker System video (Step 2 on the page)
-- Do NOT include a sign-off like "— Justine" or "COO, Nexli Automation" at the end. The UI already shows your name and title. Just end naturally after your last point.`;
+- Do NOT include a sign-off like "— Daniela" or "COO, Nexli Automation" at the end. The UI already shows your name and title. Just end naturally after your last point.`;
 
 async function generateText(challenge: string, outcome: string, priorAttempts: string): Promise<string> {
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -71,8 +71,8 @@ async function generateText(challenge: string, outcome: string, priorAttempts: s
 }
 
 async function generateVoice(text: string): Promise<string> {
-  // ElevenLabs Zara voice — Justine's voice
-  const voiceId = 'jqcCZkN6Knx8BJ5TBdYR';
+  // ElevenLabs — Daniela's voice
+  const voiceId = 'tJ2B69tloiOhZn8Gk9Lp';
 
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',

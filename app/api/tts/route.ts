@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Text too long.' }, { status: 400 });
     }
 
-    // ElevenLabs Zara voice — Justine's voice
-    const voiceId = 'jqcCZkN6Knx8BJ5TBdYR';
+    // ElevenLabs — Daniela's voice
+    const voiceId = 'tJ2B69tloiOhZn8Gk9Lp';
 
     const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: 'POST',

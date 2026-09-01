@@ -350,14 +350,14 @@ const RainmakerDemo: React.FC = () => {
       <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
       <div className="relative z-10 p-4 md:p-8">
-        {/* System intro — title + animated arrow + Justine voice message */}
+        {/* System intro — title + animated arrow + Daniela voice message */}
         <div className="mb-6">
           <div className="text-center mb-5">
             <h3 className={`text-base md:text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
               See How the System Works — <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-500">Hands On</span>
             </h3>
             <p className={`text-xs md:text-sm mb-4 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
-              Tap play to hear Justine walk you through it, then explore each pillar yourself.
+              Tap play to hear Daniela walk you through it, then explore each pillar yourself.
             </p>
             <motion.div
               animate={{ y: [0, 6, 0] }}
@@ -371,9 +371,9 @@ const RainmakerDemo: React.FC = () => {
           </div>
 
           <div className="flex items-start gap-3 max-w-xl mx-auto">
-            <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
+            <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0 space-y-2">
-              <p className={`text-[10px] font-bold ml-1 ${theme === 'dark' ? 'text-white/40' : 'text-slate-400'}`}>Justine, COO</p>
+              <p className={`text-[10px] font-bold ml-1 ${theme === 'dark' ? 'text-white/40' : 'text-slate-400'}`}>Daniela, COO</p>
               <div className={`rounded-2xl rounded-bl-md px-4 py-3 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
                 <div className="flex items-center gap-3">
                   <button

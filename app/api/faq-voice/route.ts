@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
-const SYSTEM_PROMPT = `You are Justine, COO of Nexli Automation. A CPA firm owner who just booked a strategy call is asking you a pre-call question. Answer it the way a real COO would — conversational, confident, warm, and direct.
+const SYSTEM_PROMPT = `You are Daniela, COO of Nexli Automation. A CPA firm owner who just booked a strategy call is asking you a pre-call question. Answer it the way a real COO would — conversational, confident, warm, and direct.
 
 ## How You Sound
 - Like you're on a quick voice memo, not writing an essay
@@ -34,7 +34,7 @@ async function generateText(question: string): Promise<string> {
         { role: 'system', content: SYSTEM_PROMPT },
         {
           role: 'user',
-          content: `A prospect just asked this question before their strategy call: "${question}"\n\nGive a natural, conversational voice-memo-style answer as Justine.`,
+          content: `A prospect just asked this question before their strategy call: "${question}"\n\nGive a natural, conversational voice-memo-style answer as Daniela.`,
         },
       ],
     }),
@@ -51,7 +51,7 @@ async function generateText(question: string): Promise<string> {
 }
 
 async function generateVoice(text: string): Promise<string> {
-  const voiceId = 'jqcCZkN6Knx8BJ5TBdYR';
+  const voiceId = 'tJ2B69tloiOhZn8Gk9Lp'; // Daniela's voice
 
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Question too long.' }, { status: 400 });
     }
 
-    // Step 1: Generate Justine's natural response
+    // Step 1: Generate Daniela's natural response
     const message = await generateText(question);
 
     // Step 2: Convert to voice

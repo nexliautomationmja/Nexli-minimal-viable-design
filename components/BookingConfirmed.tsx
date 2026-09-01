@@ -347,7 +347,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptChange, onAud
 };
 
 // ---------------------------------------------------------------------------
-// FAQ Questions — Pre-recorded Justine voice answers
+// FAQ Questions — Pre-recorded Daniela voice answers
 // ---------------------------------------------------------------------------
 const faqItems = [
   { question: 'How secure is the document portal? What about compliance?', audio: '/audio/faq/faq-security.mp3' },
@@ -487,7 +487,7 @@ const BookingConfirmed: React.FC = () => {
       if (data.audioUrl) setAudioUrl(data.audioUrl);
       setIntelSubmitted(true);
     } catch {
-      setAiError('Your responses have been saved and Justine will review them before your call.');
+      setAiError('Your responses have been saved and Daniela will review them before your call.');
       setIntelSubmitted(true);
     } finally {
       setIntelLoading(false);
@@ -622,8 +622,43 @@ const BookingConfirmed: React.FC = () => {
               </div>
             </motion.div>
 
-            <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-8 max-w-xl leading-relaxed">
-              Before your call, complete the steps below so we can prepare a custom strategy tailored to your firm. This takes about 5 minutes and makes all the difference.
+            <p className="text-sm sm:text-lg md:text-xl text-[var(--text-muted)] mb-6 max-w-xl leading-relaxed">
+              Your session is booked — <span className="font-bold text-[var(--text-main)]">the one thing to do now is confirm your appointment</span> so we hold your slot on the calendar. It only takes a few seconds:
+            </p>
+
+            {/* Confirm-your-appointment callout — two ways to confirm */}
+            <div className="mb-8 max-w-xl rounded-2xl border border-green-500/20 bg-green-500/5 p-4 md:p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle size={16} className="text-green-400 flex-shrink-0" />
+                <p className="text-sm md:text-base font-bold text-[var(--text-main)]">Confirm your appointment</p>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-green-500/15 border border-green-500/25 flex items-center justify-center flex-shrink-0">
+                    <MessageSquare size={15} className="text-green-400" />
+                  </div>
+                  <p className="text-xs md:text-sm text-[var(--text-muted)] leading-relaxed pt-1">
+                    Reply <span className="font-bold text-green-400">CONFIRM</span> to the text message we just sent confirming your appointment.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 pl-1">
+                  <span className="h-px flex-1 bg-[var(--glass-border)]" />
+                  <span className="text-[10px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)] opacity-50">or</span>
+                  <span className="h-px flex-1 bg-[var(--glass-border)]" />
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-green-500/15 border border-green-500/25 flex items-center justify-center flex-shrink-0">
+                    <Video size={15} className="text-green-400" />
+                  </div>
+                  <p className="text-xs md:text-sm text-[var(--text-muted)] leading-relaxed pt-1">
+                    Open your Zoom confirmation email and accept the calendar invite to lock in your time.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs md:text-sm text-[var(--text-muted)] mb-6 max-w-xl leading-relaxed opacity-80">
+              Once you&apos;ve confirmed, run through the quick prep steps below whenever you&apos;re ready — they help us tailor a custom strategy to your firm.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
@@ -732,14 +767,14 @@ const BookingConfirmed: React.FC = () => {
         >
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
-              <img src="/justine-headshot.png" alt="Justine" className="w-5 h-5 rounded-full object-cover border border-green-500/30" />
-              <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Powered by Justine, COO</span>
+              <img src="/daniela-headshot.png" alt="Daniela" className="w-5 h-5 rounded-full object-cover border border-green-500/30" />
+              <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Powered by Daniela, COO</span>
             </div>
             <h2 className="text-2xl md:text-5xl font-bold text-[var(--text-main)] mb-4 md:mb-6">
               Help Us Prepare <span className="text-green-500">Your Custom Strategy</span>
             </h2>
             <p className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg">
-              Answer three quick questions so our COO, Justine, can analyze your firm&apos;s needs and prepare strategic insights before the call.
+              Answer three quick questions so our COO, Daniela, can analyze your firm&apos;s needs and prepare strategic insights before the call.
             </p>
           </div>
 
@@ -838,12 +873,12 @@ const BookingConfirmed: React.FC = () => {
                       {intelLoading ? (
                         <>
                           <Loader2 size={18} className="animate-spin" />
-                          Justine is analyzing your responses...
+                          Daniela is analyzing your responses...
                         </>
                       ) : (
                         <>
                           <Send size={16} />
-                          Submit to Justine
+                          Submit to Daniela
                         </>
                       )}
                     </button>
@@ -874,7 +909,7 @@ const BookingConfirmed: React.FC = () => {
                       </motion.div>
                     )}
 
-                    {/* Justine's response or typing indicator */}
+                    {/* Daniela's response or typing indicator */}
                     {intelLoading ? (
                       <motion.div
                         initial={{ opacity: 0, x: -20 }}
@@ -882,9 +917,9 @@ const BookingConfirmed: React.FC = () => {
                         transition={{ duration: 0.3, delay: 0.4 }}
                         className="flex items-start gap-3"
                       >
-                        <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
+                        <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
                         <div>
-                          <p className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 ml-1">Justine</p>
+                          <p className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 ml-1">Daniela</p>
                           <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl rounded-bl-md px-5 py-4">
                             <div className="flex items-center gap-2">
                               <div className="flex gap-1.5">
@@ -892,7 +927,7 @@ const BookingConfirmed: React.FC = () => {
                                 <span className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                                 <span className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                               </div>
-                              <span className="text-xs text-[var(--text-muted)] ml-2">Justine is listening...</span>
+                              <span className="text-xs text-[var(--text-muted)] ml-2">Daniela is listening...</span>
                             </div>
                           </div>
                         </div>
@@ -904,11 +939,11 @@ const BookingConfirmed: React.FC = () => {
                         transition={{ duration: 0.4, delay: 0.1 }}
                         className="flex items-start gap-3"
                       >
-                        <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
+                        <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
                         <div className="flex-1 min-w-0 space-y-3">
-                          <p className="text-[10px] font-bold text-[var(--text-muted)] ml-1">Justine</p>
+                          <p className="text-[10px] font-bold text-[var(--text-muted)] ml-1">Daniela</p>
 
-                          {/* Justine's voice message */}
+                          {/* Daniela's voice message */}
                           {audioUrl && (
                             <>
                               <VoiceMessageBubble
@@ -965,7 +1000,7 @@ const BookingConfirmed: React.FC = () => {
                         transition={{ duration: 0.3, delay: 0.2 }}
                         className="flex items-start gap-3"
                       >
-                        <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
+                        <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0" />
                         <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl rounded-bl-md px-5 py-4">
                           <p className="text-sm text-[var(--text-main)] leading-relaxed">{aiError}</p>
                         </div>
@@ -984,9 +1019,9 @@ const BookingConfirmed: React.FC = () => {
                       <div>
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-3">
-                            <Image src="/justine-headshot.png" alt="Justine" width={48} height={48} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-green-500/30" />
+                            <Image src="/daniela-headshot.png" alt="Daniela" width={48} height={48} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-green-500/30" />
                             <div>
-                              <p className="text-sm md:text-base font-bold text-[var(--text-main)]">Justine</p>
+                              <p className="text-sm md:text-base font-bold text-[var(--text-main)]">Daniela</p>
                               <p className="text-[10px] md:text-xs text-[var(--text-muted)]">COO, Nexli Automation</p>
                             </div>
                           </div>
@@ -997,7 +1032,7 @@ const BookingConfirmed: React.FC = () => {
                               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20 transition-all text-xs md:text-sm font-bold"
                             >
                               {isPlaying ? <Pause size={16} /> : <Volume2 size={16} />}
-                              {isPlaying ? 'Pause' : 'Listen to Justine'}
+                              {isPlaying ? 'Pause' : 'Listen to Daniela'}
                             </button>
                           )}
                         </div>
@@ -1043,7 +1078,7 @@ const BookingConfirmed: React.FC = () => {
                       <div className="flex items-center gap-2 mb-3">
                         <Mail size={16} className="text-green-500" />
                         <p className="text-sm md:text-base font-bold text-[var(--text-main)]">
-                          Want a copy of your answers &amp; Justine&apos;s response?
+                          Want a copy of your answers &amp; Daniela&apos;s response?
                         </p>
                       </div>
                       <p className="text-xs md:text-sm text-[var(--text-muted)] mb-4 leading-relaxed">
@@ -1121,7 +1156,7 @@ const BookingConfirmed: React.FC = () => {
               </video>
 
               <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
-                Watch Justine break down the client dashboard — the heart of the Digital Rainmaker System and the command center your firm will run from every day.
+                Watch Daniela break down the client dashboard — the heart of the Digital Rainmaker System and the command center your firm will run from every day.
               </p>
             </div>
           </div>
@@ -1213,7 +1248,7 @@ const BookingConfirmed: React.FC = () => {
             {/* Secondary cards grid — everything else in the system */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
               {[
-                { Icon: LayoutDashboard, title: 'Client Dashboard', desc: 'The command center you just watched Justine break down — run your entire firm from one place.' },
+                { Icon: LayoutDashboard, title: 'Client Dashboard', desc: 'The command center you just watched Daniela break down — run your entire firm from one place.' },
                 { Icon: Zap, title: 'AI Automations', desc: 'Missed-call recovery, lead nurturing, and 24/7 follow-up that never drops a prospect.' },
                 { Icon: Shield, title: 'Secure Document Portal', desc: 'Bank-level encrypted file sharing — send, receive, and store client documents safely.' },
                 { Icon: PenLine, title: 'E-Signature & Engagements', desc: 'Send, sign, and store engagement letters in minutes — no DocuSign subscription needed.' },
@@ -1239,7 +1274,7 @@ const BookingConfirmed: React.FC = () => {
 
         </motion.section>
 
-        {/* ── FAQ: Justine Voice Responses ── */}
+        {/* ── FAQ: Daniela Voice Responses ── */}
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1250,13 +1285,13 @@ const BookingConfirmed: React.FC = () => {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
               <HelpCircle size={14} className="text-green-400" />
-              <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Ask Justine</span>
+              <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Ask Daniela</span>
             </div>
             <h2 className="text-2xl md:text-5xl font-bold text-[var(--text-main)] mb-4">
               Questions Before <span className="text-green-500">Your Call?</span>
             </h2>
             <p className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg">
-              Tap any question to hear Justine answer it personally — in her own voice.
+              Tap any question to hear Daniela answer it personally — in her own voice.
             </p>
           </div>
 
@@ -1286,9 +1321,9 @@ const BookingConfirmed: React.FC = () => {
                     >
                       <div className="px-5 md:px-6 pb-5 md:pb-6">
                         <div className="flex items-start gap-3">
-                          <Image src="/justine-headshot.png" alt="Justine" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
+                          <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0 space-y-2">
-                            <p className="text-[10px] font-bold ml-1 text-[var(--text-muted)]">Justine, COO</p>
+                            <p className="text-[10px] font-bold ml-1 text-[var(--text-muted)]">Daniela, COO</p>
                             <div className={`rounded-2xl rounded-bl-md px-4 py-3 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
                               <div className="flex items-center gap-3">
                                 <button
