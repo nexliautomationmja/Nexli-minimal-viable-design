@@ -330,7 +330,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           </button>
 
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established tax and CPA firms ready to take on IRS representation work. No high-pressure pitch.
+            We only partner with established tax and CPA firms that deliver real tax planning. No high-pressure pitch.
           </p>
         </motion.div>
       </div>
@@ -581,7 +581,7 @@ const AdvisoryClientsAnimation = () => {
           $5K-$25K+
         </p>
         <p className="text-xs md:text-sm font-semibold text-white/70">
-          Per Resolution Engagement
+          Per Tax-Planning Engagement
         </p>
       </motion.div>
     </div>
@@ -666,7 +666,7 @@ const GoogleReviewsSimpleAnimation = () => {
           Zero
         </p>
         <p className="text-xs md:text-sm font-semibold text-white/70">
-          Price Shopping — They Pay to End the Pain
+          Price Shopping — Your Fee Is a Rounding Error Next to the Savings
         </p>
       </motion.div>
     </div>
@@ -694,7 +694,7 @@ const TransformationSection: React.FC = () => {
             </span>
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            One system with a single job: put high-income taxpayers with real IRS problems on your calendar — pre-qualified, urgent, and ready to pay premium fees.
+            One system with a single job: put high-income taxpayers who&apos;ve been overpaying the IRS for years on your calendar — pre-qualified and ready to pay premium fees for real planning.
           </p>
         </motion.div>
 
@@ -737,7 +737,7 @@ const TransformationSection: React.FC = () => {
                 Authority Positioning
               </h3>
               <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                A premium digital presence that makes a panicked taxpayer trust your firm with a $15,000 engagement on the first visit — not a template, a trust asset.
+                A premium digital presence that makes a high earner trust your firm with their entire tax picture on the first visit — not a template, a trust asset.
               </p>
             </div>
           </motion.div>
@@ -777,10 +777,10 @@ const TransformationSection: React.FC = () => {
               </div>
 
               <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
-                IRS-Problem Client Pipeline
+                High-Income Client Pipeline
               </h3>
               <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                Targeted acquisition that puts 6-and-7-figure taxpayers with active IRS problems in front of your firm — at the exact moment they&apos;re searching for help.
+                Targeted acquisition that puts 6-and-7-figure earners in front of your firm — right after they&apos;ve written another painful check to the IRS and started wondering if it has to be this way.
               </p>
             </div>
           </motion.div>
@@ -823,7 +823,7 @@ const TransformationSection: React.FC = () => {
                 Intake & Follow-Up Automations
               </h3>
               <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                IRS-problem clients hire the first credible firm that responds. Our automations answer, qualify, and book them instantly — 24/7, no manual follow-up.
+                High earners are busy — they book with the first credible firm that responds. Our automations answer, qualify, and book them instantly — 24/7, no manual follow-up.
               </p>
             </div>
           </motion.div>
@@ -866,7 +866,7 @@ const TransformationSection: React.FC = () => {
                 Pre-Qualified Bookings
               </h3>
               <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                Only 6-and-7-figure-income cases with genuine IRS exposure reach your calendar. We screen income level and case severity before they ever book.
+                Only 6-and-7-figure-income cases with real planning opportunity reach your calendar. We screen income level and savings potential before they ever book.
               </p>
             </div>
           </motion.div>
@@ -883,19 +883,19 @@ const CostOfInactionSection: React.FC = () => {
   const painPoints = [
     {
       icon: Clock,
-      text: 'Every $400 tax return you grind through fills a slot a $12,000 offer-in-compromise engagement could have taken.',
+      text: 'Every $400 tax return you file for a high earner is a $15,000 planning client nobody ever pitched.',
     },
     {
       icon: TrendingUp,
-      text: 'Right now, a business owner with a six-figure IRS balance is searching for help. If your firm isn\'t in front of them, a national tax-relief chain is charging them 5x — and doing worse work.',
+      text: 'Right now, a business owner who just paid the IRS $300K is telling themselves that\'s normal. The first firm to show them otherwise owns that relationship for a decade.',
     },
     {
       icon: Users,
-      text: 'IRS-problem clients don\'t shop around. They sign with the first credible firm that responds — and most firms take days to follow up, if they follow up at all.',
+      text: 'These clients don\'t leave their current accountant for cheaper compliance. They leave the moment someone shows them the six figures they\'re leaving on the table.',
     },
     {
       icon: BarChart3,
-      text: 'Every season you stay buried in low-fee compliance work, the premium resolution fees in your market go to someone else.',
+      text: 'Every season you stay buried in low-fee compliance work, the premium planning fees in your market go to someone else.',
     },
   ];
 
@@ -922,8 +922,9 @@ const CostOfInactionSection: React.FC = () => {
             Is Higher Than You Think
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            Every month without a pipeline of resolution clients, you&apos;re grinding low-fee
-            compliance work while the most profitable cases in your market sign with someone else.
+            Every month without a pipeline of planning clients, you&apos;re grinding low-fee
+            compliance work while the highest earners in your market keep overpaying — and
+            eventually sign with whoever shows them the savings first.
           </p>
         </motion.div>
 
@@ -989,8 +990,8 @@ const ROISection: React.FC = () => {
             </span>
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            One resolved case can out-earn twenty tax returns. If Nexli books your firm
-            just 2-3 IRS-problem clients, the system pays for itself — everything after is margin.
+            One planning client can out-earn twenty tax returns. If Nexli books your firm
+            just 2-3 high-income planning clients, the system pays for itself — everything after is margin.
           </p>
         </motion.div>
 
@@ -1150,13 +1151,13 @@ const ROISection: React.FC = () => {
                   ROI Reality Check
                 </p>
                 <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-200">
-                  A single IRS representation engagement — offer-in-compromise, installment agreement,
-                  penalty abatement, audit defense — runs{' '}
+                  A single tax-planning engagement for a high-income client runs{' '}
                   <span className="font-bold text-white">
                     $5,000-$25,000+
                   </span>{' '}
-                  for high-income cases. If Nexli books your firm even a handful of these clients,
-                  the system doesn&apos;t just pay for itself — it becomes your{' '}
+                  — and it&apos;s the easiest fee they&apos;ll ever approve, because it&apos;s priced
+                  against the six figures you&apos;re saving them. If Nexli books your firm even a
+                  handful of these clients, the system doesn&apos;t just pay for itself — it becomes your{' '}
                   <span className="font-bold" style={{ color: '#00D632' }}>highest-ROI investment</span>.
                 </p>
               </div>
@@ -1179,9 +1180,9 @@ const ProjectionSection: React.FC = () => {
       icon: CalendarCheck,
       label: 'Booked Consults',
       metric: '10+',
-      unit: 'Qualified IRS-Problem Consults',
+      unit: 'Qualified Tax-Planning Consults',
       description:
-        'High-income taxpayers with active IRS problems, booked directly onto your calendar. You take the call — we handle everything before it.',
+        'High-income taxpayers who\'ve been overpaying for years, booked directly onto your calendar. You take the call — we handle everything before it.',
       color: '#fbbf24',
     },
     {
@@ -1190,7 +1191,7 @@ const ProjectionSection: React.FC = () => {
       metric: '100%',
       unit: '6-7 Figure Income Cases',
       description:
-        'Every booking is screened for income level and genuine IRS exposure before it reaches you. No tire-kickers, no $200 cases.',
+        'Every booking is screened for income level and real planning opportunity before it reaches you. No tire-kickers, no $200 cases.',
       color: '#22d3ee',
     },
     {
@@ -1199,16 +1200,16 @@ const ProjectionSection: React.FC = () => {
       metric: '$5K-$25K+',
       unit: 'Per Retained Case',
       description:
-        'Offer-in-compromise, installment agreements, penalty abatement, audit defense — high-income cases command premium fees, and these clients pay them.',
+        'Entity structuring, retirement strategy, deduction planning, quarterly advisory — high-income planning commands premium fees, and these clients pay them.',
       color: '#a78bfa',
     },
     {
       icon: TimerReset,
-      label: 'Built for Urgency',
+      label: 'Pre-Sold on Value',
       metric: 'Days',
-      unit: 'From IRS Letter to Signed Engagement',
+      unit: 'From First Consult to Signed Engagement',
       description:
-        'These clients are in pain, not shopping. Speed-to-lead automations move them from panic to signed engagement before a competitor even responds.',
+        'They arrive already sold on what planning is worth — the consult is about fit, not convincing. Speed-to-lead automations keep the momentum until the engagement is signed.',
       color: '#60a5fa',
     },
   ];
@@ -1247,7 +1248,7 @@ const ProjectionSection: React.FC = () => {
             </span>
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Based on how the system is engineered to work, here is what a typical established tax firm can expect in their first quarter of taking on IRS-problem clients.
+            Based on how the system is engineered to work, here is what a typical established tax firm can expect in their first quarter of taking on high-income planning clients.
           </p>
         </motion.div>
 
@@ -1316,7 +1317,7 @@ const ProjectionSection: React.FC = () => {
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
           </button>
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established tax and CPA firms ready to take on IRS representation work. No high-pressure pitch.
+            We only partner with established tax and CPA firms that deliver real tax planning. No high-pressure pitch.
           </p>
         </motion.div>
       </div>
@@ -1377,9 +1378,9 @@ const FounderStorySection: React.FC = () => {
         </p>
         <p>
           The 70-hour weeks during tax season. Hundreds of low-fee returns. And meanwhile, the
-          most valuable clients a firm can serve — high-income taxpayers in real trouble with the
-          IRS — end up calling national tax-relief chains that charge $15,000 and deliver worse
-          work than a real firm would.
+          most valuable clients a firm can serve — people writing six-and-seven-figure checks to
+          the IRS every single year — were never shown one proactive strategy. They think
+          overpaying is just what success costs.
         </p>
         <p>
           The expertise is there. The credentials are there. What&apos;s missing is the pipeline.
@@ -1387,12 +1388,12 @@ const FounderStorySection: React.FC = () => {
         <p>
           So I built the client-acquisition arm of the{' '}
           <span className="font-semibold" style={{ color: '#ffffff' }}>Digital Rainmaker System</span> —
-          a machine that finds 6-and-7-figure taxpayers with IRS problems, screens them for income
-          and case severity, and books them directly onto your firm&apos;s calendar.
+          a machine that finds 6-and-7-figure earners who&apos;ve been overpaying for years, screens
+          them for income and planning opportunity, and books them directly onto your firm&apos;s calendar.
         </p>
         <p style={{ color: 'rgba(255,255,255,0.9)' }} className="font-medium">
-          No fluff. No shared lead lists. Just pre-qualified, premium-fee clients for firms
-          equipped to serve them.
+          No fluff. No shared lead lists. Just pre-qualified, premium-fee planning clients for
+          firms equipped to serve them.
         </p>
       </motion.div>
     </div>
@@ -1410,23 +1411,23 @@ const FAQSection: React.FC = () => {
   const faqs = [
     {
       q: 'What kind of firms do you work with?',
-      a: 'We exclusively partner with established tax and CPA firms doing $250K+ in annual revenue that can take on IRS representation work — whether that\'s a CPA, EA, or tax attorney on your team. If you\'re a solo practitioner just starting out, this isn\'t the right fit yet.',
+      a: 'We exclusively partner with established tax and CPA firms doing $250K+ in annual revenue that can deliver real tax planning — not just compliance. If you\'re a solo practitioner just starting out, this isn\'t the right fit yet.',
     },
     {
       q: 'Where do these clients come from?',
-      a: 'Targeted acquisition campaigns built to reach high-income taxpayers at the moment they\'re dealing with an IRS problem — a letter, a lien, a levy, an audit. Before anyone reaches your calendar, we screen for income level and genuine IRS exposure. You only talk to real cases.',
+      a: 'Targeted acquisition campaigns built to reach 6-and-7-figure earners who\'ve been overpaying the IRS for years without anyone showing them proactive planning. Before anyone reaches your calendar, we screen for income level and genuine planning opportunity. You only talk to real cases.',
     },
     {
-      q: 'What if my firm doesn\'t do much resolution work today?',
-      a: 'Most of our partner firms started exactly there. The technical work — offer-in-compromise, installment agreements, penalty abatement, audit defense — is well within an established firm\'s capability. What firms lack is the pipeline, and that\'s the part we deliver. At $5K-$25K+ per engagement, even a few cases a quarter changes your revenue mix.',
+      q: 'What if my firm mostly does compliance work today?',
+      a: 'Then you\'re sitting on the expertise these clients need — you already know their returns better than anyone. What firms lack is the pipeline of high earners who\'ve realized they\'re overpaying, and that\'s the part we deliver. At $5K-$25K+ per planning engagement, even a few clients a quarter changes your revenue mix.',
     },
     {
-      q: 'How is this different from buying tax-relief leads?',
-      a: 'Lead lists are shared, low-intent, and unfiltered — you pay to chase people who filled out a form once. We deliver booked appointments with pre-qualified, high-income taxpayers who have a verified IRS problem, exclusively to your firm. You take the consult; we\'ve done everything before it.',
+      q: 'How is this different from buying leads?',
+      a: 'Lead lists are shared, low-intent, and unfiltered — you pay to chase people who filled out a form once. We deliver booked appointments with pre-qualified, high-income taxpayers who already understand what planning is worth, exclusively to your firm. You take the consult; we\'ve done everything before it.',
     },
     {
       q: 'Is there a high-pressure sales pitch on the call?',
-      a: 'Absolutely not. The call is a genuine fit assessment. We\'ll walk through your market, your capacity for resolution work, and what the client flow would look like. If it\'s a fit, great. If not, you still walk away knowing exactly what this opportunity looks like in your market.',
+      a: 'Absolutely not. The call is a genuine fit assessment. We\'ll walk through your market, your capacity for planning work, and what the client flow would look like. If it\'s a fit, great. If not, you still walk away knowing exactly what this opportunity looks like in your market.',
     },
   ];
 
@@ -1512,7 +1513,7 @@ const FAQSection: React.FC = () => {
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
           </button>
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established tax and CPA firms ready to take on IRS representation work. No high-pressure pitch.
+            We only partner with established tax and CPA firms that deliver real tax planning. No high-pressure pitch.
           </p>
         </motion.div>
       </div>
@@ -1670,7 +1671,7 @@ const StickyCTA: React.FC = () => {
               className="hidden sm:block text-sm md:text-base font-semibold"
               style={{ color: 'rgba(255,255,255,0.7)' }}
             >
-              Want IRS-problem clients on your calendar?
+              Want tax-planning clients on your calendar?
             </p>
             <button
               onClick={() => openBooking()}
