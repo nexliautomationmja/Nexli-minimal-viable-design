@@ -7,7 +7,7 @@ export default function VslFunnelOfferClient() {
   return (
     <VslFunnelOffer
       variant="Offer"
-      muxPlaybackId="4VURlgj96a94Ro8U3qwxG01L4hNUEAyMZ3I02ItScldMs"
+      muxPlaybackId="PE95PF1vknWBf3wpNkiYJND35n4XyWcraisBDYv5OmY"
       videoTitle="Jasmine VSL - Tax Planning Clients"
       eyebrowText="High-Income Tax-Planning Clients, Delivered to Your Firm"
       eyebrowIcon={TrendingUp}
