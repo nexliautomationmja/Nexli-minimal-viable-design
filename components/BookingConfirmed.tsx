@@ -1143,16 +1143,14 @@ const BookingConfirmed: React.FC = () => {
             <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none transition-opacity duration-500 ${theme === 'dark' ? 'bg-green-500/5 opacity-100' : 'bg-green-500/10 opacity-50'}`} />
 
             <div className="relative z-10 p-4 md:p-8">
-              <video
+              <MuxPlayer
+                playbackId="i02jTMTuY028ZUWRHJsjSRBEEYBJGPcl005sEV3iOARIn00"
+                metadata={{ video_title: 'Digital Rainmaker System Demo' }}
+                streamType="on-demand"
+                accentColor="#22c55e"
                 className="w-full rounded-xl md:rounded-2xl"
-                controls
-                playsInline
-                preload="metadata"
-                crossOrigin="anonymous"
-              >
-                <source src="https://pub-30ba0dacbf5d436998d690d6fc971433.r2.dev/videos/justine-full-demo.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+                style={{ aspectRatio: '16/9' }}
+              />
 
               <p className="mt-5 text-sm md:text-base text-[var(--text-muted)] leading-relaxed text-center max-w-xl mx-auto">
                 Watch Daniela break down the client dashboard — the heart of the Digital Rainmaker System and the command center your firm will run from every day.
