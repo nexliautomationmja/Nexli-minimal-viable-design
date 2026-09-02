@@ -351,12 +351,12 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptChange, onAud
 // FAQ Questions — Pre-recorded Daniela voice answers
 // ---------------------------------------------------------------------------
 const faqItems = [
-  { question: 'How secure is the document portal? What about compliance?', audio: '/audio/faq/faq-security.mp3' },
-  { question: 'What happens to my data? Do I actually own it?', audio: '/audio/faq/faq-data-ownership.mp3' },
-  { question: 'I already have a website. Why do I need a new one?', audio: '/audio/faq/faq-website.mp3' },
-  { question: 'I don\'t have time for a big project right now.', audio: '/audio/faq/faq-time.mp3' },
-  { question: 'How is this different from other marketing agencies?', audio: '/audio/faq/faq-different.mp3' },
-  { question: 'My clients are used to how we do things — won\'t this disrupt everything?', audio: '/audio/faq/faq-disruption.mp3' },
+  { question: 'How exactly does the system get me higher-value clients?', audio: '/audio/faq/faq-how-it-works.mp3' },
+  { question: 'Who runs the ads — you or my firm?', audio: '/audio/faq/faq-who-runs-ads.mp3' },
+  { question: 'What kind of clients will actually show up on my calendar?', audio: '/audio/faq/faq-client-quality.mp3' },
+  { question: 'Most of my revenue is compliance work today — can I deliver advisory at those fees?', audio: '/audio/faq/faq-deliver-advisory.mp3' },
+  { question: 'I\'ve been burned by marketing agencies and lead lists before. How is this different?', audio: '/audio/faq/faq-burned-before.mp3' },
+  { question: 'How secure is this for my clients\' data? What about compliance?', audio: '/audio/faq/faq-security.mp3' },
 ];
 
 

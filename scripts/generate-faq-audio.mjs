@@ -17,28 +17,28 @@ const VOICE_ID = 'ogwqBH5bbF03DSbNiRNN'; // Daniela's voice
 
 const faqScripts = [
   {
+    filename: 'faq-how-it-works.mp3',
+    text: `Great question — here's the whole thing in thirty seconds. First, we build your infrastructure: the website, the client portal, the automations. That's what makes everything else work. Then we run targeted ads that put your firm in front of high-income taxpayers and business owners — people who've been overpaying the IRS for years and nobody's ever shown them real planning. Every lead gets qualified before they ever reach you — income level, fit, real opportunity. And then we book them directly on your calendar. You show up to the consult; everything before that is handled. That's the Digital Rainmaker System — one machine, start to finish.`,
+  },
+  {
+    filename: 'faq-who-runs-ads.mp3',
+    text: `We do — the creative, the targeting, the optimization, all of it. You're not learning Meta ads or hiring a media buyer. But here's the part most firms miss: ads alone don't work. If you send traffic to a website that looks like a digital business card, you're just setting your budget on fire. That's why we build the infrastructure first — so when the ads go live, there's an actual system behind them converting that attention into booked consultations. We'll walk through ad spend and how the campaigns work on your strategy call.`,
+  },
+  {
+    filename: 'faq-client-quality.mp3',
+    text: `This is honestly my favorite question, because it's the whole point. We're not sending you leads — we're booking qualified consultations. Before anyone touches your calendar, they've been screened: income level, business situation, whether there's a real planning or advisory opportunity. So you're not spending an hour with someone shopping around a $400 return. You're talking to six-and-seven-figure earners who already understand they need help and can comfortably pay for it. If they don't clear the bar, they never reach you. Your time only goes to conversations that can actually turn into premium engagements.`,
+  },
+  {
+    filename: 'faq-deliver-advisory.mp3',
+    text: `Look, if you're running an established firm, you already have the expertise — you've been staring at these returns for years and seeing the opportunities nobody's acting on. What you haven't had is a pipeline of clients who actually value that thinking and will pay for it. That's the missing piece, and that's the piece we deliver. And the math is what makes it exciting: one eight-thousand-dollar advisory client out-earns ten of those grind-it-out returns. You keep doing the work you're already great at — the system just makes sure the right clients are sitting across from you.`,
+  },
+  {
+    filename: 'faq-burned-before.mp3',
+    text: `I get it — and honestly, if you've been burned, you were probably right to be skeptical. Most agencies build you a pretty website, hand you the keys, and disappear. Lead vendors sell you the same tired list they sold five other firms. This is different in one fundamental way: it's a single system, and it's accountable for one thing — qualified consultations on your calendar. Not clicks, not impressions, not a report nobody reads. The website, the ads, the qualification, the booking — it's all one machine, you own it, and it either puts real prospects in front of you or it isn't doing its job.`,
+  },
+  {
     filename: 'faq-security.mp3',
     text: `Look, I totally get the concern — you're handling sensitive financial data, social security numbers, the works. Here's what most people don't realize: our document portal runs on Supabase, which is backed by AWS — the same infrastructure the IRS uses, the same systems hospitals and government agencies trust with their most sensitive data. We're talking SOC 2 Type II compliance, end-to-end encryption, the whole nine. Honestly? If it's good enough for the IRS, it's good enough for your firm. And I'd ask you this — what are you using right now? Because if it's Dropbox or shared drives or emailing documents back and forth, you're actually taking way more risk than you realize. You're not just getting a portal — you're getting a real security upgrade.`,
-  },
-  {
-    filename: 'faq-data-ownership.mp3',
-    text: `This is honestly one of the biggest things that sets us apart. With most platforms — Canopy, TaxDome, whatever — your data lives on their servers. You cancel? You lose access. They raise prices? You pay or you start over. With us, you own everything. Your client data, your documents, your templates — all of it. We build it, you own it. No hostage situation, no per-seat fees holding you captive. And if you ever want to take it somewhere else, it's yours to take. That's how it should be.`,
-  },
-  {
-    filename: 'faq-website.mp3',
-    text: `Honestly, I hear this all the time, and I get it. But here's the thing — having a website and having a website that actually brings in clients are two completely different things. Most CPA firm websites are basically digital business cards. They look fine, but they don't convert. What we build is a client acquisition engine — it's designed to turn visitors into booked consultations. So it's not about replacing what you have, it's about upgrading to something that actually works for you around the clock.`,
-  },
-  {
-    filename: 'faq-time.mp3',
-    text: `I totally understand — tax season, client deadlines, you're slammed. But here's the thing: we handle everything. You're not building this yourself. We design it, we build it, we launch it. Your involvement is basically one strategy call and maybe a couple of quick approvals. That's it. The whole point of the Digital Rainmaker System is to save you time, not eat more of it. And once it's running, it works for you while you're focused on your clients.`,
-  },
-  {
-    filename: 'faq-different.mp3',
-    text: `Great question. Most agencies build you a pretty website, hand you the keys, and disappear. We're not an agency — we're building you an entire system. The Digital Rainmaker System combines your website, AI automation, a secure document portal, and a review engine into one platform you actually own. No monthly retainers for basic updates, no relying on a third party for every little change. You're not just getting a website — you're getting a security upgrade, an automation layer, and a client acquisition engine. That's the difference.`,
-  },
-  {
-    filename: 'faq-disruption.mp3',
-    text: `I hear this concern all the time, and honestly it's the opposite of what happens. Your clients are going to love this. Instead of emailing documents back and forth or using some clunky portal with a terrible interface, they get a clean, secure place to upload everything — encrypted, compliant, professional. It actually makes their experience better. And for your team, the transition is seamless. We handle the setup, the migration, everything. Your clients just see a better, more polished version of working with your firm. Nobody's disrupted — everybody's upgraded.`,
   },
 ];
 
