@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ElevenLabs — Daniela's voice
-    const voiceId = 'ogwqBH5bbF03DSbNiRNN';
+    const voiceId = '6rOxfAnZpbM3VIEhFaeV';
 
     const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: 'POST',

@@ -51,7 +51,7 @@ async function generateText(question: string): Promise<string> {
 }
 
 async function generateVoice(text: string): Promise<string> {
-  const voiceId = 'ogwqBH5bbF03DSbNiRNN'; // Daniela's voice
+  const voiceId = '6rOxfAnZpbM3VIEhFaeV'; // Daniela's voice
 
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',

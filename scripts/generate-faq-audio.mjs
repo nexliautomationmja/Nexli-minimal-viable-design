@@ -13,7 +13,7 @@ if (!ELEVENLABS_API_KEY) {
   console.error('Missing ELEVENLABS_API_KEY env var.');
   process.exit(1);
 }
-const VOICE_ID = 'ogwqBH5bbF03DSbNiRNN'; // Daniela's voice
+const VOICE_ID = '6rOxfAnZpbM3VIEhFaeV'; // Daniela's voice
 
 const faqScripts = [
   {
