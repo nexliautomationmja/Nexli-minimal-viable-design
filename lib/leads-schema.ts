@@ -4,6 +4,7 @@ import {
   timestamp,
   uuid,
   boolean,
+  integer,
   index,
 } from "drizzle-orm/pg-core";
 
@@ -39,7 +40,7 @@ export const leads = pgTable(
     disqualifyReason: text("disqualify_reason"),
 
     // Source tracking
-    formSource: text("form_source"), // 'qualification-gate' | 'free-guide' | 'audit' | 'revenue-calc'
+    formSource: text("form_source"), // 'qualification-gate' | 'free-guide' | 'audit' | 'revenue-calc' | 'roadmap'
 
     // Attribution (from cookies/localStorage)
     fbclid: text("fbclid"),
@@ -70,6 +71,13 @@ export const leads = pgTable(
     showedCallAt: timestamp("showed_call_at"),
     opportunityAt: timestamp("opportunity_at"),
     purchasedAt: timestamp("purchased_at"),
+
+    // Low-ticket (CPA Scaling Roadmap) purchase — kept separate from the
+    // high-ticket purchased_at signal so Meta reporting stays clean.
+    roadmapPurchasedAt: timestamp("roadmap_purchased_at"),
+    roadmapAmountCents: integer("roadmap_amount_cents"),
+    stripeCheckoutSessionId: text("stripe_checkout_session_id"),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
 
     // Timestamps
     createdAt: timestamp("created_at").defaultNow().notNull(),

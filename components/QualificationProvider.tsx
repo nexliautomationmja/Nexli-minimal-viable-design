@@ -573,6 +573,9 @@ export default function QualificationProvider({ children }: { children: React.Re
     Cal("on", {
       action: "bookingSuccessful",
       callback: (e: any) => {
+        // The roadmap thank-you page runs its own inline Cal embed and handles
+        // its own booking flow — never redirect those buyers to /thank-you.
+        if (window.location.pathname.startsWith('/roadmap')) return;
 
         // Send prequalification answers to GHL with booking info
         const savedAnswers = answersRef.current;

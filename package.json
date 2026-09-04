@@ -24,6 +24,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "simplex-noise": "^4.0.3",
+    "stripe": "^21.0.1",
     "tailwindcss": "^4.1.18"
   },
   "overrides": {
