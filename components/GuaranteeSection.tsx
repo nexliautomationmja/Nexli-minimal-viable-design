@@ -57,7 +57,10 @@ const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue' }) 
       : 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/25';
 
   return (
-    <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
+    <section
+      className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332] border-b"
+      style={{ borderColor: 'rgba(255,255,255,0.07)' }}
+    >
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[260px] rounded-full blur-[120px] bg-emerald-500/8 pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto">

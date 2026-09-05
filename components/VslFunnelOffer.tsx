@@ -1763,10 +1763,10 @@ const VslFunnelOffer: React.FC<VslFunnelOfferProps> = ({ headline, subheadline, 
       <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} />
       <TrustBar />
       <TransformationSection />
+      <GuaranteeSection accent="green" />
       <CostOfInactionSection />
       <ROISection />
       <ProjectionSection />
-      <GuaranteeSection accent="green" />
       <FounderStorySection />
       <FAQSection />
       <StickyCTA />
