@@ -872,7 +872,7 @@ const TransformationSection: React.FC = () => {
                 Google Review Engine
               </h3>
               <p className="text-xs md:text-sm max-w-md leading-relaxed text-neutral-300">
-                Our automated review engine routes your happiest clients to Google — building the social proof that makes high-net-worth prospects choose you over competitors.
+                Our automated review engine routes your happiest clients to Google. Expect 3-5 extra reviews a month, which steadily amplifies your visibility on Google and makes high-net-worth prospects choose you over competitors.
               </p>
             </div>
           </motion.div>
@@ -1189,10 +1189,10 @@ const ProjectionSection: React.FC = () => {
     {
       icon: GoogleG,
       label: 'Reputation Multiplier',
-      metric: '40+',
-      unit: 'Google Reviews',
+      metric: '3-5',
+      unit: 'Extra Google Reviews Monthly',
       description:
-        'Our automated review engine routes your happiest clients to Google — building the social proof that makes high-net-worth prospects choose you over competitors.',
+        'You can expect 3-5 extra reviews a month as our automated review engine routes your happiest clients to Google — steady social proof that amplifies your visibility and makes high-net-worth prospects choose you over competitors.',
       color: '#fbbf24',
     },
     {
