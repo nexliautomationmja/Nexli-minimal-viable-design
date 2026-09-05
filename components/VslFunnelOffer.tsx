@@ -12,6 +12,7 @@ import { trackMetaEvent } from '@/lib/meta-events';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
+import GuaranteeSection from './GuaranteeSection';
 
 // Google "G" icon matching lucide-react component interface
 const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
@@ -1765,6 +1766,7 @@ const VslFunnelOffer: React.FC<VslFunnelOfferProps> = ({ headline, subheadline, 
       <CostOfInactionSection />
       <ROISection />
       <ProjectionSection />
+      <GuaranteeSection accent="green" />
       <FounderStorySection />
       <FAQSection />
       <StickyCTA />

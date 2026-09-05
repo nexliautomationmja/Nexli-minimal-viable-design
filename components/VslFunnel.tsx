@@ -12,6 +12,7 @@ import { trackMetaEvent } from '@/lib/meta-events';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
+import GuaranteeSection from './GuaranteeSection';
 
 // Google "G" icon matching lucide-react component interface
 const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
@@ -1162,7 +1163,7 @@ const ROISection: React.FC = () => {
                 <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-200">
                   The average high-value advisory client brings{' '}
                   <span className="font-bold text-white">
-                    $5,000-$15,000+
+                    $5,000-$25,000+
                   </span>{' '}
                   in annual revenue. If your new digital presence, automated intake, and review engine help you land
                   even a handful of these clients, the system doesn&apos;t just pay for itself — it
@@ -1774,6 +1775,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <CostOfInactionSection />
       <ROISection />
       <ProjectionSection />
+      <GuaranteeSection accent="blue" />
       <FounderStorySection />
       <FAQSection />
       <StickyCTA />
