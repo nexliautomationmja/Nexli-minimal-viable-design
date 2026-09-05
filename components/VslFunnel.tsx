@@ -1772,10 +1772,10 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} />
       <TrustBar />
       <TransformationSection />
+      <GuaranteeSection accent="blue" />
       <CostOfInactionSection />
       <ROISection />
       <ProjectionSection />
-      <GuaranteeSection accent="blue" />
       <FounderStorySection />
       <FAQSection />
       <StickyCTA />
