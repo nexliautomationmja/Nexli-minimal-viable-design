@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import { SparklesCore } from './Sparkles';
@@ -9,7 +9,6 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { blogPosts } from '../data/blogPosts';
 
 const Blog: React.FC = () => {
-    const router = useRouter();
   const { theme } = useTheme();
   const { openBooking } = useBooking();
   const carouselRef = React.useRef<HTMLDivElement>(null);
@@ -154,9 +153,9 @@ const Blog: React.FC = () => {
                     }}
                     className="last:pr-[5%] md:last:pr-[33%] rounded-3xl"
                   >
-                    <button
-                      onClick={() => router.push(`/blog/${post.slug}`)}
-                      className="rounded-3xl bg-[var(--glass-bg)] dark:bg-[#0f0f0f] border border-[var(--glass-border)] h-48 w-72 md:h-80 md:w-[28rem] overflow-hidden flex flex-col items-start justify-end relative z-10 hover:scale-[1.02] transition-transform text-left"
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="rounded-3xl bg-[var(--glass-bg)] dark:bg-[#0f0f0f] border border-[var(--glass-border)] h-48 w-72 md:h-80 md:w-[28rem] overflow-hidden flex flex-col items-start justify-end relative z-10 hover:scale-[1.02] transition-transform text-left no-underline"
                     >
                       <div className="absolute h-full bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-30 pointer-events-none" />
                       <div className="relative z-40 p-4 md:p-5">
@@ -174,7 +173,7 @@ const Blog: React.FC = () => {
                         style={post.imagePosition ? { objectPosition: post.imagePosition } : undefined}
                         loading="lazy"
                       />
-                    </button>
+                    </Link>
                   </motion.div>
                 ))}
               </div>

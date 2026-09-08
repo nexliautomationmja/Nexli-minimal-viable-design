@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { offerFaq } from '../data/vsl-faqs';
 import {
   ArrowRight, Shield, Clock, TrendingUp, Droplets,
   VolumeX, X, ChevronDown,
@@ -1409,28 +1410,8 @@ const FAQSection: React.FC = () => {
   const { openBooking } = useBooking();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const faqs = [
-    {
-      q: 'What kind of firms do you work with?',
-      a: 'We exclusively partner with established tax and CPA firms doing $250K+ in annual revenue that can deliver real tax planning — not just compliance. If you\'re a solo practitioner just starting out, this isn\'t the right fit yet.',
-    },
-    {
-      q: 'Where do these clients come from?',
-      a: 'Targeted acquisition campaigns built to reach 6-and-7-figure earners who\'ve been overpaying the IRS for years without anyone showing them proactive planning. Before anyone reaches your calendar, we screen for income level and genuine planning opportunity. You only talk to real cases.',
-    },
-    {
-      q: 'What if my firm mostly does compliance work today?',
-      a: 'Then you\'re sitting on the expertise these clients need — you already know their returns better than anyone. What firms lack is the pipeline of high earners who\'ve realized they\'re overpaying, and that\'s the part we deliver. At $5K-$25K+ per planning engagement, even a few clients a quarter changes your revenue mix.',
-    },
-    {
-      q: 'How is this different from buying leads?',
-      a: 'Lead lists are shared, low-intent, and unfiltered — you pay to chase people who filled out a form once. We deliver booked appointments with pre-qualified, high-income taxpayers who already understand what planning is worth, exclusively to your firm. You take the consult; we\'ve done everything before it.',
-    },
-    {
-      q: 'Is there a high-pressure sales pitch on the call?',
-      a: 'Absolutely not. The call is a genuine fit assessment. We\'ll walk through your market, your capacity for planning work, and what the client flow would look like. If it\'s a fit, great. If not, you still walk away knowing exactly what this opportunity looks like in your market.',
-    },
-  ];
+  // Page-specific FAQ lives in data/vsl-faqs.ts
+  const faqs = offerFaq;
 
   return (
     <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
