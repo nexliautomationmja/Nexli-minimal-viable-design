@@ -13,6 +13,7 @@ import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
 import GuaranteeSection from './GuaranteeSection';
+import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
 
 // Google "G" icon matching lucide-react component interface
 const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
@@ -1414,32 +1415,41 @@ const FounderStorySection: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 7: FAQ — Adapted for Premium Positioning
 // ─────────────────────────────────────────────────────────────────────────────
-const FAQSection: React.FC = () => {
+// Default FAQ for the base, Admin, and Tech Stack variants (unchanged).
+// Advisory and Better Clients use the page-specific lists in data/vsl-faqs.ts.
+const DEFAULT_FAQ = [
+  {
+    q: 'What kind of CPA firms do you work with?',
+    a: 'We exclusively partner with established CPA and accounting firms doing $250K+ in annual revenue. If you\'re a solo practitioner just starting out, this isn\'t the right fit yet.',
+  },
+  {
+    q: 'How is this different from hiring a web designer or buying software?',
+    a: 'This is a done-for-you business infrastructure build — not a website project or a software subscription. We design, build, and integrate your entire client-facing system: website, portal, automations, and review engine. You get a custom-built system, not a template.',
+  },
+  {
+    q: 'How long does the implementation take?',
+    a: 'Most firms go live within 2-4 weeks. We handle everything — design, development, integrations, automations — so there\'s minimal disruption to your practice.',
+  },
+  {
+    q: 'What if I already have a website?',
+    a: 'No problem. We can rebuild from scratch or strategically integrate the portal, automations, and review engine into your existing presence — whatever makes sense for your firm.',
+  },
+  {
+    q: 'Is there a high-pressure sales pitch on the call?',
+    a: 'Absolutely not. The strategy call is a genuine audit of your current systems. We\'ll identify gaps, show you what\'s possible, and give you a custom roadmap. If it\'s a fit, great. If not, you still walk away with actionable insights.',
+  },
+];
+
+const FAQ_BY_VARIANT: Record<string, typeof DEFAULT_FAQ> = {
+  Advisory: advisoryFaq,
+  BetterClients: betterClientsFaq,
+};
+
+const FAQSection: React.FC<{ variant?: string }> = ({ variant = 'A' }) => {
   const { openBooking } = useBooking();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const faqs = [
-    {
-      q: 'What kind of CPA firms do you work with?',
-      a: 'We exclusively partner with established CPA and accounting firms doing $250K+ in annual revenue. If you\'re a solo practitioner just starting out, this isn\'t the right fit yet.',
-    },
-    {
-      q: 'How is this different from hiring a web designer or buying software?',
-      a: 'This is a done-for-you business infrastructure build — not a website project or a software subscription. We design, build, and integrate your entire client-facing system: website, portal, automations, and review engine. You get a custom-built system, not a template.',
-    },
-    {
-      q: 'How long does the implementation take?',
-      a: 'Most firms go live within 2-4 weeks. We handle everything — design, development, integrations, automations — so there\'s minimal disruption to your practice.',
-    },
-    {
-      q: 'What if I already have a website?',
-      a: 'No problem. We can rebuild from scratch or strategically integrate the portal, automations, and review engine into your existing presence — whatever makes sense for your firm.',
-    },
-    {
-      q: 'Is there a high-pressure sales pitch on the call?',
-      a: 'Absolutely not. The strategy call is a genuine audit of your current systems. We\'ll identify gaps, show you what\'s possible, and give you a custom roadmap. If it\'s a fit, great. If not, you still walk away with actionable insights.',
-    },
-  ];
+  const faqs = FAQ_BY_VARIANT[variant] ?? DEFAULT_FAQ;
 
   return (
     <section className="relative py-14 sm:py-20 md:py-28 px-4 bg-[#1a2332]">
@@ -1777,7 +1787,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <ROISection />
       <ProjectionSection />
       <FounderStorySection />
-      <FAQSection />
+      <FAQSection variant={variant} />
       <StickyCTA />
       {showExitIntent && <ExitIntentPopup />}
     </div>

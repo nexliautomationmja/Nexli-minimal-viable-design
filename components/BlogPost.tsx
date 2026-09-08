@@ -1,14 +1,13 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import { ArrowLeft, ArrowRight, Clock, Calendar } from 'lucide-react';
 import { BlogPost as BlogPostType, getBlogPostBySlug, blogPosts } from '../data/blogPosts';
 
 const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
-    const router = useRouter();
   const { theme } = useTheme();
   const { openBooking } = useBooking();
   const post = getBlogPostBySlug(slug);
@@ -18,12 +17,9 @@ const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
       <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-[var(--text-main)] mb-4">Post not found</h1>
-          <button
-            onClick={() => router.push('/blog')}
-            className="text-blue-500 hover:text-blue-400 font-semibold"
-          >
+          <Link href="/blog" className="text-blue-500 hover:text-blue-400 font-semibold">
             Back to Blog
-          </button>
+          </Link>
         </div>
       </div>
     );
@@ -48,15 +44,19 @@ const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/60 to-transparent" />
 
         {/* Back Button */}
-        <motion.button
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => router.push('/blog')}
-          className="absolute top-24 md:top-32 left-6 md:left-12 z-50 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 cursor-pointer"
+          className="absolute top-24 md:top-32 left-6 md:left-12 z-50"
         >
-          <ArrowLeft size={18} />
-          <span className="text-sm font-semibold">Back to Blog</span>
-        </motion.button>
+          <Link
+            href="/blog"
+            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 cursor-pointer no-underline"
+          >
+            <ArrowLeft size={18} />
+            <span className="text-sm font-semibold">Back to Blog</span>
+          </Link>
+        </motion.div>
 
         {/* Title Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
@@ -149,9 +149,9 @@ const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
         {/* Post Navigation */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-4">
           {prevPost && (
-            <button
-              onClick={() => router.push(`/blog/${prevPost.slug}`)}
-              className="group p-6 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-left hover:border-blue-500/30 transition-all"
+            <Link
+              href={`/blog/${prevPost.slug}`}
+              className="group block p-6 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-left hover:border-blue-500/30 transition-all no-underline"
             >
               <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2 mb-2">
                 <ArrowLeft size={14} />
@@ -160,12 +160,12 @@ const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
               <span className="text-[var(--text-main)] font-semibold group-hover:text-blue-500 transition-colors line-clamp-2">
                 {prevPost.title}
               </span>
-            </button>
+            </Link>
           )}
           {nextPost && (
-            <button
-              onClick={() => router.push(`/blog/${nextPost.slug}`)}
-              className="group p-6 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-right hover:border-blue-500/30 transition-all md:col-start-2"
+            <Link
+              href={`/blog/${nextPost.slug}`}
+              className="group block p-6 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-right hover:border-blue-500/30 transition-all md:col-start-2 no-underline"
             >
               <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center justify-end gap-2 mb-2">
                 Next
@@ -174,7 +174,7 @@ const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
               <span className="text-[var(--text-main)] font-semibold group-hover:text-blue-500 transition-colors line-clamp-2">
                 {nextPost.title}
               </span>
-            </button>
+            </Link>
           )}
         </div>
       </div>
