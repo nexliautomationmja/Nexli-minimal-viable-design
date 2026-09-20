@@ -7,7 +7,7 @@ import { useTheme } from './ThemeProvider';
 import SocialDock from './SocialDock';
 
 // Routes where the footer should be completely hidden (dedicated funnels)
-const HIDDEN_FOOTER_ROUTES = ['/vslfunnel'];
+const HIDDEN_FOOTER_ROUTES = ['/vslfunnel', '/profit-calculator'];
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();
