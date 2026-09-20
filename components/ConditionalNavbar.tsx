@@ -12,6 +12,7 @@ export default function ConditionalNavbar() {
     pathname === '/booking-confirmed' ||
     pathname === '/qualify' ||
     pathname === '/thank-you' ||
+    pathname === '/profit-calculator' ||
     pathname.startsWith('/vslfunnel') ||
     pathname.startsWith('/roadmap')
   ) {

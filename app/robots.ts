@@ -9,6 +9,7 @@ const DISALLOW = [
   '/thank-you',
   '/booking-confirmed',
   '/roadmap/thank-you',
+  '/profit-calculator',
 ];
 
 /**
