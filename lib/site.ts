@@ -58,7 +58,10 @@ export const TAGLINE = 'Growth systems for established CPA firms.';
 export const ORG_DESCRIPTION =
   'Nexli Automation is a CPA firm growth agency. It builds the Digital Rainmaker System, a premium website, AI automation layer, secure client document portal, and Google review engine, then runs paid ads to it so established CPA firms doing $500K+ per year (about $40K-$50K a month) land high-value tax advisory clients.';
 
-/** Minimum annual revenue to work with Nexli. Matches DISQUALIFYING_REVENUE in components/QualificationProvider.tsx. */
+/**
+ * Public-facing minimum annual revenue. Intentionally stays at $500K+ in marketing copy.
+ * The booking gate itself accepts $400K+ (see DISQUALIFYING_REVENUE in components/QualificationProvider.tsx).
+ */
 export const MIN_REVENUE = '$500K+';
 export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';
 
