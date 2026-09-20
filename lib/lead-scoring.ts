@@ -33,10 +33,10 @@ export interface ScoringResult {
 // ---------------------------------------------------------------------------
 
 /** Revenue tiers that qualify a lead */
-const QUALIFYING_REVENUES = ['500k-1m', '1m-5m', '5m+'];
+const QUALIFYING_REVENUES = ['400k-500k', '500k-1m', '1m-5m', '5m+'];
 
-/** Revenue tiers that disqualify a lead */
-const DISQUALIFYING_REVENUES = ['under-500k'];
+/** Revenue tiers that disqualify a lead. 'under-500k' kept for legacy submissions from the old form. */
+const DISQUALIFYING_REVENUES = ['under-400k', 'under-500k'];
 
 /** Decision roles that qualify a lead */
 const QUALIFYING_ROLES = ['sole-owner', 'partner-authority'];

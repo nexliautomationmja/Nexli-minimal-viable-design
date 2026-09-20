@@ -54,13 +54,14 @@ const problemDurationOptions = [
 ];
 
 const annualRevenueOptions = [
-  { value: 'under-500k', label: 'Under $500K per year' },
+  { value: 'under-400k', label: 'Under $400K per year' },
+  { value: '400k-500k', label: '$400K – $500K per year' },
   { value: '500k-1m', label: '$500K – $1M per year' },
   { value: '1m-5m', label: '$1M – $5M per year' },
   { value: '5m+', label: '$5M+ per year' },
 ];
 
-const DISQUALIFYING_REVENUE = 'under-500k';
+const DISQUALIFYING_REVENUE = 'under-400k';
 
 const taxSavingsOptions = [
   { value: '100k-plus', label: '$100K+ saved in a single engagement' },
@@ -213,7 +214,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     setStep(4);
   };
 
-  // Step 4: Revenue — under-500k is a hard disqualifier
+  // Step 4: Revenue — under-400k is a hard disqualifier
   const handleAnnualRevenue = (value: string) => {
     const updated = { ...answers, annualRevenue: value };
     setAnswers(updated);
@@ -415,7 +416,7 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
           </motion.div>
         )}
 
-        {/* Step 4: Revenue — under-500k is a hard disqualifier */}
+        {/* Step 4: Revenue — under-400k is a hard disqualifier */}
         {step === 4 && (
           <motion.div
             key="q-revenue"

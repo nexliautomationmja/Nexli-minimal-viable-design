@@ -245,11 +245,11 @@ In GoHighLevel, create workflow automations that fire HTTP webhooks when a conta
 Edit `lib/lead-scoring.ts` to adjust scoring criteria:
 
 ```typescript
-// Revenue thresholds that disqualify
-const DISQUALIFYING_REVENUE = ['under-500k'];
+// Revenue thresholds that disqualify ('under-500k' kept for legacy submissions)
+const DISQUALIFYING_REVENUES = ['under-400k', 'under-500k'];
 
 // Revenue thresholds that qualify
-const QUALIFYING_REVENUE = ['500k-1m', '1m-5m', '5m+'];
+const QUALIFYING_REVENUES = ['400k-500k', '500k-1m', '1m-5m', '5m+'];
 
 // Roles that disqualify
 const DISQUALIFYING_ROLES = ['not-decision-maker'];
