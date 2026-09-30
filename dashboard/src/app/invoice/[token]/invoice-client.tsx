@@ -1,6 +1,46 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { NEXLI_BRANDING, type OwnerBranding } from "@/lib/branding";
+
+const NEXLI_LOGO = "/logos/nexli-logo-white-wordmark@2x.png";
+
+/** Dark page header showing the issuing firm's logo (Nexli by default). */
+function BrandHeader({ branding }: { branding: OwnerBranding }) {
+  return (
+    <header
+      style={{
+        background: "#0a0a0f",
+        padding: "16px 24px",
+        borderTop: branding.brandColor
+          ? `4px solid ${branding.brandColor}`
+          : undefined,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12,
+      }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={branding.logoUrl}
+        alt={branding.displayName}
+        style={{ height: 28, maxWidth: 220, objectFit: "contain" }}
+      />
+      {!branding.isNexli && (
+        <span
+          style={{
+            color: "rgba(255,255,255,0.7)",
+            fontSize: 14,
+            fontWeight: 600,
+          }}
+        >
+          {branding.displayName}
+        </span>
+      )}
+    </header>
+  );
+}
 
 interface LineItem {
   id: string;
@@ -54,7 +94,13 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export function InvoiceClient({ token }: { token: string }) {
+export function InvoiceClient({
+  token,
+  branding = NEXLI_BRANDING,
+}: {
+  token: string;
+  branding?: OwnerBranding;
+}) {
   const [invoice, setInvoice] = useState<InvoiceData | null>(null);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [from, setFrom] = useState<{ name: string; company: string }>({
@@ -168,22 +214,7 @@ export function InvoiceClient({ token }: { token: string }) {
   if (isPaid) {
     return (
       <div style={{ minHeight: "100vh", background: "#f8f9fa" }}>
-        {/* Header */}
-        <header
-          style={{
-            background: "#0a0a0f",
-            padding: "16px 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src="/logos/nexli-logo-white-wordmark@2x.png"
-            alt="Nexli"
-            style={{ height: 28 }}
-          />
-        </header>
+        <BrandHeader branding={branding} />
 
         <div
           style={{
@@ -288,8 +319,9 @@ export function InvoiceClient({ token }: { token: string }) {
             right: 0,
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logos/nexli-logo-white-wordmark@2x.png"
+            src={NEXLI_LOGO}
             alt="Nexli"
             style={{ height: 16, opacity: 0.4 }}
           />
@@ -332,22 +364,7 @@ export function InvoiceClient({ token }: { token: string }) {
   // Normal invoice view
   return (
     <div style={{ minHeight: "100vh", background: "#f8f9fa" }}>
-      {/* Header */}
-      <header
-        style={{
-          background: "#0a0a0f",
-          padding: "16px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <img
-          src="/logos/nexli-logo-white-wordmark@2x.png"
-          alt="Nexli"
-          style={{ height: 28 }}
-        />
-      </header>
+      <BrandHeader branding={branding} />
 
       <div
         style={{
@@ -841,6 +858,7 @@ export function InvoiceClient({ token }: { token: string }) {
               token={token}
               invoice={invoice}
               hasPartialPayment={hasPartialPayment}
+              brandColor={branding.brandColor}
             />
           )}
         </div>
@@ -858,8 +876,9 @@ export function InvoiceClient({ token }: { token: string }) {
           right: 0,
         }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/logos/nexli-logo-white-wordmark@2x.png"
+          src={NEXLI_LOGO}
           alt="Nexli"
           style={{ height: 16, opacity: 0.4 }}
         />
@@ -881,10 +900,12 @@ function PayButton({
   token,
   invoice,
   hasPartialPayment,
+  brandColor,
 }: {
   token: string;
   invoice: InvoiceData;
   hasPartialPayment: boolean;
+  brandColor: string | null;
 }) {
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState("");
@@ -898,6 +919,12 @@ function PayButton({
       });
       const data = await res.json();
       if (!res.ok || !data.checkoutUrl) {
+        if (data.error === "payments_not_configured") {
+          setPayError(
+            "This firm hasn't enabled online payments yet. Please pay using the method listed on the invoice."
+          );
+          return;
+        }
         setPayError(data.error || "Failed to create payment session.");
         return;
       }
@@ -948,7 +975,7 @@ function PayButton({
             display: "inline-block",
             background: paying
               ? "#94a3b8"
-              : "linear-gradient(135deg, #2563EB, #06B6D4)",
+              : brandColor || "linear-gradient(135deg, #2563EB, #06B6D4)",
             color: "#fff",
             border: "none",
             cursor: paying ? "not-allowed" : "pointer",

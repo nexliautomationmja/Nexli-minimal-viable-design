@@ -12,8 +12,8 @@ export interface ProfitInputs {
   closeRate: number;
   /** One-time advisory engagement fee per closed client, USD */
   engagementFee: number;
-  /** Optional recurring retainer per client per year, USD */
-  recurringAnnual: number;
+  /** Optional recurring retainer per client per month, USD */
+  recurringMonthly: number;
   /** Firm profit margin on advisory work, percent 0-100 */
   profitMargin: number;
   /** What the firm pays Nexli, USD (monthly amount or annual lump sum) */
@@ -28,7 +28,7 @@ export const DEFAULT_INPUTS: ProfitInputs = {
   consultsPerMonth: 50,
   closeRate: 20,
   engagementFee: 10000,
-  recurringAnnual: 0,
+  recurringMonthly: 0,
   profitMargin: 40,
   nexliFee: 5000,
   nexliFeePeriod: 'monthly',
@@ -53,6 +53,12 @@ export interface ProfitResults {
   /** nexliCost / closedClients, null when no clients close */
   costPerClosedClient: number | null;
   totalTaxAlreadyPaid: number;
+  /** Retainer revenue from the clients closed in one month, view-independent */
+  recurringMonthlyRevenue: number;
+  /** Nexli fee normalized to a monthly amount, view-independent */
+  monthlyNexliFee: number;
+  /** recurringMonthlyRevenue / monthlyNexliFee as a percent, null when fee is 0 */
+  recurringCoveragePct: number | null;
 }
 
 export function computeProfit(i: ProfitInputs, view: Period): ProfitResults {
@@ -62,7 +68,7 @@ export function computeProfit(i: ProfitInputs, view: Period): ProfitResults {
   const closedClients = consults * (i.closeRate / 100);
 
   const newEngagementRevenue = closedClients * i.engagementFee;
-  const recurringPerClient = view === 'annual' ? i.recurringAnnual : i.recurringAnnual / 12;
+  const recurringPerClient = view === 'annual' ? i.recurringMonthly * 12 : i.recurringMonthly;
   const recurringRevenue = closedClients * recurringPerClient;
   const grossRevenue = newEngagementRevenue + recurringRevenue;
 
@@ -75,6 +81,10 @@ export function computeProfit(i: ProfitInputs, view: Period): ProfitResults {
 
   const profitPerClient =
     (i.engagementFee + recurringPerClient) * (i.profitMargin / 100);
+
+  // Monthly recurring vs monthly Nexli fee, independent of the selected view
+  const closedPerMonth = i.consultsPerMonth * (i.closeRate / 100);
+  const recurringMonthlyRevenue = closedPerMonth * i.recurringMonthly;
 
   return {
     consults,
@@ -90,6 +100,9 @@ export function computeProfit(i: ProfitInputs, view: Period): ProfitResults {
     breakEvenClients: profitPerClient > 0 ? Math.ceil(nexliCost / profitPerClient) : null,
     costPerClosedClient: closedClients > 0 ? nexliCost / closedClients : null,
     totalTaxAlreadyPaid: closedClients * i.avgTaxPaid,
+    recurringMonthlyRevenue,
+    monthlyNexliFee: monthlyFee,
+    recurringCoveragePct: monthlyFee > 0 ? (recurringMonthlyRevenue / monthlyFee) * 100 : null,
   };
 }
 

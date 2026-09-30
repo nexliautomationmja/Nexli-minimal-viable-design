@@ -4,6 +4,19 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  async redirects() {
+    return [
+      // The $97 CPA Scaling Roadmap was retired; the demo funnel replaced it.
+      { source: "/roadmap", destination: "/demo-opt-in", permanent: true },
+      { source: "/roadmap/thank-you", destination: "/demo-opt-in", permanent: true },
+      // The /foundation funnel (pitch page -> six questions -> generated
+      // website preview) was replaced by /demo-opt-in -> /demo -> /demo/qualify.
+      { source: "/foundation", destination: "/demo-opt-in", permanent: true },
+      { source: "/foundation/start", destination: "/demo-opt-in", permanent: true },
+      { source: "/foundation/preview/:token*", destination: "/demo-opt-in", permanent: true },
+      { source: "/foundation/thank-you", destination: "/demo/thank-you", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

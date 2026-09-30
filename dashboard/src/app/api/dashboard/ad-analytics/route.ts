@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { leads } from "@/db/schema";
+import { leads } from "@/db/external-schema";
 import { sql, gte, isNotNull, and, desc } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {

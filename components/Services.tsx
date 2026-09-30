@@ -73,7 +73,7 @@ const Services: React.FC = () => {
                         </h4>
                     </div>
                     <p className={`mb-6 text-sm md:text-base leading-relaxed ${theme === 'dark' ? 'text-neutral-300' : 'text-slate-600'}`}>
-                        Designed specifically for the financial services trust threshold (not a template, not a generic small business site). Your website should work as hard as you do.
+                        Designed specifically for the financial services trust threshold (custom-designed on our premium framework, never a generic small business site). Your website should work as hard as you do.
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                         {[

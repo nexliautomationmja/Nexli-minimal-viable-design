@@ -163,8 +163,8 @@ const guide: Guide = {
       id: 'how-nexli-does-this',
       heading: 'How Nexli does this',
       body: [
-        'Nexli Automation is a CPA firm growth agency. It builds levers two, three, and four as one integrated system, the Digital Rainmaker System: a premium website, an AI automation layer for missed-call text-back, 24/7 intake, automated booking, and nurture sequences, a secure client document portal, and a Google review engine that adds 3-5 extra Google reviews per month. It then runs paid ads to the system so the freed capacity fills with advisory clients. Most firms go live within 2-4 weeks.',
-        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), month to month with no annual contracts. Two guarantees are written into every engagement: at least 10 qualified tax advisory opportunities on the calendar within 90 days of campaign launch, or Nexli keeps working for free until it hits 10; and a 21-day launch guarantee, or a $1,000 credit toward the next monthly payment.',
+        'Nexli Automation is a CPA firm growth agency. It builds levers two, three, and four as one integrated system, the Digital Rainmaker System: a premium website, an AI automation layer for missed-call text-back, 24/7 intake, automated booking, and nurture sequences, a secure client document portal, and a Google review engine that adds 3-5 extra Google reviews per month. It then runs paid ads to the system so the freed capacity fills with advisory clients. Most firms go live within 2 weeks.',
+        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), month to month with no annual contracts. Two guarantees are written into every engagement: at least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it hits 50; and a 14-day funnel launch guarantee, or a $1,000 credit toward the next monthly payment.',
         'If that fits your firm, [watch the short presentation and apply for a strategy call](/vslfunnel-advisory).',
       ],
     },
@@ -198,7 +198,7 @@ const guide: Guide = {
     {
       question: 'How long does it take to scale a CPA firm this way?',
       answer:
-        'The changes can all be made in one off-season. Repricing takes a letter and a few weeks of notice. Intake automation takes days. A portal and standardized tiers take a few weeks to configure and roll out. Nexli builds the automation, portal, and review engine together and most firms go live within 2-4 weeks.',
+        'The changes can all be made in one off-season. Repricing takes a letter and a few weeks of notice. Intake automation takes days. A portal and standardized tiers take a few weeks to configure and roll out. Nexli builds the automation, portal, and review engine together and most firms go live within 2 weeks.',
     },
   ],
   relatedGuides: [

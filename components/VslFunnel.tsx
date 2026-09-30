@@ -1428,7 +1428,7 @@ const DEFAULT_FAQ = [
   },
   {
     q: 'How long does the implementation take?',
-    a: 'Most firms go live within 2-4 weeks. We handle everything — design, development, integrations, automations — so there\'s minimal disruption to your practice.',
+    a: 'Most firms go live within 2 weeks. We handle everything — design, development, integrations, automations — so there\'s minimal disruption to your practice.',
   },
   {
     q: 'What if I already have a website?',

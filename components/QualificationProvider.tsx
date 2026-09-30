@@ -5,77 +5,54 @@ import { ArrowRight, CheckCircle, XCircle, Building2, Target, DollarSign, Crown,
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent, generateEventId } from '@/lib/meta-events';
 import { getAttribution } from '@/lib/attribution';
+import {
+  type QualificationAnswers,
+  type QualificationStepDef,
+  EMPTY_QUALIFICATION_ANSWERS,
+  QUALIFICATION_STEPS,
+  QUALIFICATION_STEP_COUNT,
+  DISQUALIFYING_ROLE,
+  DISQUALIFYING_REVENUE,
+  decisionRoleOptions,
+  goalOptions,
+  goalTagMap,
+  problemDurationOptions,
+  annualRevenueOptions,
+  taxSavingsOptions,
+  taxSavingsTagMap,
+} from '@/lib/qualification-steps';
 
 // ---------------------------------------------------------------------------
 // Qualification types & data — Optimized 6-step "High-Signal" funnel
 // Geography → Authority → Intent → Duration → Revenue → Tax-Planning Value
+// The data lives in lib/qualification-steps.ts (server-safe) and is
+// re-exported here for client code.
 // ---------------------------------------------------------------------------
-type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
+export type { QualificationAnswers, QualificationStepDef, QualificationOption, QualificationStepKey } from '@/lib/qualification-steps';
+export {
+  EMPTY_QUALIFICATION_ANSWERS,
+  QUALIFICATION_STEPS,
+  QUALIFICATION_STEP_COUNT,
+  DISQUALIFYING_ROLE,
+  DISQUALIFYING_REVENUE,
+  decisionRoleOptions,
+  goalOptions,
+  goalTagMap,
+  problemDurationOptions,
+  annualRevenueOptions,
+  taxSavingsOptions,
+  taxSavingsTagMap,
+} from '@/lib/qualification-steps';
 
-interface QualificationAnswers {
-  usBased: boolean | null;
-  decisionRole: string | null;
-  goal: string | null;
-  goalTag: string | null;
-  problemDuration: string | null;
-  annualRevenue: string | null;
-  taxSavings: string | null;
-  taxSavingsTag: string | null;
-}
+export type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
 
-const decisionRoleOptions = [
-  { value: 'sole-owner', label: "I'm the sole owner — I make all the decisions" },
-  { value: 'partner-authority', label: "I'm a partner with authority to make this decision" },
-  { value: 'partner-need-approval', label: "I'm a partner but other partners would need to weigh in" },
-  { value: 'not-decision-maker', label: "I'm not involved in decisions like this" },
-];
-
-const DISQUALIFYING_ROLE = 'not-decision-maker';
-
-const goalOptions = [
-  { value: 'generate-leads', label: 'We need help generating new leads and finding clients' },
-  { value: 'better-website', label: 'Upgrade our website and digital presence' },
-  { value: 'streamline-ops', label: 'Streamline operations and reduce manual work' },
-  { value: 'more-reviews', label: 'Get more Google reviews and improve our reputation' },
-];
-
-const goalTagMap: Record<string, string> = {
-  'generate-leads': 'hot_full_system',
-  'better-website': 'warm_full_system',
-  'streamline-ops': 'warm_automations',
-  'more-reviews': 'soft_single_pillar',
-};
-
-const problemDurationOptions = [
-  { value: 'just-started', label: 'Just started looking' },
-  { value: 'few-months', label: 'A few months' },
-  { value: '6-12-months', label: '6–12 months' },
-  { value: 'over-a-year', label: 'Over a year' },
-];
-
-const annualRevenueOptions = [
-  { value: 'under-400k', label: 'Under $400K per year' },
-  { value: '400k-500k', label: '$400K – $500K per year' },
-  { value: '500k-1m', label: '$500K – $1M per year' },
-  { value: '1m-5m', label: '$1M – $5M per year' },
-  { value: '5m+', label: '$5M+ per year' },
-];
-
-const DISQUALIFYING_REVENUE = 'under-400k';
-
-const taxSavingsOptions = [
-  { value: '100k-plus', label: '$100K+ saved in a single engagement' },
-  { value: '50k-100k', label: '$50K – $100K' },
-  { value: '10k-50k', label: '$10K – $50K' },
-  { value: 'under-10k', label: "Under $10K — or we don't do much tax planning yet" },
-];
-
-const taxSavingsTagMap: Record<string, string> = {
-  '100k-plus': 'taxplan_elite',
-  '50k-100k': 'taxplan_strong',
-  '10k-50k': 'taxplan_developing',
-  'under-10k': 'taxplan_compliance',
-};
+/**
+ * 'call'       — the booking funnel: hard disqualifiers, POSTs to
+ *                /api/forms/qualification, then onResult('qualified'|'not-qualified').
+ * 'foundation' — Firm Foundation preview: nobody is disqualified, nothing is
+ *                POSTed; the final step calls onComplete(answers).
+ */
+export type QualificationMode = 'call' | 'foundation';
 
 // Map raw answer values to human-readable labels for Cal.com notes
 function formatAnswersAsNotes(answers: QualificationAnswers): string {
@@ -161,40 +138,83 @@ export const useBooking = () => {
 };
 
 // ---------------------------------------------------------------------------
-// Qualification Gate (modal version)
+// Qualification steps card — shared by the booking modal (overlay) and the
+// Firm Foundation /foundation/start page (inline).
 // ---------------------------------------------------------------------------
-function QualificationGateModal({ onResult }: { onResult: (status: QualificationStatus, answers: QualificationAnswers) => void }) {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<QualificationAnswers>({
-    usBased: null,
-    decisionRole: null,
-    goal: null,
-    goalTag: null,
-    problemDuration: null,
-    annualRevenue: null,
-    taxSavings: null,
-    taxSavingsTag: null,
-  });
+const STEP_ICONS: Record<QualificationStepDef['key'], React.ElementType> = {
+  usBased: Building2,
+  decisionRole: Crown,
+  goal: Target,
+  problemDuration: Target,
+  annualRevenue: DollarSign,
+  taxSavings: Crown,
+};
 
-  // Step 0: Geography — hard disqualifier
+const STEP_MOTION_KEYS: Record<QualificationStepDef['key'], string> = {
+  usBased: 'q-us',
+  decisionRole: 'q-decision',
+  goal: 'q-goal',
+  problemDuration: 'q-duration',
+  annualRevenue: 'q-revenue',
+  taxSavings: 'q-taxplan',
+};
+
+const OPTION_BUTTON_CLASS =
+  'w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer';
+
+export interface QualificationStepsCardProps {
+  mode?: QualificationMode;
+  /** Call mode: fires on qualified / not-qualified exactly as the booking funnel always has. */
+  onResult?: (status: QualificationStatus, answers: QualificationAnswers) => void;
+  /** Foundation mode: fires once after the sixth answer. Also fired in call mode after 'qualified'. */
+  onComplete?: (answers: QualificationAnswers) => void;
+  /** Hide the icon/heading block (the host page supplies its own). */
+  hideHeader?: boolean;
+  /** Hide the six progress dots (the host page renders its own progress UI). */
+  hideProgress?: boolean;
+  /** Called on every step change with the zero-based index (for external progress UI). */
+  onStepChange?: (step: number) => void;
+}
+
+export function QualificationStepsCard({
+  mode = 'call',
+  onResult,
+  onComplete,
+  hideHeader = false,
+  hideProgress = false,
+  onStepChange,
+}: QualificationStepsCardProps) {
+  const isCall = mode === 'call';
+  const [step, setStepState] = useState(0);
+  const [answers, setAnswers] = useState<QualificationAnswers>({ ...EMPTY_QUALIFICATION_ANSWERS });
+
+  const setStep = (next: number) => {
+    setStepState(next);
+    onStepChange?.(next);
+  };
+
+  const disqualify = (updated: QualificationAnswers) => {
+    sendQualificationToServer(updated, false);
+    onResult?.('not-qualified', updated);
+  };
+
+  // Step 0: Geography — hard disqualifier (call mode only)
   const handleUsBased = (value: boolean) => {
     const updated = { ...answers, usBased: value };
     setAnswers(updated);
-    if (!value) {
-      sendQualificationToServer(updated, false);
-      onResult('not-qualified', updated);
+    if (isCall && !value) {
+      disqualify(updated);
     } else {
       setStep(1);
     }
   };
 
-  // Step 1: Authority — disqualifies non-decision-makers
+  // Step 1: Authority — disqualifies non-decision-makers (call mode only)
   const handleDecisionRole = (value: string) => {
     const updated = { ...answers, decisionRole: value };
     setAnswers(updated);
-    if (value === DISQUALIFYING_ROLE) {
-      sendQualificationToServer(updated, false);
-      onResult('not-qualified', updated);
+    if (isCall && value === DISQUALIFYING_ROLE) {
+      disqualify(updated);
     } else {
       setStep(2);
     }
@@ -214,13 +234,12 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
     setStep(4);
   };
 
-  // Step 4: Revenue — under-400k is a hard disqualifier
+  // Step 4: Revenue — under-400k is a hard disqualifier (call mode only)
   const handleAnnualRevenue = (value: string) => {
     const updated = { ...answers, annualRevenue: value };
     setAnswers(updated);
-    if (value === DISQUALIFYING_REVENUE) {
-      sendQualificationToServer(updated, false);
-      onResult('not-qualified', updated);
+    if (isCall && value === DISQUALIFYING_REVENUE) {
+      disqualify(updated);
     } else {
       setStep(5);
     }
@@ -230,62 +249,79 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
   const handleTaxSavings = (value: string) => {
     const updated = { ...answers, taxSavings: value, taxSavingsTag: taxSavingsTagMap[value] ?? null };
     setAnswers(updated);
-    sendQualificationToServer(updated, true);
-    onResult('qualified', updated);
+    if (isCall) {
+      sendQualificationToServer(updated, true);
+      onResult?.('qualified', updated);
+    }
+    onComplete?.(updated);
   };
 
-  const totalSteps = 6;
+  const optionHandlers: Record<QualificationStepDef['key'], (value: string) => void> = {
+    usBased: () => undefined,
+    decisionRole: handleDecisionRole,
+    goal: handleGoal,
+    problemDuration: handleProblemDuration,
+    annualRevenue: handleAnnualRevenue,
+    taxSavings: handleTaxSavings,
+  };
+
+  const totalSteps = QUALIFICATION_STEP_COUNT;
+  const current = QUALIFICATION_STEPS[step];
+  const Icon = STEP_ICONS[current.key];
+  const hint = isCall ? current.hint : current.foundationHint;
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
-      <div className="text-center mb-6 md:mb-10">
-        <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-          <Target className="text-blue-400" size={28} />
+      {!hideHeader && (
+        <div className="text-center mb-6 md:mb-10">
+          <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+            <Target className="text-blue-400" size={28} />
+          </div>
+          <h3 className="text-[var(--text-main)] text-lg md:text-2xl font-bold mb-2">
+            {isCall ? 'Tell Us About Your Firm' : 'Tell us about your firm'}
+          </h3>
+          <p className="text-[var(--text-muted)] text-xs md:text-sm max-w-md mx-auto">
+            {isCall
+              ? "We work exclusively with established CPA firms. A few quick questions to make sure we're the right fit."
+              : 'So your preview fits your firm. Takes about a minute.'}
+          </p>
         </div>
-        <h3 className="text-[var(--text-main)] text-lg md:text-2xl font-bold mb-2">
-          Tell Us About Your Firm
-        </h3>
-        <p className="text-[var(--text-muted)] text-xs md:text-sm max-w-md mx-auto">
-          We work exclusively with established CPA firms. A few quick questions to make sure we&apos;re the right fit.
-        </p>
-      </div>
+      )}
 
       {/* Progress dots */}
-      <div className="flex justify-center gap-2 mb-8">
-        {Array.from({ length: totalSteps }).map((_, i) => (
-          <div
-            key={i}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === step ? 'w-8 bg-blue-500' : i < step ? 'w-4 bg-blue-500/50' : 'w-4 bg-[var(--glass-border)]'
-            }`}
-          />
-        ))}
-      </div>
+      {!hideProgress && (
+        <div className="flex justify-center gap-2 mb-8">
+          {Array.from({ length: totalSteps }).map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === step ? 'w-8 bg-blue-500' : i < step ? 'w-4 bg-blue-500/50' : 'w-4 bg-[var(--glass-border)]'
+              }`}
+            />
+          ))}
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
-        {/* Step 0: US-based (hard disqualifier) */}
-        {step === 0 && (
-          <motion.div
-            key="q-us"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-6"
-          >
-            <div className="flex items-start gap-3 md:gap-4">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Building2 className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  Is your firm based in the United States?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  We currently serve US-based CPA firms and accounting practices.
-                </p>
-              </div>
+        <motion.div
+          key={STEP_MOTION_KEYS[current.key]}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -30 }}
+          transition={{ duration: 0.3 }}
+          className={current.key === 'usBased' ? 'space-y-6' : 'space-y-4'}
+        >
+          <div className={`flex items-start gap-3 md:gap-4${current.key === 'usBased' ? '' : ' mb-2'}`}>
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
+              <Icon className="text-blue-400" size={20} />
             </div>
+            <div>
+              <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">{current.question}</p>
+              <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">{hint}</p>
+            </div>
+          </div>
+
+          {current.key === 'usBased' ? (
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <button
                 onClick={() => handleUsBased(true)}
@@ -302,196 +338,35 @@ function QualificationGateModal({ onResult }: { onResult: (status: Qualification
                 No
               </button>
             </div>
-          </motion.div>
-        )}
-
-        {/* Step 1: Decision role (disqualifies non-decision-makers) */}
-        {step === 1 && (
-          <motion.div
-            key="q-decision"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            <div className="flex items-start gap-3 md:gap-4 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Crown className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  What&apos;s your role in the firm&apos;s decision-making?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  This helps us understand who will be involved in evaluating and implementing our system.
-                </p>
-              </div>
-            </div>
+          ) : (
             <div className="space-y-2 md:space-y-3">
-              {decisionRoleOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => handleDecisionRole(opt.value)}
-                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
-                >
+              {(current.options ?? []).map((opt) => (
+                <button key={opt.value} onClick={() => optionHandlers[current.key](opt.value)} className={OPTION_BUTTON_CLASS}>
                   {opt.label}
                 </button>
               ))}
             </div>
-          </motion.div>
-        )}
-
-        {/* Step 2: Intent — no disqualifiers; tags the lead */}
-        {step === 2 && (
-          <motion.div
-            key="q-goal"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            <div className="flex items-start gap-3 md:gap-4 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Target className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  What&apos;s the main thing you&apos;re trying to fix?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  This helps us prepare for your strategy session.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-              {goalOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => handleGoal(opt.value)}
-                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Step 3: Duration — no disqualifiers; informational */}
-        {step === 3 && (
-          <motion.div
-            key="q-duration"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            <div className="flex items-start gap-3 md:gap-4 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Target className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  How long has this been a problem you&apos;ve wanted to solve?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  No wrong answer — we just want to understand where you are.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-              {problemDurationOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => handleProblemDuration(opt.value)}
-                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Step 4: Revenue — under-400k is a hard disqualifier */}
-        {step === 4 && (
-          <motion.div
-            key="q-revenue"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            <div className="flex items-start gap-3 md:gap-4 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <DollarSign className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  What is your firm&apos;s approximate annual revenue?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  This helps us tailor the strategy session to your firm&apos;s size and goals.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-              {annualRevenueOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => handleAnnualRevenue(opt.value)}
-                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Step 5: Tax-planning value (segmentation tag, not a disqualifier) */}
-        {step === 5 && (
-          <motion.div
-            key="q-taxplan"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            <div className="flex items-start gap-3 md:gap-4 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
-                <Crown className="text-blue-400" size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--text-main)] font-bold text-sm md:text-lg">
-                  What&apos;s the most you&apos;ve ever saved a single client through tax planning?
-                </p>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm mt-1">
-                  This tells us how much advisory value you&apos;re already creating — and where the ceiling is.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-              {taxSavingsOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => handleTaxSavings(opt.value)}
-                  className="w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer"
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
+          )}
+        </motion.div>
       </AnimatePresence>
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Qualification Gate (modal version) — the overlay content used by the
+// booking funnel. Kept as a named export for other callers.
+// ---------------------------------------------------------------------------
+export function QualificationGateModal({
+  onResult,
+  mode = 'call',
+  onComplete,
+}: {
+  onResult: (status: QualificationStatus, answers: QualificationAnswers) => void;
+  mode?: QualificationMode;
+  onComplete?: (answers: QualificationAnswers) => void;
+}) {
+  return <QualificationStepsCard mode={mode} onResult={onResult} onComplete={onComplete} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -574,9 +449,11 @@ export default function QualificationProvider({ children }: { children: React.Re
     Cal("on", {
       action: "bookingSuccessful",
       callback: (e: any) => {
-        // The roadmap thank-you page runs its own inline Cal embed and handles
-        // its own booking flow — never redirect those buyers to /thank-you.
-        if (window.location.pathname.startsWith('/roadmap')) return;
+        // Pages that run their own inline Cal embed handle their own booking
+        // flow (and their own thank-you page) — never redirect those buyers to
+        // the homepage funnel's /thank-you.
+        const path = window.location.pathname;
+        if (path.startsWith('/foundation') || path === '/demo' || path.startsWith('/demo/')) return;
 
         // Send prequalification answers to GHL with booking info
         const savedAnswers = answersRef.current;
@@ -596,20 +473,52 @@ export default function QualificationProvider({ children }: { children: React.Re
               goal_tag: savedAnswers.goalTag,
               problem_duration: savedAnswers.problemDuration,
               annual_revenue: savedAnswers.annualRevenue,
+              tax_savings: savedAnswers.taxSavings,
+              tax_savings_tag: savedAnswers.taxSavingsTag,
               qualification_notes: formatAnswersAsNotes(savedAnswers),
               submitted_at: new Date().toISOString(),
             }),
           }).catch(() => {});
         }
 
-        // Redirect to thank-you page (fires Meta Lead + Schedule pixel events)
-        // then thank-you page links to /booking-confirmed for call prep
+        // The attendee's email is the only place in the whole funnel where we
+        // learn who the visitor actually is. The inbound webhook above cannot
+        // use it (it fires a workflow, it does not write the contact), so send
+        // it to our own route as well: with an email, the server can upsert the
+        // GoHighLevel contact and attach every qualifier answer to it.
         const attendeeEmail = bookingData.booking?.attendees?.[0]?.email
           || bookingData.attendees?.[0]?.email
           || '';
         const attendeeName = bookingData.booking?.attendees?.[0]?.name
           || bookingData.attendees?.[0]?.name
           || '';
+
+        if (savedAnswers && attendeeEmail) {
+          fetch('/api/forms/qualification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              qualified: true,
+              us_based: savedAnswers.usBased,
+              decision_role: savedAnswers.decisionRole,
+              goal: savedAnswers.goal,
+              goal_tag: savedAnswers.goalTag,
+              problem_duration: savedAnswers.problemDuration,
+              annual_revenue: savedAnswers.annualRevenue,
+              tax_savings: savedAnswers.taxSavings,
+              tax_savings_tag: savedAnswers.taxSavingsTag,
+              email: attendeeEmail,
+              name: attendeeName,
+              booking_uid: bookingData.uid ?? '',
+              stage: 'booked',
+              attribution: getAttribution(),
+            }),
+            keepalive: true,
+          }).catch(() => {});
+        }
+
+        // Redirect to thank-you page (fires Meta Lead + Schedule pixel events)
+        // then thank-you page links to /booking-confirmed for call prep
         const params = new URLSearchParams();
         if (attendeeEmail) params.set('email', attendeeEmail);
         if (attendeeName) params.set('name', attendeeName);

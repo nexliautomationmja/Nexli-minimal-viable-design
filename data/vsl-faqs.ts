@@ -16,7 +16,7 @@ const MINIMUM = '$500K+ per year (about $40K-$50K a month)';
 
 const whatCounts: VslFaqItem = {
   q: 'What counts as a "qualified advisory opportunity"?',
-  a: 'A US-based business owner or high-income individual who fits the advisory criteria we set with you and books a consultation on your calendar. That is what the 10-in-90-days guarantee counts: opportunities on your calendar, not closed revenue. Your close rate determines what you bank. If we do not hit 10 within 90 days of campaign launch, we keep working for free until we do. No extra fees, no renegotiation.',
+  a: 'A US-based business owner or high-income individual who matches the advisory criteria we set with you and has asked your firm to contact them. That is what the 50-in-90-days guarantee counts: qualified leads, not closed revenue. Your close rate determines what you bank. If we do not hit 50 within 90 days of campaign launch, we keep working for free until we do. No extra fees, no renegotiation.',
 };
 
 const whatItCosts: VslFaqItem = {
@@ -31,7 +31,7 @@ const whoRunsAds: VslFaqItem = {
 
 const howLong: VslFaqItem = {
   q: 'How long until we are live, and what do we need to do?',
-  a: 'Most firms go live within 2-4 weeks. Once we have your branding, logins, approvals, and onboarding details, we guarantee the system is built and launched within 21 days. If the delay is on our end, you receive a $1,000 credit toward your next monthly payment. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
+  a: 'Most firms go live within 2 weeks. Once we have your branding, logins, approvals, and onboarding details, we guarantee your whole funnel is built and launched within 14 days. If the delay is on our end, you receive a $1,000 credit toward your next monthly payment. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
 };
 
 const existingWebsite: VslFaqItem = {
@@ -134,13 +134,13 @@ export const offerFaq: VslFaqItem[] = [
   },
   {
     q: 'What does the guarantee cover?',
-    a: 'At least 10 qualified tax advisory opportunities on your calendar within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who fits your criteria and books a consultation. That is opportunity on the calendar, not closed revenue. If we miss it, we keep working for free until we hit 10. Separately, once we have your assets and access, the system is built and launched within 21 days or you receive a $1,000 credit toward your next monthly payment.',
+    a: 'At least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who matches the criteria you set with us and has asked your firm to contact them. That is a lead, not closed revenue. If we miss it, we keep working for free until you hit 50. Separately, once we have your assets and access, your whole funnel is built and launched within 14 days or you receive a $1,000 credit toward your next monthly payment.',
   },
   whatItCosts,
   whoRunsAds,
   {
     q: 'How long until the first appointments show up?',
-    a: 'The build takes most firms 2-4 weeks, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and the guarantee is 10 qualified opportunities within 90 days of campaign launch.',
+    a: 'The build takes most firms about 2 weeks, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and the guarantee is 50 qualified leads within 90 days of campaign launch.',
   },
   {
     q: 'What if we cannot handle the volume?',

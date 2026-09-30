@@ -21,7 +21,7 @@ export const aboutFacts: AboutFact[] = [
   { label: 'Email', value: 'mail@nexli.net' },
   { label: 'Serves', value: 'Established CPA and accounting firms with $500K+ in annual revenue (about $40K-$50K a month)' },
   { label: 'Contract terms', value: 'Month to month, no annual contracts' },
-  { label: 'Launch time', value: 'Most firms live within 2-4 weeks; 21-day launch guarantee' },
+  { label: 'Launch time', value: 'Most firms live within 2 weeks; 14-day funnel launch guarantee' },
 ];
 
 export const founderBio: string[] = [
@@ -58,13 +58,13 @@ export const aboutSections: AboutSection[] = [
     id: 'how-we-work',
     heading: 'How we work',
     body: [
-      'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. Most firms go live within 2-4 weeks.',
+      'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. Most firms go live within 2 weeks.',
       'Terms are month to month. There are no annual contracts, and the firm can stop at the end of any month.',
       'Two guarantees are written into every engagement.',
     ],
     bullets: [
-      'Results guarantee: at least 10 qualified tax advisory opportunities on the calendar within 90 days of campaign launch, or Nexli keeps working for free until it hits 10.',
-      'Launch guarantee: live within 21 days, or a $1,000 credit toward the next monthly payment.',
+      'Results guarantee: at least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it hits 50.',
+      'Launch guarantee: live within 14 days, or a $1,000 credit toward the next monthly payment.',
     ],
   },
   {

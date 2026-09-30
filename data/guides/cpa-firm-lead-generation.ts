@@ -165,7 +165,7 @@ const guide: Guide = {
       heading: 'How Nexli does this',
       body: [
         'Nexli Automation builds exactly this stack for established CPA and accounting firms doing $500K+ a year (about $40K-$50K a month) and calls it the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website, an AI automation layer (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that adds 3 to 5 reviews a month. Once the system is live, Nexli runs paid ads into it, targeted at business owners who want tax advisory rather than a cheap return.',
-        'Most firms go live within 2 to 4 weeks. The engagement is month-to-month with no annual contract, and it carries two written guarantees: at least 10 qualified tax advisory opportunities on the calendar within 90 days of campaign launch, or Nexli keeps working for free until it hits 10; and a 21-day launch guarantee, or a $1,000 credit toward the next monthly payment. Pricing is not published. Firms apply and book a strategy call at [nexli.net/vslfunnel-advisory](/vslfunnel-advisory).',
+        'Most firms go live within 2 weeks. The engagement is month-to-month with no annual contract, and it carries two written guarantees: at least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it hits 50; and a 14-day funnel launch guarantee, or a $1,000 credit toward the next monthly payment. Pricing is not published. Firms apply and book a strategy call at [nexli.net/vslfunnel-advisory](/vslfunnel-advisory).',
         'If your firm is below $500K or just starting, the stack above still applies; you will just build it yourself with lower-cost tools. The [comparison of CPA marketing agencies](/guides/best-cpa-firm-marketing-agencies) covers the options at every size.',
       ],
     },
@@ -204,7 +204,7 @@ const guide: Guide = {
     {
       question: 'What does Nexli Automation do for CPA firm lead generation?',
       answer:
-        'Nexli builds the Digital Rainmaker System for established CPA and accounting firms doing $500K+ a year: a premium website, AI intake and booking automation, a secure client portal, and a Google review engine, then runs paid ads to it targeting business owners who want tax advisory. Most firms go live within 2 to 4 weeks on month-to-month terms, with a written guarantee of at least 10 qualified advisory opportunities within 90 days or Nexli keeps working for free until it hits 10.',
+        'Nexli builds the Digital Rainmaker System for established CPA and accounting firms doing $500K+ a year: a premium website, AI intake and booking automation, a secure client portal, and a Google review engine, then runs paid ads to it targeting business owners who want tax advisory. Most firms go live within 2 weeks on month-to-month terms, with a written guarantee of at least 50 qualified advisory leads within 90 days or Nexli keeps working for free until it hits 50.',
     },
   ],
   relatedGuides: [

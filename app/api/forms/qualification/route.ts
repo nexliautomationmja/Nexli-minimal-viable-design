@@ -4,10 +4,21 @@ import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
 import { scoreLead } from "@/lib/lead-scoring";
 import { sendCAPIEvent } from "@/lib/meta-capi";
+import { syncContactToGhl } from "@/lib/ghl-sync";
+import { TAG_AGENCY_PITCH, TAG_WEB_PITCH } from "@/lib/demo-config";
 
 const GHL_WEBHOOK_URL =
   process.env.GHL_QUALIFICATION_WEBHOOK_URL ||
   "https://services.leadconnectorhq.com/hooks/yamjttuJWWdstfF9N0zu/webhook-trigger/c08ab845-6f7c-4016-bdf0-bbcb6b5782e6";
+
+/** "Dana Whitfield" -> { firstName: "Dana", lastName: "Whitfield" }. */
+function splitName(full: string | null): { firstName: string | null; lastName: string | null } {
+  if (!full) return { firstName: null, lastName: null };
+  const parts = full.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return { firstName: null, lastName: null };
+  if (parts.length === 1) return { firstName: parts[0], lastName: null };
+  return { firstName: parts[0], lastName: parts.slice(1).join(" ") };
+}
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
@@ -41,12 +52,28 @@ export async function POST(req: NextRequest) {
     const eventId =
       typeof body.event_id === "string" ? body.event_id : null;
 
+    // Optional identity. The pre-booking call has none of these — the visitor
+    // has not told us who they are yet — so this route behaves exactly as it
+    // always has. QualificationProvider calls it a second time once Cal.com
+    // reports a successful booking, and THAT call carries the attendee's
+    // email, which is what finally lets the answers be attached to a real
+    // GoHighLevel contact instead of floating in a webhook payload.
+    const email =
+      typeof body.email === "string" && body.email.includes("@")
+        ? body.email.trim().toLowerCase()
+        : null;
+    const name = typeof body.name === "string" ? body.name.trim() || null : null;
+    const bookingUid =
+      typeof body.booking_uid === "string" ? body.booking_uid.trim() || null : null;
+    const stage = typeof body.stage === "string" ? body.stage.trim() || null : null;
+
     // Attribution data from client
     const attribution = body.attribution || {};
     const userAgent = req.headers.get("user-agent") || "";
 
     // Score the lead
     const scoring = scoreLead({
+      email,
       usBased,
       decisionRole,
       annualRevenue,
@@ -123,6 +150,40 @@ export async function POST(req: NextRequest) {
         submitted_at: new Date().toISOString(),
       }),
     }).catch(() => {});
+
+    // Write the answers onto the GoHighLevel CONTACT (not just a webhook
+    // payload). Only possible once we know who they are; see `email` above.
+    // Awaited on purpose: a background promise can be killed when the
+    // serverless function returns. syncContactToGhl never throws and caps
+    // each GHL call at 8s, so the worst case is a slow response, not a 500.
+    if (email) {
+      const { firstName, lastName } = splitName(name);
+      await syncContactToGhl({
+        email,
+        firstName,
+        lastName,
+        source: "Nexli Booking Funnel - Qualifier",
+        tags: [qualified ? TAG_AGENCY_PITCH : TAG_WEB_PITCH],
+        answers: {
+          usBased,
+          decisionRole,
+          goal,
+          goalTag,
+          problemDuration,
+          annualRevenue,
+          taxSavings,
+          taxSavingsTag,
+        },
+        leadScore: scoring.classification,
+        funnelPath: qualified ? "agency" : "web",
+        attribution,
+        noteHeading: "Completed the booking-funnel qualifier",
+        extraNoteLines: [
+          ...(stage ? [`Stage: ${stage}`] : []),
+          ...(bookingUid ? [`Cal.com booking uid: ${bookingUid}`] : []),
+        ],
+      });
+    }
 
     // Fire CAPI CompleteRegistration event (deduplicates with browser pixel)
     if (eventId) {

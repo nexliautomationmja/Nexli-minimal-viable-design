@@ -239,8 +239,8 @@ const guide: Guide = {
       heading: 'How Nexli does this',
       body: [
         'Nexli works on levers three and four for established CPA and accounting firms doing $500K or more in annual revenue (about $40K-$50K a month). We build the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website built around one advisory offer, an AI automation layer for intake (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that produces three to five extra reviews a month. Then we run paid ads to it.',
-        'The firm keeps pricing, positioning, and the client relationship. We supply the infrastructure that larger firms build in-house. Most firms go live within two to four weeks. Terms are month to month with no annual contract.',
-        'Two guarantees. At least 10 qualified tax advisory opportunities on the calendar within 90 days of campaign launch, or we keep working for free until we hit 10. A 21-day launch, or a $1,000 credit toward the next monthly payment.',
+        'The firm keeps pricing, positioning, and the client relationship. We supply the infrastructure that larger firms build in-house. Most firms go live within 2 weeks. Terms are month to month with no annual contract.',
+        'Two guarantees. At least 50 qualified advisory leads within 90 days of campaign launch, or we keep working for free until you hit 50. A 14-day funnel launch, or a $1,000 credit toward the next monthly payment.',
         'If you want to see whether your firm fits, [apply for a strategy call](/vslfunnel-advisory). If you are comparing options, [Best CPA Firm Marketing Agencies](/guides/best-cpa-firm-marketing-agencies) lays out how this differs from a generalist agency.',
       ],
     },

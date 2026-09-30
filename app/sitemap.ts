@@ -10,15 +10,20 @@ type Freq = NonNullable<Entry['changeFrequency']>;
 const BUILD_TIME = new Date();
 
 /**
- * Deliberately excluded: /qualify, /thank-you, /booking-confirmed,
- * /roadmap/thank-you (noindex), /funnel and /vslfunnel* (paid-traffic
- * landers; indexable but not part of the canonical content set).
+ * Deliberately excluded: /qualify, /thank-you, /booking-confirmed, the
+ * inner demo-funnel steps /demo/qualify, /demo/call, /demo/offer and
+ * /demo/thank-you (they only make sense mid-funnel and are noindexed), and
+ * /funnel and /vslfunnel* (paid-traffic landers; indexable but not part of
+ * the canonical content set). Only the two entry points of the demo funnel,
+ * /demo-opt-in and /demo, are listed below.
  */
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Freq }[] = [
   { path: '/', priority: 1.0, changeFrequency: 'weekly' },
   { path: '/guides', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/about', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/rainmaker', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/demo-opt-in', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/demo', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/ai-automations', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/client-dashboard', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/smart-reviews', priority: 0.8, changeFrequency: 'monthly' },
@@ -26,7 +31,6 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Freq }[]
   { path: '/blog', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/free-guide', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/revenuecalc', priority: 0.6, changeFrequency: 'monthly' },
-  { path: '/roadmap', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' },
   { path: '/terms', priority: 0.2, changeFrequency: 'yearly' },
 ];

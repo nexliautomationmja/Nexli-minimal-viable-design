@@ -753,7 +753,7 @@ const FAQSection: React.FC = () => {
   const faqs = [
     {
       q: 'How long does the setup process take?',
-      a: 'Most firms go live within 2-4 weeks, depending on customization needs.',
+      a: 'Most firms go live within 2 weeks, depending on customization needs.',
     },
     {
       q: 'Do I need to be tech-savvy to use the system?',

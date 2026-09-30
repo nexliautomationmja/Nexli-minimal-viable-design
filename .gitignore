@@ -39,3 +39,6 @@ Nexli Brand Assets/
 
 # Cloudflare Workers local dev
 .wrangler/
+
+# TypeScript incremental build cache — regenerated on every build.
+tsconfig.tsbuildinfo

@@ -13,6 +13,7 @@ import {
   Calculator,
   DollarSign,
   Landmark,
+  Repeat,
   RotateCcw,
   Star,
   Target,
@@ -21,12 +22,14 @@ import {
   Zap,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import AnimatedNumber from './AnimatedNumber';
 import {
   computeProfit,
   DEFAULT_INPUTS,
   formatClients,
   formatCurrency,
   formatMultiple,
+  formatPercent,
   type Period,
   type ProfitInputs,
 } from '../lib/profit-calc';
@@ -121,62 +124,6 @@ const NexliLogo: React.FC = () => (
     </span>
   </span>
 );
-
-// ---------------------------------------------------------------------------
-// Animated number: tweens from the currently displayed value to each new target
-// ---------------------------------------------------------------------------
-
-function useAnimatedValue(target: number, duration = 600): number {
-  const [value, setValue] = useState(0);
-  const displayed = useRef(0);
-  const raf = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (raf.current) cancelAnimationFrame(raf.current);
-    const from = displayed.current;
-    const delta = target - from;
-    if (delta === 0) return;
-    const start = performance.now();
-
-    const tick = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      displayed.current = from + delta * eased;
-      setValue(displayed.current);
-      if (progress < 1) {
-        raf.current = requestAnimationFrame(tick);
-      } else {
-        displayed.current = target;
-        setValue(target);
-        raf.current = null;
-      }
-    };
-
-    raf.current = requestAnimationFrame(tick);
-    return () => {
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, [target, duration]);
-
-  return value;
-}
-
-interface AnimatedNumberProps {
-  value: number;
-  format?: (n: number) => string;
-  duration?: number;
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ value, format = formatCurrency, duration, className, style }) => {
-  const v = useAnimatedValue(value, duration);
-  return (
-    <span className={cn('tabular-nums', className)} style={style}>
-      {format(v)}
-    </span>
-  );
-};
 
 // ---------------------------------------------------------------------------
 // Shimmer-border pill (Launch Pad badge)
@@ -637,14 +584,14 @@ const ProfitCalculator: React.FC = () => {
 
               <SliderField
                 label="Recurring retainer per client"
-                value={inputs.recurringAnnual}
-                onChange={set('recurringAnnual')}
+                value={inputs.recurringMonthly}
+                onChange={set('recurringMonthly')}
                 min={0}
-                max={50000}
-                step={500}
+                max={5000}
+                step={50}
                 adornment="$"
                 accent="emerald"
-                hint={inputs.recurringAnnual > 0 ? `per year, ${formatCurrency(inputs.recurringAnnual / 12)}/mo` : 'per year, optional'}
+                hint={inputs.recurringMonthly > 0 ? `per month, ${formatCurrency(inputs.recurringMonthly * 12)}/yr per client` : 'per month, optional'}
               />
 
               <SliderField label="Their profit margin" value={inputs.profitMargin} onChange={set('profitMargin')} min={0} max={100} step={1} adornment="%" accent="cyan" />
@@ -789,7 +736,7 @@ const ProfitCalculator: React.FC = () => {
                       format={formatCurrency}
                       sub={
                         results.recurringRevenue > 0
-                          ? `${formatCurrency(results.newEngagementRevenue)} + ${formatCurrency(results.recurringRevenue)} recurring`
+                          ? `${formatCurrency(results.newEngagementRevenue)} + ${formatCurrency(results.recurringRevenue)}${periodShort} recurring`
                           : `${formatClients(results.closedClients)} × ${formatCurrency(inputs.engagementFee)}`
                       }
                       accent="emerald"
@@ -823,6 +770,29 @@ const ProfitCalculator: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Recurring vs Nexli fee, always on a monthly basis */}
+            {inputs.recurringMonthly > 0 && (
+              <div className="rounded-2xl px-4 py-3 mt-3 bg-white/5 border border-white/10">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center', ACCENT.emerald.chip)} style={{ filter: ACCENT.emerald.chipGlow }}>
+                    <Repeat size={15} className={ACCENT.emerald.icon} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-neutral-500">Recurring covers Nexli</span>
+                </div>
+                <div className="text-xl font-black text-white tabular-nums">
+                  <AnimatedNumber value={results.recurringMonthlyRevenue} format={formatCurrency} />
+                  <span className="text-sm text-neutral-400 font-bold">/mo</span>
+                </div>
+                <p className="text-[11px] text-neutral-400 mt-0.5">
+                  {results.recurringCoveragePct === null
+                    ? `recurring revenue from the ${formatClients(inputs.consultsPerMonth * (inputs.closeRate / 100))} clients closed each month`
+                    : results.recurringCoveragePct >= 100
+                      ? `covers our entire ${formatCurrency(results.monthlyNexliFee)}/mo fee before a single engagement fee`
+                      : `covers ${formatPercent(results.recurringCoveragePct)} of our ${formatCurrency(results.monthlyNexliFee)}/mo fee`}
+                </p>
+              </div>
+            )}
 
             {/* Secondary stats */}
             <div className="grid grid-cols-2 gap-3 mt-3">
