@@ -67,14 +67,14 @@ export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';
 
 export const GUARANTEES = [
   {
-    name: '10 Qualified Advisory Opportunities in 90 Days',
+    name: '50 Qualified Leads in 90 Days',
     description:
-      'At least 10 qualified tax advisory opportunities on your calendar within 90 days of campaign launch, or Nexli keeps working for free until it hits 10.',
+      'At least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it hits 50.',
   },
   {
-    name: '21-Day Launch Guarantee',
+    name: '14-Day Funnel Launch Guarantee',
     description:
-      'Your system is live within 21 days of kickoff, or you receive a $1,000 credit toward your next monthly payment.',
+      'Your whole funnel — website, landing pages, booking flow, follow-up and portal — is live within 14 days of kickoff, or you receive a $1,000 credit toward your next monthly payment.',
   },
 ] as const;
 
@@ -117,3 +117,12 @@ export const KNOWS_ABOUT = [
   'Client document portals for tax professionals',
   'Paid advertising for CPA firms',
 ];
+
+/**
+ * Absolute site origin for Stripe success/cancel URLs and CAPI source URLs.
+ * Honors NEXT_PUBLIC_SITE_URL (e.g. http://localhost:3000 in dev).
+ */
+export function getSiteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || SITE_URL;
+  return raw.replace(/\/+$/, '');
+}

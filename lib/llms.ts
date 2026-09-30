@@ -5,7 +5,7 @@ import { EMAIL, GUARANTEES, MIN_REVENUE_DETAIL, SITE_NAME, SITE_URL, SYSTEM_COMP
 
 const url = (path: string) => `${SITE_URL}${path}`;
 
-const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by Marcel Allen. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it so established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} land high-value tax advisory clients. Guarantees: ${GUARANTEES.map((g) => g.description).join(' ')} Month-to-month, no annual contracts. Most firms go live within 2-4 weeks. Pricing is not published; firms apply for a strategy call.`;
+const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by Marcel Allen. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it so established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} land high-value tax advisory clients. Guarantees: ${GUARANTEES.map((g) => g.description).join(' ')} Month-to-month, no annual contracts. Most firms go live within 2 weeks. Pricing is not published; firms apply for a strategy call.`;
 
 function header() {
   return [
@@ -49,7 +49,7 @@ export function buildLlmsTxt(): string {
   lines.push(`- [Watch the presentation and apply](${url('/vslfunnel-advisory')}): Video overview of the system, the guarantees, and the strategy call.`);
   lines.push(`- [Free guide](${url('/free-guide')}): Downloadable guide on scaling client capacity.`);
   lines.push(`- [Revenue calculator](${url('/revenuecalc')}): Estimate revenue impact of advisory clients.`);
-  lines.push(`- [CPA Scaling Roadmap](${url('/roadmap')}): Low-cost roadmap product.`);
+  lines.push(`- [Firm Foundation](${url('/foundation')}): Entry tier — a premium website plus a branded client portal, built and hosted by Nexli, $497/mo.`);
   lines.push(`- [Full text of all guides](${url('/llms-full.txt')})`);
   lines.push('');
 

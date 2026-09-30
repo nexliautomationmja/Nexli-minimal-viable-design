@@ -10,15 +10,15 @@ import { useBooking } from './QualificationProvider';
 // Shared by every VSL page (VslFunnel.tsx + VslFunnelOffer.tsx).
 // Tune the numbers here; the pipeline math below is computed from them.
 // ─────────────────────────────────────────────────────────────────────────────
-const OPPORTUNITIES = 10;
+const LEADS = 50;
 const DAYS = 90;
 const ENGAGEMENT_LOW = 5_000;
 const ENGAGEMENT_HIGH = 25_000;
-const LAUNCH_DAYS = 21;
+const LAUNCH_DAYS = 14;
 const CREDIT = 1_000;
 
 const ENGAGEMENT_AVG = (ENGAGEMENT_LOW + ENGAGEMENT_HIGH) / 2;
-const PIPELINE_VALUE = OPPORTUNITIES * ENGAGEMENT_AVG;
+const PIPELINE_VALUE = LEADS * ENGAGEMENT_AVG;
 
 const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 
@@ -28,28 +28,34 @@ const EMERALD_GLOW = 'drop-shadow(0 0 12px rgba(52,211,153,0.5))';
 interface GuaranteeSectionProps {
   /** Matches the CTA color of the host page: blue for VslFunnel, green for VslFunnelOffer. */
   accent?: 'blue' | 'green';
+  /**
+   * Hide the "See If Your Firm Qualifies" button. Use on pages where the
+   * visitor has already qualified and the calendar is on the page, so the
+   * button would send them back through the gate they just cleared.
+   */
+  hideCta?: boolean;
 }
 
 const guarantees = [
   {
     n: 1,
     Icon: CalendarCheck,
-    title: `${OPPORTUNITIES} Qualified Advisory Opportunities in ${DAYS} Days`,
-    body: `We guarantee at least ${OPPORTUNITIES} qualified tax advisory opportunities on your calendar within ${DAYS} days of campaign launch.`,
+    title: `${LEADS} Qualified Leads in ${DAYS} Days`,
+    body: `We guarantee at least ${LEADS} qualified advisory leads within ${DAYS} days of campaign launch — business owners and high earners who match the criteria you set with us and have asked your firm to contact them.`,
     missLabel: 'If we miss it',
-    miss: `We continue working for free until we hit ${OPPORTUNITIES}. No extra fees, no renegotiation.`,
+    miss: `We keep working for free until you hit ${LEADS}. No extra fees, no renegotiation, no clock.`,
   },
   {
     n: 2,
     Icon: Rocket,
-    title: `${LAUNCH_DAYS}-Day Launch Guarantee`,
-    body: `Once we receive all required assets, access, approvals, and onboarding information, we guarantee your acquisition system will be built and launched within ${LAUNCH_DAYS} days.`,
+    title: `${LAUNCH_DAYS}-Day Funnel Launch Guarantee`,
+    body: `We build your entire funnel — website, landing pages, booking flow, follow-up and the portal behind it — and we guarantee it is live within ${LAUNCH_DAYS} days. The clock starts the day we have your assets, access and approvals, and pauses for anything we are waiting on from you.`,
     missLabel: 'If we miss it',
     miss: `If the delay is on our end, you receive a ${usd(CREDIT)} credit toward your next monthly payment.`,
   },
 ];
 
-const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue' }) => {
+const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue', hideCta = false }) => {
   const { openBooking } = useBooking();
   const btnClass =
     accent === 'green'
@@ -165,10 +171,10 @@ const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue' }) 
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr_auto_1.2fr] gap-4 sm:gap-3 items-center">
             <div className="text-center sm:text-left">
               <p className="text-3xl sm:text-4xl font-black" style={{ color: '#ffffff', fontFamily: "'Syne', sans-serif" }}>
-                {OPPORTUNITIES}
+                {LEADS}
               </p>
               <p className="text-xs sm:text-sm leading-snug mt-1" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                Qualified advisory opportunities
+                Guaranteed qualified leads
               </p>
             </div>
 
@@ -193,19 +199,23 @@ const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue' }) 
                 {usd(PIPELINE_VALUE)}
               </p>
               <p className="text-xs sm:text-sm leading-snug mt-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                Pipeline value guaranteed in {DAYS} days
+                Pipeline value in {DAYS} days
               </p>
             </div>
           </div>
 
           <p className="text-xs sm:text-sm leading-relaxed mt-5" style={{ color: 'rgba(255,255,255,0.45)' }}>
-            Pipeline value is opportunity value on your calendar, not closed revenue. Your close rate
-            determines what you bank. Qualified means a US-based business owner or high-income individual
-            who fits your advisory criteria and books a consultation. Full terms are in your agreement.
+            The {LEADS} leads are guaranteed. The {usd(PIPELINE_VALUE)} is not — it is what those leads
+            are worth <em className="pr-[0.12em]">if</em> every one of them becomes an engagement at your average fee, which no
+            firm closes at. It is there to size the opportunity, not to promise revenue; your close rate
+            decides what you actually bank. Qualified means a US-based business owner or high-income
+            individual who matches the advisory criteria you set with us and has asked your firm to
+            contact them. Those criteria and the full terms are written into your agreement.
           </p>
         </motion.div>
 
         {/* CTA */}
+        {!hideCta && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -224,6 +234,7 @@ const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue' }) 
             We only partner with established CPA firms. No startups. No high-pressure pitch.
           </p>
         </motion.div>
+        )}
       </div>
     </section>
   );
