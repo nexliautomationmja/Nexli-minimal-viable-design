@@ -79,23 +79,27 @@ const FAKE_EMAIL_PATTERNS = [
 export function scoreLead(data: LeadData): ScoringResult {
   // ------ Disqualification checks ------
 
-  // Missing email entirely
-  if (!data.email || data.email.trim().length < 5) {
+  // Missing email entirely. The qualification gate (call funnel) never
+  // collects an email — its answers are scored on revenue/role alone.
+  const hasEmail = !!data.email && data.email.trim().length >= 5;
+  if (!hasEmail && data.formSource !== 'qualification-gate') {
     return { classification: 'disqualified', reason: 'missing_email' };
   }
 
-  const emailLower = data.email.trim().toLowerCase();
+  if (hasEmail) {
+    const emailLower = data.email!.trim().toLowerCase();
 
-  // Disposable email domain
-  const domain = emailLower.split('@')[1];
-  if (domain && DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
-    return { classification: 'disqualified', reason: 'disposable_email' };
-  }
+    // Disposable email domain
+    const domain = emailLower.split('@')[1];
+    if (domain && DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
+      return { classification: 'disqualified', reason: 'disposable_email' };
+    }
 
-  // Fake email patterns
-  for (const pattern of FAKE_EMAIL_PATTERNS) {
-    if (pattern.test(emailLower)) {
-      return { classification: 'disqualified', reason: 'fake_email' };
+    // Fake email patterns
+    for (const pattern of FAKE_EMAIL_PATTERNS) {
+      if (pattern.test(emailLower)) {
+        return { classification: 'disqualified', reason: 'fake_email' };
+      }
     }
   }
 

@@ -5,8 +5,12 @@ import {
   uuid,
   boolean,
   integer,
+  jsonb,
   index,
 } from "drizzle-orm/pg-core";
+
+// Mirrored (read-only) in dashboard/src/db/external-schema.ts. Add new
+// columns in both places and ship them via scripts/*.sql.
 
 export const leads = pgTable(
   "leads",
@@ -40,7 +44,7 @@ export const leads = pgTable(
     disqualifyReason: text("disqualify_reason"),
 
     // Source tracking
-    formSource: text("form_source"), // 'qualification-gate' | 'free-guide' | 'audit' | 'revenue-calc' | 'roadmap'
+    formSource: text("form_source"), // 'qualification-gate' | 'free-guide' | 'audit' | 'revenue-calc' | 'roadmap' | 'foundation'
 
     // Attribution (from cookies/localStorage)
     fbclid: text("fbclid"),
@@ -66,6 +70,9 @@ export const leads = pgTable(
     // CRM integration
     ghlContactId: text("ghl_contact_id"),
 
+    // Demo funnel split: 'agency' (booking call) | 'web' (self-serve site + portal)
+    funnelPath: text("funnel_path"),
+
     // Lifecycle stage tracking
     bookedCallAt: timestamp("booked_call_at"),
     showedCallAt: timestamp("showed_call_at"),
@@ -78,6 +85,25 @@ export const leads = pgTable(
     roadmapAmountCents: integer("roadmap_amount_cents"),
     stripeCheckoutSessionId: text("stripe_checkout_session_id"),
     stripePaymentIntentId: text("stripe_payment_intent_id"),
+
+    // Firm Foundation subscription ($497/mo website + portal tier).
+    // See scripts/add-foundation-columns.sql.
+    foundationSubscribedAt: timestamp("foundation_subscribed_at"),
+    stripeCustomerId: text("stripe_customer_id"),
+    stripeSubscriptionId: text("stripe_subscription_id"),
+    subscriptionStatus: text("subscription_status"), // Stripe status: active | trialing | past_due | canceled | unpaid | incomplete
+    subscriptionCurrentPeriodEnd: timestamp("subscription_current_period_end"),
+    provisionedAt: timestamp("provisioned_at"),
+    provisioningStatus: text("provisioning_status"), // 'pending' | 'ok' | 'failed'
+    provisioningError: text("provisioning_error"),
+    // $999 setup fee + first month, as actually charged (session.amount_total).
+    setupFeeCents: integer("setup_fee_cents"),
+    firstPaymentCents: integer("first_payment_cents"),
+    onboardingIntake: jsonb("onboarding_intake"),
+    kickoffBookedAt: timestamp("kickoff_booked_at"),
+    // "See your new website" preview (scripts/add-site-previews.sql)
+    previewToken: text("preview_token"),
+    previewStatus: text("preview_status"), // pending | generating | ready | failed
 
     // Timestamps
     createdAt: timestamp("created_at").defaultNow().notNull(),
