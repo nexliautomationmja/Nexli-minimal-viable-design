@@ -73,6 +73,14 @@ export const leads = pgTable(
     // Demo funnel split: 'agency' (booking call) | 'web' (self-serve site + portal)
     funnelPath: text("funnel_path"),
 
+    // Demo funnel stage tracking — which pages the lead actually reached.
+    // Distinct from funnelPath: that is the pitch the qualifier ASSIGNED,
+    // these are the pitches the lead was SHOWN. An agency lead may browse
+    // /demo/offer, so the two are not interchangeable.
+    demoViewedAt: timestamp("demo_viewed_at"),
+    agencyPitchViewedAt: timestamp("agency_pitch_viewed_at"),
+    webPitchViewedAt: timestamp("web_pitch_viewed_at"),
+
     // Lifecycle stage tracking
     bookedCallAt: timestamp("booked_call_at"),
     showedCallAt: timestamp("showed_call_at"),

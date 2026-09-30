@@ -35,6 +35,16 @@ export const TAG_AGENCY_PITCH = 'agency pitch';
 /** Not qualified: pitched the self-serve website + portal. */
 export const TAG_WEB_PITCH = 'web pitch';
 export const TAG_CALL_BOOKED = 'call booked';
+
+// ── Stage tags: which page the lead actually reached ──────────────────────
+// The pitch tags above are ASSIGNMENT — set by the qualifier the moment the
+// split is decided. These are ARRIVAL. They are deliberately separate names:
+// a qualified agency lead is allowed to browse /demo/offer, and tagging that
+// visit 'web pitch' would mislabel them and feed the wrong nurture sequence.
+/** Opened the /demo sandbox. 'demo opt-in' only means they gave us an email. */
+export const TAG_DEMO_VIEWED = 'demo';
+export const TAG_AGENCY_PITCH_VIEWED = 'agency pitch viewed';
+export const TAG_WEB_PITCH_VIEWED = 'web pitch viewed';
 export const TAG_FOUNDATION_CUSTOMER = 'foundation customer';
 
 /** Which side of the split a lead landed on. Stored and sent to GHL. */
