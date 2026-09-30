@@ -16,6 +16,14 @@ export const DEMO_CALL_PATH = '/demo/call';
 export const DEMO_OFFER_PATH = '/demo/offer';
 export const DEMO_THANK_YOU_PATH = '/demo/thank-you';
 
+/**
+ * Where a booked growth call lands. Shared with the VSL funnel rather than
+ * demo-specific: welcome video, the Rainmaker walkthrough and the intel form
+ * are the same prep either way. Optional ?name= and ?email=: the email seeds
+ * the "send me a copy" field, the name rides along on the intel submission.
+ */
+export const BOOKING_CONFIRMED_PATH = '/booking-confirmed';
+
 /** leads.form_source for anyone who opts in to the demo. */
 export const DEMO_FORM_SOURCE = 'demo-optin';
 

@@ -131,6 +131,10 @@ export function useCalPopup({
             booking_uid: data.uid ?? data.booking?.uid ?? '',
             start_time: data.date ?? data.booking?.startTime ?? '',
           }),
+          // onBooked may navigate away (the demo funnel sends people to
+          // /booking-confirmed). Without keepalive the browser cancels this
+          // in flight and we silently lose the Schedule event and the GHL tag.
+          keepalive: true,
         }).catch(() => {});
 
         setBooked(true);

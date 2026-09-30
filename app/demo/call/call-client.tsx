@@ -38,6 +38,7 @@ import AdsDashboard from '@/components/demo/AdsDashboard';
 import { useVideoTracking } from '@/lib/use-video-tracking';
 import { trackMetaEvent } from '@/lib/meta-events';
 import {
+  BOOKING_CONFIRMED_PATH,
   DEMO_CAL_LINK,
   DEMO_CAL_NAMESPACE,
   DEMO_OFFER_VIDEO_PLAYBACK_ID,
@@ -245,6 +246,22 @@ const DemoCallClient: React.FC<DemoCallClientProps> = ({
     leadToken,
     notes,
     scheduleContentName: 'Advisory Engine Growth Call',
+    // Hand them straight to the call-prep page: welcome video, the Rainmaker
+    // walkthrough and the intel form. The beat is there because Cal's modal is
+    // still on top showing its own confirmation — navigating instantly yanks
+    // them out mid-sentence — and it gives the booked POST extra headroom on
+    // top of its keepalive flag.
+    onBooked: () => {
+      const qs = new URLSearchParams();
+      if (fullName) qs.set('name', fullName);
+      if (email) qs.set('email', email);
+      const query = qs.toString();
+      window.setTimeout(() => {
+        window.location.href = query
+          ? `${BOOKING_CONFIRMED_PATH}?${query}`
+          : BOOKING_CONFIRMED_PATH;
+      }, 1800);
+    },
   });
 
   return (
