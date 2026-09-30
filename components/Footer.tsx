@@ -14,7 +14,18 @@ const Footer: React.FC = () => {
   const pathname = usePathname();
 
   // Hide footer on dedicated funnel pages to remove exit paths
-  if (HIDDEN_FOOTER_ROUTES.includes(pathname)) return null;
+  // '/foundation/start' and '/foundation/preview' used to be listed here;
+  // both pages are gone and /foundation now redirects to /demo-opt-in.
+  if (
+    HIDDEN_FOOTER_ROUTES.includes(pathname) ||
+    pathname.startsWith('/sites') ||
+    pathname === '/demo-opt-in' ||
+    // Exact '/demo' plus the '/demo/' prefix, so a future unrelated route
+    // beginning with those letters is not swept up.
+    pathname === '/demo' ||
+    pathname.startsWith('/demo/')
+  )
+    return null;
 
   return (
     <footer className="py-20 border-t border-[var(--glass-border)] bg-[var(--footer-bg)] relative overflow-hidden transition-colors duration-300">

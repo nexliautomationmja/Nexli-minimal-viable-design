@@ -24,7 +24,7 @@ const TermsAndConditions: React.FC = () => {
                     </div>
                     <h1 className="text-[var(--text-main)] text-5xl md:text-7xl font-bold mb-8">Terms & Conditions</h1>
                     <p className="text-[var(--text-muted)] text-xl leading-relaxed">
-                        Effective Date: January 18, 2026
+                        Effective Date: September 26, 2026
                     </p>
                 </div>
 
@@ -52,9 +52,13 @@ const TermsAndConditions: React.FC = () => {
                                 <strong className="text-[var(--text-main)]">Monthly Retainer:</strong> Upon completion of the initial setup and "go-live," the client moves to a monthly recurring retainer. This covers ongoing automation maintenance, CRM management, hosting, and continuous optimization. Monthly subscription fees are non-refundable.
                             </li>
                             <li>
-                                <strong className="text-[var(--text-main)]">Cancellation:</strong> Clients may cancel future monthly billing with 30 days written notice.
+                                <strong className="text-[var(--text-main)]">Cancellation:</strong> Subscriptions run month-to-month with no minimum term. Clients may cancel future monthly billing at any time with 30 days&apos; written notice.
                             </li>
                         </ul>
+                        <h3 className="text-xl font-bold text-[var(--text-main)] pt-4">Subscription Plans</h3>
+                        <p>
+                            <strong className="text-[var(--text-main)]">Firm Foundation</strong> is billed as a one-time setup fee of $999 plus a recurring subscription of $497 per month. Both are charged together on the first invoice, so the first payment is $1,496; every subsequent payment is $497 per month. The $999 setup fee covers the design and build of the client&apos;s website, the configuration and branding of the client portal, data migration, domain and payment connection, and team onboarding; it is non-refundable once project work has commenced. There is no minimum term: the subscription runs month-to-month and the client may cancel at any time with 30 days&apos; written notice to <strong>mail@nexli.net</strong>. Cancellation takes effect at the end of the notice period and no partial-month refunds are issued. Subscription fees are non-refundable once charged. During the active subscription term, Nexli designs, builds, hosts, and maintains the client&apos;s website and client portal; access to both depends on the subscription remaining in good standing. Purchase is completed through Stripe Checkout, where the client accepts these Terms and the Firm Foundation service agreement. A $497 credit toward the Digital Rainmaker System is available to Firm Foundation subscribers who upgrade within 90 days of purchase.
+                        </p>
                     </section>
 
                     <section className="space-y-4 p-8 glass-card rounded-3xl border border-blue-500/10">
@@ -87,6 +91,10 @@ const TermsAndConditions: React.FC = () => {
                         <p>
                             Upon full payment of the setup fee, Nexli grants the client a license to use the custom-built web assets and automation workflows. Nexli retains title to all underlying proprietary AI frameworks and code libraries used in the assembly of the final product.
                         </p>
+                        <h3 className="text-xl font-bold text-[var(--text-main)] pt-4">Hosted Services and License</h3>
+                        <p>
+                            For hosted subscription plans, including Firm Foundation, the client owns all content, brand assets (logos, colors, photography, and copy the client supplies), the client's domain name, and all client data stored in the portal. Nexli owns the client portal software, the website framework, templates, and all underlying code, and grants the client a non-exclusive, non-transferable license to use them for the duration of the active subscription term. Upon termination, Nexli will provide the client with an export of the client's website content and client data within 30 days of the termination date. The website and portal may be taken offline 30 days after termination. Nexli may reference the client's website in its portfolio unless the client opts out in writing.
+                        </p>
                     </section>
 
                     <section className="space-y-4">
@@ -97,9 +105,10 @@ const TermsAndConditions: React.FC = () => {
                     </section>
 
                     <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-[var(--text-main)]">6. Governing Law</h2>
+                        <h2 className="text-2xl font-bold text-[var(--text-main)]">6. Governing Law and Dispute Resolution</h2>
+                        {/* TODO legal review */}
                         <p>
-                            These Terms shall be governed by and defined in accordance with the laws of the United States. Nexli and yourself irrevocably consent that the courts shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these terms.
+                            These Terms shall be governed by and construed in accordance with the laws of the State of Florida, without regard to its conflict-of-law principles. Any dispute, claim, or controversy arising out of or relating to these Terms or the services shall be resolved by binding arbitration administered by the American Arbitration Association (AAA) under its Commercial Arbitration Rules. The arbitration shall take place in Florida, and judgment on the award may be entered in any court of competent jurisdiction. Either party may seek injunctive relief in a court of competent jurisdiction to protect its intellectual property or confidential information.
                         </p>
                     </section>
 

@@ -8,8 +8,14 @@ const DISALLOW = [
   '/qualify',
   '/thank-you',
   '/booking-confirmed',
-  '/roadmap/thank-you',
+  '/sites/preview',
   '/profit-calculator',
+  // Inner demo-funnel steps: entered from /demo-opt-in -> /demo, never
+  // meaningful as a search result.
+  '/demo/qualify',
+  '/demo/call',
+  '/demo/offer',
+  '/demo/thank-you',
 ];
 
 /**
