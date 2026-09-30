@@ -16,6 +16,14 @@ export const DEMO_CALL_PATH = '/demo/call';
 export const DEMO_OFFER_PATH = '/demo/offer';
 export const DEMO_THANK_YOU_PATH = '/demo/thank-you';
 
+/**
+ * Where a booked growth call lands. Shared with the VSL funnel rather than
+ * demo-specific: welcome video, the Rainmaker walkthrough and the intel form
+ * are the same prep either way. Optional ?name= and ?email=: the email seeds
+ * the "send me a copy" field, the name rides along on the intel submission.
+ */
+export const BOOKING_CONFIRMED_PATH = '/booking-confirmed';
+
 /** leads.form_source for anyone who opts in to the demo. */
 export const DEMO_FORM_SOURCE = 'demo-optin';
 
@@ -27,6 +35,16 @@ export const TAG_AGENCY_PITCH = 'agency pitch';
 /** Not qualified: pitched the self-serve website + portal. */
 export const TAG_WEB_PITCH = 'web pitch';
 export const TAG_CALL_BOOKED = 'call booked';
+
+// ── Stage tags: which page the lead actually reached ──────────────────────
+// The pitch tags above are ASSIGNMENT — set by the qualifier the moment the
+// split is decided. These are ARRIVAL. They are deliberately separate names:
+// a qualified agency lead is allowed to browse /demo/offer, and tagging that
+// visit 'web pitch' would mislabel them and feed the wrong nurture sequence.
+/** Opened the /demo sandbox. 'demo opt-in' only means they gave us an email. */
+export const TAG_DEMO_VIEWED = 'demo';
+export const TAG_AGENCY_PITCH_VIEWED = 'agency pitch viewed';
+export const TAG_WEB_PITCH_VIEWED = 'web pitch viewed';
 export const TAG_FOUNDATION_CUSTOMER = 'foundation customer';
 
 /** Which side of the split a lead landed on. Stored and sent to GHL. */

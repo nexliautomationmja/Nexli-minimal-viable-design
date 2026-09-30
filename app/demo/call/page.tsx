@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { after } from 'next/server';
 import { eq } from 'drizzle-orm';
 import FunnelLogo from '@/components/FunnelLogo';
 import { getDb } from '@/lib/db';
 import { leads } from '@/lib/leads-schema';
 import { DEMO_OFFER_PATH } from '@/lib/demo-config';
 import { DEMO_COOKIE, requireDemoLead } from '@/lib/demo-session';
+import { markDemoStage } from '@/lib/demo-stage';
 import { qualificationLabel } from '@/lib/qualification-steps';
 import DemoCallClient from './call-client';
 
@@ -65,6 +67,10 @@ export default async function DemoCallPage({
   }
 
   if (lead?.funnelPath === 'web') redirect(DEMO_OFFER_PATH);
+
+  // Below the redirect on purpose: only a lead who actually stays on this page
+  // counts as having been shown the agency pitch.
+  after(() => markDemoStage(leadId, 'agencyPitch'));
 
   const leadToken = (await cookies()).get(DEMO_COOKIE)?.value || '';
   const firstName = (lead?.firstName || '').trim();

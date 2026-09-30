@@ -423,7 +423,9 @@ const BookingConfirmed: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Email capture state (shown after AI response)
-  const [prospectEmailInput, setProspectEmailInput] = useState('');
+  // Seeded from ?email= so a visitor arriving from /demo/call does not retype
+  // an address we already have. Empty for the VSL path, which passes no params.
+  const [prospectEmailInput, setProspectEmailInput] = useState(prospectEmail);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [emailSending, setEmailSending] = useState(false);
 

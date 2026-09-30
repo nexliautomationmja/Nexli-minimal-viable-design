@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
+import { after } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { requireDemoLead } from '@/lib/demo-session';
+import { markDemoStage } from '@/lib/demo-stage';
 import { getDb } from '@/lib/db';
 import { leads } from '@/lib/leads-schema';
 import { FOUNDATION_PRODUCT_NAME } from '@/lib/foundation-config';
@@ -28,6 +30,12 @@ export default async function DemoOfferPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const leadId = await requireDemoLead();
+
+  // Arrival, not assignment. A qualified agency lead is allowed to land here
+  // and buy the infrastructure outright, so this tag is deliberately not
+  // 'web pitch' — that one belongs to the qualifier.
+  after(() => markDemoStage(leadId, 'webPitch'));
+
   const params = await searchParams;
   const checkout = Array.isArray(params.checkout) ? params.checkout[0] : params.checkout;
 
