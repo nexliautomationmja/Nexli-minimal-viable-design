@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import { NEXLI_BRANDING, type OwnerBranding } from "@/lib/branding";
 import {
   LayoutIcon,
   InvoiceIcon,
@@ -38,6 +39,8 @@ function ChevronRightIcon({ className }: { className?: string }) {
 interface PortalSidebarProps {
   clientName: string | null;
   clientEmail: string;
+  /** Firm branding resolved server-side from the portal session's ownerId. */
+  branding?: OwnerBranding;
 }
 
 const portalNav: { href: string; label: string; icon: typeof LayoutIcon }[] = [
@@ -49,13 +52,28 @@ const portalNav: { href: string; label: string; icon: typeof LayoutIcon }[] = [
   { href: "/portal/dashboard/tax-returns", label: "Tax Returns", icon: KanbanIcon },
 ];
 
-export function PortalSidebar({ clientName, clientEmail }: PortalSidebarProps) {
+export function PortalSidebar({
+  clientName,
+  clientEmail,
+  branding = NEXLI_BRANDING,
+}: PortalSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+
+  const nexliLogoSrc =
+    theme === "dark"
+      ? "/logos/nexli-logo-white-wordmark@2x.png"
+      : "/logos/nexli-logo-dark-wordmark@2x.png";
+  // A firm's uploaded logo is used as-is in both themes; Nexli's wordmark
+  // switches with the theme.
+  const hasCustomLogo =
+    !branding.isNexli && branding.logoUrl !== NEXLI_BRANDING.logoUrl;
+  const logoSrc = hasCustomLogo ? branding.logoUrl : nexliLogoSrc;
+  const accent = branding.brandColor || "var(--accent-blue)";
 
   const initials = clientName
     ? clientName
@@ -105,21 +123,34 @@ export function PortalSidebar({ clientName, clientEmail }: PortalSidebarProps) {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className={cn("flex items-center h-16 px-4", collapsed ? "justify-center" : "gap-3")}>
-        <Link href="/portal/dashboard" className="flex items-center no-underline shrink-0">
+        <Link href="/portal/dashboard" className="flex items-center no-underline shrink-0 min-w-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={theme === "dark" ? "/logos/nexli-logo-white-wordmark@2x.png" : "/logos/nexli-logo-dark-wordmark@2x.png"}
-            alt="Nexli"
-            className={cn("w-auto shrink-0", collapsed ? "h-6" : "h-7")}
+            src={logoSrc}
+            alt={branding.displayName}
+            className={cn(
+              "w-auto shrink-0 object-contain",
+              collapsed ? "h-6 max-w-[40px]" : "h-7 max-w-[180px]"
+            )}
           />
         </Link>
       </div>
 
-      {/* Portal label */}
+      {/* Firm name + portal label */}
       {!collapsed && (
-        <div className="px-4 mb-2">
+        <div className="px-4 mb-2 min-w-0">
+          {!branding.isNexli && (
+            <p
+              className="text-sm font-semibold truncate"
+              style={{ color: "var(--text-main)" }}
+              title={branding.displayName}
+            >
+              {branding.displayName}
+            </p>
+          )}
           <span
             className="text-[9px] font-bold uppercase tracking-[0.2em]"
-            style={{ color: "var(--accent-blue)" }}
+            style={{ color: accent }}
           >
             Client Portal
           </span>
@@ -205,7 +236,9 @@ export function PortalSidebar({ clientName, clientEmail }: PortalSidebarProps) {
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
             style={{
-              background: "linear-gradient(135deg, #2563EB, #06B6D4)",
+              background: branding.brandColor
+                ? branding.brandColor
+                : "linear-gradient(135deg, #2563EB, #06B6D4)",
               color: "white",
             }}
           >

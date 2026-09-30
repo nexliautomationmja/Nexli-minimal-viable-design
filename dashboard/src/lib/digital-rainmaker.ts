@@ -40,6 +40,7 @@ import {
   formatCurrency,
 } from "@/lib/invoice-utils";
 import { sendEmailWithLog, buildInvoiceEmail } from "@/lib/email";
+import { getOwnerBranding } from "@/lib/branding";
 import { createNotification } from "@/lib/notifications";
 
 // ── Constants ─────────────────────────────────────────────
@@ -165,6 +166,7 @@ async function emailInvoiceToClient(
     const portalUrl =
       process.env.NEXT_PUBLIC_PORTAL_URL || "https://portal.nexli.net";
     const invoiceUrl = `${portalUrl}/invoice/${invoice.token}`;
+    const branding = await getOwnerBranding(ownerId);
 
     const { subject, html } = buildInvoiceEmail({
       clientName: invoice.clientName,
@@ -173,12 +175,14 @@ async function emailInvoiceToClient(
       total: formatCurrency(invoice.total, invoice.currency),
       dueDate: invoice.dueDate,
       invoiceUrl,
+      branding,
     });
 
     await sendEmailWithLog({
       to: invoice.clientEmail,
       subject,
       html,
+      fromName: branding.fromName,
       recipientName: invoice.clientName,
       emailType: "invoice",
       relatedId: invoice.id,

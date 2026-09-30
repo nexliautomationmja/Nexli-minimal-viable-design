@@ -27,9 +27,12 @@ import {
   XIcon,
 } from "@/components/ui/icons";
 import { NotificationBell } from "@/components/dashboard/notification-bell";
+import type { Tier } from "@/lib/tier-access";
 
 interface SidebarProps {
   isAdmin: boolean;
+  /** Commercial tier; Foundation firms only see the firm-facing nav. */
+  tier?: Tier;
   userName?: string | null;
 }
 
@@ -49,13 +52,15 @@ function ChevronRightIcon({ className }: { className?: string }) {
   );
 }
 
-const clientNav: { href: string; label: string; icon: typeof LayoutIcon }[] = [
+type NavItem = { href: string; label: string; icon: typeof LayoutIcon };
+
+/**
+ * Firm-facing tools every tier gets: the client portal, documents, billing
+ * and tax workflow. Listed in the order the full nav shows them.
+ */
+const firmNav: NavItem[] = [
   { href: "/dashboard", label: "Overview", icon: LayoutIcon },
   { href: "/dashboard/clients", label: "Clients", icon: UsersIcon },
-  { href: "/dashboard/contacts", label: "Contacts", icon: UsersIcon },
-  { href: "/dashboard/pipeline", label: "Pipeline", icon: KanbanIcon },
-  { href: "/dashboard/calendar", label: "Calendar", icon: CalendarIcon },
-  { href: "/dashboard/messages", label: "Messages", icon: MessageIcon },
   { href: "/dashboard/portal-messages", label: "Client Messages", icon: SendIcon },
   { href: "/dashboard/documents", label: "Documents", icon: FileIcon },
   { href: "/dashboard/engagements", label: "Engagements", icon: PenLineIcon },
@@ -63,19 +68,59 @@ const clientNav: { href: string; label: string; icon: typeof LayoutIcon }[] = [
   { href: "/dashboard/tax-returns", label: "Tax Returns", icon: KanbanIcon },
   { href: "/dashboard/tax-organizers", label: "Tax Organizers", icon: FormIcon },
   { href: "/dashboard/tax-forms", label: "Tax Center", icon: FormIcon },
-  { href: "/dashboard/ad-analytics", label: "Ad Analytics", icon: ChartIcon },
   { href: "/dashboard/settings", label: "Settings", icon: GearIcon },
 ];
 
+/**
+ * Agency tooling backed by GHL / ad platforms / Vercel analytics. Only the
+ * full Digital Rainmaker System tier (and admins) see these. Keep in sync
+ * with AGENCY_ROUTE_PREFIXES in src/lib/tier-access.ts.
+ */
+const agencyNav: NavItem[] = [
+  { href: "/dashboard/contacts", label: "Contacts", icon: UsersIcon },
+  { href: "/dashboard/pipeline", label: "Pipeline", icon: KanbanIcon },
+  { href: "/dashboard/calendar", label: "Calendar", icon: CalendarIcon },
+  { href: "/dashboard/messages", label: "Messages", icon: MessageIcon },
+  { href: "/dashboard/ad-analytics", label: "Ad Analytics", icon: ChartIcon },
+];
+
+/** The historical full-nav ordering, interleaving agency items among firm ones. */
+const fullNavOrder = [
+  "/dashboard",
+  "/dashboard/clients",
+  "/dashboard/contacts",
+  "/dashboard/pipeline",
+  "/dashboard/calendar",
+  "/dashboard/messages",
+  "/dashboard/portal-messages",
+  "/dashboard/documents",
+  "/dashboard/engagements",
+  "/dashboard/invoices",
+  "/dashboard/tax-returns",
+  "/dashboard/tax-organizers",
+  "/dashboard/tax-forms",
+  "/dashboard/ad-analytics",
+  "/dashboard/settings",
+];
+
+const fullNav: NavItem[] = fullNavOrder
+  .map((href) => [...firmNav, ...agencyNav].find((n) => n.href === href))
+  .filter((n): n is NavItem => !!n);
+
 const adminNav: { href: string; label: string; icon: typeof ShieldIcon }[] = [];
 
-export function Sidebar({ isAdmin, userName }: SidebarProps) {
+export function Sidebar({ isAdmin, tier = "drs", userName }: SidebarProps) {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navItems = isAdmin ? [...clientNav, ...adminNav] : clientNav;
+  // Admin → everything; Foundation → firm tools only; DRS → the full list.
+  const navItems = isAdmin
+    ? [...fullNav, ...adminNav]
+    : tier === "foundation"
+      ? firmNav
+      : fullNav;
 
   const initials = userName
     ? userName
