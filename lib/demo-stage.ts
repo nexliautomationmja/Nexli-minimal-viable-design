@@ -22,6 +22,7 @@ import { leads } from '@/lib/leads-schema';
 import { addContactTags } from '@/lib/ghl';
 import { syncContactToGhl } from '@/lib/ghl-sync';
 import {
+  type FunnelPath,
   TAG_AGENCY_PITCH_VIEWED,
   TAG_DEMO_VIEWED,
   TAG_WEB_PITCH_VIEWED,
@@ -107,7 +108,7 @@ export async function markDemoStage(leadId: string, stage: DemoStage): Promise<v
       websiteUrl: lead.websiteUrl,
       source: cfg.source,
       tags: [cfg.tag],
-      funnelPath: lead.funnelPath as 'agency' | 'web' | undefined,
+      funnelPath: (lead.funnelPath as FunnelPath | null) ?? undefined,
       noteHeading: cfg.note,
     });
     if (sync.contactId) {

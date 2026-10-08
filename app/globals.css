@@ -105,6 +105,23 @@ html {
   }
 }
 
+/* The animated rim on showpiece cards. A named class rather than Tailwind's
+   animate-[shimmer_6s_linear_infinite] so the reduced-motion rule below can
+   stop every rim at once — an arbitrary-value class cannot be targeted. New
+   rims should use components/funnel/primitives.tsx RimCard, which applies it. */
+.rim-spin {
+  animation: shimmer 6s linear infinite;
+}
+
+/* WCAG 2.2.2: a conic gradient rotating forever is exactly the motion this
+   is for. Holding it still costs the design nothing — the opaque interior
+   and the blurred orbs carry the card. */
+@media (prefers-reduced-motion: reduce) {
+  .rim-spin {
+    animation: none;
+  }
+}
+
 /* Background Gradient Animations */
 @keyframes moveInCircle {
   0% {

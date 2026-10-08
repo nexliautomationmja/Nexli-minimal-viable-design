@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useInView } from 'framer-motion';
+import { useInView, useReducedMotion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { formatCurrency } from '../lib/profit-calc';
 
@@ -75,11 +75,22 @@ const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
+  const reduceMotion = useReducedMotion();
   const target = animateOnView && !inView ? 0 : value;
   const v = useAnimatedValue(target, duration);
+
+  // Counting up is decorative; the figure is the content. Under reduced
+  // motion show it immediately rather than tweening to it.
+  const shown = reduceMotion ? value : v;
+  const final = format(value);
+
+  // A tweening text node gets announced mid-count by some screen readers, and
+  // this now has five call sites. Hide the animating span and expose the
+  // settled figure once.
   return (
     <span ref={ref} className={cn('tabular-nums', className)} style={style}>
-      {format(v)}
+      <span aria-hidden="true">{format(shown)}</span>
+      <span className="sr-only">{final}</span>
     </span>
   );
 };

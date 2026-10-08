@@ -21,7 +21,10 @@ export default function ConditionalNavbar() {
     // exact match plus a '/demo/' prefix so a future route that merely starts
     // with the letters (e.g. /demo-reel) keeps its navbar.
     pathname === '/demo' ||
-    pathname.startsWith('/demo/')
+    pathname.startsWith('/demo/') ||
+    // The advisory funnel, same exact-plus-prefix shape.
+    pathname === '/advisory-pricing' ||
+    pathname.startsWith('/advisory-pricing/')
   ) {
     return null;
   }

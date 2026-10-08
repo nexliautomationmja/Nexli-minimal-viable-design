@@ -23,6 +23,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Freq }[]
   { path: '/about', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/rainmaker', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/demo-opt-in', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/advisory-pricing', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/demo', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/ai-automations', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/client-dashboard', priority: 0.8, changeFrequency: 'monthly' },

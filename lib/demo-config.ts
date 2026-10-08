@@ -48,11 +48,17 @@ export const TAG_WEB_PITCH_VIEWED = 'web pitch viewed';
 export const TAG_FOUNDATION_CUSTOMER = 'foundation customer';
 
 /** Which side of the split a lead landed on. Stored and sent to GHL. */
-export type FunnelPath = 'agency' | 'web';
+export type FunnelPath = 'agency' | 'web' | 'not-a-fit';
 
 export const FUNNEL_PATH_TAG: Record<FunnelPath, string> = {
   agency: TAG_AGENCY_PITCH,
   web: TAG_WEB_PITCH,
+  // The advisory funnel's third outcome: a paying customer whose firm is
+  // below the bar for the done-for-you engine. Deliberately NOT 'web' —
+  // that tag means "pitched the website", and routing a $297 buyer into the
+  // website nurture would be the exact mislabelling the tags above warn
+  // about. The demo funnel never produces this value.
+  'not-a-fit': 'advisory not a fit',
 };
 
 // ── The fixed demo firm ───────────────────────────────────────────────────

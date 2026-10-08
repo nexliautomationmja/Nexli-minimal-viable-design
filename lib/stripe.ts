@@ -1,12 +1,10 @@
 import Stripe from "stripe";
 import { getSiteUrl } from "./site";
 import {
-  ROADMAP_CURRENCY,
-  ROADMAP_PATH,
-  ROADMAP_PRICE_VALUE,
-  ROADMAP_STRIPE_PRODUCT_ID,
-  ROADMAP_THANK_YOU_PATH,
-} from "./roadmap-config";
+  ADVISORY_OFFER_PATH,
+  ADVISORY_THANK_YOU_PATH,
+  getAdvisoryPriceId,
+} from "./advisory-config";
 import {
   FOUNDATION_PRODUCT_ID,
   FOUNDATION_PRODUCT_NAME,
@@ -28,11 +26,11 @@ export function getStripe(): Stripe {
   return _stripe;
 }
 
-export type SessionProduct = "roadmap" | "foundation";
+export type SessionProduct = "advisory" | "foundation";
 
 /** Attribution fields carried through Stripe metadata so the webhook can
  *  fire a fully-attributed CAPI Purchase without a DB round-trip. */
-export interface RoadmapAttribution {
+export interface CheckoutAttributionFields {
   fbclid?: string | null;
   fbp?: string | null;
   fbc?: string | null;
@@ -45,19 +43,19 @@ export interface RoadmapAttribution {
   referrer?: string | null;
 }
 
-export type CheckoutAttribution = RoadmapAttribution;
+export type CheckoutAttribution = CheckoutAttributionFields;
 
-export interface RoadmapCheckoutParams {
+export interface OneTimeCheckoutParams {
   leadId: string | null;
   email: string;
   firstName: string;
   lastName: string;
   phone: string;
   purchaseEventId: string;
-  attribution: RoadmapAttribution;
+  attribution: CheckoutAttributionFields;
 }
 
-export interface FoundationCheckoutParams extends RoadmapCheckoutParams {
+export interface FoundationCheckoutParams extends OneTimeCheckoutParams {
   firmName: string;
   websiteUrl?: string | null;
   marketingSmsOptIn: boolean;
@@ -80,7 +78,7 @@ function compact(obj: Record<string, string | undefined>): Record<string, string
   return out;
 }
 
-function attributionMetadata(a: RoadmapAttribution): Record<string, string | undefined> {
+function attributionMetadata(a: CheckoutAttributionFields): Record<string, string | undefined> {
   return {
     fbclid: meta(a.fbclid),
     fbp: meta(a.fbp),
@@ -95,52 +93,19 @@ function attributionMetadata(a: RoadmapAttribution): Record<string, string | und
   };
 }
 
-/** Resolved line items, cached per key for the life of the serverless instance. */
-const lineItemCache = new Map<string, Stripe.Checkout.SessionCreateParams.LineItem>();
-
-const FOUNDATION_SETUP_CACHE_KEY = `${FOUNDATION_PRODUCT_ID}:setup`;
-
 /**
- * Resolve what to charge for the roadmap, in priority order:
- *  1. STRIPE_ROADMAP_PRICE_ID (explicit Price)
- *  2. the Product's default price
- *  3. ad-hoc price_data on the Product using ROADMAP_PRICE_VALUE
+ * Every line item is now a plain env-var lookup, so there is deliberately no
+ * cache. The old one memoised resolved prices for the life of the serverless
+ * instance, which meant a corrected price id only took effect on instances
+ * started after the change — during a rolling deploy some customers were
+ * charged the old amount. It existed only because the retired roadmap
+ * resolver might call stripe.products.retrieve(); with that gone, caching an
+ * object literal buys nothing.
  */
-async function resolveRoadmapLineItem(
-  stripe: Stripe
-): Promise<Stripe.Checkout.SessionCreateParams.LineItem> {
-  const cached = lineItemCache.get("roadmap");
-  if (cached) return cached;
 
-  let lineItem: Stripe.Checkout.SessionCreateParams.LineItem;
-  const explicitPrice = process.env.STRIPE_ROADMAP_PRICE_ID;
-  if (explicitPrice) {
-    lineItem = { price: explicitPrice, quantity: 1 };
-  } else {
-    const product = await stripe.products.retrieve(ROADMAP_STRIPE_PRODUCT_ID);
-    const defaultPrice =
-      typeof product.default_price === "string"
-        ? product.default_price
-        : product.default_price?.id;
-
-    if (defaultPrice) {
-      lineItem = { price: defaultPrice, quantity: 1 };
-    } else {
-      console.warn(
-        `[Stripe] Product ${ROADMAP_STRIPE_PRODUCT_ID} has no default price — charging ${ROADMAP_PRICE_VALUE} ${ROADMAP_CURRENCY} via price_data`
-      );
-      lineItem = {
-        price_data: {
-          currency: ROADMAP_CURRENCY.toLowerCase(),
-          product: ROADMAP_STRIPE_PRODUCT_ID,
-          unit_amount: Math.round(ROADMAP_PRICE_VALUE * 100),
-        },
-        quantity: 1,
-      };
-    }
-  }
-  lineItemCache.set("roadmap", lineItem);
-  return lineItem;
+/** The $297 one-time calculator. Throws if the Price id is unset. */
+function resolveAdvisoryLineItem(): Stripe.Checkout.SessionCreateParams.LineItem {
+  return { price: getAdvisoryPriceId(), quantity: 1 };
 }
 
 /**
@@ -156,10 +121,6 @@ async function resolveRoadmapLineItem(
  * and keeps the Checkout page reading "$497/month" above "$999 setup fee".
  */
 function resolveFoundationLineItems(): Stripe.Checkout.SessionCreateParams.LineItem[] {
-  const cachedRecurring = lineItemCache.get(FOUNDATION_PRODUCT_ID);
-  const cachedSetup = lineItemCache.get(FOUNDATION_SETUP_CACHE_KEY);
-  if (cachedRecurring && cachedSetup) return [cachedRecurring, cachedSetup];
-
   const recurring: Stripe.Checkout.SessionCreateParams.LineItem = {
     price: getFoundationStripePriceId(),
     quantity: 1,
@@ -168,21 +129,19 @@ function resolveFoundationLineItems(): Stripe.Checkout.SessionCreateParams.LineI
     price: getFoundationSetupPriceId(),
     quantity: 1,
   };
-  lineItemCache.set(FOUNDATION_PRODUCT_ID, recurring);
-  lineItemCache.set(FOUNDATION_SETUP_CACHE_KEY, setup);
   return [recurring, setup];
 }
 
-export async function createRoadmapCheckoutSession(
-  params: RoadmapCheckoutParams
+export async function createAdvisoryCheckoutSession(
+  params: OneTimeCheckoutParams
 ): Promise<{ sessionId: string; checkoutUrl: string }> {
   const stripe = getStripe();
-  const lineItem = await resolveRoadmapLineItem(stripe);
+  const lineItem = resolveAdvisoryLineItem();
   const site = getSiteUrl();
   const a = params.attribution || {};
 
   const metadata = compact({
-    product: "roadmap",
+    product: "advisory",
     lead_id: meta(params.leadId),
     first_name: meta(params.firstName),
     last_name: meta(params.lastName),
@@ -202,15 +161,15 @@ export async function createRoadmapCheckoutSession(
     metadata,
     payment_intent_data: {
       metadata: compact({
-        product: "roadmap",
+        product: "advisory",
         lead_id: meta(params.leadId),
         email: meta(params.email),
       }),
     },
     // Stripe requires at least 30 minutes; 45 keeps abandoned sessions short.
     expires_at: Math.floor(Date.now() / 1000) + 45 * 60,
-    success_url: `${site}${ROADMAP_THANK_YOU_PATH}?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${site}${ROADMAP_PATH}?checkout=cancelled#checkout`,
+    success_url: `${site}${ADVISORY_THANK_YOU_PATH}?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${site}${ADVISORY_OFFER_PATH}?checkout=cancelled#checkout`,
   });
 
   if (!session.url) {
@@ -330,15 +289,17 @@ export function getSubscriptionPeriodEnd(sub: Stripe.Subscription | null | undef
 
 export function getSessionProduct(session: Stripe.Checkout.Session): SessionProduct | null {
   const p = session.metadata?.product;
-  if (p === "roadmap" || p === "foundation") return p;
+  if (p === "advisory" || p === "foundation") return p;
   return null;
 }
 
-/** True when a session represents a settled roadmap purchase. */
-export function isPaidRoadmapSession(session: Stripe.Checkout.Session): boolean {
+/** True when a session represents a settled advisory calculator purchase. */
+export function isPaidAdvisorySession(session: Stripe.Checkout.Session): boolean {
   return (
-    session.payment_status === "paid" &&
-    session.metadata?.product === "roadmap"
+    session.metadata?.product === "advisory" &&
+    session.mode === "payment" &&
+    session.status === "complete" &&
+    session.payment_status === "paid"
   );
 }
 

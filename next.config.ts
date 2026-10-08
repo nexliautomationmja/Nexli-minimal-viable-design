@@ -4,6 +4,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // The Book of Business Accelerator PDF lives outside public/ on purpose —
+  // it is the whole $297 product and anything in public/ is a guessable URL.
+  // Files outside public/ are not bundled into the serverless function by
+  // default, so without this the gated download route 404s in production
+  // while working perfectly on localhost.
+  outputFileTracingIncludes: {
+    "/api/advisory-pricing/download": ["./assets/**"],
+  },
   async redirects() {
     return [
       // The $97 CPA Scaling Roadmap was retired; the demo funnel replaced it.

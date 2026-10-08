@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, CircleDollarSign, MousePointerClick, Target, Users } from 'lucide-react';
 import AnimatedNumber from '@/components/AnimatedNumber';
+import { AGENCY_ENGAGEMENT_AVG } from '@/lib/agency-offer';
 
 // ---------------------------------------------------------------------------
 // The ads half of the system, shown rather than described.
@@ -78,7 +79,7 @@ const FEED: { name: string; firm: string; city: string; score: 'Qualified' | 'Ra
   { name: 'Joanne K.', firm: 'Kessler & Kim', city: 'Seattle, WA', score: 'Qualified' },
 ];
 
-const ENGAGEMENT_AVG = 15_000;
+const ENGAGEMENT_AVG = AGENCY_ENGAGEMENT_AVG;
 
 const usd0 = (n: number) => `$${Math.round(n).toLocaleString('en-US')}`;
 const int = (n: number) => Math.round(n).toLocaleString('en-US');

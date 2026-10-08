@@ -26,6 +26,59 @@ const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ siz
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// QUALIFY CTA — the one conversion button on this page, used four times here
+// and a fifth time inside GuaranteeSection.
+//
+// Two behaviours:
+//
+//   no ctaHref   calls openBooking() — the modal qualifier from
+//                QualificationProvider. What the five public /vslfunnel*
+//                pages have always done; leave them on it.
+//
+//   ctaHref set  a plain link. The gated advisory funnel points this at its
+//                own qualifier page, which writes a lead row, sets funnelPath,
+//                tags the contact in GoHighLevel and has a downsell branch for
+//                firms that do not qualify. The modal does none of that — it
+//                simply declines to open the calendar.
+//
+// Extracted because the same markup was repeated at four call sites and the
+// next person to change the button would have found three of them.
+// ─────────────────────────────────────────────────────────────────────────────
+const CTA_LABEL = 'See If Your Firm Qualifies';
+
+const CTA_CLASS = {
+  lg: 'inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer',
+  bar: 'w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer',
+} as const;
+
+const QualifyCta: React.FC<{ ctaHref?: string; size?: keyof typeof CTA_CLASS }> = ({
+  ctaHref,
+  size = 'lg',
+}) => {
+  const { openBooking } = useBooking();
+  const cls = CTA_CLASS[size];
+  const arrow = (
+    <ArrowRight
+      size={size === 'lg' ? 22 : 18}
+      className="group-hover:translate-x-1 transition-transform"
+    />
+  );
+
+  // Raw <a> rather than next/link — this file uses no next/link anywhere.
+  return ctaHref ? (
+    <a href={ctaHref} className={cls}>
+      {CTA_LABEL}
+      {arrow}
+    </a>
+  ) : (
+    <button onClick={() => openBooking()} className={cls}>
+      {CTA_LABEL}
+      {arrow}
+    </button>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // STATIC LOGO — Non-linking brand anchor (replaces Navbar on funnel pages)
 // ─────────────────────────────────────────────────────────────────────────────
 const StaticLogo: React.FC = () => (
@@ -67,6 +120,7 @@ interface HeroProps {
   eyebrowIcon?: React.ElementType;
   eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
+  ctaHref?: string;
 }
 
 const EYEBROW_TONES = {
@@ -92,9 +146,8 @@ const EYEBROW_TONES = {
   },
 } as const;
 
-const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true }) => {
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, ctaHref }) => {
   const eyebrow = EYEBROW_TONES[eyebrowTone] ?? EYEBROW_TONES.blue;
-  const { openBooking } = useBooking();
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
 
@@ -323,13 +376,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           )}
 
           {/* Booking Button */}
-          <button
-            onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
-          >
-            See If Your Firm Qualifies
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          <QualifyCta ctaHref={ctaHref} />
 
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
@@ -1183,8 +1230,7 @@ const ROISection: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 5: PROJECTION FRAMEWORK — "What to Expect in Your First 90 Days"
 // ─────────────────────────────────────────────────────────────────────────────
-const ProjectionSection: React.FC = () => {
-  const { openBooking } = useBooking();
+const ProjectionSection: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
 
   const projections = [
     {
@@ -1320,13 +1366,7 @@ const ProjectionSection: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <button
-            onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
-          >
-            See If Your Firm Qualifies
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          <QualifyCta ctaHref={ctaHref} />
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
           </p>
@@ -1445,8 +1485,7 @@ const FAQ_BY_VARIANT: Record<string, typeof DEFAULT_FAQ> = {
   BetterClients: betterClientsFaq,
 };
 
-const FAQSection: React.FC<{ variant?: string }> = ({ variant = 'A' }) => {
-  const { openBooking } = useBooking();
+const FAQSection: React.FC<{ variant?: string; ctaHref?: string }> = ({ variant = 'A', ctaHref }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = FAQ_BY_VARIANT[variant] ?? DEFAULT_FAQ;
@@ -1525,13 +1564,7 @@ const FAQSection: React.FC<{ variant?: string }> = ({ variant = 'A' }) => {
           transition={{ duration: 0.6 }}
           className="text-center mt-10 sm:mt-14"
         >
-          <button
-            onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
-          >
-            See If Your Firm Qualifies
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          <QualifyCta ctaHref={ctaHref} />
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
           </p>
@@ -1657,8 +1690,7 @@ const ExitIntentPopup: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // STICKY CTA BAR — Appears after scrolling past hero
 // ────────────��────────────────────────────────────────────────────────────────
-const StickyCTA: React.FC = () => {
-  const { openBooking } = useBooking();
+const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -1693,13 +1725,7 @@ const StickyCTA: React.FC = () => {
             >
               Ready to modernize your firm?
             </p>
-            <button
-              onClick={() => openBooking()}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer"
-            >
-              See If Your Firm Qualifies
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            <QualifyCta ctaHref={ctaHref} size="bar" />
           </div>
         </motion.div>
       )}
@@ -1765,9 +1791,16 @@ interface VslFunnelProps {
   eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
   showExitIntent?: boolean;
+  /**
+   * Set this and every conversion CTA becomes a link to it instead of opening
+   * the QualificationProvider modal. Used by the gated advisory funnel, whose
+   * own qualifier page records the lead and has a downsell branch. Leave it
+   * unset on the public pages.
+   */
+  ctaHref?: string;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1779,16 +1812,16 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
     <div className="min-h-screen pb-14 sm:pb-16">
       <StaticLogo />
       <UrgencyPill />
-      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} />
+      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} />
       <TrustBar />
       <TransformationSection />
-      <GuaranteeSection accent="blue" />
+      <GuaranteeSection accent="blue" ctaHref={ctaHref} />
       <CostOfInactionSection />
       <ROISection />
-      <ProjectionSection />
+      <ProjectionSection ctaHref={ctaHref} />
       <FounderStorySection />
-      <FAQSection variant={variant} />
-      <StickyCTA />
+      <FAQSection variant={variant} ctaHref={ctaHref} />
+      <StickyCTA ctaHref={ctaHref} />
       {showExitIntent && <ExitIntentPopup />}
     </div>
   );

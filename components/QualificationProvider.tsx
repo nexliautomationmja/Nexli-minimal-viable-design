@@ -453,7 +453,19 @@ export default function QualificationProvider({ children }: { children: React.Re
         // flow (and their own thank-you page) — never redirect those buyers to
         // the homepage funnel's /thank-you.
         const path = window.location.pathname;
-        if (path.startsWith('/foundation') || path === '/demo' || path.startsWith('/demo/')) return;
+        if (
+          path.startsWith('/foundation') ||
+          path === '/demo' ||
+          path.startsWith('/demo/') ||
+          // The advisory funnel books through its own inline embed on the
+          // 'advisory-growth-call' namespace and lands on /booking-confirmed.
+          // That namespace already keeps it off this handler; the path check
+          // is belt and braces, so a future page on the default namespace
+          // cannot silently bypass /api/advisory-pricing/booked.
+          path.startsWith('/advisory-pricing')
+        ) {
+          return;
+        }
 
         // Send prequalification answers to GHL with booking info
         const savedAnswers = answersRef.current;

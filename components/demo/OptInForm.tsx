@@ -1,9 +1,12 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// Demo funnel, page 1 — the only form in the funnel.
-// Posts to /api/demo/opt-in, which sets the signed cookie and hands back the
-// next path (/demo).
+// The opt-in form, shared by both funnels.
+//
+// Posts to an endpoint that sets the signed cookie and hands back the next
+// path; the form follows whatever `next` the server returns, so it never
+// needs to know which funnel it is in. Only the endpoint, the button label
+// and the Meta content_name differ between them.
 // ---------------------------------------------------------------------------
 import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -85,7 +88,34 @@ function ConsentRow({
   );
 }
 
-export default function OptInForm() {
+export interface OptInFormProps {
+  /** Route that creates the lead, sets the cookie and returns `{ next }`. */
+  endpoint?: string;
+  /** Meta `Lead` content_name, so the two funnels are separable in reporting. */
+  eventName?: string;
+  ctaLabel?: string;
+  // ── Copy ────────────────────────────────────────────────────────────────
+  // Defaulted to the sandbox wording this card shipped with, so existing
+  // callers are unaffected. Overridden by the advisory funnel, where "no
+  // sales call" was a promise the funnel then broke: its whole purpose is to
+  // book one. Say what the page actually leads to.
+  heading?: string;
+  subheading?: string;
+  /** Replaces the label while the request is in flight. */
+  pendingLabel?: string;
+  /** The small reassurance line under the button. */
+  trustLine?: string;
+}
+
+export default function OptInForm({
+  endpoint = '/api/demo/opt-in',
+  eventName = 'Nexli Demo - Guest Access',
+  ctaLabel = 'Show me the sandbox',
+  heading = 'See it for yourself',
+  subheading = '30 seconds and you are inside. No credit card, no sales call.',
+  pendingLabel = 'Opening the sandbox…',
+  trustLine = 'No card. No call required. Unsubscribe any time.',
+}: OptInFormProps = {}) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
@@ -128,10 +158,10 @@ export default function OptInForm() {
       setPending(true);
       setSubmitError(null);
 
-      const { eventId, attribution } = trackLeadEvent('Nexli Demo - Guest Access');
+      const { eventId, attribution } = trackLeadEvent(eventName);
 
       try {
-        const res = await fetch('/api/demo/opt-in', {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -162,7 +192,7 @@ export default function OptInForm() {
         setPending(false);
       }
     },
-    [form, pending, router, validate],
+    [form, pending, router, validate, endpoint, eventName],
   );
 
   const field = (
@@ -204,10 +234,10 @@ export default function OptInForm() {
       }}
     >
       <h2 className="text-xl sm:text-2xl font-black tracking-[-0.02em] text-white" style={OUTFIT}>
-        See it for yourself
+        {heading}
       </h2>
       <p className="mt-1.5 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-        30 seconds and you are inside. No credit card, no sales call.
+        {subheading}
       </p>
 
       <form onSubmit={onSubmit} noValidate className="mt-6 space-y-4">
@@ -286,11 +316,11 @@ export default function OptInForm() {
           {pending ? (
             <>
               <Loader2 size={18} className="animate-spin" aria-hidden="true" />
-              Opening the sandbox…
+              {pendingLabel}
             </>
           ) : (
             <>
-              Show me the sandbox
+              {ctaLabel}
               <ArrowRight size={18} aria-hidden="true" />
             </>
           )}
@@ -298,7 +328,7 @@ export default function OptInForm() {
 
         <p className="flex items-center justify-center gap-1.5 text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
           <ShieldCheck size={12} aria-hidden="true" />
-          No card. No call required. Unsubscribe any time.
+          {trustLine}
         </p>
 
         <p className="text-center text-[10px] leading-relaxed italic" style={{ color: 'rgba(255,255,255,0.35)' }}>

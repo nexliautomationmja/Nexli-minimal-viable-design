@@ -167,6 +167,14 @@ export interface DemoCallClientProps {
   email: string;
   leadToken: string;
   notes: string;
+  /** Which funnel's booking route records the call. The advisory funnel has
+   *  its own so the two stay separable in GoHighLevel and in Meta. */
+  bookedEndpoint?: string;
+  /** Cal namespace. Must differ per funnel: useCalPopup registers one
+   *  bookingSuccessful handler per namespace, and sharing one would let a
+   *  second mounted instance miss the event. */
+  calNamespace?: string;
+  scheduleContentName?: string;
 }
 
 /** Bottom bar, same pattern as the VSL pages — but it opens the calendar, it does not gate. */
@@ -220,6 +228,9 @@ const DemoCallClient: React.FC<DemoCallClientProps> = ({
   email,
   leadToken,
   notes,
+  bookedEndpoint = '/api/demo/booked',
+  calNamespace = DEMO_CAL_NAMESPACE,
+  scheduleContentName = 'Advisory Engine Growth Call',
 }) => {
   const { videoRef, handlers } = useVideoTracking(
     'demo_offer_session_id',
@@ -239,13 +250,13 @@ const DemoCallClient: React.FC<DemoCallClientProps> = ({
   // handler, so /api/demo/booked cannot be hit twice.
   const { open: openCal, booked, ready: calReady } = useCalPopup({
     calLink: DEMO_CAL_LINK,
-    namespace: DEMO_CAL_NAMESPACE,
-    bookedEndpoint: '/api/demo/booked',
+    namespace: calNamespace,
+    bookedEndpoint,
     name: fullName,
     email,
     leadToken,
     notes,
-    scheduleContentName: 'Advisory Engine Growth Call',
+    scheduleContentName,
     // Hand them straight to the call-prep page: welcome video, the Rainmaker
     // walkthrough and the intel form. The beat is there because Cal's modal is
     // still on top showing its own confirmation — navigating instantly yanks

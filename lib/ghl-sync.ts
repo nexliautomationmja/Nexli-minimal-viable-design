@@ -13,6 +13,7 @@
 import {
   addContactNote,
   addContactTags,
+  removeContactTags,
   buildCustomFields,
   isGhlConfigured,
   upsertContact,
@@ -29,11 +30,16 @@ export interface SyncContactInput {
   websiteUrl?: string | null;
   source: string;
   tags: string[];
+  /** Tags this stage supersedes — removed after the new ones are applied. */
+  removeTags?: string[];
   attribution?: Record<string, string | null | undefined> | null;
   /** Present once the qualifier has run. */
   answers?: QualificationAnswers | null;
   leadScore?: string | null;
   funnelPath?: FunnelPath | null;
+  /** One-click link back into the funnel, stored so ANY later workflow or
+   *  email can use it — not just the one the webhook triggers. */
+  resumeUrl?: string | null;
   /** Extra lines appended to the note, e.g. "Booked the growth call". */
   noteHeading?: string;
   extraNoteLines?: string[];
@@ -66,7 +72,13 @@ export function formatQualificationNote(input: SyncContactInput): string {
   if (input.leadScore) lines.push('', `Lead score: ${input.leadScore}`);
   if (input.funnelPath) {
     lines.push(
-      `Routed to: ${input.funnelPath === 'agency' ? 'agency pitch (booking call)' : 'web pitch (self-serve website + portal)'}`,
+      `Routed to: ${
+        input.funnelPath === 'agency'
+          ? 'agency pitch (booking call)'
+          : input.funnelPath === 'not-a-fit'
+            ? 'not a fit for the engine (advisory buyer below the bar)'
+            : 'web pitch (self-serve website + portal)'
+      }`,
     );
   }
   if (input.extraNoteLines?.length) lines.push('', ...input.extraNoteLines);
@@ -102,6 +114,7 @@ export async function syncContactToGhl(input: SyncContactInput): Promise<SyncRes
     nexli_tax_savings: qualificationLabel('taxSavings', a?.taxSavings ?? null),
     nexli_lead_score: input.leadScore ?? null,
     nexli_funnel_path: input.funnelPath ?? null,
+    resume_url: input.resumeUrl ?? null,
   });
 
   const upserted = await upsertContact({
@@ -124,6 +137,8 @@ export async function syncContactToGhl(input: SyncContactInput): Promise<SyncRes
 
   // Tags and the note are independent of the upsert succeeding at field level.
   await addContactTags(contactId, input.tags);
+  // After adding, so the contact is never momentarily untagged.
+  if (input.removeTags?.length) await removeContactTags(contactId, input.removeTags);
   const note = await addContactNote(contactId, formatQualificationNote(input));
 
   return { ok: note.ok, contactId, error: note.ok ? undefined : note.error };

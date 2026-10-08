@@ -47,7 +47,25 @@ export function decideFunnelPath(a: QualificationAnswers): FunnelPath {
   return 'agency';
 }
 
-const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'leads' }) => {
+export interface QualifyFlowProps {
+  intent?: 'leads' | 'website';
+  /** Route that records the answers and returns `{ next }`. */
+  endpoint?: string;
+  /** Client-side fallbacks, used only when the POST fails — the server is
+   *  authoritative. The advisory funnel points these at its own two pages. */
+  qualifiedPath?: string;
+  unqualifiedPath?: string;
+  /** Footer line under the card; the advisory funnel has already sold. */
+  footnote?: string;
+}
+
+const QualifyFlow: React.FC<QualifyFlowProps> = ({
+  intent = 'leads',
+  endpoint = '/api/demo/qualify',
+  qualifiedPath = DEMO_CALL_PATH,
+  unqualifiedPath = DEMO_OFFER_PATH,
+  footnote = 'Six questions. About a minute. No sales pitch until we know you are a fit.',
+}) => {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -77,10 +95,10 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
         eventId,
       );
 
-      const fallback = decideFunnelPath(answers) === 'agency' ? DEMO_CALL_PATH : DEMO_OFFER_PATH;
+      const fallback = decideFunnelPath(answers) === 'agency' ? qualifiedPath : unqualifiedPath;
 
       try {
-        const res = await fetch('/api/demo/qualify', {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -100,7 +118,7 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
         router.push(withIntent(fallback));
       }
     },
-    [router, withIntent],
+    [router, withIntent, endpoint, qualifiedPath, unqualifiedPath],
   );
 
   const pct = submitting
@@ -181,7 +199,7 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
         className="mt-5 px-4 text-center text-xs"
         style={{ color: 'rgba(255,255,255,0.4)' }}
       >
-        Six questions. About a minute. No sales pitch until we know you are a fit.
+        {footnote}
       </p>
     </div>
   );

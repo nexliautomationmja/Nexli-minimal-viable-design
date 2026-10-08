@@ -4,23 +4,34 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, CalendarCheck, Rocket, ArrowRight, Calculator, Equal, X as XIcon } from 'lucide-react';
 import { useBooking } from './QualificationProvider';
+import {
+  AGENCY_DAYS,
+  AGENCY_ENGAGEMENT_AVG,
+  AGENCY_ENGAGEMENT_HIGH,
+  AGENCY_ENGAGEMENT_LOW,
+  AGENCY_LAUNCH_DAYS,
+  AGENCY_LEADS,
+  AGENCY_PIPELINE_VALUE,
+  usd,
+} from '@/lib/agency-offer';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GUARANTEE SECTION — Two written guarantees for the Digital Rainmaker System.
 // Shared by every VSL page (VslFunnel.tsx + VslFunnelOffer.tsx).
 // Tune the numbers here; the pipeline math below is computed from them.
 // ─────────────────────────────────────────────────────────────────────────────
-const LEADS = 50;
-const DAYS = 90;
-const ENGAGEMENT_LOW = 5_000;
-const ENGAGEMENT_HIGH = 25_000;
-const LAUNCH_DAYS = 14;
+// Values now live in lib/agency-offer.ts so the advisory funnel and the ads
+// dashboard cannot drift from them. Aliased to the original local names so
+// the markup below is untouched.
+const LEADS = AGENCY_LEADS;
+const DAYS = AGENCY_DAYS;
+const ENGAGEMENT_LOW = AGENCY_ENGAGEMENT_LOW;
+const ENGAGEMENT_HIGH = AGENCY_ENGAGEMENT_HIGH;
+const LAUNCH_DAYS = AGENCY_LAUNCH_DAYS;
 const CREDIT = 1_000;
 
-const ENGAGEMENT_AVG = (ENGAGEMENT_LOW + ENGAGEMENT_HIGH) / 2;
-const PIPELINE_VALUE = LEADS * ENGAGEMENT_AVG;
-
-const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
+const ENGAGEMENT_AVG = AGENCY_ENGAGEMENT_AVG;
+const PIPELINE_VALUE = AGENCY_PIPELINE_VALUE;
 
 const EMERALD = '#34d399';
 const EMERALD_GLOW = 'drop-shadow(0 0 12px rgba(52,211,153,0.5))';
@@ -34,6 +45,12 @@ interface GuaranteeSectionProps {
    * button would send them back through the gate they just cleared.
    */
   hideCta?: boolean;
+  /**
+   * Set this and the button becomes a link to it instead of opening the
+   * QualificationProvider modal. The gated advisory funnel points it at its
+   * own qualifier page; the public VSL pages leave it unset.
+   */
+  ctaHref?: string;
 }
 
 const guarantees = [
@@ -55,12 +72,19 @@ const guarantees = [
   },
 ];
 
-const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue', hideCta = false }) => {
+const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue', hideCta = false, ctaHref }) => {
   const { openBooking } = useBooking();
   const btnClass =
     accent === 'green'
       ? 'bg-green-600 hover:bg-green-500 shadow-green-600/25'
       : 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/25';
+  const ctaClass = `inline-flex items-center justify-center gap-2 sm:gap-3 ${btnClass} text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl group cursor-pointer`;
+  const ctaInner = (
+    <>
+      See If Your Firm Qualifies
+      <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+    </>
+  );
 
   return (
     <section
@@ -223,13 +247,15 @@ const GuaranteeSection: React.FC<GuaranteeSectionProps> = ({ accent = 'blue', hi
           transition={{ duration: 0.6 }}
           className="text-center mt-8 sm:mt-10"
         >
-          <button
-            onClick={() => openBooking()}
-            className={`inline-flex items-center justify-center gap-2 sm:gap-3 ${btnClass} text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl group cursor-pointer`}
-          >
-            See If Your Firm Qualifies
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          {ctaHref ? (
+            <a href={ctaHref} className={ctaClass}>
+              {ctaInner}
+            </a>
+          ) : (
+            <button onClick={() => openBooking()} className={ctaClass}>
+              {ctaInner}
+            </button>
+          )}
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
           </p>

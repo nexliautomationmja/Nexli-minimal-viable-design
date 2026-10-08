@@ -137,6 +137,12 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
 
         fetch(bookedEndpoint, {
           method: 'POST',
+          // onBooked usually navigates (the advisory call page redirects to
+          // /booking-confirmed 1.8s from here), and a normal fetch is
+          // cancelled when the page unloads. Without keepalive the booking
+          // silently never records: no booked_call_at, no "call booked" tag,
+          // no CAPI Schedule, and nothing anywhere says it failed.
+          keepalive: true,
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...(leadToken ? { lead_token: leadToken } : { session_id: sessionId }),
