@@ -41,6 +41,8 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
       eyebrowTone="emerald"
       showHiddenDrain={false}
       showExitIntent={false}
+      // Only this page. The public /vslfunnel* pages are unchanged.
+      metaChip
       ctaHref={ctaHref}
       headline={
         <>
