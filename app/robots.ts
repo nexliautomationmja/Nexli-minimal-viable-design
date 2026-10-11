@@ -18,7 +18,6 @@ const DISALLOW = [
   '/demo/thank-you',
   // Advisory funnel inner steps. The bare /advisory-pricing landing page is
   // the ad destination and stays crawlable.
-  '/advisory-pricing/vsl',
   '/advisory-pricing/offer',
   '/advisory-pricing/thank-you',
   '/advisory-pricing/qualify',

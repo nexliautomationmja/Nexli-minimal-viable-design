@@ -21,6 +21,7 @@ import { sendCAPIEvent } from "@/lib/meta-capi";
 import { syncContactToGhl } from "@/lib/ghl-sync";
 import { getSiteUrl } from "@/lib/site";
 import { DEMO_COOKIE, createDemoToken, demoCookieOptions } from "@/lib/demo-session";
+import { EMAIL_RE } from "@/lib/contact-validation";
 
 export interface OptInConfig {
   /** Rate-limit bucket, per funnel so one cannot exhaust the other. */
@@ -44,8 +45,6 @@ export interface OptInConfig {
   nextPath: string;
   unavailableMessage: string;
 }
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function str(value: unknown, max: number): string {
   return typeof value === "string" ? value.trim().slice(0, max) : "";

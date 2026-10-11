@@ -12,7 +12,7 @@
 // funnel needs only the opt-in cookie, the advisory funnel needs a purchase.
 // ---------------------------------------------------------------------------
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, sql as dsql } from "drizzle-orm";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
@@ -22,15 +22,32 @@ import { syncContactToGhl } from "@/lib/ghl-sync";
 import {
   normalizeQualificationAnswers,
   qualificationLabel,
+  DISQUALIFYING_BUDGETS,
   DISQUALIFYING_REVENUE,
   DISQUALIFYING_ROLE,
 } from "@/lib/qualification-steps";
 import { FUNNEL_PATH_TAG, type FunnelPath } from "@/lib/demo-config";
+import { DEMO_COOKIE, createDemoToken, demoCookieOptions } from "@/lib/demo-session";
+import { trimTo, validateContact, MAX_NAME, MAX_FIRM } from "@/lib/contact-validation";
 import { SITE_URL } from "@/lib/site";
 
 export interface QualifierConfig {
-  /** Resolved and gated by the caller before we get here. */
-  leadId: string;
+  /**
+   * Resolved and gated by the caller before we get here. Null only when the
+   * qualifier is itself the lead capture — see `collectsContact`.
+   */
+  leadId: string | null;
+  /**
+   * The advisory funnel has no opt-in in front of it, so its qualifier is
+   * where the lead is born: contact fields arrive with the answers, the row
+   * is upserted on email, and the signed cookie is minted on the response.
+   *
+   * Leave false and this function behaves exactly as it always has, which is
+   * what keeps the demo funnel and the booking modal unchanged.
+   */
+  collectsContact?: boolean;
+  /** Required when collectsContact — leads.form_source for a new row. */
+  formSource?: string;
   rateLimitKey: string;
   ghlSource: string;
   noteHeading: string;
@@ -68,27 +85,135 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
 
-  const leadId = cfg.leadId;
-
   try {
     const body = await req.json().catch(() => ({}));
     const answers = normalizeQualificationAnswers(body?.answers);
     const eventId = typeof body?.event_id === "string" ? body.event_id.slice(0, 100) : null;
+    const leadEventId =
+      typeof body?.lead_event_id === "string" ? body.lead_event_id.slice(0, 100) : null;
     const attribution = (body?.attribution && typeof body.attribution === "object"
       ? body.attribution
       : {}) as Record<string, string | null | undefined>;
     const userAgent = req.headers.get("user-agent") || "";
 
+    // ── Contact, when this qualifier is also the lead capture ────────────
+    let contact: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone: string;
+      firmName: string;
+      marketingSmsOptIn: boolean;
+    } | null = null;
+
+    if (cfg.collectsContact) {
+      const raw = (body?.contact ?? {}) as Record<string, unknown>;
+      const candidate = {
+        firstName: trimTo(raw.firstName, MAX_NAME),
+        lastName: trimTo(raw.lastName, MAX_NAME),
+        email: trimTo(raw.email, 200).toLowerCase(),
+        phone: trimTo(raw.phone, 40),
+        firmName: trimTo(raw.firmName, MAX_FIRM),
+      };
+      const invalid = validateContact(candidate);
+      if (Object.keys(invalid).length) {
+        return NextResponse.json(
+          { error: "Please check your details.", fields: invalid },
+          { status: 400 },
+        );
+      }
+      contact = { ...candidate, marketingSmsOptIn: raw.marketingSmsOptIn === true };
+    }
+
     // ── The split ─────────────────────────────────────────────────────────
     const qualified =
       answers.usBased !== false &&
       answers.decisionRole !== DISQUALIFYING_ROLE &&
-      answers.annualRevenue !== DISQUALIFYING_REVENUE;
+      answers.annualRevenue !== DISQUALIFYING_REVENUE &&
+      // Only gates where a budget question was actually asked. A null budget
+      // on the demo funnel must not disqualify anyone.
+      !(answers.budget !== null && DISQUALIFYING_BUDGETS.includes(answers.budget));
     const path: FunnelPath = qualified ? cfg.qualifiedPath : cfg.unqualifiedPath;
 
     const db = getDb();
     let lead: typeof leads.$inferSelect | null = null;
-    if (db) {
+    let leadId = cfg.leadId;
+
+    if (db && contact) {
+      // ── Upsert on email ───────────────────────────────────────────────
+      // The opt-in route inserted blind, which was survivable when it ran
+      // once per visitor. This endpoint is retried — people abandon the
+      // qualifier and come back — so a blind insert would mint a new row
+      // every attempt. leads.email has no unique constraint, so the match
+      // is done here rather than with onConflict.
+      try {
+        const [existing] = await db
+          .select()
+          .from(leads)
+          .where(dsql`lower(${leads.email}) = ${contact.email}`)
+          .orderBy(dsql`${leads.createdAt} desc`)
+          .limit(1);
+        if (existing) lead = existing;
+      } catch (err) {
+        console.error("[Qualify] email lookup failed:", err);
+      }
+
+      const contactValues = {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+        firmName: contact.firmName,
+        marketingSmsOptIn: contact.marketingSmsOptIn,
+        // Service texts are covered by the disclosure shown at the contact
+        // step; only the marketing flag is an explicit tick.
+        nonMarketingSmsOptIn: true,
+        updatedAt: new Date(),
+      };
+
+      try {
+        if (lead) {
+          await db.update(leads).set(contactValues).where(eq(leads.id, lead.id));
+          leadId = lead.id;
+        } else {
+          const [inserted] = await db
+            .insert(leads)
+            .values({
+              ...contactValues,
+              formSource: cfg.formSource ?? "advisory-qualifier",
+              utmSource: attribution.utm_source ?? null,
+              utmMedium: attribution.utm_medium ?? null,
+              utmCampaign: attribution.utm_campaign ?? null,
+              utmTerm: attribution.utm_term ?? null,
+              utmContent: attribution.utm_content ?? null,
+              fbclid: attribution.fbclid ?? null,
+              fbp: attribution.fbp ?? null,
+              fbc: attribution.fbc ?? null,
+              landingPage: attribution.landing_page ?? null,
+              referrer: attribution.referrer ?? null,
+              ipAddress: ip !== "unknown" ? ip : null,
+              userAgent,
+            })
+            .returning({ id: leads.id });
+          leadId = inserted?.id ?? null;
+        }
+      } catch (err) {
+        console.error("[Qualify] lead upsert failed:", err);
+      }
+
+      if (!leadId) {
+        return NextResponse.json(
+          { error: "We could not save your answers just now. Please try again." },
+          { status: 503 },
+        );
+      }
+    }
+
+    if (!leadId) {
+      return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+    }
+
+    if (db && !lead) {
       try {
         [lead] = await db.select().from(leads).where(eq(leads.id, leadId)).limit(1);
       } catch (err) {
@@ -124,6 +249,7 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
             annualRevenue: answers.annualRevenue,
             taxSavings: answers.taxSavings,
             taxSavingsTag: answers.taxSavingsTag,
+            budget: answers.budget,
             leadScore: scoring.classification,
             disqualifyReason:
               scoring.classification === "disqualified" ? scoring.reason : null,
@@ -194,6 +320,25 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
       tax_savings_tag: answers.taxSavingsTag,
     };
 
+    // The advisory funnel has no opt-in, so this submission is the lead.
+    // Without this the funnel reports no Lead conversion at all in Ads
+    // Manager, which is the event campaigns optimise against.
+    if (leadEventId && contact) {
+      sendCAPIEvent({
+        event_name: "Lead",
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: leadEventId,
+        action_source: "website",
+        event_source_url: attribution.landing_page || `${SITE_URL}${cfg.sourcePath}`,
+        user_data: userData,
+        custom_data: {
+          content_name: cfg.contentName,
+          lead_id: leadId,
+          lead_score: scoring.classification,
+        },
+      }).catch(() => {});
+    }
+
     if (eventId) {
       sendCAPIEvent({
         event_name: "CompleteRegistration",
@@ -261,11 +406,20 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
       console.warn(`[Qualify] ${cfg.webhookEnvName} not set — skipping webhook`);
     }
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       ok: true,
       path,
       next: cfg.nextPath[path] ?? cfg.nextPath[cfg.unqualifiedPath],
     });
+
+    // When this qualifier IS the lead capture it also owns the session —
+    // every page after it (the calendar, the downsell) gates on this cookie.
+    // A Route Handler is the only sanctioned place to set it.
+    if (contact && leadId) {
+      res.cookies.set(DEMO_COOKIE, await createDemoToken(leadId), demoCookieOptions());
+    }
+
+    return res;
   } catch (error) {
     console.error("[Qualify] error:", error);
     return NextResponse.json({ error: "Request failed." }, { status: 500 });

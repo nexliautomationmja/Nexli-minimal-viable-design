@@ -41,7 +41,7 @@ import {
   ADVISORY_OFFER_PATH,
   ADVISORY_PRICE_VALUE,
   ADVISORY_THANK_YOU_PATH,
-  ADVISORY_VSL_PATH,
+  ADVISORY_PATH,
 } from '@/lib/advisory-config';
 
 export const runtime = 'nodejs';
@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
       ? ADVISORY_CALL_PATH
       : funnelPath === 'not-a-fit'
         ? ADVISORY_OFFER_PATH
-        : ADVISORY_VSL_PATH;
+        : ADVISORY_PATH;
 
   return NextResponse.redirect(new URL(safeTo(searchParams.get('to')) || fallback, req.url));
 }

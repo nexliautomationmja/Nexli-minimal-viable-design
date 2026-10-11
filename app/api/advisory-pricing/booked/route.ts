@@ -140,6 +140,7 @@ export async function POST(req: NextRequest) {
           annualRevenue: lead.annualRevenue ?? null,
           taxSavings: lead.taxSavings ?? null,
           taxSavingsTag: lead.taxSavingsTag ?? null,
+          budget: lead.budget ?? null,
         },
         leadScore: lead.leadScore,
         funnelPath: "agency",

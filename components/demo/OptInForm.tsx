@@ -12,6 +12,7 @@ import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, CheckCircle, Loader2, ShieldCheck } from 'lucide-react';
 import { trackLeadEvent } from '@/lib/meta-events';
+import { validateContact } from '@/lib/contact-validation';
 
 const OUTFIT: React.CSSProperties = {
   fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif",
@@ -29,8 +30,6 @@ const errorInputStyle: React.CSSProperties = {
 };
 const labelCls = 'block text-[11px] font-bold tracking-[0.15em] uppercase mb-1.5';
 const labelStyle: React.CSSProperties = { color: 'rgba(255,255,255,0.5)' };
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type FieldKey = 'firstName' | 'lastName' | 'email' | 'phone' | 'firmName';
 
@@ -135,16 +134,20 @@ export default function OptInForm({
     [],
   );
 
-  const validate = useCallback((): Partial<Record<FieldKey, string>> => {
-    const next: Partial<Record<FieldKey, string>> = {};
-    if (!form.firstName.trim()) next.firstName = 'Enter your first name.';
-    if (!form.lastName.trim()) next.lastName = 'Enter your last name.';
-    if (!EMAIL_RE.test(form.email.trim())) next.email = 'Enter a valid work email.';
-    if (form.phone.replace(/\D/g, '').length < 10) next.phone = 'Enter a mobile number with at least 10 digits.';
-    if (!form.firmName.trim()) next.firmName = 'Enter your firm name.';
-    else if (form.firmName.trim().length > 200) next.firmName = 'Firm name is too long.';
-    return next;
-  }, [form]);
+  // One rule, shared with the advisory qualifier's contact step and with
+  // the server. It used to be written out here, again in optin-service.ts
+  // and was about to be written a third time.
+  const validate = useCallback(
+    (): Partial<Record<FieldKey, string>> =>
+      validateContact({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        firmName: form.firmName,
+      }),
+    [form],
+  );
 
   const onSubmit = useCallback(
     async (e: React.FormEvent) => {

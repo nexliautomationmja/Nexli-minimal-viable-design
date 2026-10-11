@@ -9,6 +9,30 @@
 // Tune them here. The pipeline math everywhere else is computed from them.
 // ---------------------------------------------------------------------------
 
+// ── What the firm pays Nexli ──────────────────────────────────────────────
+// Two numbers only, and they are NOT itemised anywhere. The system is sold
+// whole: one fee for the website, the portal, the funnel and the automations
+// together. Do not add setup-fee or per-component constants here — the moment
+// the price has parts, the sales page starts arguing about the parts.
+//
+// Keep these distinct from AGENCY_ENGAGEMENT_* below, which is a completely
+// different thing: what the CPA charges THEIR client. Conflating the two is
+// the easiest mistake to make in this file.
+
+/** The complete system, flat, every month. No setup fee, no contract. */
+export const AGENCY_MONTHLY_FEE = 4_997;
+
+/**
+ * The firm's own ad budget. Paid to the platforms through their account, not
+ * to Nexli — which is why it is a separate number rather than folded in.
+ */
+export const AGENCY_AD_SPEND = 5_000;
+
+/** What it actually costs them to run this: $9,997. */
+export const AGENCY_TOTAL_MONTHLY = AGENCY_MONTHLY_FEE + AGENCY_AD_SPEND;
+
+// ── What the CPA charges their own client ─────────────────────────────────
+
 /** Qualified leads written into the agreement. This one IS guaranteed. */
 export const AGENCY_LEADS = 50;
 

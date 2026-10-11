@@ -39,6 +39,10 @@ export const leads = pgTable(
     taxSavings: text("tax_savings"),
     taxSavingsTag: text("tax_savings_tag"),
 
+    // Advisory funnel's last qualifier question — what they can invest per
+    // month. Null on every other funnel, which has no budget question.
+    budget: text("budget"),
+
     // Lead classification
     leadScore: text("lead_score"), // 'raw' | 'qualified' | 'disqualified'
     disqualifyReason: text("disqualify_reason"),

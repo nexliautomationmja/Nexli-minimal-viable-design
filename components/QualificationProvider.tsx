@@ -1,12 +1,18 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle, XCircle, Building2, Target, DollarSign, Crown, X } from 'lucide-react';
+import { ArrowRight, CheckCircle, XCircle, Building2, Target, DollarSign, Crown, X, User, Wallet } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent, generateEventId } from '@/lib/meta-events';
 import { getAttribution } from '@/lib/attribution';
 import {
+  type ContactErrors,
+  type ContactInput,
+  validateContact,
+} from '@/lib/contact-validation';
+import {
   type QualificationAnswers,
+  type QualificationContact,
   type QualificationStepDef,
   EMPTY_QUALIFICATION_ANSWERS,
   QUALIFICATION_STEPS,
@@ -28,7 +34,13 @@ import {
 // The data lives in lib/qualification-steps.ts (server-safe) and is
 // re-exported here for client code.
 // ---------------------------------------------------------------------------
-export type { QualificationAnswers, QualificationStepDef, QualificationOption, QualificationStepKey } from '@/lib/qualification-steps';
+export type {
+  QualificationAnswers,
+  QualificationContact,
+  QualificationStepDef,
+  QualificationOption,
+  QualificationStepKey,
+} from '@/lib/qualification-steps';
 export {
   EMPTY_QUALIFICATION_ANSWERS,
   QUALIFICATION_STEPS,
@@ -141,33 +153,184 @@ export const useBooking = () => {
 // Qualification steps card — shared by the booking modal (overlay) and the
 // Firm Foundation /foundation/start page (inline).
 // ---------------------------------------------------------------------------
-const STEP_ICONS: Record<QualificationStepDef['key'], React.ElementType> = {
+// Partial on purpose. These used to be exhaustive Records keyed by step, so
+// adding a question meant editing three lookups and a ternary before the
+// thing would even compile. A step now only needs an entry here if it wants
+// something other than the default icon.
+const STEP_ICONS: Partial<Record<QualificationStepDef['key'], React.ElementType>> = {
   usBased: Building2,
   decisionRole: Crown,
   goal: Target,
   problemDuration: Target,
   annualRevenue: DollarSign,
   taxSavings: Crown,
-};
-
-const STEP_MOTION_KEYS: Record<QualificationStepDef['key'], string> = {
-  usBased: 'q-us',
-  decisionRole: 'q-decision',
-  goal: 'q-goal',
-  problemDuration: 'q-duration',
-  annualRevenue: 'q-revenue',
-  taxSavings: 'q-taxplan',
+  contact: User,
+  budget: Wallet,
 };
 
 const OPTION_BUTTON_CLASS =
   'w-full text-left p-3 md:p-4 rounded-xl md:rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-main)] font-medium text-xs md:text-sm hover:border-blue-500/40 hover:bg-blue-500/5 active:scale-[0.99] transition-all cursor-pointer';
 
+// ---------------------------------------------------------------------------
+// Contact step — the only step that cannot advance on a single click.
+//
+// It sits mid-qualifier rather than in front of it: by the time a visitor
+// reaches this they have answered three questions, and it comes BEFORE the
+// budget question so a firm that fails on budget has still identified itself.
+// That is who the downsell is for.
+// ---------------------------------------------------------------------------
+const EMPTY_CONTACT: ContactInput = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  firmName: '',
+};
+
+const FIELD_CLASS =
+  'w-full px-3.5 py-3 rounded-xl border bg-[var(--glass-bg)] text-[var(--text-main)] text-sm placeholder:text-[var(--text-muted)]/60 outline-none transition-colors focus:border-blue-500/50';
+
+function ContactStep({
+  onSubmit,
+}: {
+  onSubmit: (value: QualificationContact) => void;
+}) {
+  const [form, setForm] = useState<ContactInput>({ ...EMPTY_CONTACT });
+  const [smsOptIn, setSmsOptIn] = useState(false);
+  const [errors, setErrors] = useState<ContactErrors>({});
+
+  const set = (key: keyof ContactInput, value: string) => {
+    setForm((f) => ({ ...f, [key]: value }));
+    // Clear this field's error the moment they start fixing it.
+    setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
+  };
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const found = validateContact(form);
+    if (Object.keys(found).length) {
+      setErrors(found);
+      return;
+    }
+    onSubmit({
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      firmName: form.firmName.trim(),
+      marketingSmsOptIn: smsOptIn,
+    });
+  };
+
+  const field = (
+    key: keyof ContactInput,
+    label: string,
+    extra: React.InputHTMLAttributes<HTMLInputElement>,
+  ) => (
+    <div>
+      <label htmlFor={`q-${key}`} className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
+        {label}
+      </label>
+      <input
+        id={`q-${key}`}
+        value={form[key]}
+        onChange={(ev) => set(key, ev.target.value)}
+        aria-invalid={errors[key] ? true : undefined}
+        aria-describedby={errors[key] ? `q-${key}-err` : undefined}
+        className={FIELD_CLASS}
+        style={{ borderColor: errors[key] ? 'rgba(248,113,113,0.6)' : 'var(--glass-border)' }}
+        {...extra}
+      />
+      {errors[key] && (
+        <p id={`q-${key}-err`} className="mt-1 text-xs" style={{ color: '#fca5a5' }}>
+          {errors[key]}
+        </p>
+      )}
+    </div>
+  );
+
+  return (
+    <form onSubmit={submit} noValidate className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {field('firstName', 'First name', { type: 'text', autoComplete: 'given-name', placeholder: 'Jane' })}
+        {field('lastName', 'Last name', { type: 'text', autoComplete: 'family-name', placeholder: 'Smith' })}
+      </div>
+      {field('email', 'Work email', {
+        type: 'email',
+        inputMode: 'email',
+        autoComplete: 'email',
+        placeholder: 'jane@yourfirm.com',
+      })}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {field('phone', 'Mobile phone', {
+          type: 'tel',
+          inputMode: 'tel',
+          autoComplete: 'tel',
+          placeholder: '+1 (555) 000-0000',
+        })}
+        {field('firmName', 'Firm name', {
+          type: 'text',
+          autoComplete: 'organization',
+          placeholder: 'Smith & Associates CPAs',
+        })}
+      </div>
+
+      {/* TCPA: marketing consent is an UNTICKED affirmative opt-in and must
+          stay that way. A pre-ticked box is not consent, and carriers reject
+          A2P 10DLC campaigns that collect it that way. */}
+      <button
+        type="button"
+        onClick={() => setSmsOptIn((v) => !v)}
+        aria-pressed={smsOptIn}
+        className="flex w-full items-start gap-2.5 text-left pt-1"
+      >
+        <span
+          className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors"
+          style={{
+            borderColor: smsOptIn ? '#2563eb' : 'var(--glass-border)',
+            backgroundColor: smsOptIn ? '#2563eb' : 'transparent',
+          }}
+        >
+          {smsOptIn && <CheckCircle size={11} className="text-white" />}
+        </span>
+        <span className="text-[11px] leading-relaxed text-[var(--text-muted)]">
+          Text me occasional tips and offers. Optional — message and data rates may apply,
+          reply STOP to opt out.
+        </span>
+      </button>
+
+      <button
+        type="submit"
+        className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-sm font-bold text-white transition-all hover:bg-blue-500 active:scale-[0.98]"
+        style={{ boxShadow: '0 14px 40px -12px rgba(37,99,235,0.8)' }}
+      >
+        Continue
+        <ArrowRight size={16} aria-hidden="true" />
+      </button>
+
+      <p className="text-center text-[11px] text-[var(--text-muted)]">
+        We use this to send your results and prepare the call. No spam.
+      </p>
+    </form>
+  );
+}
+
 export interface QualificationStepsCardProps {
   mode?: QualificationMode;
+  /**
+   * Which questions to ask. Defaults to the original six, so every existing
+   * caller is unchanged; the advisory funnel passes its own list, which ends
+   * with a contact step and a budget question.
+   */
+  steps?: QualificationStepDef[];
   /** Call mode: fires on qualified / not-qualified exactly as the booking funnel always has. */
   onResult?: (status: QualificationStatus, answers: QualificationAnswers) => void;
-  /** Foundation mode: fires once after the sixth answer. Also fired in call mode after 'qualified'. */
-  onComplete?: (answers: QualificationAnswers) => void;
+  /**
+   * Fires once after the final step. Also fired in call mode after
+   * 'qualified'. `contact` is present only when the step list included a
+   * contact step — existing callers can keep ignoring it.
+   */
+  onComplete?: (answers: QualificationAnswers, contact?: QualificationContact) => void;
   /** Hide the icon/heading block (the host page supplies its own). */
   hideHeader?: boolean;
   /** Hide the six progress dots (the host page renders its own progress UI). */
@@ -178,6 +341,7 @@ export interface QualificationStepsCardProps {
 
 export function QualificationStepsCard({
   mode = 'call',
+  steps = QUALIFICATION_STEPS,
   onResult,
   onComplete,
   hideHeader = false,
@@ -187,6 +351,7 @@ export function QualificationStepsCard({
   const isCall = mode === 'call';
   const [step, setStepState] = useState(0);
   const [answers, setAnswers] = useState<QualificationAnswers>({ ...EMPTY_QUALIFICATION_ANSWERS });
+  const [contact, setContact] = useState<QualificationContact | null>(null);
 
   const setStep = (next: number) => {
     setStepState(next);
@@ -198,76 +363,62 @@ export function QualificationStepsCard({
     onResult?.('not-qualified', updated);
   };
 
-  // Step 0: Geography — hard disqualifier (call mode only)
-  const handleUsBased = (value: boolean) => {
-    const updated = { ...answers, usBased: value };
-    setAnswers(updated);
-    if (isCall && !value) {
-      disqualify(updated);
-    } else {
-      setStep(1);
-    }
-  };
-
-  // Step 1: Authority — disqualifies non-decision-makers (call mode only)
-  const handleDecisionRole = (value: string) => {
-    const updated = { ...answers, decisionRole: value };
-    setAnswers(updated);
-    if (isCall && value === DISQUALIFYING_ROLE) {
-      disqualify(updated);
-    } else {
-      setStep(2);
-    }
-  };
-
-  // Step 2: Intent — no disqualifiers; store goal + derived tag
-  const handleGoal = (value: string) => {
-    const updated = { ...answers, goal: value, goalTag: goalTagMap[value] ?? null };
-    setAnswers(updated);
-    setStep(3);
-  };
-
-  // Step 3: Duration — no disqualifiers; informational
-  const handleProblemDuration = (value: string) => {
-    const updated = { ...answers, problemDuration: value };
-    setAnswers(updated);
-    setStep(4);
-  };
-
-  // Step 4: Revenue — under-400k is a hard disqualifier (call mode only)
-  const handleAnnualRevenue = (value: string) => {
-    const updated = { ...answers, annualRevenue: value };
-    setAnswers(updated);
-    if (isCall && value === DISQUALIFYING_REVENUE) {
-      disqualify(updated);
-    } else {
-      setStep(5);
-    }
-  };
-
-  // Step 5: Tax-planning value — no disqualifiers; store answer + derived segment tag, then finalize
-  const handleTaxSavings = (value: string) => {
-    const updated = { ...answers, taxSavings: value, taxSavingsTag: taxSavingsTagMap[value] ?? null };
-    setAnswers(updated);
+  // Advancing is generic now: land the answer, then either disqualify (call
+  // mode only) or move to the next step, finishing when there is no next.
+  // Previously each step had its own handler with a literal setStep(n), so
+  // inserting a question meant renumbering every handler after it.
+  const finish = (updated: QualificationAnswers, withContact: QualificationContact | null) => {
     if (isCall) {
       sendQualificationToServer(updated, true);
       onResult?.('qualified', updated);
     }
-    onComplete?.(updated);
+    onComplete?.(updated, withContact ?? undefined);
   };
 
-  const optionHandlers: Record<QualificationStepDef['key'], (value: string) => void> = {
-    usBased: () => undefined,
-    decisionRole: handleDecisionRole,
-    goal: handleGoal,
-    problemDuration: handleProblemDuration,
-    annualRevenue: handleAnnualRevenue,
-    taxSavings: handleTaxSavings,
+  const advance = (updated: QualificationAnswers, withContact = contact) => {
+    setAnswers(updated);
+    const next = step + 1;
+    if (next < steps.length) setStep(next);
+    else finish(updated, withContact);
   };
 
-  const totalSteps = QUALIFICATION_STEP_COUNT;
-  const current = QUALIFICATION_STEPS[step];
-  const Icon = STEP_ICONS[current.key];
+  const handleUsBased = (value: boolean) => {
+    const updated = { ...answers, usBased: value };
+    // Call mode disqualifies in the browser. The advisory funnel runs in
+    // 'foundation' mode precisely so it does not: every answer is collected
+    // and the server decides, so the reason is visible in GoHighLevel.
+    if (isCall && !value) {
+      setAnswers(updated);
+      disqualify(updated);
+      return;
+    }
+    advance(updated);
+  };
+
+  const handleChoice = (key: QualificationStepDef['key'], value: string) => {
+    const updated: QualificationAnswers = { ...answers, [key]: value };
+    if (key === 'goal') updated.goalTag = goalTagMap[value] ?? null;
+    if (key === 'taxSavings') updated.taxSavingsTag = taxSavingsTagMap[value] ?? null;
+
+    const hardNo =
+      (key === 'decisionRole' && value === DISQUALIFYING_ROLE) ||
+      (key === 'annualRevenue' && value === DISQUALIFYING_REVENUE);
+    if (isCall && hardNo) {
+      setAnswers(updated);
+      disqualify(updated);
+      return;
+    }
+    advance(updated);
+  };
+
+  const handleContact = (value: QualificationContact) => {
+    setContact(value);
+    advance(answers, value);
+  };
+
+  const totalSteps = steps.length;
+  const current = steps[step];
+  const Icon = STEP_ICONS[current.key] ?? Target;
   const hint = isCall ? current.hint : current.foundationHint;
 
   return (
@@ -304,14 +455,14 @@ export function QualificationStepsCard({
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={STEP_MOTION_KEYS[current.key]}
+          key={current.key}
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.3 }}
-          className={current.key === 'usBased' ? 'space-y-6' : 'space-y-4'}
+          className={current.type === 'boolean' ? 'space-y-6' : 'space-y-4'}
         >
-          <div className={`flex items-start gap-3 md:gap-4${current.key === 'usBased' ? '' : ' mb-2'}`}>
+          <div className={`flex items-start gap-3 md:gap-4${current.type === 'boolean' ? '' : ' mb-2'}`}>
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 flex-shrink-0">
               <Icon className="text-blue-400" size={20} />
             </div>
@@ -321,7 +472,9 @@ export function QualificationStepsCard({
             </div>
           </div>
 
-          {current.key === 'usBased' ? (
+          {current.type === 'contact' ? (
+            <ContactStep onSubmit={handleContact} />
+          ) : current.type === 'boolean' ? (
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <button
                 onClick={() => handleUsBased(true)}
@@ -341,7 +494,11 @@ export function QualificationStepsCard({
           ) : (
             <div className="space-y-2 md:space-y-3">
               {(current.options ?? []).map((opt) => (
-                <button key={opt.value} onClick={() => optionHandlers[current.key](opt.value)} className={OPTION_BUTTON_CLASS}>
+                <button
+                  key={opt.value}
+                  onClick={() => handleChoice(current.key, opt.value)}
+                  className={OPTION_BUTTON_CLASS}
+                >
                   {opt.label}
                 </button>
               ))}

@@ -1,7 +1,7 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// The Better Clients VSL, inside the funnel.
+// The Better Clients VSL — now the funnel's landing page.
 //
 // Props mirror app/vslfunnel-betterclients — same eyebrow, exit-intent and
 // the /revenuecalc hero button both off — with two deliberate divergences:

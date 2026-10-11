@@ -15,7 +15,12 @@
  * Both must give the same reason for the same answers, which is why this is
  * not written twice.
  */
-import { DISQUALIFYING_REVENUE, DISQUALIFYING_ROLE } from './qualification-steps';
+import {
+  DISQUALIFYING_BUDGETS,
+  DISQUALIFYING_REVENUE,
+  DISQUALIFYING_ROLE,
+} from './qualification-steps';
+import { AGENCY_TOTAL_MONTHLY, usd } from './agency-offer';
 
 export interface FitReason {
   heading: string;
@@ -26,6 +31,8 @@ export interface FitAnswers {
   usBased: boolean | null;
   decisionRole: string | null;
   annualRevenue: string | null;
+  /** Null on funnels with no budget question. */
+  budget?: string | null;
 }
 
 export function reasonFor(lead: FitAnswers): FitReason {
@@ -47,6 +54,13 @@ export function reasonFor(lead: FitAnswers): FitReason {
       body: 'The engine assumes a firm with capacity to absorb new advisory clients and the cash flow to run ads while they convert. Under that mark, the honest answer is that the guide plus your existing referrals will move you further than we would.',
     };
   }
+  if (lead.budget && DISQUALIFYING_BUDGETS.includes(lead.budget)) {
+    return {
+      heading: `It comes to about ${usd(AGENCY_TOTAL_MONTHLY)} a month, and you said that is not where you are.`,
+      body: 'That is a straight answer and we will take it at face value rather than try to talk you round. The engine only works when the ad spend runs long enough to compound, and starting it underfunded is how firms conclude ads do not work for accountants. When the budget is there, come back.',
+    };
+  }
+
   return {
     heading: 'Not a fit for the done-for-you engine right now.',
     body: 'Based on your answers, the system we run would not be the right next move for your firm today. That is a judgement about the engine, not about your practice.',

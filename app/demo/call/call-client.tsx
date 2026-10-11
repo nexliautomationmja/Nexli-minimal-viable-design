@@ -8,7 +8,8 @@
 // visitor already cleared /demo/qualify, so every CTA drops them straight on
 // the calendar instead of reopening the gate they just walked through.
 //
-// No price anywhere. The number belongs on the call.
+// No price on this page. The retired demo funnel never carried one; the
+// advisory funnel states it on the VSL and again on /booking-confirmed.
 // ---------------------------------------------------------------------------
 
 import React, { useEffect, useState } from 'react';

@@ -21,6 +21,8 @@ import { Loader2 } from 'lucide-react';
 import {
   QualificationStepsCard,
   type QualificationAnswers,
+  type QualificationContact,
+  type QualificationStepDef,
 } from '@/components/QualificationProvider';
 import {
   DISQUALIFYING_REVENUE,
@@ -57,6 +59,14 @@ export interface QualifyFlowProps {
   unqualifiedPath?: string;
   /** Footer line under the card; the advisory funnel has already sold. */
   footnote?: string;
+  /**
+   * Which questions to ask. Defaults to the demo funnel's six. The advisory
+   * funnel passes ADVISORY_QUALIFICATION_STEPS, whose last two steps collect
+   * contact details and the budget answer.
+   */
+  steps?: QualificationStepDef[];
+  /** Meta content_name, so the two funnels stay separable in reporting. */
+  contentName?: string;
 }
 
 const QualifyFlow: React.FC<QualifyFlowProps> = ({
@@ -65,6 +75,8 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
   qualifiedPath = DEMO_CALL_PATH,
   unqualifiedPath = DEMO_OFFER_PATH,
   footnote = 'Six questions. About a minute. No sales pitch until we know you are a fit.',
+  steps,
+  contentName = 'Demo Qualifier',
 }) => {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -84,16 +96,29 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
   );
 
   const handleComplete = useCallback(
-    async (answers: QualificationAnswers) => {
+    async (answers: QualificationAnswers, contact?: QualificationContact) => {
       setSubmitting(true);
 
       // Browser pixel first so the server CAPI event can dedupe against it.
       const eventId = generateEventId();
       trackMetaEvent(
         'CompleteRegistration',
-        { content_name: 'Demo Qualifier', content_category: 'Qualification' },
+        { content_name: contentName, content_category: 'Qualification' },
         eventId,
       );
+
+      // The advisory funnel has no opt-in in front of it, so this submission
+      // is also the lead capture — fire Lead too, or the funnel has no lead
+      // conversion in Ads Manager at all. Its own event id, so the two events
+      // dedupe independently against their CAPI counterparts.
+      const leadEventId = contact ? generateEventId() : null;
+      if (leadEventId) {
+        trackMetaEvent(
+          'Lead',
+          { content_name: contentName, content_category: 'Qualification' },
+          leadEventId,
+        );
+      }
 
       const fallback = decideFunnelPath(answers) === 'agency' ? qualifiedPath : unqualifiedPath;
 
@@ -103,7 +128,9 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             answers,
+            contact,
             event_id: eventId,
+            lead_event_id: leadEventId,
             attribution: getAttribution(),
           }),
         });
@@ -118,12 +145,16 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
         router.push(withIntent(fallback));
       }
     },
-    [router, withIntent, endpoint, qualifiedPath, unqualifiedPath],
+    [router, withIntent, endpoint, qualifiedPath, unqualifiedPath, contentName],
   );
+
+  // Follows whichever step list is in play, so the advisory funnel's six
+  // steps do not report progress against the demo funnel's six.
+  const stepCount = steps?.length ?? QUALIFICATION_STEP_COUNT;
 
   const pct = submitting
     ? 100
-    : Math.round((step / QUALIFICATION_STEP_COUNT) * 100);
+    : Math.round((step / stepCount) * 100);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -136,7 +167,7 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
           >
             {submitting
               ? 'Complete'
-              : `Question ${Math.min(step + 1, QUALIFICATION_STEP_COUNT)} of ${QUALIFICATION_STEP_COUNT}`}
+              : `Question ${Math.min(step + 1, stepCount)} of ${stepCount}`}
           </span>
           <span className="text-[11px] font-bold text-blue-400">{pct}%</span>
         </div>
@@ -185,6 +216,7 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
             </motion.div>
           ) : (
             <QualificationStepsCard
+              steps={steps}
               mode="foundation"
               hideHeader
               hideProgress

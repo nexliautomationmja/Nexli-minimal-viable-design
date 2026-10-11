@@ -77,7 +77,7 @@ export const ADVISORY_THANKYOU_VIDEO_PLAYBACK_ID =
 export const ADVISORY_THANKYOU_VIDEO_TITLE = 'Book of Business Accelerator — Welcome';
 
 /**
- * The VSL on /advisory-pricing/vsl — the funnel's main page.
+ * The VSL on /advisory-pricing — the funnel's landing page.
  *
  * A re-record of the Better Clients VSL whose audio says $15,000 rather than
  * $8,000, so it agrees with AGENCY_ENGAGEMENT_AVG and with every other number
@@ -109,16 +109,12 @@ export const ADVISORY_DOWNLOAD_PATH = '/api/advisory-pricing/download';
 // every buyer was sent to a signup page. Nothing checked the two against
 // each other.
 
-export const ADVISORY_PATH = '/advisory-pricing';
-
 /**
- * The VSL, gated behind the opt-in. This is the main path: the opt-in sells
- * the video, the video sells the call, and the qualifier routes from there.
- * It renders the same component as the public /vslfunnel-betterclients page,
- * with its CTAs pointed at ADVISORY_QUALIFY_PATH instead of the old booking
- * modal — see components/VslFunnel.tsx's ctaHref prop.
+ * The VSL, and the funnel's landing page. Public and indexable — it is the
+ * ad destination. There is no opt-in in front of it any more; contact
+ * details are collected inside the qualifier.
  */
-export const ADVISORY_VSL_PATH = '/advisory-pricing/vsl';
+export const ADVISORY_PATH = '/advisory-pricing';
 
 /**
  * The $297 page. No longer the main path — it is the downsell a firm lands on
@@ -130,8 +126,8 @@ export const ADVISORY_QUALIFY_PATH = '/advisory-pricing/qualify';
 export const ADVISORY_CALL_PATH = '/advisory-pricing/call';
 export const ADVISORY_NEXT_STEPS_PATH = '/advisory-pricing/next-steps';
 
-/** leads.form_source for anyone who opts in to this funnel. */
-export const ADVISORY_FORM_SOURCE = 'advisory-optin';
+/** leads.form_source for anyone who completes this funnel's qualifier. */
+export const ADVISORY_FORM_SOURCE = 'advisory-qualifier';
 
 // ── GoHighLevel tags ──────────────────────────────────────────────────────
 export const TAG_ADVISORY_OPT_IN = 'advisory opt-in';

@@ -52,6 +52,7 @@ export default async function AdvisoryOfferPage({
           usBased: leads.usBased,
           decisionRole: leads.decisionRole,
           annualRevenue: leads.annualRevenue,
+          budget: leads.budget,
         })
         .from(leads)
         .where(eq(leads.id, leadId))

@@ -36,7 +36,7 @@ import {
   isPaidAdvisorySession,
   retrieveCheckoutSession,
 } from '@/lib/stripe';
-import { ADVISORY_PATH, ADVISORY_VSL_PATH } from '@/lib/advisory-config';
+import { ADVISORY_PATH } from '@/lib/advisory-config';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -46,7 +46,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 /** Only ever bounce to a path inside this app — never an absolute URL. */
 function safeDestination(raw: string | null): string {
   // Falls back to the VSL, the funnel's main path — not to checkout.
-  if (!raw || !raw.startsWith('/') || raw.startsWith('//')) return ADVISORY_VSL_PATH;
+  if (!raw || !raw.startsWith('/') || raw.startsWith('//')) return ADVISORY_PATH;
   return raw;
 }
 
