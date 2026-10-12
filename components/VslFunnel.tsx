@@ -400,44 +400,43 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="max-w-3xl mx-auto mb-10 md:mb-14"
+          className="max-w-4xl mx-auto mb-10 md:mb-14"
         >
-          <div className="relative rounded-2xl md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden bg-[#050505]">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none bg-blue-500/5" />
-            <div className="relative z-10 p-2.5 sm:p-4 md:p-8">
-              <div className="relative">
-                <MuxPlayer
-                  ref={videoRef}
-                  playbackId={muxPlaybackId || "dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"}
-                  metadata={{
-                    video_title: videoTitle || "Nexli Digital Rainmaker System",
-                  }}
-                  streamType="on-demand"
-                  accentColor="#3b82f6"
-                  className="w-full rounded-xl md:rounded-2xl"
-                  style={{ aspectRatio: '16/9' }}
-                  onPlay={handlePlay}
-                  onPause={handlePause}
-                  onTimeUpdate={handleTimeUpdate}
-                  onEnded={handleEnded}
-                />
-                <AnimatePresence>
-                  {isMuted && (
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      onClick={handleUnmute}
-                      className="absolute top-2 right-2 sm:top-4 sm:right-4 flex items-center gap-1.5 sm:gap-2 bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/30 cursor-pointer transition-colors"
-                    >
-                      <VolumeX size={16} className="sm:hidden" />
-                      <VolumeX size={18} className="hidden sm:block" />
-                      Unmute
-                    </motion.button>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+          {/* Edge to edge inside a thin border — no inset bezel. It used to
+              sit on a near-black panel with up to 32px of padding around it,
+              which read as a picture frame and made the video smaller than
+              the space it took up. */}
+          <div className="relative rounded-2xl md:rounded-3xl border border-[var(--glass-border)] shadow-2xl overflow-hidden">
+            <MuxPlayer
+              ref={videoRef}
+              playbackId={muxPlaybackId || "dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"}
+              metadata={{
+                video_title: videoTitle || "Nexli Digital Rainmaker System",
+              }}
+              streamType="on-demand"
+              accentColor="#3b82f6"
+              className="w-full block"
+              style={{ aspectRatio: '16/9' }}
+              onPlay={handlePlay}
+              onPause={handlePause}
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={handleEnded}
+            />
+            <AnimatePresence>
+              {isMuted && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  onClick={handleUnmute}
+                  className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 flex items-center gap-1.5 sm:gap-2 bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/30 cursor-pointer transition-colors"
+                >
+                  <VolumeX size={16} className="sm:hidden" />
+                  <VolumeX size={18} className="hidden sm:block" />
+                  Unmute
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 
