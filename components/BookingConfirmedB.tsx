@@ -36,13 +36,18 @@ import FunnelLogo from './FunnelLogo';
 import BrowserFrame from './demo/BrowserFrame';
 import PortalDemo from './demo/PortalDemo';
 import PricingBlock from './booking/PricingBlock';
-import DanielaFaq from './booking/DanielaFaq';
+import DanielaFaq, { type FaqItem } from './booking/DanielaFaq';
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent } from '@/lib/meta-events';
 import {
+  AGENCY_AD_SPEND,
   AGENCY_DAYS,
   AGENCY_LAUNCH_DAYS,
+  AGENCY_LAUNCH_DAYS_MAX,
+  AGENCY_LAUNCH_DAYS_MIN,
   AGENCY_LEADS,
+  AGENCY_MONTHLY_FEE,
+  AGENCY_TOTAL_MONTHLY,
   usd,
 } from '@/lib/agency-offer';
 import {
@@ -56,13 +61,10 @@ import {
   demoFirmLogo,
 } from '@/lib/demo-config';
 
-/** The $1,000 late-launch credit, as written in the guarantee. */
-const LAUNCH_CREDIT = 1_000;
-
 /**
  * What happens after they sign. Every number is read from agency-offer.ts
- * rather than typed, so this timeline cannot promise something the written
- * guarantees do not.
+ * rather than typed, and none of it is a guarantee — Nexli does not offer
+ * them. These are the timelines the system is built to.
  */
 const TIMELINE = [
   {
@@ -79,21 +81,67 @@ const TIMELINE = [
   },
   {
     Icon: Rocket,
-    when: `Day ${AGENCY_LAUNCH_DAYS}`,
+    when: `Days ${AGENCY_LAUNCH_DAYS_MIN}–${AGENCY_LAUNCH_DAYS}`,
     title: 'Everything is live',
-    body: `Website, client portal, funnel and the automations behind them. If we are late and the delay is ours, you get a ${usd(LAUNCH_CREDIT)} credit against your next month.`,
+    body: `Website, client portal, funnel and the automations behind them. Around ${AGENCY_LAUNCH_DAYS_MAX} days is the realistic worst case, and the variable is how fast your assets come back — not us.`,
   },
   {
     Icon: CalendarCheck,
     when: `Days ${AGENCY_LAUNCH_DAYS}–${AGENCY_DAYS}`,
     title: 'Campaigns run, your calendar fills',
-    body: `${AGENCY_LEADS} qualified advisory leads inside ${AGENCY_DAYS} days of launch. Miss it and we keep working free until you hit ${AGENCY_LEADS} — no extra fees, no renegotiation.`,
+    body: `${AGENCY_LEADS} qualified advisory leads inside ${AGENCY_DAYS} days of launch is what the system is built to produce. We report on it every week, so you see the pace rather than waiting to find out.`,
   },
   {
     Icon: ShieldCheck,
     when: 'Ongoing',
     title: 'Month to month',
     body: 'Cancel whenever. We would rather earn the next month than lock you into twelve.',
+  },
+];
+
+/**
+ * Written, not voice. Page A plays Daniela's recordings; this page exists to
+ * answer everything before the call, and making someone press play and wait
+ * is the opposite of that.
+ *
+ * Figures come from lib/agency-offer.ts so an answer can never disagree with
+ * the pricing block above it.
+ */
+const FAQ: FaqItem[] = [
+  {
+    question: 'How exactly does the system get me higher-value clients?',
+    answer:
+      `We build the front end a high earner judges you by — the website, the booking flow, the portal they log into — and then run Meta campaigns at business owners and high-income individuals who are actively looking for tax help. The ads do not sell your firm; they offer a conversation about what someone is overpaying. Intake, follow-up and reminders are automated, so the ones who respond land on your calendar already knowing what the meeting is about. The target is ${AGENCY_LEADS} qualified advisory leads inside ${AGENCY_DAYS} days of launch.`,
+  },
+  {
+    question: 'Who runs the ads — you or a white-label agency?',
+    answer:
+      'We do, in house. No white-label, no subcontractor, no media buyer you never meet. We build the campaigns, write and produce the creative, and manage the Facebook ad account day to day. The account itself is yours and the spend goes to Meta directly from it, so you can see every dollar and every result without asking us for a screenshot.',
+  },
+  {
+    question: 'How soon can this be up and running?',
+    answer:
+      `Most firms are live in ${AGENCY_LAUNCH_DAYS_MIN} to ${AGENCY_LAUNCH_DAYS} days. Around ${AGENCY_LAUNCH_DAYS_MAX} days is the realistic worst case, and the variable is almost never us — it is how fast branding, logins and approvals come back. Send everything in the first few days and you are at the short end of that range.`,
+  },
+  {
+    question: 'What do I actually own at the end of it?',
+    answer:
+      'The website is yours. It is on your domain, and if we part ways you keep it.\n\nThe rest is not. The automations, the client portal and the review engine are built and run by us on our infrastructure, and they stop working when the engagement does. We would rather say that now than have you find out later.\n\nThe honest version: the website on its own will not bring anyone in, and it will not onboard anybody onto tax planning. The part that does that is the part you are paying us to run.',
+  },
+  {
+    question: 'How often will we actually talk?',
+    answer:
+      'Once a week, reliably. You get a written update covering exactly what we did in the ad account and in the business that week, and what it produced. Not a dashboard link — a personal note.\n\nWe also run an internal survey every week on how the work is going, so problems surface while they are still small.\n\nWe are not on call, and you will not be chasing us for a status. Nothing is worse than an agency delivering and never telling you.',
+  },
+  {
+    question: 'Who is actually running my account?',
+    answer:
+      'Marcel, the founder. Not a junior, not a pod, not someone you meet once on the kickoff call and never again. As the firm grows that will change, and we will tell you before it does.',
+  },
+  {
+    question: 'How is the price built?',
+    answer:
+      `${usd(AGENCY_MONTHLY_FEE)} a month for the complete system — the website, the portal, the funnel and the automations behind them, built and run for you. On top of that you budget about ${usd(AGENCY_AD_SPEND)} a month in ad spend, which you pay Meta directly from your own ad account. So roughly ${usd(AGENCY_TOTAL_MONTHLY)} a month all in.\n\nIt is one price for one system. There is no setup fee, no deposit, no per-component pricing and no annual contract. We do not sell the pieces separately because they do not work separately.`,
   },
 ];
 
@@ -315,7 +363,12 @@ export default function BookingConfirmedB() {
         </motion.section>
 
         {/* ── 8. Objections, answered ───────────────────────────────── */}
-        <DanielaFaq />
+        <DanielaFaq
+          items={FAQ}
+          badge="Before the call"
+          heading={<>Everything else you were <span className="text-green-500">going to ask</span></>}
+          intro="Answered here so the call can be about whether this fits, not about what it is."
+        />
 
         {/* ── 9. Close ──────────────────────────────────────────────── */}
         <motion.section

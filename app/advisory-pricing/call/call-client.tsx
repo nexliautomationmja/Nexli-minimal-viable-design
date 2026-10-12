@@ -6,7 +6,7 @@
 // This route used to render DemoCallClient — a second full VSL, ~5,800px of
 // desktop scroll before the booking button, with no calendar on the page at
 // all. Almost all of it repeated the VSL the visitor had just watched
-// (GuaranteeSection is literally the same component), and it opened with the
+// (it rendered the same guarantee block, since removed), and it opened with the
 // older Jasmine $8,000-era video, so a firm heard $15,000 in the VSL and then
 // $8,000 thirty seconds later.
 //

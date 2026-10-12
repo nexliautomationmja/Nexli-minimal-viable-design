@@ -6,7 +6,7 @@
  * Facts stated here must match lib/site.ts: $500K+ per year minimum,
  * Nexli runs the ads and the firm funds ad spend separately, pricing is
  * $4,997/mo for the complete system plus about $5,000/mo in ad spend the
- * firm pays the platforms directly, month to month, both written guarantees.
+ * firm pays the platforms directly, month to month, no guarantees offered.
  */
 export interface VslFaqItem {
   q: string;
@@ -17,7 +17,7 @@ const MINIMUM = '$500K+ per year (about $40K-$50K a month)';
 
 const whatCounts: VslFaqItem = {
   q: 'What counts as a "qualified advisory opportunity"?',
-  a: 'A US-based business owner or high-income individual who matches the advisory criteria we set with you and has asked your firm to contact them. That is what the 50-in-90-days guarantee counts: qualified leads, not closed revenue. Your close rate determines what you bank. If we do not hit 50 within 90 days of campaign launch, we keep working for free until we do. No extra fees, no renegotiation.',
+  a: 'A US-based business owner or high-income individual who matches the advisory criteria we set with you and has asked your firm to contact them. That is what the 50-in-90-days target counts: qualified leads, not closed revenue. Your close rate determines what you bank. We report the pace against it every week, so you are never guessing where you stand.',
 };
 
 const whatItCosts: VslFaqItem = {
@@ -32,7 +32,7 @@ const whoRunsAds: VslFaqItem = {
 
 const howLong: VslFaqItem = {
   q: 'How long until we are live, and what do we need to do?',
-  a: 'Most firms go live within 2 weeks. Once we have your branding, logins, approvals, and onboarding details, we guarantee your whole funnel is built and launched within 14 days. If the delay is on our end, you receive a $1,000 credit toward your next monthly payment. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
+  a: 'Most firms go live in 10 to 14 days once we have your branding, logins, approvals and onboarding details. Around 24 days is the realistic worst case, and the variable is how fast those come back from you. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
 };
 
 const existingWebsite: VslFaqItem = {
@@ -57,7 +57,7 @@ const whatYouGet = (angle: string): VslFaqItem => ({
 
 const differentFrom: VslFaqItem = {
   q: 'How is this different from hiring a web designer, buying software, or hiring a marketing agency?',
-  a: 'This is a done-for-you business infrastructure build, not a website project, a software subscription, or an ad retainer. We design, build, and integrate your entire client-facing system: website, portal, automations, and review engine. Then we drive the traffic to it and guarantee the result. You get a custom-built system, not a template, and one team accountable for the whole path from click to booked consultation.',
+  a: 'This is a done-for-you business infrastructure build, not a website project, a software subscription, or an ad retainer. We design, build, and integrate your entire client-facing system: website, portal, automations, and review engine. Then we drive the traffic to it and report on the result every week. You get a custom-built system, not a template, and one team accountable for the whole path from click to booked consultation.',
 };
 
 export const advisoryFaq: VslFaqItem[] = [
@@ -134,14 +134,14 @@ export const offerFaq: VslFaqItem[] = [
     a: 'Lead lists are shared, low-intent, and unfiltered. You pay to chase people who filled out a form once. We deliver booked appointments with pre-qualified, high-income taxpayers who already understand what planning is worth, exclusively to your firm, on a system we built and run.',
   },
   {
-    q: 'What does the guarantee cover?',
-    a: 'At least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who matches the criteria you set with us and has asked your firm to contact them. That is a lead, not closed revenue. If we miss it, we keep working for free until you hit 50. Separately, once we have your assets and access, your whole funnel is built and launched within 14 days or you receive a $1,000 credit toward your next monthly payment.',
+    q: 'Do you guarantee results?',
+    a: 'No, and we would be careful of anyone who does. What we publish is the target: at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who matches the criteria you set with us and has asked your firm to contact them — a lead, not closed revenue. You get a written update every week showing the pace against that number, and the engagement is month to month, so if it is not working you are not stuck.',
   },
   whatItCosts,
   whoRunsAds,
   {
     q: 'How long until the first appointments show up?',
-    a: 'The build takes most firms about 2 weeks, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and the guarantee is 50 qualified leads within 90 days of campaign launch.',
+    a: 'The build takes most firms about 2 weeks, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and the target is 50 qualified leads within 90 days of campaign launch.',
   },
   {
     q: 'What if we cannot handle the volume?',

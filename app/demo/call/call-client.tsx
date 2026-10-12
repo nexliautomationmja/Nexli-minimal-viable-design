@@ -4,7 +4,7 @@
 // Demo funnel page 4A — the qualified path.
 //
 // Mirrors the VSL pages' running order (video → CTA → what you get → how it
-// gets built → guarantees → projection → book) minus the qualifier: this
+// gets built → projection → book) minus the qualifier: this
 // visitor already cleared /demo/qualify, so every CTA drops them straight on
 // the calendar instead of reopening the gate they just walked through.
 //
@@ -28,7 +28,6 @@ import {
   Users,
 } from 'lucide-react';
 import { useCalPopup } from '@/components/CalPopupButton';
-import GuaranteeSection from '@/components/GuaranteeSection';
 import TransformationCards, {
   DEFAULT_TRANSFORMATION_CARDS,
   GlowTile,
@@ -78,7 +77,7 @@ CALL_CARDS[3].details = [
   'The client portal where the engagement actually runs',
 ];
 
-// The 14-day guarantee is only believable if the visitor can see what fits
+// The 14-day build window is only believable if the visitor can see what fits
 // inside it — so this section stays. What changed is the subject of every
 // sentence: each step names what the firm HAS at the end of it, not what we
 // did to get there.
@@ -100,7 +99,7 @@ const BUILD = [
   },
 ];
 
-// Sized off the guarantee so the two sections cannot contradict each other.
+// Sized off lib/agency-offer so the two sections cannot contradict each other.
 // Wears the same glow-tile treatment as the cards above, with the numbers
 // counting up once they are actually on screen.
 const PROJECTION = [
@@ -112,11 +111,11 @@ const PROJECTION = [
     conicStops: '#60a5fa, #3b82f6, #60a5fa',
     starClass: 'text-blue-400 fill-blue-400',
     labelClass: 'text-blue-300',
-    badge: 'Guaranteed',
+    badge: 'Target',
     value: 50,
     format: (n: number) => Math.round(n).toLocaleString('en-US'),
     label: 'Qualified leads',
-    sub: 'Inside 90 days, or we keep working free',
+    sub: 'What the system is built to produce in 90 days',
   },
   {
     Icon: Clock3,
@@ -130,7 +129,7 @@ const PROJECTION = [
     value: 14,
     format: (n: number) => `${Math.round(n)} days`,
     label: 'Whole funnel live',
-    sub: 'Or a $1,000 credit on your next month',
+    sub: 'Typically 10 to 14 days from kickoff',
   },
   {
     Icon: TrendingUp,
@@ -484,14 +483,12 @@ const DemoCallClient: React.FC<DemoCallClientProps> = ({
           </motion.div>
 
           <p className="mt-4 text-center text-[11px] sm:text-xs leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Sample figures from a firm at the pace we guarantee — 50 qualified leads across 90 days.
+            Sample figures at the pace the system targets — 50 qualified leads across 90 days.
             Spend and close rate vary by market; the leads are the part we put in writing.
           </p>
         </div>
       </section>
 
-      {/* ── The two written guarantees ─────────────────────────────────── */}
-      <GuaranteeSection accent="blue" hideCta />
 
       {/* ── The 90 days, in numbers ────────────────────────────────────── */}
       <section className="relative z-10 px-4 py-12 md:py-20">

@@ -3,7 +3,7 @@ import { aboutFacts, aboutIntro, aboutSections, founderBio } from '../data/about
 import { getAuthor } from '../data/authors';
 import { guides } from '../data/guides';
 import { PORTFOLIO_META } from '../lib/portfolio-meta';
-import { EMAIL, GUARANTEES, SOCIAL, SYSTEM_COMPONENTS } from '../lib/site';
+import { EMAIL, ENGAGEMENT_TERMS, SOCIAL, SYSTEM_COMPONENTS } from '../lib/site';
 import { renderInline } from '../lib/inline-markdown';
 
 const cardClass = 'rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] p-6';
@@ -109,12 +109,12 @@ export default function About() {
           </ul>
         </section>
 
-        <section aria-labelledby="guarantees-heading">
-          <h2 id="guarantees-heading" className="text-2xl md:text-3xl font-bold text-[var(--text-main)] mb-4">
-            Guarantees
+        <section aria-labelledby="terms-heading">
+          <h2 id="terms-heading" className="text-2xl md:text-3xl font-bold text-[var(--text-main)] mb-4">
+            How the engagement works
           </h2>
           <ul className="space-y-4">
-            {GUARANTEES.map((g) => (
+            {ENGAGEMENT_TERMS.map((g) => (
               <li key={g.name} className={cardClass}>
                 <p className="font-bold text-[var(--text-main)]">{g.name}</p>
                 <p className="text-sm text-[var(--text-muted)] mt-2 leading-relaxed">{g.description}</p>

@@ -18,7 +18,7 @@ import { AGENCY_ENGAGEMENT_AVG } from '@/lib/agency-offer';
 // Two honesty constraints baked in:
 //
 //  1. The 90-day column shows exactly 50 qualified leads, because that is the
-//     number the guarantee on this same page promises. If these two ever
+//     number lib/agency-offer targets. If these two ever
 //     disagree the page argues with itself.
 //  2. The product does not track ad spend or ROAS yet — there is no Meta
 //     Insights integration. So the return figure is not asserted: it is
@@ -41,7 +41,7 @@ interface RangeData {
   weeks: { label: string; leads: number }[];
 }
 
-// 90d is the anchor: 50 qualified, matching the guarantee. 7d and 30d are that
+// 90d is the anchor: 50 qualified, matching the target. 7d and 30d are that
 // pace scaled back, with the ramp you would actually see while creative is
 // still being tested.
 const DATA: Record<RangeKey, RangeData> = {
@@ -300,7 +300,7 @@ const AdsDashboard: React.FC = () => {
 
             <p className="mt-3 text-[11px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
               Your number, not ours — move the slider. Revenue assumes a {usd0(ENGAGEMENT_AVG)} average
-              engagement; the leads are what we guarantee, the close rate is yours.
+              engagement; the leads are what we target, the close rate is yours.
             </p>
           </div>
         </div>

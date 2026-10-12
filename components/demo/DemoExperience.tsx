@@ -188,7 +188,7 @@ function SectionHeading({
 const PIPELINE = [
   { label: 'Reached', value: 2400, hint: 'owners and high earners' },
   { label: 'Warm', value: 186, hint: 'engaged with your offer' },
-  { label: 'Qualified', value: 50, hint: 'guaranteed in 90 days', highlight: true },
+  { label: 'Qualified', value: 50, hint: 'targeted in 90 days', highlight: true },
   { label: 'Booked', value: 34, hint: 'on your calendar' },
 ];
 

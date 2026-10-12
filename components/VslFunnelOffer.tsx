@@ -14,7 +14,6 @@ import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import TransformationCards from './TransformationCards';
 import MuxPlayer from '@mux/mux-player-react';
-import GuaranteeSection from './GuaranteeSection';
 
 // Google "G" icon matching lucide-react component interface
 const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
@@ -1573,7 +1572,6 @@ const VslFunnelOffer: React.FC<VslFunnelOfferProps> = ({ headline, subheadline, 
       <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} />
       <TrustBar />
       <TransformationSection />
-      <GuaranteeSection accent="green" />
       <CostOfInactionSection />
       <ROISection />
       <ProjectionSection />

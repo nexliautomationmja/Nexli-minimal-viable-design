@@ -5,12 +5,12 @@ const guide: Guide = {
   title: 'Best CPA Firm Marketing Agencies in 2026: An Honest Comparison',
   metaTitle: 'Best CPA Firm Marketing Agencies (2026): 11 Compared, With Pricing',
   description:
-    'An honest comparison of 11 CPA firm marketing agencies: who each is best for, what they charge, contract terms, guarantees, and how to choose the right one.',
+    'An honest comparison of 11 CPA firm marketing agencies: who each is best for, what they charge, contract terms, what they commit to, and how to choose the right one.',
   question: 'What are the best marketing agencies for CPA firms?',
   tldr: [
-    'The best marketing agency for a CPA firm depends on firm size and goal: Build Your Firm and CPA Site Solutions for cheap websites under $200 a month, Hinge or Ingenuity for branding and positioning at larger firms, Brand House or Fixyr for outsourced marketing at small-to-mid firms, Mole Street for HubSpot at Top 200 firms, and Nexli Automation for established $500K+ firms that want a done-for-you lead system with a written performance guarantee.',
+    'The best marketing agency for a CPA firm depends on firm size and goal: Build Your Firm and CPA Site Solutions for cheap websites under $200 a month, Hinge or Ingenuity for branding and positioning at larger firms, Brand House or Fixyr for outsourced marketing at small-to-mid firms, Mole Street for HubSpot at Top 200 firms, and Nexli Automation for established $500K+ firms that want a done-for-you lead system with a published lead target and weekly reporting.',
     'Most accounting-specific agencies do not publish pricing. The ones that do range from about $90 a month for a template website to $1,000 to $5,000 a month for done-for-you execution, with positioning projects quoted in the five figures.',
-    'Only one agency on this list puts a lead-count guarantee in writing. Everyone else sells effort, not outcomes, which is normal but worth knowing before you sign.',
+    'Only one agency on this list publishes a lead-count target and reports against it weekly. Everyone else sells effort, not outcomes, which is normal but worth knowing before you sign.',
     'Whatever you pick, expect 60 to 90 days before paid channels produce booked calls and 6 to 12 months before SEO or content moves the needle.',
   ],
   publishedAt: '2026-09-08',
@@ -79,18 +79,18 @@ const guide: Guide = {
         '**Brand House Marketing.** A Wisconsin agency founded by, and affiliated with, an IPA Top 300 CPA firm. Best for small to mid-size firms that want strategy plus execution across content, paid ads, SEO, design, and partner LinkedIn from people who have sat inside an accounting firm. Pricing and contract terms are not published. Weakness: the affiliation with an operating CPA firm is a real strength for context and a potential concern if you compete in the same markets or niches.',
         '**Fixyr.** A Canadian firm serving US and Canadian accounting, tax, and advisory practices. Best for firms that want a senior marketing head for less than a hire: a Marketing Action Plan is [$1,495](https://fixyr.com/pricing/), the Strategy First engagement starts at $9,000, done-for-you packages run $1,000 to $5,000 a month, and coaching starts at $750 a month. No long-term contracts. Weakness: the model leans on strategy and coaching; execution packages are scoped narrowly, and there is no performance guarantee.',
         '**Mole Street.** An Elite HubSpot Solutions Partner in Philadelphia with SOC 2 compliance and named Top 100 accounting clients (Sax LLP, HBK). Best for large firms that need CRM, data integration with practice management, and cross-selling visibility across offices. Pricing is not published. Weakness: this is a technology consultancy, not a lead generation agency. If your firm is under $5M, the platform and the engagement are more than you need.',
-        '**Nexli Automation.** A CPA firm growth agency founded by Marcel Allen. It builds the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website, an AI automation layer (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that adds 3 to 5 reviews a month, then runs paid ads to it. Best for established firms doing $500K+ that want advisory clients and a done-for-you system, backed by a written guarantee of at least 50 qualified advisory leads within 90 days of launch, or Nexli keeps working for free until it hits 50, plus a 14-day funnel launch guarantee with a $1,000 credit if missed. Month-to-month, no annual contracts, most firms live in 2 weeks. Weakness: not a fit for solo or startup firms, pricing is not published, and it is application-only, so you cannot just sign up.',
+        '**Nexli Automation.** A CPA firm growth agency founded by Marcel Allen. It builds the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website, an AI automation layer (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that adds 3 to 5 reviews a month, then runs paid ads to it. Best for established firms doing $500K+ that want advisory clients and a done-for-you system. It publishes a target of at least 50 qualified advisory leads within 90 days of launch and sends a written update every week on the pace, but offers no performance guarantee and says so. $4,997 a month plus about $5,000 a month in ad spend paid to the platforms directly, month-to-month, no annual contract, most firms live in 10 to 14 days. Weakness: not a fit for solo or startup firms, and it is application-only, so you cannot just sign up.',
       ],
     },
     {
       id: 'comparison-table',
       heading: 'Side-by-side comparison',
       body: [
-        'The table below compresses the list. "Model" is what you are actually buying. "Guarantee" means a written outcome guarantee, not a satisfaction promise or a free trial.',
+        'The table below compresses the list. "Model" is what you are actually buying. "Commits to" means a stated outcome the agency reports against, not a satisfaction promise or a free trial.',
       ],
       table: {
         caption: 'CPA firm marketing agencies compared, September 2026. Pricing from each agency\'s website.',
-        headers: ['Agency', 'Best for', 'Model', 'Pricing', 'Contract', 'Guarantee'],
+        headers: ['Agency', 'Best for', 'Model', 'Pricing', 'Contract', 'Commits to'],
         rows: [
           ['Build Your Firm', 'Solo and small firms needing a site plus basic marketing', 'Website subscription, add-on programs', '$95-$120/mo sites; $399.95/mo content program; outsourced marketing custom', 'Monthly, annual discount, free trial', 'None published'],
           ['CPA Site Solutions', 'Cheapest credible website with portal', 'Website subscription', '$90-$166.50/mo', 'No long-term contract, 60-day trial', 'None published'],
@@ -102,7 +102,7 @@ const guide: Guide = {
           ['Brand House Marketing', 'Small to mid-size firms wanting strategy plus execution', 'Full-service agency', 'Not published', 'Not published', 'None published'],
           ['Fixyr', 'Firms wanting a senior marketing lead at low cost', 'Strategy, coaching, DFY packages', '$1,495 plan; $9,000+ strategy; $1,000-$5,000/mo DFY', 'No long-term contracts', 'None published'],
           ['Mole Street', 'Top 200 firms needing HubSpot and CRM integration', 'HubSpot consultancy', 'Not published', 'Not published', 'None published'],
-          ['Nexli Automation', 'Established $500K+ firms wanting advisory clients', 'Done-for-you system plus paid ads', 'Not published (apply)', 'Month-to-month, no annual contract', '50 qualified leads in 90 days or works free; 14-day funnel launch or $1,000 credit'],
+          ['Nexli Automation', 'Established $500K+ firms wanting advisory clients', 'Done-for-you system plus paid ads', '$4,997/mo + ~$5,000/mo ad spend', 'Month-to-month, no annual contract', 'Target of 50 qualified leads in 90 days, reported weekly (no guarantee)'],
         ],
       },
     },
@@ -183,7 +183,7 @@ const guide: Guide = {
       id: 'where-nexli-fits',
       heading: 'Where Nexli fits, and where it does not',
       body: [
-        'Nexli Automation is the only agency on this list that puts a lead count in the contract: at least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it hits 50. That is possible because the system is narrow on purpose. It works with established CPA and accounting firms doing $500K+ a year (about $40K-$50K a month), builds the full stack (website, AI intake and booking, document portal, review engine), then runs paid ads into it. Most firms go live within 2 weeks, on month-to-month terms.',
+        'Nexli Automation is the only agency on this list that publishes a lead count at all: a target of at least 50 qualified advisory leads within 90 days of campaign launch, reported against every week. It does not guarantee the number. That target is possible because the system is narrow on purpose. It works with established CPA and accounting firms doing $500K+ a year (about $40K-$50K a month), builds the full stack (website, AI intake and booking, document portal, review engine), then runs paid ads into it. Most firms go live in 10 to 14 days, on month-to-month terms.',
         'It is not the right choice for a startup practice, a firm that wants a $100-a-month website, a Top 100 firm that needs a HubSpot integration, or a firm that wants to keep doing marketing in-house and just needs coaching. Pricing is not published; firms apply and book a strategy call at [nexli.net/vslfunnel-advisory](/vslfunnel-advisory). For what the system contains, read [What is the Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system).',
       ],
     },
@@ -195,7 +195,7 @@ const guide: Guide = {
       ],
       bullets: [
         'Under $500K revenue or just starting out: CPA Site Solutions or Build Your Firm for the site, CountingWorks PRO if you want automation you run yourself. Spend the savings on reviews and referrals.',
-        '$500K to $3M, want advisory or business clients, do not want to manage a marketer: Nexli Automation (guaranteed, done-for-you), Brand House (full-service, custom quote), or Fixyr (strategy-led, published pricing).',
+        '$500K to $3M, want advisory or business clients, do not want to manage a marketer: Nexli Automation (done-for-you, published lead target), Brand House (full-service, custom quote), or Fixyr (strategy-led, published pricing).',
         '$3M to $20M with a marketing coordinator already in place: Ingenuity or Inovautus for outsourced capacity and partner BD training; Hinge if the problem is positioning.',
         'Top 200 firm with CRM and data problems: Mole Street.',
         'Need organic content volume and have someone to review it: theStacc, or Build Your Firm\'s content program if you want it accounting-only.',
@@ -217,7 +217,7 @@ const guide: Guide = {
     {
       question: 'Do any CPA marketing agencies guarantee results?',
       answer:
-        'Most do not; they sell a retainer for effort and deliverables. Nexli Automation is the exception on this list, with a written guarantee of at least 50 qualified advisory leads within 90 days of launch or it keeps working for free until it hits 50, plus a 14-day funnel launch guarantee with a $1,000 credit. Be skeptical of any agency that guarantees rankings or an undefined number of "leads" without saying what counts as qualified.',
+        'Most do not; they sell a retainer for effort and deliverables. Nexli Automation publishes what it targets — 50 qualified advisory leads within 90 days of launch, and a build live in 10 to 14 days — and reports against it weekly, but does not offer a performance guarantee and says so. Be skeptical of any agency that guarantees rankings or an undefined number of "leads" without saying what counts as qualified.',
     },
     {
       question: 'Should a CPA firm hire an agency or a full-time marketer?',

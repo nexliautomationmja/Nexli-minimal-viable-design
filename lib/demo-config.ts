@@ -151,6 +151,6 @@ export const DEMO_HEADLINE = 'See what a $15,000 advisory client sees before the
 /**
  * The closing headline on /demo. Deliberately NOT another $800-vs-$15,000
  * contrast — the hero block already makes that argument, and repeating it at
- * the foot of the page weakens both. This one closes on the guarantee instead.
+ * the foot of the page weakens both. This one closes on the lead target instead.
  */
-export const DEMO_BRIDGE_CTA = '50 qualified leads in your first 90 days, or we keep working free';
+export const DEMO_BRIDGE_CTA = '50 qualified leads in your first 90 days';

@@ -19,7 +19,6 @@ import {
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
-import GuaranteeSection from './GuaranteeSection';
 import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
 
 // Google "G" icon matching lucide-react component interface
@@ -34,7 +33,7 @@ const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ siz
 
 // ─────────────────────────────────────────────────────────────────────────────
 // QUALIFY CTA — the one conversion button on this page, used four times here
-// and a fifth time inside GuaranteeSection.
+// four times on this page.
 //
 // Two behaviours:
 //
@@ -1743,13 +1742,6 @@ interface VslFunnelProps {
    */
   ctaHref?: string;
   /**
-   * Render the two written guarantees. On by default — the public pages
-   * lead with them. The advisory VSL turns them off: its ROI section now
-   * opens on the two-clients number instead, and the guarantees land again
-   * on the confirmation page once a call is actually booked.
-   */
-  showGuarantees?: boolean;
-  /**
    * Render the FAQ accordion. On by default. The advisory VSL turns it off:
    * its objections are answered on the booking-confirmed page instead, once
    * a call is booked and the visitor is actually reading.
@@ -1757,7 +1749,7 @@ interface VslFunnelProps {
   showFaq?: boolean;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead, showGuarantees = true, showFaq = true }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead, showFaq = true }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1772,7 +1764,6 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} eyebrowBelowSubhead={eyebrowBelowSubhead} />
       <TrustBar />
       <TransformationSection />
-      {showGuarantees && <GuaranteeSection accent="blue" ctaHref={ctaHref} />}
       <CostOfInactionSection />
       <ROISection />
       <FounderStorySection />

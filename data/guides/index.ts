@@ -25,7 +25,7 @@ export const getGuideBySlug = (slug: string): Guide | undefined =>
 
 export const DEFAULT_GUIDE_CTA = {
   heading: 'See how established CPA firms fill their calendar with advisory clients',
-  body: 'Watch the short presentation on the Digital Rainmaker System, the two guarantees, and who it is built for. Then decide whether a strategy call makes sense.',
+  body: 'Watch the short presentation on the Digital Rainmaker System, what it costs, and who it is built for. Then decide whether a strategy call makes sense.',
   href: '/vslfunnel-advisory',
   label: 'Watch the presentation',
 };

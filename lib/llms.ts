@@ -1,11 +1,11 @@
 import { blogPosts } from '../data/blogPosts';
 import { guides } from '../data/guides';
 import type { Guide } from '../data/guides/types';
-import { EMAIL, GUARANTEES, MIN_REVENUE_DETAIL, SITE_NAME, SITE_URL, SYSTEM_COMPONENTS } from './site';
+import { EMAIL, ENGAGEMENT_TERMS, MIN_REVENUE_DETAIL, SITE_NAME, SITE_URL, SYSTEM_COMPONENTS } from './site';
 
 const url = (path: string) => `${SITE_URL}${path}`;
 
-const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by Marcel Allen. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it so established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} land high-value tax advisory clients. Guarantees: ${GUARANTEES.map((g) => g.description).join(' ')} Month-to-month, no annual contracts. Most firms go live within 2 weeks. Pricing is not published; firms apply for a strategy call.`;
+const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by Marcel Allen. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it so established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} land high-value tax advisory clients. ${ENGAGEMENT_TERMS.map((t) => t.description).join(' ')} Nexli does not offer performance guarantees. Pricing is $4,997 a month for the complete system, plus about $5,000 a month in ad spend the firm pays the platforms directly.`;
 
 function header() {
   return [
@@ -22,7 +22,7 @@ export function buildLlmsTxt(): string {
   const lines = [header()];
 
   lines.push('## Company');
-  lines.push(`- [About Nexli Automation](${url('/about')}): Who we are, founder, who we serve, guarantees, contact.`);
+  lines.push(`- [About Nexli Automation](${url('/about')}): Who we are, founder, who we serve, how the engagement works, contact.`);
   lines.push(`- [Digital Rainmaker System](${url('/rainmaker')}): The growth system we build and run for CPA firms.`);
   lines.push(`- [Portfolio](${url('/portfolio')}): Example CPA firm websites we designed.`);
   lines.push('');
@@ -46,7 +46,7 @@ export function buildLlmsTxt(): string {
   lines.push('');
 
   lines.push('## Optional');
-  lines.push(`- [Watch the presentation and apply](${url('/vslfunnel-advisory')}): Video overview of the system, the guarantees, and the strategy call.`);
+  lines.push(`- [Watch the presentation and apply](${url('/vslfunnel-advisory')}): Video overview of the system, the pricing, and the strategy call.`);
   lines.push(`- [Free guide](${url('/free-guide')}): Downloadable guide on scaling client capacity.`);
   lines.push(`- [Revenue calculator](${url('/revenuecalc')}): Estimate revenue impact of advisory clients.`);
   lines.push(`- [Firm Foundation](${url('/foundation')}): Entry tier — a premium website plus a branded client portal, built and hosted by Nexli, $497/mo.`);

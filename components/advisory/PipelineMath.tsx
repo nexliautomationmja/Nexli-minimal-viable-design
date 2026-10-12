@@ -3,9 +3,9 @@
 // ---------------------------------------------------------------------------
 // 50 × $15,000 = $750,000.
 //
-// The grid is lifted from components/GuaranteeSection.tsx:171-205, which is
+// The grid was lifted from the old GuaranteeSection, since deleted, which was
 // the only place in the codebase that draws this multiplication. It could
-// not be imported: GuaranteeSection calls useBooking() unconditionally at
+// not be imported: it called useBooking() unconditionally at
 // its top, and that hook throws without a QualificationProvider — which the
 // advisory thank-you page does not mount.
 //
@@ -64,7 +64,7 @@ export default function PipelineMath() {
               />
             </p>
             <p className="mt-1 text-xs sm:text-sm leading-snug" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Guaranteed qualified leads
+              Qualified leads targeted
             </p>
           </div>
 

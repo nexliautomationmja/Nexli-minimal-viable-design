@@ -23,12 +23,34 @@ export const DEFAULT_FAQ_ITEMS = [
   { question: 'How secure is this for my clients\' data? What about compliance?', audio: '/audio/faq/faq-security.mp3' },
 ];
 
-export interface DanielaFaqProps {
-  /** Override the questions; defaults to the six on page A. */
-  items?: typeof DEFAULT_FAQ_ITEMS;
+export interface FaqItem {
+  question: string;
+  /** Pre-recorded answer. Page A uses these. */
+  audio?: string;
+  /**
+   * Written answer. When present the item renders as prose instead of a
+   * player — page B uses these, because a page whose job is to answer
+   * everything before the call should not make anyone press play and wait.
+   */
+  answer?: string;
 }
 
-export default function DanielaFaq({ items = DEFAULT_FAQ_ITEMS }: DanielaFaqProps) {
+export interface DanielaFaqProps {
+  /** Override the questions; defaults to the six on page A. */
+  items?: FaqItem[];
+  /** Section eyebrow. Voice-specific by default. */
+  badge?: string;
+  heading?: React.ReactNode;
+  /** Sub-copy under the heading. */
+  intro?: string;
+}
+
+export default function DanielaFaq({
+  items = DEFAULT_FAQ_ITEMS,
+  badge = 'Ask Daniela',
+  heading,
+  intro = 'Tap any question to hear Daniela answer it personally — in her own voice.',
+}: DanielaFaqProps) {
   const { theme } = useTheme();
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   const [faqPlaying, setFaqPlaying] = useState<number | null>(null);
@@ -70,7 +92,7 @@ export default function DanielaFaq({ items = DEFAULT_FAQ_ITEMS }: DanielaFaqProp
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
           <HelpCircle size={14} className="text-green-400" />
-          <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Ask Daniela</span>
+          <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">{badge}</span>
         </div>
         <h2 className="text-2xl md:text-5xl font-bold text-[var(--text-main)] mb-4">
           Questions Before <span className="text-green-500">Your Call?</span>
@@ -105,71 +127,77 @@ export default function DanielaFaq({ items = DEFAULT_FAQ_ITEMS }: DanielaFaqProp
                   className="overflow-hidden"
                 >
                   <div className="px-5 md:px-6 pb-5 md:pb-6">
-                    <div className="flex items-start gap-3">
-                      <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
-                      <div className="flex-1 min-w-0 space-y-2">
-                        <p className="text-[10px] font-bold ml-1 text-[var(--text-muted)]">Daniela, COO</p>
-                        <div className={`rounded-2xl rounded-bl-md px-4 py-3 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
-                          <div className="flex items-center gap-3">
-                            <button
-                              type="button"
-                              onClick={() => handleFaqPlay(i)}
-                              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors bg-green-500/20 hover:bg-green-500/30"
-                            >
-                              {faqPlaying === i ? (
-                                <Pause size={16} className="text-green-400" />
-                              ) : (
-                                <Play size={16} className="text-green-400 ml-0.5" />
-                              )}
-                            </button>
-
-                            {/* Waveform bars */}
-                            <div className="flex items-center gap-[2px] h-8 flex-1 min-w-0">
-                              {Array.from({ length: 48 }).map((_, barIdx) => {
-                                const h = 20 + Math.sin(barIdx * 0.7) * 35 + Math.sin(barIdx * 1.4) * 20 + Math.cos(barIdx * 0.5) * 10;
-                                return (
-                                  <div
-                                    key={barIdx}
-                                    className={`flex-1 min-w-[2px] rounded-full transition-all duration-200 ${
-                                      faqPlaying === i ? 'bg-green-400/90' : 'bg-green-400/40'
-                                    }`}
-                                    style={{ height: `${Math.max(15, h)}%` }}
-                                  />
-                                );
-                              })}
+                    {item.answer ? (
+                      <p className="text-sm md:text-base leading-relaxed text-[var(--text-muted)] whitespace-pre-line">
+                        {item.answer}
+                      </p>
+                    ) : (
+                      <div className="flex items-start gap-3">
+                        <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0 space-y-2">
+                          <p className="text-[10px] font-bold ml-1 text-[var(--text-muted)]">Daniela, COO</p>
+                          <div className={`rounded-2xl rounded-bl-md px-4 py-3 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
+                            <div className="flex items-center gap-3">
+                              <button
+                                type="button"
+                                onClick={() => handleFaqPlay(i)}
+                                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors bg-green-500/20 hover:bg-green-500/30"
+                              >
+                                {faqPlaying === i ? (
+                                  <Pause size={16} className="text-green-400" />
+                                ) : (
+                                  <Play size={16} className="text-green-400 ml-0.5" />
+                                )}
+                              </button>
+  
+                              {/* Waveform bars */}
+                              <div className="flex items-center gap-[2px] h-8 flex-1 min-w-0">
+                                {Array.from({ length: 48 }).map((_, barIdx) => {
+                                  const h = 20 + Math.sin(barIdx * 0.7) * 35 + Math.sin(barIdx * 1.4) * 20 + Math.cos(barIdx * 0.5) * 10;
+                                  return (
+                                    <div
+                                      key={barIdx}
+                                      className={`flex-1 min-w-[2px] rounded-full transition-all duration-200 ${
+                                        faqPlaying === i ? 'bg-green-400/90' : 'bg-green-400/40'
+                                      }`}
+                                      style={{ height: `${Math.max(15, h)}%` }}
+                                    />
+                                  );
+                                })}
+                              </div>
                             </div>
                           </div>
+  
+                          {/* Transcript toggle */}
+                          <button
+                            type="button"
+                            onClick={() => setFaqTranscriptOpen(faqTranscriptOpen === i ? null : i)}
+                            className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-green-400 transition-colors ml-1"
+                          >
+                            <ChevronDown size={14} className={`transition-transform duration-300 ${faqTranscriptOpen === i ? 'rotate-180' : ''}`} />
+                            {faqTranscriptOpen === i ? 'Hide transcript' : 'Read transcript'}
+                          </button>
+  
+                          <AnimatePresence>
+                            {faqTranscriptOpen === i && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                              >
+                                <div className={`rounded-2xl rounded-bl-md p-4 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
+                                  <p className="text-sm text-[var(--text-muted)] leading-relaxed italic">
+                                    Transcript will be available after playback.
+                                  </p>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
-
-                        {/* Transcript toggle */}
-                        <button
-                          type="button"
-                          onClick={() => setFaqTranscriptOpen(faqTranscriptOpen === i ? null : i)}
-                          className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-green-400 transition-colors ml-1"
-                        >
-                          <ChevronDown size={14} className={`transition-transform duration-300 ${faqTranscriptOpen === i ? 'rotate-180' : ''}`} />
-                          {faqTranscriptOpen === i ? 'Hide transcript' : 'Read transcript'}
-                        </button>
-
-                        <AnimatePresence>
-                          {faqTranscriptOpen === i && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.3 }}
-                              className="overflow-hidden"
-                            >
-                              <div className={`rounded-2xl rounded-bl-md p-4 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
-                                <p className="text-sm text-[var(--text-muted)] leading-relaxed italic">
-                                  Transcript will be available after playback.
-                                </p>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </motion.div>
               )}

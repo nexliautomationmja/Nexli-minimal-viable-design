@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // The Digital Rainmaker System's numbers — one source of truth.
 //
-// These were module-local in components/GuaranteeSection.tsx, and
+// These were module-local in the old GuaranteeSection, and
 // components/demo/AdsDashboard.tsx had already grown a second, independent
 // copy of ENGAGEMENT_AVG. A third copy was about to appear on the advisory
 // thank-you page, so they live here instead.
@@ -31,13 +31,21 @@ export const AGENCY_AD_SPEND = 5_000;
 /** What it actually costs them to run this: $9,997. */
 export const AGENCY_TOTAL_MONTHLY = AGENCY_MONTHLY_FEE + AGENCY_AD_SPEND;
 
-// ── What the CPA charges their own client ─────────────────────────────────
+// ── What the system is built to produce ──────────────────────────────────
 
-/** Qualified leads written into the agreement. This one IS guaranteed. */
+/**
+ * Qualified leads the system is built to produce in AGENCY_DAYS.
+ *
+ * A projection, not a promise. Nexli does not offer guarantees — never
+ * phrase this as "we guarantee", "or we keep working free", or anything
+ * with a penalty attached.
+ */
 export const AGENCY_LEADS = 50;
 
-/** The window the guarantee runs over. */
+/** The window that projection runs over. */
 export const AGENCY_DAYS = 90;
+
+// ── What the CPA charges their own client ────────────────────────────────
 
 export const AGENCY_ENGAGEMENT_LOW = 5_000;
 export const AGENCY_ENGAGEMENT_HIGH = 25_000;
@@ -47,16 +55,23 @@ export const AGENCY_ENGAGEMENT_AVG =
   (AGENCY_ENGAGEMENT_LOW + AGENCY_ENGAGEMENT_HIGH) / 2;
 
 /**
- * $750,000. What the guaranteed leads are worth IF every one closed at the
+ * $750,000. What those leads would be worth IF every one closed at the
  * average fee — which no firm does.
  *
- * Never render this without the accompanying disclaimer. The leads are a
- * promise; this number is a ceiling used to size the opportunity, and
- * presenting it as revenue would be a claim we cannot stand behind.
+ * Never render this without the accompanying disclaimer. Even the lead count
+ * is a projection now; this number is a ceiling on top of it, and presenting
+ * it as revenue would be a claim we cannot stand behind.
  */
 export const AGENCY_PIPELINE_VALUE = AGENCY_LEADS * AGENCY_ENGAGEMENT_AVG;
 
-/** Days to launch the funnel. Not the same clock as AGENCY_DAYS. */
+/**
+ * How long a build takes, as a range rather than a deadline. Most firms are
+ * live by AGENCY_LAUNCH_DAYS; AGENCY_LAUNCH_DAYS_MAX is the realistic worst
+ * case when assets, access and approvals come back slowly. Not the same
+ * clock as AGENCY_DAYS, and no longer a guarantee with a credit attached.
+ */
 export const AGENCY_LAUNCH_DAYS = 14;
+export const AGENCY_LAUNCH_DAYS_MIN = 10;
+export const AGENCY_LAUNCH_DAYS_MAX = 24;
 
 export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
