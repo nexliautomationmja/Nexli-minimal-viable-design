@@ -299,18 +299,18 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="-mt-3 mb-6 md:-mt-4 md:mb-8 flex justify-center"
+              className="-mt-2 mb-7 md:-mt-2 md:mb-9 flex justify-center"
             >
               <span
-                className="group relative inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 transition-colors"
+                className="group relative inline-flex items-center gap-2.5 rounded-full border px-6 py-2.5 sm:gap-3 sm:px-7 sm:py-3 transition-colors"
                 style={{
                   borderColor: 'rgba(163,230,53,0.35)',
                   backgroundColor: 'rgba(163,230,53,0.1)',
                 }}
               >
-                <MetaLogo className="w-[15px] h-auto" />
+                <MetaLogo className="w-[17px] sm:w-[20px] h-auto" />
                 <span
-                  className="text-[11px] sm:text-xs font-semibold tracking-wide"
+                  className="text-sm sm:text-base font-semibold tracking-wide"
                   style={{ color: CHIP_GREEN }}
                 >
                   Campaigns built and run on Meta
@@ -320,7 +320,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
                     the chip never says "verified" — it marks a true statement
                     about how we work, not a platform endorsement. */}
                 <BadgeCheck
-                  size={15}
+                  size={19}
                   className="shrink-0"
                   fill={CHIP_GREEN}
                   stroke="#0a0f1c"
