@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Shield, Clock, TrendingUp, Droplets,
+  ArrowRight, Shield, Clock, TrendingUp, Droplets, CheckCircle2,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
@@ -302,19 +302,25 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
               className="-mt-3 mb-6 md:-mt-4 md:mb-8 flex justify-center"
             >
               <span
-                className="group relative inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors hover:border-white/25"
+                className="group relative inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 transition-colors"
                 style={{
-                  borderColor: 'rgba(255,255,255,0.12)',
-                  backgroundColor: 'rgba(255,255,255,0.04)',
+                  borderColor: 'rgba(163,230,53,0.35)',
+                  backgroundColor: 'rgba(163,230,53,0.1)',
                 }}
               >
                 <MetaLogo className="w-[15px] h-auto" />
                 <span
                   className="text-[11px] sm:text-xs font-semibold tracking-wide"
-                  style={{ color: 'rgba(255,255,255,0.6)' }}
+                  style={{ color: CHIP_GREEN }}
                 >
                   Campaigns built and run on Meta
                 </span>
+                <CheckCircle2
+                  size={14}
+                  className="shrink-0"
+                  style={{ color: CHIP_GREEN }}
+                  aria-hidden="true"
+                />
 
                 {/* Hover detail. Pointer-events-none so it never swallows a
                     click meant for the CTA underneath, and hidden below sm
@@ -322,7 +328,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
                 <span
                   className="pointer-events-none absolute left-1/2 top-full z-20 hidden w-64 -translate-x-1/2 translate-y-2 rounded-xl border p-3 text-left opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
                   style={{
-                    borderColor: 'rgba(255,255,255,0.14)',
+                    borderColor: 'rgba(163,230,53,0.28)',
                     backgroundColor: 'rgba(10,15,28,0.97)',
                     backdropFilter: 'blur(8px)',
                   }}
@@ -478,6 +484,9 @@ const GoHighLevelLogo: React.FC<{ className?: string }> = ({ className }) => (
 
 /** Meta's primary brand blue. */
 const META_BLUE = '#0081FB';
+
+/** Gatorade lemon-lime, for the hero chip. */
+const CHIP_GREEN = '#A3E635';
 
 const MetaLogo: React.FC<{ className?: string; fill?: string }> = ({
   className,
