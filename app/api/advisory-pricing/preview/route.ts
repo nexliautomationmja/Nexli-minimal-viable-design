@@ -6,13 +6,13 @@
  * you cannot buy for real because checkout needs STRIPE_ADVISORY_PRICE_ID.
  *
  * `buy` and `as` are INDEPENDENT. They used to move together, from when the
- * $297 gated the calendar — but the main path now reaches the calendar having
+ * $97 gated the calendar — but the main path now reaches the calendar having
  * bought nothing, so "unpaid and qualified" is the single most important state
  * to be able to produce, and the old coupling could not produce it.
  *
  *   buy=1 | 0        purchase flag on the lead
  *   as=agency        cleared the qualifier  → the calendar
- *   as=not-a-fit     missed the bar         → the $297 downsell
+ *   as=not-a-fit     missed the bar         → the $97 downsell
  *   as=none          has not answered yet   → the qualifier
  *
  * Get a cookie first with /api/demo/preview (it mints the shared lead), then:
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   // Default to unpaid: that is the normal state everywhere except the two
-  // post-purchase pages, now that the $297 is a downsell.
+  // post-purchase pages, now that the $97 is a downsell.
   const buying = searchParams.get('buy') === '1';
 
   const asParam = searchParams.get('as');

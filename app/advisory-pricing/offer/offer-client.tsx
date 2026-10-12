@@ -1,7 +1,7 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// Advisory funnel, page 2 — the $297 sales page.
+// Advisory funnel, page 2 — the $97 sales page.
 //
 // Built to the house visual standard set by components/demo/DemoExperience.tsx:
 // animated rims over opaque interiors, in-card orbs, a two-card comparison as
@@ -16,7 +16,7 @@
 // ---------------------------------------------------------------------------
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Check, Minus } from 'lucide-react';
+import { BadgePercent, Check, Minus } from 'lucide-react';
 import { ShimmerBadge } from '@/components/TransformationCards';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import FunnelCta from '@/components/funnel/FunnelCta';
@@ -24,7 +24,10 @@ import DeadlineUrgency, { DeadlinePill } from '@/components/advisory/DeadlineUrg
 import { AmbientGlow, OUTFIT, RimCard, SectionHeading } from '@/components/funnel/primitives';
 import { generateEventId, trackMetaEvent } from '@/lib/meta-events';
 import {
+  ADVISORY_LIST_PRICE_DISPLAY,
   ADVISORY_PRICE_DISPLAY,
+  ADVISORY_PRICE_VALUE,
+  ADVISORY_SAVINGS_DISPLAY,
   ADVISORY_PRODUCT_ID,
   ADVISORY_PRODUCT_NAME,
   ADVISORY_REFUND_DAYS,
@@ -37,7 +40,7 @@ const MUTED = 'rgba(255,255,255,0.7)';
 const STRIP = [
   { value: 800, label: 'What you billed them', hint: 'the return you already file' },
   { value: 15000, label: 'What the planning prices at', hint: 'same client, same year', highlight: true },
-  { value: 297, label: 'What this costs you', hint: 'once, yours permanently' },
+  { value: ADVISORY_PRICE_VALUE, label: 'What this costs you', hint: `once, down from ${ADVISORY_LIST_PRICE_DISPLAY}` },
 ];
 
 /** What they already own, and never used. */
@@ -75,24 +78,16 @@ const INCLUDED = [
 
 const FAQS = [
   {
-    q: 'Does it work on clients I already have?',
-    a: 'That is the entire point. There is no prospecting in it. You open last year\u2019s returns, pull the twenty clients sending the IRS the most money, and start there.',
-  },
-  {
     q: 'Is this a subscription?',
-    a: `No. ${ADVISORY_PRICE_DISPLAY} once, and it is yours. Nothing recurring, nothing to cancel.`,
+    a: `No. ${ADVISORY_PRICE_DISPLAY} once — down from ${ADVISORY_LIST_PRICE_DISPLAY} — and it is yours. Nothing recurring, nothing to cancel.`,
   },
   {
     q: 'What format is it?',
-    a: 'A five-page PDF. Download it, print it, work straight off it. Nothing to install and nothing to learn.',
-  },
-  {
-    q: 'How fast do I get it?',
-    a: 'It is emailed to you the moment you pay — it lands within a couple of minutes. Check spam if it has not shown up, and we will resend it if anything goes wrong.',
+    a: 'A five-page PDF, emailed to you within a couple of minutes. No login, no software, nothing to learn.',
   },
   {
     q: 'What if it is not useful?',
-    a: `Reply to your receipt within ${ADVISORY_REFUND_DAYS} days and we refund it. No form, no questions.`,
+    a: `Reply to your receipt within ${ADVISORY_REFUND_DAYS} days and we refund you. No form, no questions, and you keep the file.`,
   },
 ];
 
@@ -315,202 +310,23 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
           </RimCard>
         </section>
 
-        {/* ── B. The accusation (the light breather) ───────────────────── */}
+        {/* ── D. What is in it ─────────────────────────────────────────
+            Four lines, not four cards. It is a five-page PDF; a page that
+            works harder than the product it sells reads as overselling. */}
         <section>
-          <SectionHeading
-            eyebrow="How it actually happened"
-            title="Nobody took the work from you. You gave it away at the counter."
-            sub="Not through laziness, and not because you missed something technical. Because filing season is a conveyor belt and nothing on it ever asks the question."
-          />
-          <ol className="mt-8 max-w-3xl space-y-5">
-            {[
-              {
-                n: '01',
-                t: 'You saw the number.',
-                b: 'It was on the return. A six-figure earner in the wrong entity, no retirement vehicle, no planning of any kind. You typed it into a form.',
-              },
-              {
-                n: '02',
-                t: 'You knew what to do about it.',
-                b: 'You have known for years. The restructure, the timing, the elections. None of it is a mystery to you — it is just not what you were hired for that week.',
-              },
-              {
-                n: '03',
-                t: 'You filed it and invoiced $800.',
-                b: 'Then you did it again for the next one. Somewhere in that stack were the ten clients who would have paid you properly if anyone had raised it.',
-              },
-            ].map((row) => (
-              <li key={row.n} className="flex items-start gap-4">
-                <span
-                  className="mt-0.5 shrink-0 text-[11px] font-black tracking-[0.2em]"
-                  style={{ color: 'rgba(96,165,250,0.7)' }}
-                >
-                  {row.n}
-                </span>
-                <span>
-                  <span className="block text-base sm:text-lg font-bold text-white" style={OUTFIT}>
-                    {row.t}
-                  </span>
-                  <span className="mt-1 block text-sm sm:text-base leading-relaxed" style={{ color: MUTED }}>
-                    {row.b}
-                  </span>
+          <SectionHeading eyebrow="What is in it" title="Five pages, and nothing you have to learn." />
+          <ul className="mt-5 max-w-2xl space-y-2.5">
+            {INCLUDED.map((item) => (
+              <li key={item.title} className="flex items-start gap-3">
+                <Check size={17} className="mt-0.5 shrink-0 text-blue-400" aria-hidden="true" />
+                <span className="text-sm sm:text-base leading-relaxed text-white/80">
+                  <span className="font-bold text-white">{item.title}</span>
+                  {' — '}
+                  {item.text}
                 </span>
               </li>
             ))}
-          </ol>
-        </section>
-
-        {/* ── C. The comparison — the climax ───────────────────────────── */}
-        <section>
-          <SectionHeading
-            align="center"
-            eyebrow="The same client, twice"
-            title="One tax year. Two invoices."
-            sub="If you have ever saved a client $50,000 in tax, you already know what the work was worth. You invoiced $800 for it."
-          />
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
-            {/* Left — what they settle for. */}
-            <div
-              className="rounded-3xl border p-6 sm:p-8"
-              style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.1)' }}
-            >
-              <p
-                className="text-[11px] font-black uppercase tracking-[0.2em]"
-                style={{ color: 'rgba(255,255,255,0.45)' }}
-              >
-                What you do today
-              </p>
-              <h3 className="mt-2 text-xl sm:text-2xl font-black text-white" style={OUTFIT}>
-                Everything you need, already in the file.
-              </h3>
-              <ul className="mt-5 space-y-2.5">
-                {ALREADY_YOURS.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm" style={{ color: MUTED }}>
-                    <Minus
-                      size={15}
-                      className="mt-0.5 shrink-0"
-                      style={{ color: 'rgba(255,255,255,0.3)' }}
-                      aria-hidden="true"
-                    />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-5 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-                <p
-                  className="text-[11px] font-black uppercase tracking-[0.18em]"
-                  style={{ color: 'rgba(255,255,255,0.4)' }}
-                >
-                  One client, one tax year
-                </p>
-                <p
-                  className="mt-1 text-4xl sm:text-5xl font-black"
-                  style={{ color: 'rgba(255,255,255,0.35)', ...OUTFIT }}
-                >
-                  $800
-                </p>
-                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Filing the return. What you invoiced.
-                </p>
-              </div>
-            </div>
-
-            {/* Right — the same client, priced. */}
-            <RimCard innerClassName="p-6 sm:p-8">
-              <p
-                className="text-[11px] font-black uppercase tracking-[0.2em]"
-                style={{ color: '#60a5fa' }}
-              >
-                What the play changes
-              </p>
-              <h3 className="mt-2 text-xl sm:text-2xl font-black text-white" style={OUTFIT}>
-                The same file, read as a sales document.
-              </h3>
-              <ul className="mt-5 space-y-2.5">
-                {ADDS.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-white">
-                    <Check size={15} className="mt-0.5 shrink-0" style={{ color: '#34d399' }} aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-5 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-                <p
-                  className="text-[11px] font-black uppercase tracking-[0.18em]"
-                  style={{ color: 'rgba(255,255,255,0.45)' }}
-                >
-                  One client, one tax year
-                </p>
-                <p className="mt-1 text-4xl sm:text-5xl font-black text-white" style={OUTFIT}>
-                  $15,000
-                </p>
-                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                  Pricing the tax position. Same client, same year.
-                </p>
-              </div>
-            </RimCard>
-          </div>
-
-          {/* The honesty line. Without it the $15,000 reads as a promise. */}
-          <div
-            className="mt-5 max-w-3xl mx-auto rounded-2xl border px-4 py-4"
-            style={{ background: 'rgba(52,211,153,0.07)', borderColor: 'rgba(52,211,153,0.3)' }}
-          >
-            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-              <span className="font-bold text-white">To be straight about it:</span> $15,000 is
-              the typical planning fee, not a number every client supports. The pricing table
-              tells you when the honest answer is $4,000 — and when projected savings clear
-              $75,000, it tells you to quote well above $15,000.
-              <span className="mt-2 block" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                The $60,000 assumes you call twenty clients and four of them sign at the average
-                fee. At $7,000–$12,000 each, those same four are $28,000–$48,000. It is a worked
-                example, not a promise.
-              </span>
-            </p>
-          </div>
-
-          <div className="mt-8 flex justify-center">{cta('Price my book', 'lg', false)}</div>
-        </section>
-
-        {/* ── D. What you get ──────────────────────────────────────────── */}
-        <section>
-          <SectionHeading
-            eyebrow="What you actually get"
-            title="Five pages. Three steps. No software."
-            sub="Open it, pull twenty names off last year's returns, and make the first call today."
-          />
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">
-            {INCLUDED.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border p-6 sm:p-7"
-                style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.1)' }}
-              >
-                <div className="flex items-start gap-3">
-                  <span
-                    className="mt-0.5 inline-flex w-6 h-6 shrink-0 rounded-full items-center justify-center"
-                    style={{ background: 'rgba(52,211,153,0.15)', color: '#34d399' }}
-                  >
-                    <Check size={14} aria-hidden="true" />
-                  </span>
-                  <div>
-                    <h3 className="text-base sm:text-lg font-black text-white" style={OUTFIT}>
-                      {item.title}
-                    </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed" style={{ color: MUTED }}>
-                      {item.text}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── D2. The deadline ─────────────────────────────────────────── */}
-        <section>
-          <DeadlineUrgency className="max-w-3xl" />
+          </ul>
         </section>
 
         {/* ── E. Price ─────────────────────────────────────────────────── */}
@@ -537,7 +353,17 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
                 >
                   One payment
                 </p>
-                <div className="mt-2 flex items-baseline justify-center md:justify-end gap-2">
+                <div className="mt-2 flex items-baseline justify-center md:justify-end gap-2.5">
+                  {/* A real former price, not an invented anchor. The
+                      aria-label spells it out, because a line through a
+                      number means nothing read aloud. */}
+                  <span
+                    className="text-2xl sm:text-3xl font-bold line-through decoration-2"
+                    style={{ color: 'rgba(255,255,255,0.35)' }}
+                    aria-label={`Was ${ADVISORY_LIST_PRICE_DISPLAY}`}
+                  >
+                    {ADVISORY_LIST_PRICE_DISPLAY}
+                  </span>
                   <span className="text-5xl sm:text-6xl font-black text-white" style={OUTFIT}>
                     {ADVISORY_PRICE_DISPLAY}
                   </span>
@@ -545,6 +371,10 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
                     once
                   </span>
                 </div>
+                <p className="mt-2.5 flex items-center justify-center md:justify-end gap-1.5 text-sm font-bold text-emerald-400">
+                  <BadgePercent size={15} aria-hidden="true" />
+                  You save {ADVISORY_SAVINGS_DISPLAY}
+                </p>
                 <div className="mt-6 flex md:justify-end">{cta('Get the guide', 'md')}</div>
                 <p className="mt-3 text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
                   Secure checkout by Stripe · {ADVISORY_REFUND_DAYS}-day refund, no questions
@@ -578,33 +408,6 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
           </div>
         </section>
 
-        {/* ── G. Close ─────────────────────────────────────────────────── */}
-        <section>
-          <div
-            className="rounded-3xl border px-6 sm:px-10 py-10 sm:py-14 text-center"
-            style={{
-              background:
-                'linear-gradient(140deg, rgba(37,99,235,0.18) 0%, rgba(255,255,255,0.03) 55%, rgba(6,182,212,0.12) 100%)',
-              borderColor: 'rgba(255,255,255,0.1)',
-            }}
-          >
-            <h2
-              className="mx-auto max-w-3xl text-2xl sm:text-3xl md:text-[2.5rem] font-black tracking-[-0.03em] leading-[1.1] text-white"
-              style={OUTFIT}
-            >
-              Next April you will file those same returns again.
-            </h2>
-            <p
-              className="mx-auto mt-4 max-w-2xl text-sm sm:text-base leading-relaxed"
-              style={{ color: MUTED }}
-            >
-              Same clients, same numbers, same eight hundred dollars — and by then the only
-              year you could still have changed is closed. What lands on that return is
-              decided before December 31, not in April.
-            </p>
-            <div className="mt-7 flex justify-center">{cta('Price my book', 'lg', false)}</div>
-          </div>
-        </section>
       </main>
 
       {/* ── H. Sticky mobile CTA ───────────────────────────────────────── */}

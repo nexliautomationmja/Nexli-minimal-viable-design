@@ -5,7 +5,7 @@
 // Four questions, then contact details, then the budget question. The fork:
 //
 //   qualified -> 'agency'    -> /advisory-pricing/call   (book the call)
-//   otherwise -> 'not-a-fit' -> /advisory-pricing/offer  ($297 downsell)
+//   otherwise -> 'not-a-fit' -> /advisory-pricing/offer  ($97 downsell)
 //
 // Open to anyone: there is no cookie to check, because this route is what
 // mints it. recordQualification upserts on email so a visitor who abandons

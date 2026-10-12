@@ -30,7 +30,7 @@ const BOOKING_CONTENT_NAME = "Advisory Engine Growth Call";
  * also makes: the qualifier must have returned 'agency'. The cookie is shared
  * with the demo funnel, so on its own it proves identity, not entitlement.
  *
- * The purchase is deliberately NOT a condition — the $297 is the downsell for
+ * The purchase is deliberately NOT a condition — the $97 is the downsell for
  * firms that miss the bar, so most legitimate bookers have paid nothing.
  */
 export async function POST(req: NextRequest) {
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
       // Re-checked here, not just on the page: a valid cookie is not an
       // entitlement, and a direct POST must not be able to book past the bar.
       //
-      // The purchase is deliberately NOT checked — the $297 is the downsell
+      // The purchase is deliberately NOT checked — the $97 is the downsell
       // for firms that miss the bar, so most legitimate bookers have bought
       // nothing. Clearing the qualifier is the whole entitlement, and a
       // missing row fails closed because funnelPath cannot then be 'agency'.

@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Advisory funnel — the $297 Accelerator. The DOWNSELL, not the main path.
+// Advisory funnel — the $97 Accelerator. The DOWNSELL, not the main path.
 //
 // A firm reaches this page one of two ways:
 //

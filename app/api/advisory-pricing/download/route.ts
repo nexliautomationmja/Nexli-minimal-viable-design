@@ -11,7 +11,7 @@
 // first time that happens.
 //
 // The PDF lives outside public/ precisely so there is no guessable URL for
-// it — this one file is the entire $297. Entitlement is the same check every
+// it — this one file is the entire $97. Entitlement is the same check every
 // other page in the funnel uses: the signed cookie identifies the lead, and
 // `advisory_purchased_at` on that row is what makes it a purchase.
 //

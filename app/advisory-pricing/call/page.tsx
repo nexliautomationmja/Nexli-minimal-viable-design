@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Advisory funnel, page 4 — the calendar.
 //
-// Firms that cleared the qualifier. No purchase needed: the $297 is the
+// Firms that cleared the qualifier. No purchase needed: the $97 is the
 // downsell for firms that miss the bar, not the toll for getting here.
 //
 // This page is a header and a calendar. It used to render the demo funnel's
@@ -56,7 +56,7 @@ export default async function AdvisoryCallPage() {
   //
   // Checked explicitly rather than by copying the demo page's `=== 'web'`
   // test: this funnel's unqualified value is 'not-a-fit', and a firm that
-  // missed the bar goes to the $297 downsell.
+  // missed the bar goes to the $97 downsell.
   if (!lead?.funnelPath) redirect(ADVISORY_QUALIFY_PATH);
   if (lead.funnelPath !== 'agency') redirect(ADVISORY_OFFER_PATH);
 

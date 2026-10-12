@@ -4,7 +4,7 @@
 // Open to anyone: there is no opt-in in front of this funnel, so this page
 // is where a visitor first identifies themselves. Four questions, then
 // contact details, then the budget question — and that is the fork. Clear
-// the bar and the next page is the calendar; miss it and it is the $297.
+// the bar and the next page is the calendar; miss it and it is the $97.
 //
 // Mode "foundation" on the card underneath, so nobody is disqualified
 // client-side and every answer is collected: we want the full set in

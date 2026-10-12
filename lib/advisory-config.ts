@@ -20,8 +20,28 @@ export const ADVISORY_PRODUCT_ID = 'advisory-pricing';
 export const ADVISORY_PRODUCT_NAME = 'Book of Business Accelerator';
 
 /** Display price. Keep in sync with the Stripe Price. */
-export const ADVISORY_PRICE_VALUE = 297;
-export const ADVISORY_PRICE_DISPLAY = '$297';
+/**
+ * What is actually charged, and what Stripe must be configured to charge.
+ *
+ * ⚠️  STRIPE_ADVISORY_PRICE_ID has to point at a Price of this amount. The
+ * page renders this number and Stripe charges whatever the Price id says —
+ * nothing reconciles the two, so a stale id means the page advertises $97
+ * and the card is billed something else. Change one, change both.
+ */
+export const ADVISORY_PRICE_VALUE = 97;
+export const ADVISORY_PRICE_DISPLAY = '$97';
+
+/**
+ * The struck-through anchor. This is what the guide was sold at and is a
+ * real former price, not an invented one — which is the only kind of
+ * anchor worth showing. Nothing charges against it.
+ */
+export const ADVISORY_LIST_PRICE_VALUE = 297;
+export const ADVISORY_LIST_PRICE_DISPLAY = '$297';
+
+/** $200. Derived so the three numbers can never disagree. */
+export const ADVISORY_SAVINGS_VALUE = ADVISORY_LIST_PRICE_VALUE - ADVISORY_PRICE_VALUE;
+export const ADVISORY_SAVINGS_DISPLAY = `$${ADVISORY_SAVINGS_VALUE}`;
 export const ADVISORY_CURRENCY = 'USD';
 
 /**

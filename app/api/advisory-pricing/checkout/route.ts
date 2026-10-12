@@ -20,7 +20,7 @@ import {
 export const runtime = "nodejs";
 
 /**
- * Starts the $297 one-time checkout from /advisory-pricing/offer.
+ * Starts the $97 one-time checkout from /advisory-pricing/offer.
  *
  * Auth is the signed lead cookie set at the opt-in. The visitor's name,
  * email, phone, firm and attribution already live on that `leads` row, so

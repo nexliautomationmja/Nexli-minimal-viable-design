@@ -3,7 +3,7 @@
 // the done-for-you engine.
 //
 // This page is the reason the gate is safe to have at all. Someone here paid
-// $297 a few minutes ago; told "you don't qualify" and nothing else, they
+// $97 a few minutes ago; told "you don't qualify" and nothing else, they
 // read it as "you took my money and rejected me" — which is a chargeback and
 // a one-star review. So, in this order:
 //
