@@ -129,6 +129,11 @@ const FAQ: FaqItem[] = [
       'The website is yours. It is on your domain, and if we part ways you keep it.\n\nThe rest is not. The automations, the client portal and the review engine are built and run by us on our infrastructure, and they stop working when the engagement does. We would rather say that now than have you find out later.\n\nThe honest version: the website on its own will not bring anyone in, and it will not onboard anybody onto tax planning. The part that does that is the part you are paying us to run.',
   },
   {
+    question: "How secure is this for my clients' data? What about compliance?",
+    answer:
+      'Documents are encrypted with AES-256 at rest and TLS in transit — the same standard banks use — and the portal is built to GLBA/FTC Safeguards and the IRS Publication 4557 requirements for tax professionals. Access is per-client, so one of your clients can never see another one.\n\nWhat that does not mean: we are not your compliance department. Your WISP, your retention policy and who on your team gets access are yours to set, and we will build around whatever you already have rather than hand you a policy and call it done.',
+  },
+  {
     question: 'How often will we actually talk?',
     answer:
       'Once a week, reliably. You get a written update covering exactly what we did in the ad account and in the business that week, and what it produced. Not a dashboard link — a personal note.\n\nWe also run an internal survey every week on how the work is going, so problems surface while they are still small.\n\nWe are not on call, and you will not be chasing us for a status. Nothing is worse than an agency delivering and never telling you.',
