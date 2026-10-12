@@ -44,6 +44,9 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
       // Only this page. The public /vslfunnel* pages are unchanged.
       metaChip
       eyebrowBelowSubhead
+      // The ROI section now opens on the two-clients number, and the written
+      // guarantees land again on the confirmation page once a call is booked.
+      showGuarantees={false}
       ctaHref={ctaHref}
       headline={
         <>

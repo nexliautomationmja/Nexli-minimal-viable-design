@@ -9,6 +9,11 @@ import {
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
 } from 'lucide-react';
 import { trackMetaEvent } from '@/lib/meta-events';
+import {
+  AGENCY_ENGAGEMENT_AVG,
+  AGENCY_TOTAL_MONTHLY,
+  usd,
+} from '@/lib/agency-offer';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
@@ -1146,14 +1151,20 @@ const ROISection: React.FC = () => {
             className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-4 sm:mb-6"
             style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
           >
-            The Math{' '}
+            You only need{' '}
             <span style={{ color: '#00D632' }}>
-              Speaks for Itself
-            </span>
+              two advisory clients
+            </span>{' '}
+            a month.
           </h2>
+          {/* Every figure here reads from lib/agency-offer.ts, so it cannot
+              drift from the price stated in the FAQ or on the confirmation
+              pages. */}
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            If the Rainmaker System helps you close just 4-5 new high-value advisory clients
-            this year, it pays for itself. The time you save on admin is pure profit.
+            Two engagements at the {usd(AGENCY_ENGAGEMENT_AVG)} average is{' '}
+            <strong style={{ color: '#ffffff' }}>{usd(AGENCY_ENGAGEMENT_AVG * 2)} a month</strong>{' '}
+            against about {usd(AGENCY_TOTAL_MONTHLY)} all in. That is the bare minimum —
+            and let us be honest, you are not a bare-minimum firm, or you would not be here.
           </p>
         </motion.div>
 
@@ -1912,9 +1923,16 @@ interface VslFunnelProps {
    * unset on the public pages.
    */
   ctaHref?: string;
+  /**
+   * Render the two written guarantees. On by default — the public pages
+   * lead with them. The advisory VSL turns them off: its ROI section now
+   * opens on the two-clients number instead, and the guarantees land again
+   * on the confirmation page once a call is actually booked.
+   */
+  showGuarantees?: boolean;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead, showGuarantees = true }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1929,7 +1947,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} eyebrowBelowSubhead={eyebrowBelowSubhead} />
       <TrustBar />
       <TransformationSection />
-      <GuaranteeSection accent="blue" ctaHref={ctaHref} />
+      {showGuarantees && <GuaranteeSection accent="blue" ctaHref={ctaHref} />}
       <CostOfInactionSection />
       <ROISection />
       <ProjectionSection ctaHref={ctaHref} />
