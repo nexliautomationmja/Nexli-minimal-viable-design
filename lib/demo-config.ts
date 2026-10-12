@@ -24,6 +24,26 @@ export const DEMO_THANK_YOU_PATH = '/demo/thank-you';
  */
 export const BOOKING_CONFIRMED_PATH = '/booking-confirmed';
 
+/**
+ * The B variant of the confirmation page: same hero and welcome video, then
+ * the product itself — website, portal, engagement letters, organizer — plus
+ * the price and what happens after signing. Marcel points traffic at it by
+ * hand; nothing in the app assigns anyone to it.
+ */
+export const BOOKING_CONFIRMED_B_PATH = '/booking-confirmed-b';
+
+/**
+ * The two Mux assets on the confirmation pages. Both were inline string
+ * literals in components/BookingConfirmed.tsx until the B variant needed the
+ * same welcome video — two pages playing one asset from two literals is how
+ * they end up playing different things.
+ */
+export const BOOKING_WELCOME_VIDEO_ID = '1YNqqVjhqvAdjOCpFnyCXSewrZt2Iu3HcnvzbcYZ9Gs';
+export const BOOKING_WELCOME_VIDEO_TITLE = 'Booking Confirmed - Thank You';
+
+export const BOOKING_SYSTEM_VIDEO_ID = 'i02jTMTuY028ZUWRHJsjSRBEEYBJGPcl005sEV3iOARIn00';
+export const BOOKING_SYSTEM_VIDEO_TITLE = 'Digital Rainmaker System Demo';
+
 /** leads.form_source for anyone who opts in to the demo. */
 export const DEMO_FORM_SOURCE = 'demo-optin';
 
