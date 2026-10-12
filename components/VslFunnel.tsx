@@ -308,7 +308,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
                   backgroundColor: 'rgba(255,255,255,0.04)',
                 }}
               >
-                <MetaLogo className="w-[15px] h-auto" fill={META_BLUE} />
+                <MetaLogo className="w-[15px] h-auto" />
                 <span
                   className="text-[11px] sm:text-xs font-semibold tracking-wide"
                   style={{ color: 'rgba(255,255,255,0.6)' }}
@@ -481,7 +481,7 @@ const META_BLUE = '#0081FB';
 
 const MetaLogo: React.FC<{ className?: string; fill?: string }> = ({
   className,
-  fill = '#FFFFFF',
+  fill = META_BLUE,
 }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Meta">
     <path
@@ -587,7 +587,14 @@ const TrustBar: React.FC = () => (
             {trustLogos.map((partner, i) => (
               <div
                 key={`${setIndex}-${i}`}
-                className="shrink-0 opacity-50 hover:opacity-80 transition-opacity"
+                // The marquee dims every logo to 50%, which would mute the
+                // blue to grey. Meta is the channel the whole offer runs on,
+                // so it keeps its colour.
+                className={`shrink-0 transition-opacity ${
+                  partner.name === 'Meta'
+                    ? 'opacity-90 hover:opacity-100'
+                    : 'opacity-50 hover:opacity-80'
+                }`}
               >
                 <partner.Logo className={`${partner.width} h-auto`} />
               </div>
