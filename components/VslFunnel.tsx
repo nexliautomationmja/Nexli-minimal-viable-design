@@ -1525,9 +1525,9 @@ const FounderStorySection: React.FC = () => {
           className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3"
           style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
         >
-          Built by Someone Who&apos;s Seen CPA Firm Chaos{' '}
+          I Have Watched This From{' '}
           <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-            from the Inside
+            Inside the Firm
           </span>
         </h2>
         <p className="text-xs sm:text-sm font-semibold tracking-[0.15em] uppercase" style={{ color: '#60a5fa' }}>
@@ -1544,27 +1544,37 @@ const FounderStorySection: React.FC = () => {
         style={{ color: 'rgba(255,255,255,0.75)' }}
       >
         <p>
-          I&apos;m Marcel. My wife has been in CPA firms for four years — she&apos;s now the COO of
-          one — and I&apos;ve watched her live through every problem this system solves.
+          I&apos;m Marcel. My wife has been in CPA firms for four years — she is the COO of one
+          now — and I have watched the daily in and out of running a firm for long enough to
+          know where the pain actually comes from.
         </p>
         <p>
-          The 70-hour weeks during tax season. Clients who wait until the last minute to send
-          documents. Email inboxes that turn into black holes. Talented CPAs losing deals to
-          competitors with better websites and more Google reviews.
+          It is not the seventy-hour weeks. It is what the seventy hours get spent on. Two
+          thousand clients. Five hundred dollar returns. Documents that arrive on April 12th.
+          And most of those people quietly shopping for a cheaper accountant the following
+          January, because nothing you did last year gave them a reason not to.
         </p>
         <p>
-          The expertise is there. The client work is world-class. But the systems? Broken or
-          nonexistent.
+          That is what commoditized looks like. World-class technical work priced like a
+          utility, because from where the client sits your return and the one down the road
+          are the same product.
         </p>
         <p>
-          So I built the <span className="font-semibold" style={{ color: '#ffffff' }}>Digital Rainmaker System</span> —
-          the infrastructure a modern CPA firm should have. A professional website. A client portal
-          that eliminates email chaos. Automations that handle follow-ups. A review engine that
-          builds your reputation while you focus on client work.
+          <span className="font-semibold" style={{ color: '#ffffff' }}>
+            Tax planning is the opposite of that.
+          </span>{' '}
+          Walk into a business owner writing six, seven, sometimes eight figures in tax and
+          show them what they do not have to pay, and you are not a vendor any more. You are
+          the person who saved them more than they earn. Nobody shops that. Nobody haggles
+          over it in January.
+        </p>
+        <p>
+          And you need far fewer of them. A book built on clients like that pays better than
+          two thousand returns ever will, and it does not set your season on fire — because
+          most of those two thousand were never making you money in the first place.
         </p>
         <p style={{ color: 'rgba(255,255,255,0.9)' }} className="font-medium">
-          No fluff. No complexity. Just the system that lets talented CPAs compete at the highest
-          level — without burning out their team.
+          So I built the system that puts those people in front of you. That is all this is.
         </p>
       </motion.div>
     </div>
@@ -1930,9 +1940,15 @@ interface VslFunnelProps {
    * on the confirmation page once a call is actually booked.
    */
   showGuarantees?: boolean;
+  /**
+   * Render the FAQ accordion. On by default. The advisory VSL turns it off:
+   * its objections are answered on the booking-confirmed page instead, once
+   * a call is booked and the visitor is actually reading.
+   */
+  showFaq?: boolean;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead, showGuarantees = true }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead, showGuarantees = true, showFaq = true }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1952,7 +1968,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <ROISection />
       <ProjectionSection ctaHref={ctaHref} />
       <FounderStorySection />
-      <FAQSection variant={variant} ctaHref={ctaHref} />
+      {showFaq && <FAQSection variant={variant} ctaHref={ctaHref} />}
       <StickyCTA ctaHref={ctaHref} />
       {showExitIntent && <ExitIntentPopup />}
     </div>

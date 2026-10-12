@@ -47,6 +47,9 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
       // The ROI section now opens on the two-clients number, and the written
       // guarantees land again on the confirmation page once a call is booked.
       showGuarantees={false}
+      // Objections are answered on the booking-confirmed page now, where
+      // they land after the call is booked rather than competing with the CTA.
+      showFaq={false}
       ctaHref={ctaHref}
       headline={
         <>
