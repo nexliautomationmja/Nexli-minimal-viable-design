@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Shield, Clock, TrendingUp, Droplets, CheckCircle2,
+  ArrowRight, Shield, Clock, TrendingUp, Droplets, BadgeCheck,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
@@ -315,10 +315,16 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
                 >
                   Campaigns built and run on Meta
                 </span>
-                <CheckCircle2
-                  size={14}
+                {/* Solid-filled scalloped badge, the shape platforms use
+                    for verified accounts. Green rather than Meta's blue, and
+                    the chip never says "verified" — it marks a true statement
+                    about how we work, not a platform endorsement. */}
+                <BadgeCheck
+                  size={15}
                   className="shrink-0"
-                  style={{ color: CHIP_GREEN }}
+                  fill={CHIP_GREEN}
+                  stroke="#0a0f1c"
+                  strokeWidth={2.5}
                   aria-hidden="true"
                 />
 
