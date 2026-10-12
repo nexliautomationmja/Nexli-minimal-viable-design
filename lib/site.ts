@@ -88,9 +88,9 @@ export const ENGAGEMENT_TERMS = [
       'Most firms are live within 10 to 14 days of kickoff. The variable is how quickly assets, access and approvals come back; around 24 days is the realistic worst case when they come back slowly.',
   },
   {
-    name: 'Ad spend is separate and the firm keeps control',
+    name: 'One monthly price, ad spend included',
     description:
-      'Nexli builds and runs the campaigns, but ad spend runs through the firm\'s own ad account and is paid to the platforms directly.',
+      'The monthly fee covers the complete system and the ad budget together. Nexli collects it and places the spend into the campaigns, and reports where it went each week.',
   },
 ] as const;
 

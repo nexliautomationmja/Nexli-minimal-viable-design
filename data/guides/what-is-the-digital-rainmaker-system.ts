@@ -11,7 +11,7 @@ const guide: Guide = {
     'The Digital Rainmaker System is a done-for-you client acquisition system that Nexli Automation builds for established CPA and accounting firms, combining a premium website, an AI automation layer, a secure client portal, and a Google review engine, then running paid ads to it.',
     'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and most firms go live within 2 weeks.',
     'Nexli does not offer performance guarantees. It publishes what it targets — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and reports against both weekly.',
-    'Pricing is $4,997 a month for the complete system, plus about $5,000 a month in ad spend paid to the platforms directly. Month to month, no annual contract, no setup fee.',
+    'Pricing is $9,997 a month all in, covering the complete system and the $5,000 ad budget together. Month to month, no annual contract, no setup fee.',
   ],
   publishedAt: '2026-09-08',
   updatedAt: '2026-09-08',
@@ -140,7 +140,7 @@ const guide: Guide = {
       bullets: [
         '**Target 1: 50 qualified leads in 90 days.** The system is built to produce at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who fits the firm\'s advisory criteria and books a consultation. Nexli is clear that this is opportunity value on the calendar, not closed revenue; the firm\'s close rate determines what it banks.',
         '**Target 2: live in 10 to 14 days.** Most firms are live within 10 to 14 days of kickoff. Around 24 days is the realistic worst case, and the variable is how quickly assets, access and approvals come back from the firm.',
-        '**Pricing:** $4,997 a month for the complete system, plus about $5,000 a month in ad spend the firm pays the platforms directly through its own account. Billed monthly, month-to-month, no annual contract, no setup fee. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
+        '**Pricing:** $9,997 a month all in. That covers the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns, and reports where it went each week. Billed monthly, month-to-month, no annual contract, no setup fee. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
       ],
     },
     {

@@ -23,12 +23,16 @@
 export const AGENCY_MONTHLY_FEE = 4_997;
 
 /**
- * The firm's own ad budget. Paid to the platforms through their account, not
- * to Nexli — which is why it is a separate number rather than folded in.
+ * The ad budget, collected by Nexli as part of the monthly and placed into
+ * the campaigns. It is NOT billed separately and the firm does not pay the
+ * platforms itself — running it through us is what keeps spend on schedule.
+ *
+ * Kept as its own constant only so the split can be disclosed. The price
+ * quoted anywhere is AGENCY_TOTAL_MONTHLY, one number.
  */
 export const AGENCY_AD_SPEND = 5_000;
 
-/** What it actually costs them to run this: $9,997. */
+/** The sticker price. One number, quoted everywhere: $9,997 a month. */
 export const AGENCY_TOTAL_MONTHLY = AGENCY_MONTHLY_FEE + AGENCY_AD_SPEND;
 
 // ── What the system is built to produce ──────────────────────────────────

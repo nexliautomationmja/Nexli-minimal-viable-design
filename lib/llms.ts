@@ -5,7 +5,7 @@ import { EMAIL, ENGAGEMENT_TERMS, MIN_REVENUE_DETAIL, SITE_NAME, SITE_URL, SYSTE
 
 const url = (path: string) => `${SITE_URL}${path}`;
 
-const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by Marcel Allen. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it so established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} land high-value tax advisory clients. ${ENGAGEMENT_TERMS.map((t) => t.description).join(' ')} Nexli does not offer performance guarantees. Pricing is $4,997 a month for the complete system, plus about $5,000 a month in ad spend the firm pays the platforms directly.`;
+const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by Marcel Allen. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it so established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} land high-value tax advisory clients. ${ENGAGEMENT_TERMS.map((t) => t.description).join(' ')} Nexli does not offer performance guarantees. Pricing is $9,997 a month all in, covering the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns.`;
 
 function header() {
   return [

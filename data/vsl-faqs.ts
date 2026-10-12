@@ -5,8 +5,8 @@
  *
  * Facts stated here must match lib/site.ts: $500K+ per year minimum,
  * Nexli runs the ads and the firm funds ad spend separately, pricing is
- * $4,997/mo for the complete system plus about $5,000/mo in ad spend the
- * firm pays the platforms directly, month to month, no guarantees offered.
+ * $9,997/mo all in, covering the system and the $5,000 ad budget together,
+ * month to month, no guarantees offered.
  */
 export interface VslFaqItem {
   q: string;
@@ -22,12 +22,12 @@ const whatCounts: VslFaqItem = {
 
 const whatItCosts: VslFaqItem = {
   q: 'What does it cost?',
-  a: "$4,997 a month for the complete system — website, portal, funnel and the automations behind them, built and run for you. On top of that you budget about $5,000 a month in ad spend, which you pay the platforms directly through your own account, not us. So roughly $10,000 a month all in. Month to month, no setup fee, no annual contract. The math is simple: if it helps you close 4-5 new advisory clients this year at $5,000-$25,000 each, it has paid for itself several times over.",
+  a: "$9,997 a month, all in. One number and one invoice: the website, the portal, the funnel and the automations, plus the $5,000 ad budget, which runs through us so it reaches the campaigns on schedule. Month to month, no setup fee, no annual contract. The math is simple: if it helps you close 4-5 new advisory clients this year at $5,000-$25,000 each, it has paid for itself several times over.",
 };
 
 const whoRunsAds: VslFaqItem = {
   q: 'Who runs the ads, and who pays for them?',
-  a: 'We build and manage the campaigns. Ad spend is separate from our fee and runs through your own ad account, so you see exactly what is spent and where. We agree on a budget on the call before anything goes live.',
+  a: 'We do, in house. No white-label and no subcontractor. The ad budget is part of your monthly and runs through us, so it reaches the campaigns on schedule rather than stalling on a declined card, and the weekly update shows exactly what was spent and what it produced.',
 };
 
 const howLong: VslFaqItem = {

@@ -119,7 +119,7 @@ export const taxSavingsTagMap: Record<string, string> = {
 
 // ── Budget: the advisory funnel's last question and its real gate ────────
 // Phrased around the all-in number because that is what they actually pay:
-// AGENCY_MONTHLY_FEE + AGENCY_AD_SPEND. Labels stay in sync with
+// AGENCY_TOTAL_MONTHLY. Labels stay in sync with
 // lib/agency-offer.ts by hand — they are prose, not computed, because a
 // templated sentence here reads worse than a written one.
 
@@ -277,8 +277,8 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     key: 'budget',
     type: 'choice',
     question: 'Where does that sit for your firm right now?',
-    hint: 'The complete system is $4,997 a month, plus about $5,000 a month in ad spend you control and pay the platforms directly — roughly $10,000 a month all in.',
-    foundationHint: 'The complete system is $4,997 a month, plus about $5,000 a month in ad spend you control — roughly $10,000 a month all in.',
+    hint: 'The complete system is $9,997 a month all in. That covers the build, the campaigns and the $5,000 ad budget together — one invoice, no setup fee, month to month.',
+    foundationHint: 'The complete system is $9,997 a month all in — the build, the campaigns and the $5,000 ad budget together.',
     options: budgetOptions,
   },
 ];

@@ -359,8 +359,8 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
                   style={{ color: 'rgba(255,255,255,0.72)' }}
                 >
                   We build the campaigns, the creative and the reporting.
-                  Ad spend runs through your own Meta ad account and is
-                  paid to Meta directly &mdash; never to us.
+                  We build the campaigns and place the spend, so the budget
+                  reaches the ads on schedule. You see where it went weekly.
                 </span>
               </span>
             </span>

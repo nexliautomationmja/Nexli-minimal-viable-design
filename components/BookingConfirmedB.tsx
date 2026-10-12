@@ -116,7 +116,7 @@ const FAQ: FaqItem[] = [
   {
     question: 'Who runs the ads — you or a white-label agency?',
     answer:
-      'We do, in house. No white-label, no subcontractor, no media buyer you never meet. We build the campaigns, write and produce the creative, and manage the Facebook ad account day to day. The account itself is yours and the spend goes to Meta directly from it, so you can see every dollar and every result without asking us for a screenshot.',
+      'We do, in house. No white-label, no subcontractor, no media buyer you never meet. We build the campaigns, write and produce the creative, and manage the Facebook ad account day to day.\n\nThe ad budget is part of your monthly and runs through us. That is deliberate: it means the spend reaches the campaigns on the day it is supposed to, rather than pausing because a card on file expired. The weekly update shows exactly what went out and what it brought back.',
   },
   {
     question: 'How soon can this be up and running?',
@@ -146,7 +146,7 @@ const FAQ: FaqItem[] = [
   {
     question: 'How is the price built?',
     answer:
-      `${usd(AGENCY_MONTHLY_FEE)} a month for the complete system — the website, the portal, the funnel and the automations behind them, built and run for you. On top of that you budget about ${usd(AGENCY_AD_SPEND)} a month in ad spend, which you pay Meta directly from your own ad account. So roughly ${usd(AGENCY_TOTAL_MONTHLY)} a month all in.\n\nIt is one price for one system. There is no setup fee, no deposit, no per-component pricing and no annual contract. We do not sell the pieces separately because they do not work separately.`,
+      `${usd(AGENCY_TOTAL_MONTHLY)} a month. One number, one invoice.\n\n${usd(AGENCY_AD_SPEND)} of that is your ad budget, which we place into the campaigns for you, and the rest is the system — the website, the portal, the funnel and the automations behind them, built and run for you.\n\nThere is no setup fee, no deposit, no per-component pricing and no annual contract. We do not sell the pieces separately because they do not work separately.`,
   },
 ];
 
