@@ -123,6 +123,8 @@ interface HeroProps {
   ctaHref?: string;
   /** Show the "campaigns run on Meta" chip under the eyebrow. */
   metaChip?: boolean;
+  /** Move the eyebrow below the subheadline, leaving the chip to lead. */
+  eyebrowBelowSubhead?: boolean;
 }
 
 const EYEBROW_TONES = {
@@ -148,7 +150,7 @@ const EYEBROW_TONES = {
   },
 } as const;
 
-const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, ctaHref, metaChip = false }) => {
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, ctaHref, metaChip = false, eyebrowBelowSubhead = false }) => {
   const eyebrow = EYEBROW_TONES[eyebrowTone] ?? EYEBROW_TONES.blue;
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -257,6 +259,29 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
     setIsMuted(false);
   };
 
+  // The eyebrow renders either above the headline (the default, and what
+  // every other VslFunnel page does) or below the subheadline, which the
+  // advisory page uses so the Meta chip leads the hero instead.
+  const eyebrowPill = (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative inline-flex items-center mb-6 md:mb-8 rounded-full overflow-hidden p-[1px]"
+          >
+            <span
+              className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+              style={{ background: eyebrow.border }}
+            />
+            <span className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+              <EyebrowIcon size={14} className={eyebrow.icon} />
+              <span className={`text-xs sm:text-sm font-black tracking-wide uppercase ${eyebrow.text}`}>
+                {eyebrowText}
+              </span>
+            </span>
+          </motion.div>
+  );
+
   return (
     <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-4">
       {/* Background glow */}
@@ -265,92 +290,77 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto text-center">
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative inline-flex items-center mb-6 md:mb-8 rounded-full overflow-hidden p-[1px]"
-        >
-          <span
-            className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
-            style={{ background: eyebrow.border }}
-          />
-          <span className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
-            <EyebrowIcon size={14} className={eyebrow.icon} />
-            <span className={`text-xs sm:text-sm font-black tracking-wide uppercase ${eyebrow.text}`}>
-              {eyebrowText}
-            </span>
-          </span>
-        </motion.div>
+        {!eyebrowBelowSubhead && eyebrowPill}
 
-          {/* Meta chip — sits under the eyebrow, above the headline.
-              States what we actually do, and nothing we cannot back: Nexli
-              builds and runs the campaigns, the firm's own ad account pays
-              the platform. Deliberately NOT a verification or partner badge
-              — those are specific Meta programmes with their own criteria,
-              and claiming one we are not in on a page asking for $10k a
-              month is the kind of thing a careful CPA checks.
+        {/* Meta chip. Leads the hero on the advisory page, where the
+            eyebrow is moved below the subheadline.
+            States what we actually do, and nothing we cannot back: Nexli
+            builds and runs the campaigns, the firm's own ad account pays
+            the platform. Deliberately NOT a verification or partner badge
+            — those are specific Meta programmes with their own criteria,
+            and claiming one we are not in on a page asking for $10k a
+            month is the kind of thing a careful CPA checks.
 
-              Only renders when the page passes `metaChip`, so the other
-              VslFunnel pages are unchanged. */}
-          {metaChip && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-              className="-mt-2 mb-7 md:-mt-2 md:mb-9 flex justify-center"
+            Only renders when the page passes `metaChip`, so the other
+            VslFunnel pages are unchanged. */}
+        {metaChip && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="mb-6 md:mb-8 flex justify-center"
+          >
+            <span
+              className="group relative inline-flex items-center gap-2 rounded-full border px-4 py-1.5 transition-colors"
+              style={{
+                borderColor: 'rgba(163,230,53,0.35)',
+                backgroundColor: 'rgba(163,230,53,0.1)',
+              }}
             >
+              <MetaLogo className="w-[15px] h-auto" />
               <span
-                className="group relative inline-flex items-center gap-2.5 rounded-full border px-6 py-2.5 sm:gap-3 sm:px-7 sm:py-3 transition-colors"
+                className="text-xs sm:text-sm font-semibold tracking-wide"
+                style={{ color: CHIP_GREEN }}
+              >
+                Campaigns built and run on Meta
+              </span>
+              {/* Solid-filled scalloped badge, the shape platforms use
+                  for verified accounts. Green rather than Meta's blue, and
+                  the chip never says "verified" — it marks a true statement
+                  about how we work, not a platform endorsement. */}
+              <BadgeCheck
+                size={15}
+                className="shrink-0"
+                fill={CHIP_GREEN}
+                stroke="#0a0f1c"
+                strokeWidth={2.5}
+                aria-hidden="true"
+              />
+
+              {/* Hover detail. Pointer-events-none so it never swallows a
+                  click meant for the CTA underneath, and hidden below sm
+                  where there is no hover to speak of. */}
+              <span
+                className="pointer-events-none absolute left-1/2 top-full z-20 hidden w-64 -translate-x-1/2 translate-y-2 rounded-xl border p-3 text-left opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
                 style={{
-                  borderColor: 'rgba(163,230,53,0.35)',
-                  backgroundColor: 'rgba(163,230,53,0.1)',
+                  borderColor: 'rgba(163,230,53,0.28)',
+                  backgroundColor: 'rgba(10,15,28,0.97)',
+                  backdropFilter: 'blur(8px)',
                 }}
               >
-                <MetaLogo className="w-[17px] sm:w-[20px] h-auto" />
                 <span
-                  className="text-sm sm:text-base font-semibold tracking-wide"
-                  style={{ color: CHIP_GREEN }}
+                  className="block text-[11px] leading-relaxed"
+                  style={{ color: 'rgba(255,255,255,0.72)' }}
                 >
-                  Campaigns built and run on Meta
-                </span>
-                {/* Solid-filled scalloped badge, the shape platforms use
-                    for verified accounts. Green rather than Meta's blue, and
-                    the chip never says "verified" — it marks a true statement
-                    about how we work, not a platform endorsement. */}
-                <BadgeCheck
-                  size={19}
-                  className="shrink-0"
-                  fill={CHIP_GREEN}
-                  stroke="#0a0f1c"
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                />
-
-                {/* Hover detail. Pointer-events-none so it never swallows a
-                    click meant for the CTA underneath, and hidden below sm
-                    where there is no hover to speak of. */}
-                <span
-                  className="pointer-events-none absolute left-1/2 top-full z-20 hidden w-64 -translate-x-1/2 translate-y-2 rounded-xl border p-3 text-left opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
-                  style={{
-                    borderColor: 'rgba(163,230,53,0.28)',
-                    backgroundColor: 'rgba(10,15,28,0.97)',
-                    backdropFilter: 'blur(8px)',
-                  }}
-                >
-                  <span
-                    className="block text-[11px] leading-relaxed"
-                    style={{ color: 'rgba(255,255,255,0.72)' }}
-                  >
-                    We build the campaigns, the creative and the reporting.
-                    Ad spend runs through your own Meta ad account and is
-                    paid to Meta directly &mdash; never to us.
-                  </span>
+                  We build the campaigns, the creative and the reporting.
+                  Ad spend runs through your own Meta ad account and is
+                  paid to Meta directly &mdash; never to us.
                 </span>
               </span>
-            </motion.div>
-          )}
+            </span>
+          </motion.div>
+        )}
+
 
         {/* Headline */}
         <motion.h1
@@ -380,6 +390,10 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
         >
           {subheadline || 'The Digital Rainmaker System is a complete, done-for-you infrastructure that automates your intake, secures your documents, and engineers 5-star Google reviews on autopilot. Built exclusively for established CPA firms.'}
         </motion.p>
+
+        {eyebrowBelowSubhead && (
+          <div className="-mt-6 mb-10 md:-mt-8 md:mb-14">{eyebrowPill}</div>
+        )}
 
         {/* Video Player */}
         <motion.div
@@ -1890,6 +1904,8 @@ interface VslFunnelProps {
   showExitIntent?: boolean;
   /** Show the "campaigns run on Meta" chip under the hero eyebrow. */
   metaChip?: boolean;
+  /** Move the eyebrow below the subheadline, leaving the chip to lead. */
+  eyebrowBelowSubhead?: boolean;
   /**
    * Set this and every conversion CTA becomes a link to it instead of opening
    * the QualificationProvider modal. Used by the gated advisory funnel, whose
@@ -1899,7 +1915,7 @@ interface VslFunnelProps {
   ctaHref?: string;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1911,7 +1927,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
     <div className="min-h-screen pb-14 sm:pb-16">
       <StaticLogo />
       <UrgencyPill />
-      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} />
+      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} eyebrowBelowSubhead={eyebrowBelowSubhead} />
       <TrustBar />
       <TransformationSection />
       <GuaranteeSection accent="blue" ctaHref={ctaHref} />

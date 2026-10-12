@@ -43,6 +43,7 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
       showExitIntent={false}
       // Only this page. The public /vslfunnel* pages are unchanged.
       metaChip
+      eyebrowBelowSubhead
       ctaHref={ctaHref}
       headline={
         <>
