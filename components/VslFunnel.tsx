@@ -1153,7 +1153,7 @@ const ROISection: React.FC = () => {
           >
             You only need{' '}
             <span style={{ color: '#00D632' }}>
-              two advisory clients
+              2 advisory clients
             </span>{' '}
             a month.
           </h2>
@@ -1544,15 +1544,15 @@ const FounderStorySection: React.FC = () => {
         style={{ color: 'rgba(255,255,255,0.75)' }}
       >
         <p>
-          I&apos;m Marcel. My wife has been in CPA firms for four years — she is the COO of one
+          I&apos;m Marcel. My wife has been in CPA firms for 4 years — she is the COO of one
           now — and I have watched the daily in and out of running a firm for long enough to
           know where the pain actually comes from.
         </p>
         <p>
-          It is not the seventy-hour weeks. It is what the seventy hours get spent on. Two
-          thousand clients. Five hundred dollar returns. Documents that arrive on April 12th.
-          And most of those people quietly shopping for a cheaper accountant the following
-          January, because nothing you did last year gave them a reason not to.
+          It is not the 70-hour weeks. It is what those 70 hours get spent on. 2,000 clients.
+          $500 returns. Documents that arrive on April 12th. And most of those people quietly
+          shopping for a cheaper accountant the following January, because nothing you did
+          last year gave them a reason not to.
         </p>
         <p>
           That is what commoditized looks like. World-class technical work priced like a
@@ -1563,15 +1563,15 @@ const FounderStorySection: React.FC = () => {
           <span className="font-semibold" style={{ color: '#ffffff' }}>
             Tax planning is the opposite of that.
           </span>{' '}
-          Walk into a business owner writing six, seven, sometimes eight figures in tax and
-          show them what they do not have to pay, and you are not a vendor any more. You are
-          the person who saved them more than they earn. Nobody shops that. Nobody haggles
-          over it in January.
+          Walk into a business owner writing 6, 7, sometimes 8 figures in tax and show them
+          what they do not have to pay, and you are not a vendor any more. You are the person
+          who saved them more than they earn. Nobody shops that. Nobody haggles over it in
+          January.
         </p>
         <p>
           And you need far fewer of them. A book built on clients like that pays better than
-          two thousand returns ever will, and it does not set your season on fire — because
-          most of those two thousand were never making you money in the first place.
+          2,000 returns ever will, and it does not set your season on fire — because most of
+          those 2,000 were never making you money in the first place.
         </p>
         <p style={{ color: 'rgba(255,255,255,0.9)' }} className="font-medium">
           So I built the system that puts those people in front of you. That is all this is.
