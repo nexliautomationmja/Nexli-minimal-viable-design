@@ -118,3 +118,50 @@ export default function DeadlineUrgency({ className = '' }: { className?: string
     </div>
   );
 }
+
+/**
+ * The full-bleed bar at the very top of the VSL.
+ *
+ * Same hydration contract as the other two: the sentence is static and
+ * identical on both sides of hydration, and only the day chip is added after
+ * mount. /advisory-pricing has no `dynamic` export, so it is prerendered at
+ * BUILD — a server-computed day count there would freeze on deploy day.
+ *
+ * In the page flow rather than fixed. VslFunnel already has a fixed logo, a
+ * fixed scarcity pill and a sticky bottom CTA; a fourth pinned element would
+ * leave the hero fighting for what is left of a phone screen. The caller
+ * offsets the two fixed chips so nothing lands on top of this.
+ *
+ * Out of season it renders the sentence with no number, which is still true
+ * and still worth reading. It never renders nothing — a bar that vanishes for
+ * eight months of the year is a layout nobody has ever looked at.
+ */
+export function DeadlineBanner({ className = '' }: { className?: string }) {
+  const d = useDeadline();
+
+  return (
+    <div
+      className={`relative z-[120] w-full border-b px-4 py-1.5 sm:py-2.5 ${className}`}
+      style={{ background: RED_BG, borderColor: RED_BORDER }}
+    >
+      {/*
+        Deliberately NOT flex-wrap. Wrapping put the chip on its own line and
+        took the bar to 80px on a 390px screen, which both ate the hero and
+        ran underneath the fixed logo. The chip holds its width, the sentence
+        wraps inside the space that is left, and the bar stays at ~42px.
+      */}
+      <div className="mx-auto flex max-w-4xl items-center justify-center gap-2.5">
+        <CalendarClock size={15} className="hidden shrink-0 text-red-400 sm:block" aria-hidden="true" />
+        {d?.inSeason && <DaysChip days={d.days} />}
+        <span
+          className="text-left text-[11px] font-semibold leading-snug sm:text-center sm:text-sm"
+          style={{ color: 'rgba(255,255,255,0.82)' }}
+        >
+          Most tax planning has to be executed before{' '}
+          <strong className="font-black text-white">December 31</strong> to land on April&apos;s
+          return.
+        </span>
+      </div>
+    </div>
+  );
+}

@@ -22,7 +22,6 @@
 // split possible — do not collapse them back into a shared component.
 // ---------------------------------------------------------------------------
 
-import { TrendingUp } from 'lucide-react';
 import VslFunnel from '@/components/VslFunnel';
 import { AGENCY_ENGAGEMENT_AVG, usd } from '@/lib/agency-offer';
 import {
@@ -36,17 +35,20 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
       variant="BetterClients"
       muxPlaybackId={ADVISORY_VSL_VIDEO_PLAYBACK_ID}
       videoTitle={ADVISORY_VSL_VIDEO_TITLE}
-      eyebrowText="For Firms Done Chasing $800 Clients"
-      eyebrowIcon={TrendingUp}
-      eyebrowTone="emerald"
       showHiddenDrain={false}
       showExitIntent={false}
       // Only this page. The public /vslfunnel* pages are unchanged.
       metaChip
-      eyebrowBelowSubhead
+      // No eyebrow pill. The deadline banner and the Meta chip already sit
+      // above the headline; a third pill under them was three rows of
+      // chrome before anyone read a word of the offer.
+      showEyebrow={false}
       // Objections are answered on the booking-confirmed page now, where
       // they land after the call is booked rather than competing with the CTA.
       showFaq={false}
+      // December 31. The real deadline behind this whole offer: planning sold
+      // in February is planning against a year that is already written.
+      deadlineUrgency
       ctaHref={ctaHref}
       headline={
         <>

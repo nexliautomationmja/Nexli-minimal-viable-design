@@ -20,6 +20,8 @@ import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
 import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
+import DeadlineUrgency, { DeadlineBanner } from './advisory/DeadlineUrgency';
+import MetaLogo from './icons/MetaLogo';
 
 // Google "G" icon matching lucide-react component interface
 const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
@@ -87,8 +89,12 @@ const QualifyCta: React.FC<{ ctaHref?: string; size?: keyof typeof CTA_CLASS }> 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATIC LOGO — Non-linking brand anchor (replaces Navbar on funnel pages)
 // ─────────────────────────────────────────────────────────────────────────────
-const StaticLogo: React.FC = () => (
-  <div className="fixed top-6 left-6 md:top-8 md:left-8 z-[110]">
+const StaticLogo: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }) => (
+  <div
+    className={`fixed left-6 md:left-8 z-[110] ${
+      belowBanner ? 'top-[4.5rem] md:top-[5.25rem]' : 'top-6 md:top-8'
+    }`}
+  >
     <div
       className="flex items-center gap-2 backdrop-blur-md px-3 py-2 md:px-4 md:py-2 rounded-full border"
       style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.05)' }}
@@ -127,10 +133,22 @@ interface HeroProps {
   eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
   ctaHref?: string;
-  /** Show the "campaigns run on Meta" chip under the eyebrow. */
+  /** Show the "campaigns run on Meta" chip above the headline. */
   metaChip?: boolean;
-  /** Move the eyebrow below the subheadline, leaving the chip to lead. */
-  eyebrowBelowSubhead?: boolean;
+  /** Render the eyebrow pill at all. */
+  showEyebrow?: boolean;
+  /**
+   * Which second of the video the poster frame comes from. 0 — the opening
+   * frame — unless a page has a reason to differ. See the note at the
+   * MuxPlayer for why this is not left to Mux.
+   */
+  posterTime?: number;
+  /**
+   * A DeadlineBanner is sitting above this hero. Trims the top padding by
+   * roughly the bar's own height, so the banner does not cost the headline
+   * and the video the top of a phone screen.
+   */
+  hasBanner?: boolean;
 }
 
 const EYEBROW_TONES = {
@@ -156,7 +174,7 @@ const EYEBROW_TONES = {
   },
 } as const;
 
-const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, ctaHref, metaChip = false, eyebrowBelowSubhead = false }) => {
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, ctaHref, metaChip = false, showEyebrow = true, hasBanner = false, posterTime = 0 }) => {
   const eyebrow = EYEBROW_TONES[eyebrowTone] ?? EYEBROW_TONES.blue;
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -265,9 +283,10 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
     setIsMuted(false);
   };
 
-  // The eyebrow renders either above the headline (the default, and what
-  // every other VslFunnel page does) or below the subheadline, which the
-  // advisory page uses so the Meta chip leads the hero instead.
+  // The eyebrow, above the headline. The advisory page turns it off
+  // entirely — its deadline banner and Meta chip already carry the top of
+  // the hero, and a third pill under them was three rows of chrome before
+  // anyone reached the headline.
   const eyebrowPill = (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -289,14 +308,18 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
   );
 
   return (
-    <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-4">
+    <section
+      className={`relative pb-16 md:pb-24 px-4 ${
+        hasBanner ? 'pt-16 md:pt-24' : 'pt-24 md:pt-32'
+      }`}
+    >
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full blur-[120px] bg-blue-500/8" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto text-center">
-        {!eyebrowBelowSubhead && eyebrowPill}
+        {showEyebrow && eyebrowPill}
 
         {/* Meta chip. Leads the hero on the advisory page, where the
             eyebrow is moved below the subheadline.
@@ -316,32 +339,8 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
             transition={{ duration: 0.5, delay: 0.15 }}
             className="mb-6 md:mb-8 flex justify-center"
           >
-            <span
-              className="group relative inline-flex items-center gap-2 rounded-full border px-4 py-1.5 transition-colors"
-              style={{
-                borderColor: 'rgba(163,230,53,0.35)',
-                backgroundColor: 'rgba(163,230,53,0.1)',
-              }}
-            >
-              <MetaLogo className="w-[15px] h-auto" />
-              <span
-                className="text-xs sm:text-sm font-semibold tracking-wide"
-                style={{ color: CHIP_GREEN }}
-              >
-                Campaigns built and run on Meta
-              </span>
-              {/* Solid-filled scalloped badge, the shape platforms use
-                  for verified accounts. Green rather than Meta's blue, and
-                  the chip never says "verified" — it marks a true statement
-                  about how we work, not a platform endorsement. */}
-              <BadgeCheck
-                size={15}
-                className="shrink-0"
-                fill={CHIP_GREEN}
-                stroke="#0a0f1c"
-                strokeWidth={2.5}
-                aria-hidden="true"
-              />
+            <span className="group relative inline-flex rounded-full p-[1px]">
+              <MetaCampaignChip />
 
               {/* Hover detail. Pointer-events-none so it never swallows a
                   click meant for the CTA underneath, and hidden below sm
@@ -358,9 +357,9 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
                   className="block text-[11px] leading-relaxed"
                   style={{ color: 'rgba(255,255,255,0.72)' }}
                 >
-                  We build the campaigns, the creative and the reporting.
-                  We build the campaigns and place the spend, so the budget
-                  reaches the ads on schedule. You see where it went weekly.
+                  We build the campaigns and the creative, and we place the
+                  spend, so the budget reaches the ads on schedule. You see
+                  where it went in the weekly report.
                 </span>
               </span>
             </span>
@@ -397,10 +396,6 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           {subheadline || 'The Digital Rainmaker System is a complete, done-for-you infrastructure that automates your intake, secures your documents, and engineers 5-star Google reviews on autopilot. Built exclusively for established CPA firms.'}
         </motion.p>
 
-        {eyebrowBelowSubhead && (
-          <div className="-mt-6 mb-10 md:-mt-8 md:mb-14">{eyebrowPill}</div>
-        )}
-
         {/* Video Player */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -416,6 +411,16 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
             <MuxPlayer
               ref={videoRef}
               playbackId={muxPlaybackId || "dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"}
+              // Mux does NOT default to the first frame — with no
+              // thumbnailTime it serves one from the middle of the asset,
+              // which on these cuts means a poster showing a fragment of a
+              // burned-in caption. These videos are captioned throughout,
+              // so there is no text-free frame to find; frame 0 is simply
+              // the least cluttered and the one the viewer expects.
+              //
+              // Preview any other frame before changing this:
+              // https://image.mux.com/<playback id>/thumbnail.jpg?time=2
+              thumbnailTime={posterTime}
               metadata={{
                 video_title: videoTitle || "Nexli Digital Rainmaker System",
               }}
@@ -507,23 +512,8 @@ const GoHighLevelLogo: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-/** Meta's primary brand blue. */
-const META_BLUE = '#0081FB';
-
 /** Gatorade lemon-lime, for the hero chip. */
 const CHIP_GREEN = '#A3E635';
-
-const MetaLogo: React.FC<{ className?: string; fill?: string }> = ({
-  className,
-  fill = META_BLUE,
-}) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Meta">
-    <path
-      fill={fill}
-      d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"
-    />
-  </svg>
-);
 
 const StripeLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 468 222.5" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -837,6 +827,68 @@ const GoogleReviewsSimpleAnimation = () => {
   );
 };
 
+/**
+ * "Campaigns built and run on Meta" — the chip, defined once.
+ *
+ * It appears twice on the advisory page: leading the hero, and under the
+ * Meta tile in "What You Actually Get". Those two had drifted into
+ * different type, padding, shimmer speed and contents, which is what
+ * happens when a thing is built twice. One definition now; the hero adds
+ * the hover panel around it, nothing else differs.
+ *
+ * The rotating light sits in its own clipping layer rather than on an
+ * overflow-hidden wrapper, because the hero wraps this in a hover panel
+ * that overflow-hidden would cut off. The interior is opaque — the green
+ * is layered OVER --bg-main, not a translucent fill — or the shimmer
+ * rotates through the middle of the chip instead of around its rim.
+ *
+ * States what we actually do and nothing we cannot back. Deliberately NOT
+ * a verification or partner badge: those are specific Meta programmes with
+ * their own criteria, and the chip never says "verified".
+ */
+const MetaCampaignChip: React.FC = () => (
+  <>
+    <span
+      className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
+      aria-hidden="true"
+    >
+      <span
+        className="absolute inset-[-100%] animate-[shimmer_5s_linear_infinite]"
+        style={{
+          background:
+            'conic-gradient(from 0deg at 50% 50%, #bef264, #3f6212, #bef264, #3f6212, #bef264)',
+        }}
+      />
+    </span>
+
+    <span
+      className="relative z-10 inline-flex items-center gap-2 rounded-full px-4 py-1.5"
+      style={{
+        background:
+          'linear-gradient(rgba(163,230,53,0.12), rgba(163,230,53,0.12)), var(--bg-main)',
+      }}
+    >
+      <MetaLogo className="w-[15px] h-auto" />
+      <span
+        className="text-xs sm:text-sm font-semibold tracking-wide"
+        style={{ color: CHIP_GREEN }}
+      >
+        Campaigns built and run on Meta
+      </span>
+      {/* Solid-filled scalloped badge, the shape platforms use for verified
+          accounts. Green rather than Meta's blue. */}
+      <BadgeCheck
+        size={15}
+        className="shrink-0"
+        fill={CHIP_GREEN}
+        stroke="#0a0f1c"
+        strokeWidth={2.5}
+        aria-hidden="true"
+      />
+    </span>
+  </>
+);
+
 const TransformationSection: React.FC = () => {
   return (
     <section className="relative py-14 sm:py-20 px-4" style={{ backgroundColor: 'var(--bg-main)' }}>
@@ -858,11 +910,66 @@ const TransformationSection: React.FC = () => {
             </span>
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Four integrated systems, built and installed for you — not software features, but business outcomes.
+            Five integrated systems, built and installed for you — not software features, but business outcomes.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {/*
+            The ads, first and full width.
+
+            Marcel offered the bottom-centred slot or the top; the top wins
+            on argument. The other four are what a client lands ON — this is
+            what puts a client in front of them at all, and it is the first
+            link in the same chain the funnel diagram draws (ad -> funnel ->
+            qualifier). An orphan fifth card at the bottom would read as an
+            afterthought; leading with it reads as the engine, then the four
+            things it feeds.
+
+            Lime rather than a fifth cool tone, and the same line and
+            verified badge as the "Campaigns built and run on Meta" chip in
+            the hero — the two Meta statements on this page are the same
+            claim, so they look like it. The mark itself stays Meta blue in
+            both, the way the Google card carries Google's own colours.
+          */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: 'circOut' }}
+            className="md:col-span-2 relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#A3E635]/20 p-6 md:p-8"
+          >
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="mb-4 md:mb-5"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#16200a] border-2 border-[#A3E635]/30"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(163, 230, 53, 0.45))' }}
+                >
+                  <MetaLogo className="w-9 h-9 md:w-14 md:h-14" />
+                </div>
+              </motion.div>
+
+              {/* The hero's chip, not a lookalike — same component. */}
+              <span className="relative inline-flex rounded-full p-[1px] mb-3 md:mb-4">
+                <MetaCampaignChip />
+              </span>
+
+              <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
+                Meta Ads, Run For You
+              </h3>
+              <p className="text-xs md:text-sm max-w-xl leading-relaxed text-neutral-300">
+                We bring you {usd(AGENCY_ENGAGEMENT_AVG)} tax planning clients through Meta ads — and we
+                make the creative, photo and video, so you never have to film anything or
+                turn yourself into a content creator.
+              </p>
+            </div>
+          </motion.div>
+
           {/* Card 1: Custom Website */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1048,7 +1155,9 @@ const TransformationSection: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 3: COST OF INACTION — Agitate the Pain
 // ─────────────────────────────────────────────────────────────────────────────
-const CostOfInactionSection: React.FC = () => {
+const CostOfInactionSection: React.FC<{ showDeadline?: boolean }> = ({
+  showDeadline = false,
+}) => {
   // Framed on the advisory outcome, not on the software. The system is
   // how you get there; what is actually being lost is the planning work
   // and the clients who pay for it.
@@ -1128,6 +1237,19 @@ const CostOfInactionSection: React.FC = () => {
             );
           })}
         </div>
+
+        {/* The one deadline on this page that is not of our making. It reads as
+            a fifth pain point, which is exactly what it is. */}
+        {showDeadline && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <DeadlineUrgency className="mt-8 md:mt-10" />
+          </motion.div>
+        )}
       </div>
     </section>
   );
@@ -1674,7 +1796,7 @@ const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // URGENCY PILL — Sticky scarcity badge (top-right)
 // ─────────────────────────────────────────────────────────────────────────────
-const UrgencyPill: React.FC = () => {
+const UrgencyPill: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -1690,7 +1812,9 @@ const UrgencyPill: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.4 }}
-          className="fixed top-6 right-6 md:top-8 md:right-8 z-[110]"
+          className={`fixed right-6 md:right-8 z-[110] ${
+            belowBanner ? 'top-[4.5rem] md:top-[5.25rem]' : 'top-6 md:top-8'
+          }`}
         >
           <motion.div
             animate={{ opacity: [1, 0.5, 1] }}
@@ -1730,10 +1854,20 @@ interface VslFunnelProps {
   eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
   showExitIntent?: boolean;
-  /** Show the "campaigns run on Meta" chip under the hero eyebrow. */
+  /** Show the "campaigns run on Meta" chip above the hero headline. */
   metaChip?: boolean;
-  /** Move the eyebrow below the subheadline, leaving the chip to lead. */
-  eyebrowBelowSubhead?: boolean;
+  /**
+   * Render the eyebrow pill. On by default. The advisory VSL turns it off:
+   * with the deadline banner and the Meta chip both above the headline, a
+   * third pill was chrome stacked on chrome.
+   */
+  showEyebrow?: boolean;
+  /**
+   * Which second of the video the poster frame comes from. 0 — the opening
+   * frame — unless a page has a reason to differ. See the note at the
+   * MuxPlayer for why this is not left to Mux.
+   */
+  posterTime?: number;
   /**
    * Set this and every conversion CTA becomes a link to it instead of opening
    * the QualificationProvider modal. Used by the gated advisory funnel, whose
@@ -1747,9 +1881,17 @@ interface VslFunnelProps {
    * a call is booked and the visitor is actually reading.
    */
   showFaq?: boolean;
+  /**
+   * The December 31 deadline — a bar above the hero and the explained version
+   * inside "The Cost of Doing Nothing". Off by default: the public
+   * /vslfunnel* pages sell the system, not the tax year, and a planning
+   * deadline on a page that never mentions planning reads as borrowed
+   * urgency. On for /advisory-pricing, where the whole offer is planning.
+   */
+  deadlineUrgency?: boolean;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, eyebrowBelowSubhead, showFaq = true }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, showEyebrow = true, showFaq = true, deadlineUrgency = false, posterTime = 0 }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1759,12 +1901,13 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
 
   return (
     <div className="min-h-screen pb-14 sm:pb-16">
-      <StaticLogo />
-      <UrgencyPill />
-      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} eyebrowBelowSubhead={eyebrowBelowSubhead} />
+      {deadlineUrgency && <DeadlineBanner />}
+      <StaticLogo belowBanner={deadlineUrgency} />
+      <UrgencyPill belowBanner={deadlineUrgency} />
+      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} showEyebrow={showEyebrow} hasBanner={deadlineUrgency} posterTime={posterTime} />
       <TrustBar />
       <TransformationSection />
-      <CostOfInactionSection />
+      <CostOfInactionSection showDeadline={deadlineUrgency} />
       <ROISection />
       <FounderStorySection />
       {showFaq && <FAQSection variant={variant} ctaHref={ctaHref} />}

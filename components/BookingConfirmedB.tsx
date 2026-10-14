@@ -23,6 +23,7 @@ import { useSearchParams } from 'next/navigation';
 import MuxPlayer from '@mux/mux-player-react';
 import {
   ArrowRight,
+  BadgeCheck,
   CalendarCheck,
   CheckCircle2,
   FileSignature,
@@ -35,23 +36,23 @@ import {
 import FunnelLogo from './FunnelLogo';
 import BrowserFrame from './demo/BrowserFrame';
 import PortalDemo from './demo/PortalDemo';
+import AdCreativeLab from './booking/AdCreativeLab';
+import SystemFlow from './booking/SystemFlow';
 import PricingBlock from './booking/PricingBlock';
-import DanielaFaq, { type FaqItem } from './booking/DanielaFaq';
+import DanielaFaq from './booking/DanielaFaq';
+import { BOOKING_B_FAQ } from '@/lib/booking-faq';
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent } from '@/lib/meta-events';
 import {
-  AGENCY_AD_SPEND,
   AGENCY_DAYS,
   AGENCY_LAUNCH_DAYS,
   AGENCY_LAUNCH_DAYS_MAX,
   AGENCY_LAUNCH_DAYS_MIN,
   AGENCY_LEADS,
-  AGENCY_MONTHLY_FEE,
-  AGENCY_TOTAL_MONTHLY,
-  usd,
 } from '@/lib/agency-offer';
 import {
   BOOKING_WELCOME_VIDEO_ID,
+  BOOKING_WELCOME_VIDEO_POSTER_TIME,
   BOOKING_WELCOME_VIDEO_TITLE,
   DEMO_FIRM_ACCENT,
   DEMO_FIRM_ACCENT_2,
@@ -71,7 +72,7 @@ const TIMELINE = [
     Icon: FileSignature,
     when: 'Day 0',
     title: 'You sign. That is the whole commitment.',
-    body: 'No setup fee, no deposit, no annual contract. The first month starts the day we do.',
+    body: 'No setup fee and no deposit. You sign the agreement and the first month starts the day we do.',
   },
   {
     Icon: Sparkles,
@@ -94,61 +95,11 @@ const TIMELINE = [
   {
     Icon: ShieldCheck,
     when: 'Ongoing',
-    title: 'Month to month',
-    body: 'Cancel whenever. We would rather earn the next month than lock you into twelve.',
+    title: 'Six months, then month to month',
+    body: 'The initial term is six months — long enough for the campaigns to have actually run. After that it continues month to month and you can end it on 30 days notice.',
   },
 ];
 
-/**
- * Written, not voice. Page A plays Daniela's recordings; this page exists to
- * answer everything before the call, and making someone press play and wait
- * is the opposite of that.
- *
- * Figures come from lib/agency-offer.ts so an answer can never disagree with
- * the pricing block above it.
- */
-const FAQ: FaqItem[] = [
-  {
-    question: 'How exactly does the system get me higher-value clients?',
-    answer:
-      `We build the front end a high earner judges you by — the website, the booking flow, the portal they log into — and then run Meta campaigns at business owners and high-income individuals who are actively looking for tax help. The ads do not sell your firm; they offer a conversation about what someone is overpaying. Intake, follow-up and reminders are automated, so the ones who respond land on your calendar already knowing what the meeting is about. The target is ${AGENCY_LEADS} qualified advisory leads inside ${AGENCY_DAYS} days of launch.`,
-  },
-  {
-    question: 'Who runs the ads — you or a white-label agency?',
-    answer:
-      'We do, in house. No white-label, no subcontractor, no media buyer you never meet. We build the campaigns, write and produce the creative, and manage the Facebook ad account day to day.\n\nThe ad budget is part of your monthly and runs through us. That is deliberate: it means the spend reaches the campaigns on the day it is supposed to, rather than pausing because a card on file expired. The weekly update shows exactly what went out and what it brought back.',
-  },
-  {
-    question: 'How soon can this be up and running?',
-    answer:
-      `Most firms are live in ${AGENCY_LAUNCH_DAYS_MIN} to ${AGENCY_LAUNCH_DAYS} days. Around ${AGENCY_LAUNCH_DAYS_MAX} days is the realistic worst case, and the variable is almost never us — it is how fast branding, logins and approvals come back. Send everything in the first few days and you are at the short end of that range.`,
-  },
-  {
-    question: 'What do I actually own at the end of it?',
-    answer:
-      'The website is yours. It is on your domain, and if we part ways you keep it.\n\nThe rest is not. The automations, the client portal and the review engine are built and run by us on our infrastructure, and they stop working when the engagement does. We would rather say that now than have you find out later.\n\nThe honest version: the website on its own will not bring anyone in, and it will not onboard anybody onto tax planning. The part that does that is the part you are paying us to run.',
-  },
-  {
-    question: "How secure is this for my clients' data? What about compliance?",
-    answer:
-      'Documents are encrypted with AES-256 at rest and TLS in transit — the same standard banks use — and the portal is built to GLBA/FTC Safeguards and the IRS Publication 4557 requirements for tax professionals. Access is per-client, so one of your clients can never see another one.\n\nWhat that does not mean: we are not your compliance department. Your WISP, your retention policy and who on your team gets access are yours to set, and we will build around whatever you already have rather than hand you a policy and call it done.',
-  },
-  {
-    question: 'How often will we actually talk?',
-    answer:
-      'Once a week, reliably. You get a written update covering exactly what we did in the ad account and in the business that week, and what it produced. Not a dashboard link — a personal note.\n\nWe also run an internal survey every week on how the work is going, so problems surface while they are still small.\n\nWe are not on call, and you will not be chasing us for a status. Nothing is worse than an agency delivering and never telling you.',
-  },
-  {
-    question: 'Who is actually running my account?',
-    answer:
-      'Marcel, the founder. Not a junior, not a pod, not someone you meet once on the kickoff call and never again. As the firm grows that will change, and we will tell you before it does.',
-  },
-  {
-    question: 'How is the price built?',
-    answer:
-      `${usd(AGENCY_TOTAL_MONTHLY)} a month. One number, one invoice.\n\n${usd(AGENCY_AD_SPEND)} of that is your ad budget, which we place into the campaigns for you, and the rest is the system — the website, the portal, the funnel and the automations behind them, built and run for you.\n\nThere is no setup fee, no deposit, no per-component pricing and no annual contract. We do not sell the pieces separately because they do not work separately.`,
-  },
-];
 
 /** What the firm actually receives, named plainly. */
 const INCLUDED = [
@@ -190,16 +141,70 @@ export default function BookingConfirmedB() {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <span
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
-            style={{
-              borderColor: 'rgba(34,197,94,0.35)',
-              backgroundColor: 'rgba(34,197,94,0.1)',
-            }}
-          >
-            <CheckCircle2 size={15} className="text-green-400" aria-hidden="true" />
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wide text-green-400">
-              Booking confirmed
+          {/*
+            Same treatment as the "Campaigns built and run on Meta" chip on
+            the VSL: a light travelling around the rim, and the scalloped
+            verified badge rather than a plain tick.
+
+            The rim lives in its own clipping layer and the interior is
+            opaque — the green is layered OVER --bg-main rather than being a
+            translucent fill, or the shimmer rotates straight through the
+            middle of the pill instead of around its edge.
+
+            6s, slower than the VSL's 5s and the eyebrow's 4s. This one sits
+            alone at the top of a page somebody is about to read, not in a
+            hero competing for attention.
+          */}
+          <span className="relative inline-flex rounded-full p-[1px]">
+            <span
+              className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
+              aria-hidden="true"
+            >
+              <span
+                className="absolute inset-[-100%] animate-[shimmer_6s_linear_infinite]"
+                // Theme-aware, because a two-tone rim always loses one of
+                // its stops against one of the backgrounds. The VSL's chip
+                // can hard-code a bright/near-black pair — that page is
+                // always dark. Here a near-black stop vanishes on white and
+                // a pale one vanishes on near-black, and either way the rim
+                // renders as a broken dashed line instead of a moving light.
+                // So: a bright stop and a dim one picked per theme.
+                style={{
+                  background:
+                    theme === 'dark'
+                      ? 'conic-gradient(from 0deg at 50% 50%, #4ade80, #166534, #4ade80, #166534, #4ade80)'
+                      : 'conic-gradient(from 0deg at 50% 50%, #22c55e, #14532d, #22c55e, #14532d, #22c55e)',
+                }}
+              />
+            </span>
+
+            <span
+              className="relative z-10 inline-flex items-center gap-2 rounded-full px-4 py-1.5"
+              style={{
+                background:
+                  'linear-gradient(rgba(34,197,94,0.12), rgba(34,197,94,0.12)), var(--bg-main)',
+              }}
+            >
+              {/* Solid-filled scalloped badge — the shape platforms use for
+                  verified accounts. The tick is knocked out in the page's own
+                  dark so it reads in both themes. */}
+              <BadgeCheck
+                size={15}
+                className="shrink-0"
+                fill="#22c55e"
+                stroke="#052e16"
+                strokeWidth={2.5}
+                aria-hidden="true"
+              />
+              {/* green-400 on the pale interior was thin in light mode.
+                  The pill reads the same either way now. */}
+              <span
+                className={`text-xs sm:text-sm font-black uppercase tracking-wide ${
+                  theme === 'dark' ? 'text-green-400' : 'text-green-700'
+                }`}
+              >
+                Booking confirmed
+              </span>
             </span>
           </span>
 
@@ -243,6 +248,8 @@ export default function BookingConfirmedB() {
           <div className="max-w-4xl mx-auto overflow-hidden rounded-2xl md:rounded-3xl border border-[var(--glass-border)]">
             <MuxPlayer
               playbackId={BOOKING_WELCOME_VIDEO_ID}
+              // Without this Mux serves a frame from the middle of the video.
+              thumbnailTime={BOOKING_WELCOME_VIDEO_POSTER_TIME}
               metadata={{ video_title: BOOKING_WELCOME_VIDEO_TITLE }}
               streamType="on-demand"
               accentColor="#22c55e"
@@ -302,14 +309,55 @@ export default function BookingConfirmedB() {
           </p>
         </motion.section>
 
-        {/* ── 5. What's included ────────────────────────────────────── */}
+        {/* ── 5. The ads ────────────────────────────────────────────
+            The website and the portal are the easy things to show. This is
+            what the ad spend actually buys, and it was missing. */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <SectionHead step="03" title="Everything in the engagement" />
+          <SectionHead
+            step="03"
+            title="The ads, and who makes them"
+            body="We do not guess at one perfect ad. Several angles run at once, in photo and in video, and the spend decides which ones survive."
+          />
+          <div className="mt-6">
+            <AdCreativeLab />
+          </div>
+          <p className="mx-auto mt-4 max-w-3xl text-xs leading-relaxed text-[var(--text-muted)]">
+            The presenters in the video ads are AI-generated. You never record anything, you are
+            never on camera, and you do not have to become a content creator to run ads for your
+            firm. We write the angles, produce the creative and run the account.
+          </p>
+        </motion.section>
+
+        {/* ── 6. The system, as a flow ──────────────────────────────── */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <SectionHead
+            step="04"
+            title="What gets built, end to end"
+            body="Five moving parts and one fork. Everything above plugs into this."
+          />
+          <div className="mt-6">
+            <SystemFlow />
+          </div>
+        </motion.section>
+
+        {/* ── 7. What's included ────────────────────────────────────── */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <SectionHead step="05" title="Everything in the engagement" />
           <ul className="mt-6 grid max-w-4xl mx-auto grid-cols-1 sm:grid-cols-2 gap-3">
             {INCLUDED.map((item) => (
               <li
@@ -323,12 +371,12 @@ export default function BookingConfirmedB() {
           </ul>
         </motion.section>
 
-        {/* ── 6. The price ──────────────────────────────────────────── */}
+        {/* ── 8. The price ──────────────────────────────────────────── */}
         <section>
           <PricingBlock />
         </section>
 
-        {/* ── 7. After you sign ─────────────────────────────────────── */}
+        {/* ── 9. After you sign ─────────────────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -336,7 +384,7 @@ export default function BookingConfirmedB() {
           transition={{ duration: 0.6 }}
         >
           <SectionHead
-            step="04"
+            step="06"
             title="What happens after you say yes"
             body="So there are no surprises about how this runs."
           />
@@ -367,15 +415,15 @@ export default function BookingConfirmedB() {
           </ol>
         </motion.section>
 
-        {/* ── 8. Objections, answered ───────────────────────────────── */}
+        {/* ── 10. Objections, answered ───────────────────────────────── */}
         <DanielaFaq
-          items={FAQ}
+          items={BOOKING_B_FAQ}
           badge="Before the call"
           heading={<>Everything else you were <span className="text-green-500">going to ask</span></>}
-          intro="Answered here so the call can be about whether this fits, not about what it is."
+          intro="Read them, or play them and hear Daniela answer in her own voice. Either way the call can be about whether this fits, not about what it is."
         />
 
-        {/* ── 9. Close ──────────────────────────────────────────────── */}
+        {/* ── 11. Close ──────────────────────────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
