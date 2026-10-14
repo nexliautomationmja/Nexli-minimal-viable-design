@@ -16,17 +16,17 @@
 // ---------------------------------------------------------------------------
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { BadgePercent, Check, Minus } from 'lucide-react';
-import { ShimmerBadge } from '@/components/TransformationCards';
-import AnimatedNumber from '@/components/AnimatedNumber';
+import MuxPlayer from '@mux/mux-player-react';
+import { BadgePercent } from 'lucide-react';
 import FunnelCta from '@/components/funnel/FunnelCta';
-import DeadlineUrgency, { DeadlinePill } from '@/components/advisory/DeadlineUrgency';
-import { AmbientGlow, OUTFIT, RimCard, SectionHeading } from '@/components/funnel/primitives';
+import { DeadlinePill } from '@/components/advisory/DeadlineUrgency';
+import { AmbientGlow, OUTFIT, RimCard } from '@/components/funnel/primitives';
 import { generateEventId, trackMetaEvent } from '@/lib/meta-events';
 import {
   ADVISORY_LIST_PRICE_DISPLAY,
   ADVISORY_PRICE_DISPLAY,
-  ADVISORY_PRICE_VALUE,
+  ADVISORY_OFFER_VIDEO_PLAYBACK_ID,
+  ADVISORY_OFFER_VIDEO_TITLE,
   ADVISORY_SAVINGS_DISPLAY,
   ADVISORY_PRODUCT_ID,
   ADVISORY_PRODUCT_NAME,
@@ -35,61 +35,6 @@ import {
 
 const MUTED = 'rgba(255,255,255,0.7)';
 
-/** The hero strip. Every figure is either a price this site already uses or
- *  the literal cost of the product — nothing here is an invented statistic. */
-const STRIP = [
-  { value: 800, label: 'What you billed them', hint: 'the return you already file' },
-  { value: 15000, label: 'What the planning prices at', hint: 'same client, same year', highlight: true },
-  { value: ADVISORY_PRICE_VALUE, label: 'What this costs you', hint: `once, down from ${ADVISORY_LIST_PRICE_DISPLAY}` },
-];
-
-/** What they already own, and never used. */
-const ALREADY_YOURS = [
-  'Their full return — every number you would need to spot the opportunity',
-  'Their entity structure, their K-1s, their depreciation schedule',
-  'Years of history nobody else in the market can see',
-  'A relationship warm enough to call them today',
-];
-
-const ADDS = [
-  'The criteria that surface your top 20, and the sheet to list them on',
-  'The call that books the meeting, word for word',
-  'A fee table that turns projected savings into one fixed number',
-];
-
-const INCLUDED = [
-  {
-    title: 'Step one — find your top 20',
-    text: 'The exact markers to look for on last year\u2019s returns: $250K+ net profit, large quarterly estimates, a big balance due, multiple entities. Plus the clients everyone skips — high-income W-2 earners, a spouse with a business. A blank twenty-row sheet to fill in.',
-  },
-  {
-    title: 'Step two — the call that books the meeting',
-    text: 'Thirty seconds, word for word. What to say when they ask what it costs. And the sentence that feels honest but costs you the client, which you must never say.',
-  },
-  {
-    title: 'Step three — run it, price it, sign it',
-    text: 'The two or three levers to show, a pricing table that turns projected savings into one fixed fee, and the five rules that keep it value pricing rather than a cut of the savings. Sign the letter in the meeting.',
-  },
-  {
-    title: 'Five pages. Yours permanently.',
-    text: 'A PDF. No login, no seat, no software to learn. Print it, work off it, use it on every client you have.',
-  },
-];
-
-const FAQS = [
-  {
-    q: 'Is this a subscription?',
-    a: `No. ${ADVISORY_PRICE_DISPLAY} once — down from ${ADVISORY_LIST_PRICE_DISPLAY} — and it is yours. Nothing recurring, nothing to cancel.`,
-  },
-  {
-    q: 'What format is it?',
-    a: 'A five-page PDF, emailed to you within a couple of minutes. No login, no software, nothing to learn.',
-  },
-  {
-    q: 'What if it is not useful?',
-    a: `Reply to your receipt within ${ADVISORY_REFUND_DAYS} days and we refund you. No form, no questions, and you keep the file.`,
-  },
-];
 
 interface Props {
   firstName: string;
@@ -166,7 +111,7 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
     <div className="min-h-screen text-white" style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}>
       <AmbientGlow />
 
-      <main className="relative mx-auto max-w-6xl px-4 sm:px-6 pt-28 md:pt-32 pb-32 md:pb-24 space-y-14 md:space-y-16">
+      <main className="relative mx-auto max-w-6xl px-4 sm:px-6 pt-20 md:pt-24 pb-32 md:pb-20 space-y-8 md:space-y-10">
         {/* ── A. Hero ─────────────────────────────────────────────────── */}
         <section>
           {cancelled && (
@@ -182,41 +127,31 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
             </p>
           )}
 
-          {/* The news first, then the offer. A firm that has just been told it
-              is not a fit and is immediately sold to reads the whole page as
-              the pitch it was being softened up for. Naming the reason costs
-              one paragraph and is the difference. */}
+          {/* One line, not a eulogy. The old block ran an eyebrow, a
+              heading, the reason and a paragraph of reassurance before the
+              offer — four times the words needed to say the thing, on a
+              page selling a $97 PDF. */}
+          <div className="flex flex-wrap items-center gap-2">
           {notAFit && (
-            <section
-              className="mb-8 max-w-3xl rounded-2xl border p-5 sm:p-6"
+            <p
+              className="inline-flex rounded-full border px-4 py-1.5 text-xs sm:text-sm font-semibold"
               style={{
-                background: 'rgba(255,255,255,0.03)',
-                borderColor: 'rgba(255,255,255,0.1)',
+                background: 'rgba(255,255,255,0.04)',
+                borderColor: 'rgba(255,255,255,0.14)',
+                color: 'rgba(255,255,255,0.65)',
               }}
             >
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
-                First, the straight answer
-              </p>
-              <h2 className="mt-2.5 text-lg sm:text-xl font-bold text-white" style={OUTFIT}>
-                {notAFit.heading}
-              </h2>
-              <p className="mt-2.5 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                {notAFit.body}
-              </p>
-              <p className="mt-4 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                So we are not going to sell you the done-for-you engine. What is below is
-                the same play our clients run, written so you can run it yourself on the
-                book you already have — no ads, no retainer, no us.
-              </p>
-            </section>
+              Not a fit right now for the done-for-you engine.
+            </p>
           )}
 
           <span className="inline-flex items-center rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 uppercase tracking-[0.2em] text-[10px] font-black px-3.5 py-1.5">
             {ADVISORY_PRODUCT_NAME}
           </span>
+          </div>
 
           <h1
-            className="mt-5 max-w-4xl text-[2rem] sm:text-4xl md:text-5xl font-black tracking-[-0.035em] leading-[1.05] text-white"
+            className="mt-4 max-w-4xl text-[2rem] sm:text-4xl md:text-5xl font-black tracking-[-0.035em] leading-[1.05] text-white"
             style={OUTFIT}
           >
             {firstName ? `${firstName}, your ` : 'Your '}next{' '}
@@ -229,110 +164,38 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
             is already in your client list.
           </h1>
 
-          <p className="mt-5 max-w-3xl text-base md:text-lg leading-relaxed" style={{ color: MUTED }}>
+          <p className="mt-4 max-w-3xl text-base md:text-lg leading-relaxed" style={{ color: MUTED }}>
             Your biggest clients write five- and six-figure cheques to the IRS every quarter,
             and you are the one person who sees those numbers. You filed their returns in March.
             You invoiced eight hundred dollars and said nothing about it.
           </p>
 
-          <RimCard className="mt-10 md:mt-12 max-w-4xl">
-            <div className="mb-4">
-              <ShimmerBadge
-                conicStops="#60a5fa, #a78bfa, #22d3ee, #60a5fa"
-                starClass="text-blue-400 fill-blue-400"
-                labelClass="text-blue-300"
-              >
-                The clients you already have
-              </ShimmerBadge>
-            </div>
+          {/*
+            The VSL, where a 400-line pitch panel used to be.
 
-            <h2
-              className="text-xl sm:text-2xl md:text-[1.9rem] font-black tracking-[-0.03em] leading-[1.12] text-white"
-              style={OUTFIT}
-            >
-              You do not have a lead problem. You have a list you never looked at properly.
-            </h2>
-
-            <p
-              className="mt-2.5 text-base sm:text-lg font-black tracking-[-0.02em] bg-clip-text text-transparent"
-              style={{
-                ...OUTFIT,
-                backgroundImage: 'linear-gradient(90deg, #60a5fa, #a78bfa, #22d3ee)',
-              }}
-            >
-              Every one of them already trusts you with their numbers.
-            </p>
-
-            <p className="mt-3 text-sm sm:text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
-              A three-step play: find the twenty clients sending the IRS the most money, make
-              one call, then price it and sign it in the meeting. No ads, no new leads. Just the
-              people already paying you.
-            </p>
-
-            {/* Counter strip — the whole price argument in three figures. */}
-            <div
-              className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-2 rounded-2xl border px-3.5 py-3.5"
-              style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.1)' }}
-            >
-              {STRIP.map((s) => (
-                <div key={s.label}>
-                  <p
-                    className="text-[9px] font-black tracking-[0.15em] uppercase"
-                    style={{ color: s.highlight ? '#60a5fa' : 'rgba(255,255,255,0.45)' }}
-                  >
-                    {s.label}
-                  </p>
-                  <p
-                    className="mt-1 text-base sm:text-xl font-black tracking-tight leading-none"
-                    style={{ color: s.highlight ? '#ffffff' : 'rgba(255,255,255,0.75)' }}
-                  >
-                    <AnimatedNumber
-                      value={s.value}
-                      format={(n) => `$${Math.round(n).toLocaleString('en-US')}`}
-                      animateOnView
-                      duration={1100}
-                    />
-                  </p>
-                  <p className="mt-1 text-[10px] leading-snug" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                    {s.hint}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <p className="mt-2.5 text-[11px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              $15,000 is the average planning fee. The guide&apos;s pricing table tells you where
-              a specific engagement lands — sometimes $4,000, sometimes well above $15,000.
-            </p>
-
-            <DeadlinePill className="mt-5" />
-
-            <div className="mt-6">{cta('Show me who to call first', 'md')}</div>
-          </RimCard>
-        </section>
-
-        {/* ── D. What is in it ─────────────────────────────────────────
-            Four lines, not four cards. It is a five-page PDF; a page that
-            works harder than the product it sells reads as overselling. */}
-        <section>
-          <SectionHeading eyebrow="What is in it" title="Five pages, and nothing you have to learn." />
-          <ul className="mt-5 max-w-2xl space-y-2.5">
-            {INCLUDED.map((item) => (
-              <li key={item.title} className="flex items-start gap-3">
-                <Check size={17} className="mt-0.5 shrink-0 text-blue-400" aria-hidden="true" />
-                <span className="text-sm sm:text-base leading-relaxed text-white/80">
-                  <span className="font-bold text-white">{item.title}</span>
-                  {' — '}
-                  {item.text}
-                </span>
-              </li>
-            ))}
-          </ul>
+            That panel restated the whole argument — a second headline, a
+            three-step play, a counter strip, a deadline — above a $97 PDF.
+            The video makes the case better and in less space, so the page
+            is now: what it is, watch, buy. Nothing between the headline and
+            the price that the video does not already cover.
+          */}
+          <div className="mt-6 md:mt-7 mx-auto max-w-4xl overflow-hidden rounded-2xl md:rounded-3xl border border-[var(--glass-border)] shadow-2xl">
+            <MuxPlayer
+              playbackId={ADVISORY_OFFER_VIDEO_PLAYBACK_ID}
+              metadata={{ video_title: ADVISORY_OFFER_VIDEO_TITLE }}
+              streamType="on-demand"
+              // Mux serves a mid-video frame without this, captions and all.
+              thumbnailTime={0}
+              accentColor="#2563eb"
+              style={{ aspectRatio: '16/9', width: '100%', display: 'block' }}
+            />
+          </div>
         </section>
 
         {/* ── E. Price ─────────────────────────────────────────────────── */}
         <section>
-          <RimCard className="max-w-4xl mx-auto" innerClassName="p-7 sm:p-10">
-            <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-8 items-center">
+          <RimCard className="max-w-4xl mx-auto" innerClassName="p-5 sm:p-7">
+            <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-6 items-center">
               <div>
                 <h2
                   className="text-xl sm:text-2xl md:text-[1.9rem] font-black tracking-[-0.03em] leading-[1.12] text-white"
@@ -341,7 +204,7 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
                   One client priced properly pays for this fifty times over.
                 </h2>
                 <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  You do not need all twenty to sign. You need one name off that sheet and one
+                  You do not need your whole book to sign. You need one name off that sheet and one
                   conversation you were never going to have otherwise.
                 </p>
               </div>
@@ -387,26 +250,6 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
           </RimCard>
         </section>
 
-        {/* ── F. FAQ ───────────────────────────────────────────────────── */}
-        <section>
-          <SectionHeading eyebrow="Before you buy" title="The things people ask." />
-          <div className="mt-8 max-w-3xl space-y-3">
-            {FAQS.map((f) => (
-              <div
-                key={f.q}
-                className="rounded-2xl border p-5"
-                style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.1)' }}
-              >
-                <p className="text-sm font-bold text-white" style={OUTFIT}>
-                  {f.q}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed" style={{ color: MUTED }}>
-                  {f.a}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
 
       </main>
 

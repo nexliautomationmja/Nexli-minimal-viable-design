@@ -4,9 +4,9 @@ import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
 import { sendCAPIEvent } from "@/lib/meta-capi";
-import { verifyDemoToken } from "@/lib/demo-session";
+import { createDemoToken, verifyDemoToken } from "@/lib/demo-session";
 import { syncContactToGhl } from "@/lib/ghl-sync";
-import { TAG_CALL_BOOKED } from "@/lib/demo-config";
+import { BOOKING_CONFIRMED_B_PATH, TAG_CALL_BOOKED } from "@/lib/demo-config";
 import {
   ADVISORY_CALL_PATH,
   ADVISORY_PRODUCT_NAME,
@@ -108,8 +108,33 @@ export async function POST(req: NextRequest) {
       }).catch(() => {});
     }
 
+    /**
+     * Back to the confirmation page, from an email, on any device.
+     *
+     * Points at booking-confirmed B — the long version, with the website,
+     * the portal, the ad library, the diagram and the price. That page is
+     * the whole pre-call brief, and the single most useful thing a reminder
+     * email can link to: "here is everything again before we speak".
+     *
+     * The first name rides along in `to` so the page still greets them;
+     * without it they get the generic heading. The resume route only
+     * accepts same-origin paths, and a query string on one is fine.
+     *
+     * Signed and time-limited on the same 30-day clock as the session
+     * cookie, so a reminder sent inside the usual booking window always
+     * works. Written to the contact as well as sent in the webhook, so a
+     * workflow built later can still use it.
+     */
+    const resumeTo = `${BOOKING_CONFIRMED_B_PATH}${
+      lead?.firstName ? `?name=${encodeURIComponent(lead.firstName)}` : ""
+    }`;
+    const resumeUrl = `${SITE_URL}/api/advisory-pricing/resume?t=${encodeURIComponent(
+      await createDemoToken(leadId),
+    )}&to=${encodeURIComponent(resumeTo)}`;
+
     if (lead?.email) {
       await syncContactToGhl({
+        resumeUrl,
         email: lead.email,
         firstName: lead.firstName,
         lastName: lead.lastName,
@@ -173,6 +198,7 @@ export async function POST(req: NextRequest) {
           firm_name: lead?.firmName || "",
           booking_uid: bookingUid,
           booking_start: startTime,
+          resume_url: resumeUrl,
           submitted_at: new Date().toISOString(),
         }),
       }).catch(() => {});

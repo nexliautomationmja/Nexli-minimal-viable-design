@@ -21,7 +21,7 @@ Ad → /advisory-pricing (opt-in)
 
 | Variable | Value |
 |---|---|
-| `STRIPE_ADVISORY_PRICE_ID` | `price_1UNWZHQ5JX5LVmTlgRvBBjFJ` — **live** price under `prod_VOJBkEQoLN3nvQ` |
+| `STRIPE_ADVISORY_PRICE_ID` | `price_1UNWZHQ5JX5LVmTlgRvBBjFJ` — **live** $97 price under `prod_VOJBkEQoLN3nvQ`. Confirmed as $97 in the live Dashboard on 14 Oct 2026. Checkout now verifies this against `ADVISORY_PRICE_VALUE` on every session and refuses to open on a mismatch, so a stale id fails loudly instead of charging the wrong amount. The **test** price is `price_1UPtFRQ5JX5LVmTlwfc1Fvwl`. |
 | `GHL_ADVISORY_OPTIN_WEBHOOK_URL` | workflow 1 |
 | `GHL_ADVISORY_QUALIFY_WEBHOOK_URL` | workflow 2 |
 | `GHL_ADVISORY_BOOKING_WEBHOOK_URL` | workflow 3 |

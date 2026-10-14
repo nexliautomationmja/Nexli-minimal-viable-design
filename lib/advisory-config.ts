@@ -104,13 +104,18 @@ export const ADVISORY_THANKYOU_VIDEO_TITLE = 'Book of Business Accelerator — W
  * in the funnel. The public /vslfunnel-betterclients page keeps the original
  * $8,000 cut; the two are deliberately different videos.
  *
- * PLAYBACK id, not the asset id. (The asset id for this one is
- * vGfoTlNWAwq00ODLqD015qcl007GI201SAweqSUVPIuGxlY, which does NOT resolve —
+ * PLAYBACK id, not the asset id. The asset id for this cut is
+ * 4btVOu9GtQgOzrLm5feIqdG8xUIvC2E8EFstnDwiYbg, which does NOT resolve —
  * https://stream.mux.com/<id>.m3u8 returns 200 for a playback id and 400 for
- * an asset id, which is the quickest way to tell them apart.)
+ * an asset id, which is the quickest way to tell them apart. Both were
+ * checked that way before this swap.
+ *
+ * Previous cut: 4MS5DZOqaCLjkxU4zrYaVbPZi9fyoJ8ZNisqkuz16Z8 (asset
+ * vGfoTlNWAwq00ODLqD015qcl007GI201SAweqSUVPIuGxlY). Still live in Mux, so
+ * it can be put back by swapping the id below and nothing else.
  */
 export const ADVISORY_VSL_VIDEO_PLAYBACK_ID =
-  '4MS5DZOqaCLjkxU4zrYaVbPZi9fyoJ8ZNisqkuz16Z8';
+  '6GrhZJ89yT9to6NOSN02d01ZKNPvkx7pnMVkvGS00ZeMx8';
 
 /**
  * Daniela presents this cut, not Jasmine — the public /vslfunnel-betterclients
@@ -118,6 +123,21 @@ export const ADVISORY_VSL_VIDEO_PLAYBACK_ID =
  * cuts' watch-time and drop-off separate in Mux rather than merged.
  */
 export const ADVISORY_VSL_VIDEO_TITLE = 'Daniela VSL - CPA Ads ($15K)';
+
+/**
+ * The VSL on the $97 offer page.
+ *
+ * Its own cut, not the funnel's — /advisory-pricing sells a $9,997/month
+ * engagement and this sells a five-page PDF. Separate ids also keep the two
+ * videos' watch-time apart in Mux.
+ *
+ * PLAYBACK id. https://stream.mux.com/<id>.m3u8 returns 200 for a playback
+ * id and 400 for an asset id; this one was checked that way.
+ */
+export const ADVISORY_OFFER_VIDEO_PLAYBACK_ID =
+  'fzwKGAo5nQy32VYdY00iGMRugAzD7Y6URrf7KgndNcec';
+
+export const ADVISORY_OFFER_VIDEO_TITLE = 'Book of Business Accelerator - Offer';
 
 /** The gated route. Never link the file path itself. */
 export const ADVISORY_DOWNLOAD_PATH = '/api/advisory-pricing/download';
@@ -140,8 +160,11 @@ export const ADVISORY_PATH = '/advisory-pricing';
  * The $297 page. No longer the main path — it is the downsell a firm lands on
  * after the qualifier says it is not a fit for the agency engagement.
  */
-export const ADVISORY_OFFER_PATH = '/advisory-pricing/offer';
-export const ADVISORY_THANK_YOU_PATH = '/advisory-pricing/thank-you';
+// BOBA = Book of Business Accelerator. Capitalised because that is how the
+// path was specified; URLs are case-sensitive, so /boba is a 404 and the
+// redirects in next.config.ts cover the old paths, not the lowercase one.
+export const ADVISORY_OFFER_PATH = '/advisory-pricing/BOBA';
+export const ADVISORY_THANK_YOU_PATH = '/advisory-pricing/BOBA-thank-you';
 export const ADVISORY_QUALIFY_PATH = '/advisory-pricing/qualify';
 export const ADVISORY_CALL_PATH = '/advisory-pricing/call';
 export const ADVISORY_NEXT_STEPS_PATH = '/advisory-pricing/next-steps';

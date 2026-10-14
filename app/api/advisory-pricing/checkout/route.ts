@@ -6,7 +6,7 @@ import { sendCAPIEvent } from "@/lib/meta-capi";
 import { createAdvisoryCheckoutSession } from "@/lib/stripe";
 import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
-import { readDemoLead } from "@/lib/demo-session";
+import { createDemoToken, readDemoLead } from "@/lib/demo-session";
 import {
   ADVISORY_CURRENCY,
   ADVISORY_OFFER_PATH,
@@ -20,7 +20,7 @@ import {
 export const runtime = "nodejs";
 
 /**
- * Starts the $97 one-time checkout from /advisory-pricing/offer.
+ * Starts the $97 one-time checkout from /advisory-pricing/BOBA.
  *
  * Auth is the signed lead cookie set at the opt-in. The visitor's name,
  * email, phone, firm and attribution already live on that `leads` row, so
@@ -95,6 +95,23 @@ export async function POST(req: NextRequest) {
     const purchaseEventId = `pu.${randomUUID()}`;
     const sourceUrl = `${getSiteUrl()}${ADVISORY_OFFER_PATH}`;
 
+    /**
+     * One click back to the offer, for the abandoned-cart email.
+     *
+     * Points at the BOBA page rather than straight at Stripe: a checkout
+     * session is single-use and expires, so a link to the old one would be
+     * dead by the time the email goes out. The offer page opens a fresh
+     * session on click.
+     *
+     * Also sets the session cookie, which this page needs — it is gated on
+     * the lead cookie, so a plain link opened on a phone would bounce them
+     * out of the funnel instead of back into it. That is the whole reason
+     * this is a resume URL and not just a URL.
+     */
+    const resumeUrl = `${getSiteUrl()}/api/advisory-pricing/resume?t=${encodeURIComponent(
+      await createDemoToken(lead.id),
+    )}&to=${encodeURIComponent(ADVISORY_OFFER_PATH)}`;
+
     if (eventId) {
       sendCAPIEvent({
         event_name: "InitiateCheckout",
@@ -135,6 +152,7 @@ export async function POST(req: NextRequest) {
           phone,
           firm_name: lead.firmName || null,
           offer_url: sourceUrl,
+          resume_url: resumeUrl,
           source: `${ADVISORY_PRODUCT_NAME} - Checkout Started`,
           stage: "checkout_started",
           product: ADVISORY_PRODUCT_NAME,

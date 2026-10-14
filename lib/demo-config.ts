@@ -37,9 +37,40 @@ export const BOOKING_CONFIRMED_B_PATH = '/booking-confirmed-b';
  * literals in components/BookingConfirmed.tsx until the B variant needed the
  * same welcome video — two pages playing one asset from two literals is how
  * they end up playing different things.
+ *
+ * ONE constant, BOTH pages. /booking-confirmed and /booking-confirmed-b are
+ * a split test, so the welcome video has to be the control: if A played the
+ * old cut and B the new one, a difference in bookings would no longer be
+ * attributable to the page. Split this into a B-only constant only if the
+ * video itself is the thing being tested.
+ *
+ * PLAYBACK id, not the asset id. This cut's asset is
+ * DK6eZgzxK7WLvaY9coo101dFfXYzzlc33dFrgAjWQAs4, which does NOT resolve —
+ * https://stream.mux.com/<id>.m3u8 returns 200 for a playback id and 400
+ * for an asset id. Both were checked that way before this swap.
+ *
+ * Previous cut: 1YNqqVjhqvAdjOCpFnyCXSewrZt2Iu3HcnvzbcYZ9Gs. Still in Mux,
+ * so reverting is this line and nothing else.
  */
-export const BOOKING_WELCOME_VIDEO_ID = '1YNqqVjhqvAdjOCpFnyCXSewrZt2Iu3HcnvzbcYZ9Gs';
+export const BOOKING_WELCOME_VIDEO_ID = 'brQvpc77PpgGE2004Uu7c7njC5n9rwo01GPWHG02KY6S74';
 export const BOOKING_WELCOME_VIDEO_TITLE = 'Booking Confirmed - Thank You';
+
+/**
+ * Which second of the video the poster frame comes from.
+ *
+ * Mux does NOT default to the first frame. Ask image.mux.com for a
+ * thumbnail with no `time` and it returns one from the middle of the
+ * asset — here that was a frame with an on-screen graphic and a burned-in
+ * caption reading "GETS BUILT END", which is what both confirmation pages
+ * were showing before anyone pressed play.
+ *
+ * 0 is the clean open: no caption, no motion blur. The captions in this cut
+ * start at about 0.75s, so anything past that puts text in the poster.
+ *
+ * To preview another frame before changing this:
+ *   https://image.mux.com/<playback id>/thumbnail.jpg?time=<seconds>
+ */
+export const BOOKING_WELCOME_VIDEO_POSTER_TIME = 0;
 
 export const BOOKING_SYSTEM_VIDEO_ID = 'i02jTMTuY028ZUWRHJsjSRBEEYBJGPcl005sEV3iOARIn00';
 export const BOOKING_SYSTEM_VIDEO_TITLE = 'Digital Rainmaker System Demo';
