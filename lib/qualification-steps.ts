@@ -1,8 +1,21 @@
 // ---------------------------------------------------------------------------
 // Qualification steps — pure data, safe to import from server routes.
-// The six-step "High-Signal" funnel: Geography → Authority → Intent →
-// Duration → Revenue → Tax-Planning Value. QualificationProvider re-exports
-// everything here for client code.
+// QualificationProvider re-exports everything here for client code.
+//
+// TWO step lists, deliberately:
+//
+//   QUALIFICATION_STEPS          the original six — Geography, Authority,
+//                                Intent, Duration, Revenue, Tax-Planning
+//                                Value. Still used by the demo funnel and by
+//                                the site-wide qualification modal. Frozen.
+//
+//   ADVISORY_QUALIFICATION_STEPS the advisory funnel's. Four questions, then
+//                                contact details, then the budget question
+//                                that routes to the calendar or the downsell.
+//
+// They are separate rather than one filtered list because the demo funnel's
+// payload, GHL note and progress bar are all shaped by its six, and nothing
+// about this funnel should be able to move them.
 // ---------------------------------------------------------------------------
 
 export interface QualificationAnswers {
@@ -14,6 +27,23 @@ export interface QualificationAnswers {
   annualRevenue: string | null;
   taxSavings: string | null;
   taxSavingsTag: string | null;
+  /** Advisory funnel only; always null on the demo funnel. */
+  budget: string | null;
+}
+
+/**
+ * Contact details, collected mid-qualifier now that the advisory funnel has
+ * no opt-in step in front of it. Kept out of QualificationAnswers because
+ * these map to their own lead columns and must not pass through
+ * normalizeQualificationAnswers, which whitelists against option lists.
+ */
+export interface QualificationContact {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  firmName: string;
+  marketingSmsOptIn: boolean;
 }
 
 export interface QualificationOption {
@@ -30,6 +60,7 @@ export const EMPTY_QUALIFICATION_ANSWERS: QualificationAnswers = {
   annualRevenue: null,
   taxSavings: null,
   taxSavingsTag: null,
+  budget: null,
 };
 
 export const decisionRoleOptions: QualificationOption[] = [
@@ -86,16 +117,46 @@ export const taxSavingsTagMap: Record<string, string> = {
   'under-10k': 'taxplan_compliance',
 };
 
+// ── Budget: the advisory funnel's last question and its real gate ────────
+// Phrased around the all-in number because that is what they actually pay:
+// AGENCY_TOTAL_MONTHLY. Labels stay in sync with
+// lib/agency-offer.ts by hand — they are prose, not computed, because a
+// templated sentence here reads worse than a written one.
+
+export const budgetOptions: QualificationOption[] = [
+  { value: 'ready', label: "That works — we're ready to invest at that level" },
+  { value: 'tight', label: "Workable, but we'd want to phase into the ad spend" },
+  { value: 'under', label: 'Under $5,000 a month is realistic for us right now' },
+  { value: 'no', label: "We're not looking to invest in growth at the moment" },
+];
+
+/**
+ * Who the budget question turns away. Separate from the option list so the
+ * bar can move without touching the copy — same pattern as
+ * DISQUALIFYING_ROLE and DISQUALIFYING_REVENUE.
+ */
+export const DISQUALIFYING_BUDGETS = ['under', 'no'];
+
 export type QualificationStepKey =
   | 'usBased'
   | 'decisionRole'
   | 'goal'
   | 'problemDuration'
   | 'annualRevenue'
-  | 'taxSavings';
+  | 'taxSavings'
+  | 'contact'
+  | 'budget';
+
+/**
+ * What the card renders for a step. Before this existed the card branched on
+ * the step KEY and `options: null` secretly meant "render Yes/No", so adding
+ * a step meant editing three exhaustive Record lookups and a ternary.
+ */
+export type QualificationStepType = 'boolean' | 'choice' | 'contact';
 
 export interface QualificationStepDef {
   key: QualificationStepKey;
+  type: QualificationStepType;
   question: string;
   /** Sub-copy for the call funnel. */
   hint: string;
@@ -109,6 +170,7 @@ export interface QualificationStepDef {
 export const QUALIFICATION_STEPS: QualificationStepDef[] = [
   {
     key: 'usBased',
+    type: 'boolean',
     question: 'Is your firm based in the United States?',
     hint: 'We currently serve US-based CPA firms and accounting practices.',
     foundationHint: 'We build for US-based CPA firms and accounting practices.',
@@ -116,6 +178,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
   },
   {
     key: 'decisionRole',
+    type: 'choice',
     question: "What's your role in the firm's decision-making?",
     hint: 'This helps us understand who will be involved in evaluating and implementing our system.',
     foundationHint: 'So we know who else to include in the next step.',
@@ -123,6 +186,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
   },
   {
     key: 'goal',
+    type: 'choice',
     question: "What's the main thing you're trying to fix?",
     hint: 'This helps us prepare for your strategy session.',
     foundationHint: 'So we point you at the part of the system that matters most.',
@@ -130,6 +194,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
   },
   {
     key: 'problemDuration',
+    type: 'choice',
     question: "How long has this been a problem you've wanted to solve?",
     hint: 'No wrong answer — we just want to understand where you are.',
     foundationHint: 'No wrong answer — we just want to understand where you are.',
@@ -137,6 +202,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
   },
   {
     key: 'annualRevenue',
+    type: 'choice',
     question: "What is your firm's approximate annual revenue?",
     hint: "This helps us tailor the strategy session to your firm's size and goals.",
     foundationHint: "This decides which of our two options actually fits your firm.",
@@ -144,6 +210,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
   },
   {
     key: 'taxSavings',
+    type: 'choice',
     question: "What's the most you've ever saved a single client through tax planning?",
     hint: "This tells us how much advisory value you're already creating — and where the ceiling is.",
     foundationHint: "This tells us how much advisory value you're already creating.",
@@ -152,6 +219,71 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
 ];
 
 export const QUALIFICATION_STEP_COUNT = QUALIFICATION_STEPS.length;
+
+/**
+ * The advisory funnel's qualifier.
+ *
+ * Four questions, then contact, then budget. The order is the point: two or
+ * three easy answers build enough momentum that the contact step is no
+ * longer the first thing asked of a cold visitor, and the contact step sits
+ * BEFORE the budget question so a firm that fails on budget has still
+ * identified itself — that is who the $297 downsell exists for.
+ *
+ * problemDuration and taxSavings are deliberately absent. They were
+ * collected and never used for anything: no routing, no tag, no copy.
+ */
+export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
+  {
+    key: 'usBased',
+    type: 'boolean',
+    question: 'Is your firm based in the United States?',
+    hint: 'We currently serve US-based CPA firms and accounting practices.',
+    foundationHint: 'We build for US-based CPA firms and accounting practices.',
+    options: null,
+  },
+  {
+    key: 'decisionRole',
+    type: 'choice',
+    question: "What's your role in the firm's decision-making?",
+    hint: 'This helps us understand who will be involved in evaluating and implementing our system.',
+    foundationHint: 'So we know who else to include in the next step.',
+    options: decisionRoleOptions,
+  },
+  {
+    key: 'annualRevenue',
+    type: 'choice',
+    question: "What is your firm's approximate annual revenue?",
+    hint: "This helps us tailor the strategy session to your firm's size and goals.",
+    foundationHint: 'This decides which of our two options actually fits your firm.',
+    options: annualRevenueOptions,
+  },
+  {
+    key: 'goal',
+    type: 'choice',
+    question: "What's the main thing you're trying to fix?",
+    hint: 'This helps us prepare for your strategy session.',
+    foundationHint: 'So we point you at the part of the system that matters most.',
+    options: goalOptions,
+  },
+  {
+    key: 'contact',
+    type: 'contact',
+    question: 'Where should we send your results?',
+    hint: 'So we can send the details and get the right person on the call.',
+    foundationHint: 'So we can send the details and get the right person on the call.',
+    options: null,
+  },
+  {
+    key: 'budget',
+    type: 'choice',
+    question: 'Where does that sit for your firm right now?',
+    hint: 'The complete system is $9,997 a month all in. That covers the build, the campaigns and the $5,000 ad budget together — one invoice, no setup fee, six-month initial term.',
+    foundationHint: 'The complete system is $9,997 a month all in — the build, the campaigns and the $5,000 ad budget together.',
+    options: budgetOptions,
+  },
+];
+
+export const ADVISORY_QUALIFICATION_STEP_COUNT = ADVISORY_QUALIFICATION_STEPS.length;
 
 function pickOption(value: unknown, options: QualificationOption[]): string | null {
   return typeof value === 'string' && options.some((o) => o.value === value) ? value : null;
@@ -174,12 +306,15 @@ export function normalizeQualificationAnswers(input: unknown): QualificationAnsw
     annualRevenue: pickOption(raw.annualRevenue, annualRevenueOptions),
     taxSavings,
     taxSavingsTag: taxSavings ? taxSavingsTagMap[taxSavings] ?? null : null,
+    budget: pickOption(raw.budget, budgetOptions),
   };
 }
 
 /** Human-readable label for an answer value, or the raw value when unknown. */
 export function qualificationLabel(key: QualificationStepKey, value: string | null): string | null {
   if (value == null) return null;
-  const step = QUALIFICATION_STEPS.find((s) => s.key === key);
+  const step =
+    QUALIFICATION_STEPS.find((s) => s.key === key) ??
+    ADVISORY_QUALIFICATION_STEPS.find((s) => s.key === key);
   return step?.options?.find((o) => o.value === value)?.label ?? value;
 }

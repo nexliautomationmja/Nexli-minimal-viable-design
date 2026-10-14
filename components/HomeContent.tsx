@@ -5,7 +5,6 @@ import Hero from './Hero';
 import CardShredder from './CardShredder';
 import ValueProposition from './ValueProposition';
 import ClientComplaints from './ClientComplaints';
-import ContactForm from './ContactForm';
 import BookingSection from './BookingSection';
 
 const HomeContent: React.FC = () => {
@@ -15,7 +14,6 @@ const HomeContent: React.FC = () => {
       <CardShredder />
       <ValueProposition />
       <ClientComplaints />
-      <ContactForm />
       <BookingSection />
     </>
   );

@@ -97,7 +97,7 @@ export const FOUNDATION_PREVIEW_FORM_SOURCE = 'foundation-preview';
  * Launch promise.
  *
  * DELIBERATELY 21, not the 14 the agency offer promises (see LAUNCH_DAYS in
- * components/GuaranteeSection.tsx). This is not drift — funnel buildouts take
+ * the agency build window in lib/agency-offer.ts). Not drift — funnel buildouts take
  * priority in the build queue, so Firm Foundation carries the longer window.
  * Do not "fix" the two to match.
  *

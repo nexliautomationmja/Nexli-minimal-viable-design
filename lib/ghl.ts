@@ -40,7 +40,7 @@ function getLocationId(): string {
 
 async function ghlFetch<T>(
   path: string,
-  init: { method: 'GET' | 'POST' | 'PUT'; body?: unknown },
+  init: { method: 'GET' | 'POST' | 'PUT' | 'DELETE'; body?: unknown },
 ): Promise<GhlResult<T>> {
   const key = process.env.GHL_API_KEY;
   if (!key || !getLocationId()) {
@@ -181,6 +181,22 @@ export async function addContactTags(contactId: string, tags: string[]): Promise
   if (!tags.length) return { ok: true };
   return ghlFetch(`/contacts/${encodeURIComponent(contactId)}/tags`, {
     method: 'POST',
+    body: { tags },
+  });
+}
+
+/**
+ * Remove tags from a contact.
+ *
+ * Stage tags are mutually exclusive where they describe the same axis:
+ * "advisory opt-in" means opted in and HAS NOT bought. The moment they buy
+ * it has to come off, or they sit in the pre-purchase nurture forever and
+ * every segment built on it is wrong.
+ */
+export async function removeContactTags(contactId: string, tags: string[]): Promise<GhlResult> {
+  if (!tags.length) return { ok: true };
+  return ghlFetch(`/contacts/${encodeURIComponent(contactId)}/tags`, {
+    method: 'DELETE',
     body: { tags },
   });
 }

@@ -173,6 +173,8 @@ export async function POST(req: NextRequest) {
           annualRevenue,
           taxSavings,
           taxSavingsTag,
+          // The site-wide booking modal has no budget question.
+          budget: null,
         },
         leadScore: scoring.classification,
         funnelPath: qualified ? "agency" : "web",

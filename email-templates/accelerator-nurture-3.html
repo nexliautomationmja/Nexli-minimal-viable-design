@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>Stop pricing the hours</title>
+</head>
+<!--
+  Advisory funnel — opt-in nurture #3. Send ONLY when the contact does
+  NOT carry the tag "advisory buyer" — check it immediately before each send.
+
+  PASTE THIS INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+  GHL's WYSIWYG editor rewrites pasted markup: it wraps everything in paragraph
+  tags, forces Verdana, and strips font-size and padding it does not expect.
+  That is what flattened the $800 / $15,000 figures to body size and
+  removed the button's padding in the last round.
+
+  MERGE FIELDS: built for the OPT-IN webhook, which sends snake_case —
+  {{inboundWebhookRequest.first_name}}, NOT firstName. The purchase webhook
+  uses camelCase. Do not copy merge tags between the two.
+
+  Tables and inline styles only. No flexbox, no grid, no web fonts, no CSS
+  animation, no gradient text — none of it survives Outlook or Gmail.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <!-- Preheader: inbox preview text, hidden in the body. -->
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    Your client is not buying your time. They are buying a number.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Logo -->
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 0 18px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #60a5fa;">Nexli &middot; For established CPA firms</p>
+              <h1 style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                {{inboundWebhookRequest.first_name}}, stop pricing the hours. Price the number you save them.
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Lede -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                A planning engagement that saves a client $50,000 takes you maybe fifteen hours. Bill it hourly and you have written a $4,500 invoice for $50,000 of value.
+              </p>
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                That is the whole reason advisory feels unprofitable at most firms. Not the work &mdash; the pricing.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ===================== PRIMARY CTA — AT THE TOP ===================== -->
+          <tr>
+            <td style="padding: 0 0 34px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #101c33; border: 1px solid #2f6fd0; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 10px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">Free training</p>
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">Your top 20 will run out.<br />This is where the next 50 come from.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">A short video on what has to be in place before a firm like yours runs ads.</p>
+
+                    <!-- Padding lives on the table cell, never on the link. An
+                         editor or client that strips display:inline-block makes
+                         padding on an inline link do nothing, which is what made
+                         the text burst out of the pill. A cell always makes a box. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#2563eb" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Watch the training&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <p style="margin: 16px 0 0 0; font-size: 12px; color: #8b94a3;">No card, no call. It plays in your browser.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 12px 0;">
+              <p style="margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #6b7686;">What pricing it properly requires</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td valign="top" style="padding: 0 0 12px 0;">
+                    <p style="margin: 0 0 3px 0; font-size: 16px; font-weight: 700; color: #ffffff;">Projected savings, then one fixed fee</p>
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">The fee comes off the projected saving, not off your hours. Run that calculation on the planning work you already did this year and compare it to what you actually invoiced — the gap is the whole problem, and it is bigger than most owners expect.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 0 0 12px 0;">
+                    <p style="margin: 0 0 3px 0; font-size: 16px; font-weight: 700; color: #ffffff;">Quote it once, in writing, before any work starts</p>
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">The fee is owed whether or not they implement, and whatever the savings turn out to be. No adjusting afterwards, no savings guarantees, no money-back promises.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">
+                    <p style="margin: 0 0 3px 0; font-size: 16px; font-weight: 700; color: #ffffff;">A separate engagement letter</p>
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">Apart from return preparation. That one structural change is what makes the fee defensible, and it is the step most firms skip.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #0e2320; border: 1px solid #1f5c4d; border-radius: 12px; padding: 16px 18px;">
+                    <p style="margin: 0 0 6px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #34d399;">Keep it clean</p>
+                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #cbd3de;">This is value pricing, not a cut of the savings. A percentage-of-savings fee is a contingency arrangement, and your state board has opinions about those. Know exactly where that line sits before you quote anything.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Deadline -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #2a1416; border: 1px solid #5c2225; border-radius: 12px; padding: 16px 18px;">
+                    <p style="margin: 0 0 6px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #f87171;">Why this has to be now</p>
+                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #cbd3de;">
+                      Most planning moves have to be executed <strong style="color: #ffffff;">inside the tax year</strong>. Sell an engagement in November and your client sees the saving on the return you file in April. Sell the same one in February and the year is already written.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Closing CTA -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                Fifteen hours of work is fifteen hours of work. What changes is what you write at the bottom of the letter.
+              </p>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
+                <tr>
+                  <td align="center" bgcolor="#2563eb" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                    <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Watch the training &mdash; free&nbsp;&rarr;</span></a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; The Nexli team</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                Nexli Automation &middot; <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="color: #60a5fa; text-decoration: none;">Watch the training</a>
+              </p>
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                You are receiving this because you asked to see the Nexli training.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

@@ -141,7 +141,7 @@ const BlogPost: React.FC<{ slug: string }> = ({ slug }) => {
             onClick={openBooking}
             className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-lg shadow-blue-600/25"
           >
-            Book a Consultation
+            See If You Qualify
             <ArrowRight size={18} />
           </button>
         </motion.div>

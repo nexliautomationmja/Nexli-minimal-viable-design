@@ -23,7 +23,9 @@ const Footer: React.FC = () => {
     // Exact '/demo' plus the '/demo/' prefix, so a future unrelated route
     // beginning with those letters is not swept up.
     pathname === '/demo' ||
-    pathname.startsWith('/demo/')
+    pathname.startsWith('/demo/') ||
+    pathname === '/advisory-pricing' ||
+    pathname.startsWith('/advisory-pricing/')
   )
     return null;
 

@@ -65,16 +65,32 @@ export const ORG_DESCRIPTION =
 export const MIN_REVENUE = '$500K+';
 export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';
 
-export const GUARANTEES = [
+/**
+ * How the engagement works. These are terms, not guarantees — Nexli does
+ * not offer guarantees, and this const is read by lib/schema.ts and
+ * lib/llms.ts, which is what AI assistants quote about the company. A
+ * promise left here outlives one left in a component.
+ */
+export const ENGAGEMENT_TERMS = [
   {
-    name: '50 Qualified Leads in 90 Days',
+    name: 'Six-month initial term',
     description:
-      'At least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it hits 50.',
+      'The engagement runs on a signed agreement with a six-month minimum initial term. After that it continues month to month and can be cancelled with 30 days notice.',
   },
   {
-    name: '14-Day Funnel Launch Guarantee',
+    name: 'No setup fee',
     description:
-      'Your whole funnel — website, landing pages, booking flow, follow-up and portal — is live within 14 days of kickoff, or you receive a $1,000 credit toward your next monthly payment.',
+      'One flat monthly fee for the complete system. There is no setup fee, no deposit and no per-component pricing.',
+  },
+  {
+    name: 'Typically live in 10 to 14 days',
+    description:
+      'Most firms are live within 10 to 14 days of kickoff. The variable is how quickly assets, access and approvals come back; around 24 days is the realistic worst case when they come back slowly.',
+  },
+  {
+    name: 'One monthly price, ad spend included',
+    description:
+      'The monthly fee covers the complete system and the ad budget together. Nexli collects it and places the spend into the campaigns, and reports where it went each week.',
   },
 ] as const;
 

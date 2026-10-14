@@ -21,6 +21,8 @@ import { Loader2 } from 'lucide-react';
 import {
   QualificationStepsCard,
   type QualificationAnswers,
+  type QualificationContact,
+  type QualificationStepDef,
 } from '@/components/QualificationProvider';
 import {
   DISQUALIFYING_REVENUE,
@@ -47,7 +49,35 @@ export function decideFunnelPath(a: QualificationAnswers): FunnelPath {
   return 'agency';
 }
 
-const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'leads' }) => {
+export interface QualifyFlowProps {
+  intent?: 'leads' | 'website';
+  /** Route that records the answers and returns `{ next }`. */
+  endpoint?: string;
+  /** Client-side fallbacks, used only when the POST fails — the server is
+   *  authoritative. The advisory funnel points these at its own two pages. */
+  qualifiedPath?: string;
+  unqualifiedPath?: string;
+  /** Footer line under the card; the advisory funnel has already sold. */
+  footnote?: string;
+  /**
+   * Which questions to ask. Defaults to the demo funnel's six. The advisory
+   * funnel passes ADVISORY_QUALIFICATION_STEPS, whose last two steps collect
+   * contact details and the budget answer.
+   */
+  steps?: QualificationStepDef[];
+  /** Meta content_name, so the two funnels stay separable in reporting. */
+  contentName?: string;
+}
+
+const QualifyFlow: React.FC<QualifyFlowProps> = ({
+  intent = 'leads',
+  endpoint = '/api/demo/qualify',
+  qualifiedPath = DEMO_CALL_PATH,
+  unqualifiedPath = DEMO_OFFER_PATH,
+  footnote = 'Six questions. About a minute. No sales pitch until we know you are a fit.',
+  steps,
+  contentName = 'Demo Qualifier',
+}) => {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -66,26 +96,41 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
   );
 
   const handleComplete = useCallback(
-    async (answers: QualificationAnswers) => {
+    async (answers: QualificationAnswers, contact?: QualificationContact) => {
       setSubmitting(true);
 
       // Browser pixel first so the server CAPI event can dedupe against it.
       const eventId = generateEventId();
       trackMetaEvent(
         'CompleteRegistration',
-        { content_name: 'Demo Qualifier', content_category: 'Qualification' },
+        { content_name: contentName, content_category: 'Qualification' },
         eventId,
       );
 
-      const fallback = decideFunnelPath(answers) === 'agency' ? DEMO_CALL_PATH : DEMO_OFFER_PATH;
+      // The advisory funnel has no opt-in in front of it, so this submission
+      // is also the lead capture — fire Lead too, or the funnel has no lead
+      // conversion in Ads Manager at all. Its own event id, so the two events
+      // dedupe independently against their CAPI counterparts.
+      const leadEventId = contact ? generateEventId() : null;
+      if (leadEventId) {
+        trackMetaEvent(
+          'Lead',
+          { content_name: contentName, content_category: 'Qualification' },
+          leadEventId,
+        );
+      }
+
+      const fallback = decideFunnelPath(answers) === 'agency' ? qualifiedPath : unqualifiedPath;
 
       try {
-        const res = await fetch('/api/demo/qualify', {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             answers,
+            contact,
             event_id: eventId,
+            lead_event_id: leadEventId,
             attribution: getAttribution(),
           }),
         });
@@ -100,12 +145,16 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
         router.push(withIntent(fallback));
       }
     },
-    [router, withIntent],
+    [router, withIntent, endpoint, qualifiedPath, unqualifiedPath, contentName],
   );
+
+  // Follows whichever step list is in play, so the advisory funnel's six
+  // steps do not report progress against the demo funnel's six.
+  const stepCount = steps?.length ?? QUALIFICATION_STEP_COUNT;
 
   const pct = submitting
     ? 100
-    : Math.round((step / QUALIFICATION_STEP_COUNT) * 100);
+    : Math.round((step / stepCount) * 100);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -118,7 +167,7 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
           >
             {submitting
               ? 'Complete'
-              : `Question ${Math.min(step + 1, QUALIFICATION_STEP_COUNT)} of ${QUALIFICATION_STEP_COUNT}`}
+              : `Question ${Math.min(step + 1, stepCount)} of ${stepCount}`}
           </span>
           <span className="text-[11px] font-bold text-blue-400">{pct}%</span>
         </div>
@@ -167,6 +216,7 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
             </motion.div>
           ) : (
             <QualificationStepsCard
+              steps={steps}
               mode="foundation"
               hideHeader
               hideProgress
@@ -181,7 +231,7 @@ const QualifyFlow: React.FC<{ intent?: 'leads' | 'website' }> = ({ intent = 'lea
         className="mt-5 px-4 text-center text-xs"
         style={{ color: 'rgba(255,255,255,0.4)' }}
       >
-        Six questions. About a minute. No sales pitch until we know you are a fit.
+        {footnote}
       </p>
     </div>
   );

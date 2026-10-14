@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>Nothing has changed since our first email</title>
+</head>
+<!--
+  Advisory funnel — opt-in nurture #5, the last in the sequence. Send ONLY
+  when the contact does NOT carry the tag "advisory buyer". Nothing should
+  fire after this one — it tells them it is the last.
+
+  PASTE THIS INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+  GHL's WYSIWYG editor rewrites pasted markup: it wraps everything in paragraph
+  tags, forces Verdana, and strips font-size and padding it does not expect.
+  That is what flattened the $800 / $15,000 figures to body size and
+  removed the button's padding in the last round.
+
+  MERGE FIELDS: built for the OPT-IN webhook, which sends snake_case —
+  {{inboundWebhookRequest.first_name}}, NOT firstName. The purchase webhook
+  uses camelCase. Do not copy merge tags between the two.
+
+  Tables and inline styles only. No flexbox, no grid, no web fonts, no CSS
+  animation, no gradient text — none of it survives Outlook or Gmail.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <!-- Preheader: inbox preview text, hidden in the body. -->
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    Same clients. Same returns. Same $800. Fewer weeks left.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Logo -->
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 0 18px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #60a5fa;">The last one of these</p>
+              <h1 style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                {{inboundWebhookRequest.first_name}}, nothing has changed since our first email. That is the whole problem.
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Lede -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                The clients are the same ones. The returns are the same returns. The six and seven figures going to the IRS are still going to the IRS, out of files that are still sitting on your server.
+              </p>
+              <p style="margin: 0 0 14px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                The only thing that has moved is the number of weeks left before this tax year closes.
+              </p>
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                In March you will open those files again, do the same work again, and invoice eight hundred dollars again. And the $60,000 that was sitting in your book this whole time will still be sitting there, one year older.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ===================== PRIMARY CTA — AT THE TOP ===================== -->
+          <tr>
+            <td style="padding: 0 0 34px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #101c33; border: 1px solid #2f6fd0; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 10px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">Free training</p>
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">Your top 20 will run out.<br />This is where the next 50 come from.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">A short video on what has to be in place before a firm like yours runs ads.</p>
+
+                    <!-- Padding lives on the table cell, never on the link. An
+                         editor or client that strips display:inline-block makes
+                         padding on an inline link do nothing, which is what made
+                         the text burst out of the pill. A cell always makes a box. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#2563eb" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Watch the training&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <p style="margin: 16px 0 0 0; font-size: 12px; color: #8b94a3;">No card, no call. It plays in your browser.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- $800 vs $15,000 -->
+          <tr>
+            <td style="padding: 0 0 10px 0; text-align: center;">
+              <p style="margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #6b7686;">The same client, twice</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td width="48%" valign="top" style="background-color: #121725; border: 1px solid #222a3a; border-radius: 12px; padding: 20px;">
+                    <p style="margin: 0 0 8px 0; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #6b7686;">What you do today</p>
+                    <p style="margin: 0 0 4px 0; font-size: 34px; line-height: 1; font-weight: 800; color: #59606e;">$800</p>
+                    <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #8b94a3;">Filing the return. What you invoiced.</p>
+                  </td>
+                  <td width="4%">&nbsp;</td>
+                  <td width="48%" valign="top" style="background-color: #101c33; border: 1px solid #2f6fd0; border-radius: 12px; padding: 20px;">
+                    <p style="margin: 0 0 8px 0; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #60a5fa;">What the play changes</p>
+                    <p style="margin: 0 0 4px 0; font-size: 34px; line-height: 1; font-weight: 800; color: #ffffff;">$15,000</p>
+                    <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #b4bcc8;">Pricing the tax position. Same client, same year.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 12px 0;">
+              <p style="margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #6b7686;">What it costs to do nothing</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td valign="top" style="padding: 0 0 12px 0;">
+                    <p style="margin: 0 0 3px 0; font-size: 16px; font-weight: 700; color: #ffffff;">It is not lost revenue. It is revenue you handed over</p>
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">Nobody outbid you. Nobody out-sold you. The work was yours, the data was yours, the relationship was yours. The only thing missing was somebody raising it.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 0 0 12px 0;">
+                    <p style="margin: 0 0 3px 0; font-size: 16px; font-weight: 700; color: #ffffff;">And it compounds quietly</p>
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">Every year you do not have that conversation is a year the client pays tax they did not have to, and a year you bill a fraction of what the work was worth. Nine years in, that is not a rounding error.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">
+                    <p style="margin: 0 0 3px 0; font-size: 16px; font-weight: 700; color: #ffffff;">And nobody is coming to point it out</p>
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">Your clients will not ask for planning they do not know exists. They will keep paying the tax, keep paying your eight hundred dollars, and keep thanking you for it.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Last-email note -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #0e2320; border: 1px solid #1f5c4d; border-radius: 12px; padding: 16px 18px;">
+                    <p style="margin: 0 0 6px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #34d399;">Last one from us</p>
+                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #cbd3de;">This is the final email in this sequence. If this is not for you, that is a fair answer and you will not hear from us about it again. If it is, the link below still works.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Deadline -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #2a1416; border: 1px solid #5c2225; border-radius: 12px; padding: 16px 18px;">
+                    <p style="margin: 0 0 6px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #f87171;">Why this has to be now</p>
+                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #cbd3de;">
+                      Most planning moves have to be executed <strong style="color: #ffffff;">inside the tax year</strong>. Sell an engagement in November and your client sees the saving on the return you file in April. Sell the same one in February and the year is already written.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Closing CTA -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                You will file those same returns in March either way. The only question is whether one of those clients has already paid you properly by then, and that is decided before December 31 &mdash; not in April.
+              </p>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
+                <tr>
+                  <td align="center" bgcolor="#2563eb" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                    <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Watch the training &mdash; free&nbsp;&rarr;</span></a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; The Nexli team</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                Nexli Automation &middot; <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="color: #60a5fa; text-decoration: none;">Watch the training</a>
+              </p>
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                You are receiving this because you asked to see the Nexli training.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

@@ -3,17 +3,25 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Shield, Clock, TrendingUp, Droplets,
+  ArrowRight, Shield, Clock, TrendingUp, Droplets, BadgeCheck,
   VolumeX, X, ChevronDown,
   Monitor, Users, Bot, BarChart3,
   Zap, CalendarCheck, Star, DollarSign, ContactRound, Save, TimerReset, LayoutDashboard,
 } from 'lucide-react';
 import { trackMetaEvent } from '@/lib/meta-events';
+import {
+  AGENCY_ENGAGEMENT_AVG,
+  AGENCY_ENGAGEMENT_HIGH,
+  AGENCY_ENGAGEMENT_LOW,
+  AGENCY_TOTAL_MONTHLY,
+  usd,
+} from '@/lib/agency-offer';
 import { useTheme } from './ThemeProvider';
 import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
-import GuaranteeSection from './GuaranteeSection';
 import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
+import DeadlineUrgency, { DeadlineBanner } from './advisory/DeadlineUrgency';
+import MetaLogo from './icons/MetaLogo';
 
 // Google "G" icon matching lucide-react component interface
 const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ size = 24, style }) => (
@@ -26,10 +34,67 @@ const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ siz
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// QUALIFY CTA — the one conversion button on this page, used four times here
+// four times on this page.
+//
+// Two behaviours:
+//
+//   no ctaHref   calls openBooking() — the modal qualifier from
+//                QualificationProvider. What the five public /vslfunnel*
+//                pages have always done; leave them on it.
+//
+//   ctaHref set  a plain link. The gated advisory funnel points this at its
+//                own qualifier page, which writes a lead row, sets funnelPath,
+//                tags the contact in GoHighLevel and has a downsell branch for
+//                firms that do not qualify. The modal does none of that — it
+//                simply declines to open the calendar.
+//
+// Extracted because the same markup was repeated at four call sites and the
+// next person to change the button would have found three of them.
+// ─────────────────────────────────────────────────────────────────────────────
+const CTA_LABEL = 'See If Your Firm Qualifies';
+
+const CTA_CLASS = {
+  lg: 'inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer',
+  bar: 'w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer',
+} as const;
+
+const QualifyCta: React.FC<{ ctaHref?: string; size?: keyof typeof CTA_CLASS }> = ({
+  ctaHref,
+  size = 'lg',
+}) => {
+  const { openBooking } = useBooking();
+  const cls = CTA_CLASS[size];
+  const arrow = (
+    <ArrowRight
+      size={size === 'lg' ? 22 : 18}
+      className="group-hover:translate-x-1 transition-transform"
+    />
+  );
+
+  // Raw <a> rather than next/link — this file uses no next/link anywhere.
+  return ctaHref ? (
+    <a href={ctaHref} className={cls}>
+      {CTA_LABEL}
+      {arrow}
+    </a>
+  ) : (
+    <button onClick={() => openBooking()} className={cls}>
+      {CTA_LABEL}
+      {arrow}
+    </button>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // STATIC LOGO — Non-linking brand anchor (replaces Navbar on funnel pages)
 // ─────────────────────────────────────────────────────────────────────────────
-const StaticLogo: React.FC = () => (
-  <div className="fixed top-6 left-6 md:top-8 md:left-8 z-[110]">
+const StaticLogo: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }) => (
+  <div
+    className={`fixed left-6 md:left-8 z-[110] ${
+      belowBanner ? 'top-[4.5rem] md:top-[5.25rem]' : 'top-6 md:top-8'
+    }`}
+  >
     <div
       className="flex items-center gap-2 backdrop-blur-md px-3 py-2 md:px-4 md:py-2 rounded-full border"
       style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.05)' }}
@@ -67,6 +132,23 @@ interface HeroProps {
   eyebrowIcon?: React.ElementType;
   eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
+  ctaHref?: string;
+  /** Show the "campaigns run on Meta" chip above the headline. */
+  metaChip?: boolean;
+  /** Render the eyebrow pill at all. */
+  showEyebrow?: boolean;
+  /**
+   * Which second of the video the poster frame comes from. 0 — the opening
+   * frame — unless a page has a reason to differ. See the note at the
+   * MuxPlayer for why this is not left to Mux.
+   */
+  posterTime?: number;
+  /**
+   * A DeadlineBanner is sitting above this hero. Trims the top padding by
+   * roughly the bar's own height, so the banner does not cost the headline
+   * and the video the top of a phone screen.
+   */
+  hasBanner?: boolean;
 }
 
 const EYEBROW_TONES = {
@@ -92,9 +174,8 @@ const EYEBROW_TONES = {
   },
 } as const;
 
-const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true }) => {
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, ctaHref, metaChip = false, showEyebrow = true, hasBanner = false, posterTime = 0 }) => {
   const eyebrow = EYEBROW_TONES[eyebrowTone] ?? EYEBROW_TONES.blue;
-  const { openBooking } = useBooking();
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
 
@@ -202,32 +283,89 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
     setIsMuted(false);
   };
 
+  // The eyebrow, above the headline. The advisory page turns it off
+  // entirely — its deadline banner and Meta chip already carry the top of
+  // the hero, and a third pill under them was three rows of chrome before
+  // anyone reached the headline.
+  const eyebrowPill = (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative inline-flex items-center mb-6 md:mb-8 rounded-full overflow-hidden p-[1px]"
+          >
+            <span
+              className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
+              style={{ background: eyebrow.border }}
+            />
+            <span className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
+              <EyebrowIcon size={14} className={eyebrow.icon} />
+              <span className={`text-xs sm:text-sm font-black tracking-wide uppercase ${eyebrow.text}`}>
+                {eyebrowText}
+              </span>
+            </span>
+          </motion.div>
+  );
+
   return (
-    <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-4">
+    <section
+      className={`relative pb-16 md:pb-24 px-4 ${
+        hasBanner ? 'pt-16 md:pt-24' : 'pt-24 md:pt-32'
+      }`}
+    >
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full blur-[120px] bg-blue-500/8" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto text-center">
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative inline-flex items-center mb-6 md:mb-8 rounded-full overflow-hidden p-[1px]"
-        >
-          <span
-            className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
-            style={{ background: eyebrow.border }}
-          />
-          <span className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-main)]">
-            <EyebrowIcon size={14} className={eyebrow.icon} />
-            <span className={`text-xs sm:text-sm font-black tracking-wide uppercase ${eyebrow.text}`}>
-              {eyebrowText}
+        {showEyebrow && eyebrowPill}
+
+        {/* Meta chip. Leads the hero on the advisory page, where the
+            eyebrow is moved below the subheadline.
+            States what we actually do, and nothing we cannot back: Nexli
+            builds and runs the campaigns, the firm's own ad account pays
+            the platform. Deliberately NOT a verification or partner badge
+            — those are specific Meta programmes with their own criteria,
+            and claiming one we are not in on a page asking for $10k a
+            month is the kind of thing a careful CPA checks.
+
+            Only renders when the page passes `metaChip`, so the other
+            VslFunnel pages are unchanged. */}
+        {metaChip && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="mb-6 md:mb-8 flex justify-center"
+          >
+            <span className="group relative inline-flex rounded-full p-[1px]">
+              <MetaCampaignChip />
+
+              {/* Hover detail. Pointer-events-none so it never swallows a
+                  click meant for the CTA underneath, and hidden below sm
+                  where there is no hover to speak of. */}
+              <span
+                className="pointer-events-none absolute left-1/2 top-full z-20 hidden w-64 -translate-x-1/2 translate-y-2 rounded-xl border p-3 text-left opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
+                style={{
+                  borderColor: 'rgba(163,230,53,0.28)',
+                  backgroundColor: 'rgba(10,15,28,0.97)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <span
+                  className="block text-[11px] leading-relaxed"
+                  style={{ color: 'rgba(255,255,255,0.72)' }}
+                >
+                  We build the campaigns and the creative, and we place the
+                  spend, so the budget reaches the ads on schedule. You see
+                  where it went in the weekly report.
+                </span>
+              </span>
             </span>
-          </span>
-        </motion.div>
+          </motion.div>
+        )}
+
 
         {/* Headline */}
         <motion.h1
@@ -263,44 +401,53 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="max-w-3xl mx-auto mb-10 md:mb-14"
+          className="max-w-4xl mx-auto mb-10 md:mb-14"
         >
-          <div className="relative rounded-2xl md:rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden bg-[#050505]">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[200px] blur-[100px] pointer-events-none bg-blue-500/5" />
-            <div className="relative z-10 p-2.5 sm:p-4 md:p-8">
-              <div className="relative">
-                <MuxPlayer
-                  ref={videoRef}
-                  playbackId={muxPlaybackId || "dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"}
-                  metadata={{
-                    video_title: videoTitle || "Nexli Digital Rainmaker System",
-                  }}
-                  streamType="on-demand"
-                  accentColor="#3b82f6"
-                  className="w-full rounded-xl md:rounded-2xl"
-                  style={{ aspectRatio: '16/9' }}
-                  onPlay={handlePlay}
-                  onPause={handlePause}
-                  onTimeUpdate={handleTimeUpdate}
-                  onEnded={handleEnded}
-                />
-                <AnimatePresence>
-                  {isMuted && (
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      onClick={handleUnmute}
-                      className="absolute top-2 right-2 sm:top-4 sm:right-4 flex items-center gap-1.5 sm:gap-2 bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/30 cursor-pointer transition-colors"
-                    >
-                      <VolumeX size={16} className="sm:hidden" />
-                      <VolumeX size={18} className="hidden sm:block" />
-                      Unmute
-                    </motion.button>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+          {/* Edge to edge inside a thin border — no inset bezel. It used to
+              sit on a near-black panel with up to 32px of padding around it,
+              which read as a picture frame and made the video smaller than
+              the space it took up. */}
+          <div className="relative rounded-2xl md:rounded-3xl border border-[var(--glass-border)] shadow-2xl overflow-hidden">
+            <MuxPlayer
+              ref={videoRef}
+              playbackId={muxPlaybackId || "dKbnk7fWMY3Y4JHbfFjnvVwZnX0192ee1zCH3Wy6pEhA"}
+              // Mux does NOT default to the first frame — with no
+              // thumbnailTime it serves one from the middle of the asset,
+              // which on these cuts means a poster showing a fragment of a
+              // burned-in caption. These videos are captioned throughout,
+              // so there is no text-free frame to find; frame 0 is simply
+              // the least cluttered and the one the viewer expects.
+              //
+              // Preview any other frame before changing this:
+              // https://image.mux.com/<playback id>/thumbnail.jpg?time=2
+              thumbnailTime={posterTime}
+              metadata={{
+                video_title: videoTitle || "Nexli Digital Rainmaker System",
+              }}
+              streamType="on-demand"
+              accentColor="#3b82f6"
+              className="w-full block"
+              style={{ aspectRatio: '16/9' }}
+              onPlay={handlePlay}
+              onPause={handlePause}
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={handleEnded}
+            />
+            <AnimatePresence>
+              {isMuted && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  onClick={handleUnmute}
+                  className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 flex items-center gap-1.5 sm:gap-2 bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/30 cursor-pointer transition-colors"
+                >
+                  <VolumeX size={16} className="sm:hidden" />
+                  <VolumeX size={18} className="hidden sm:block" />
+                  Unmute
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 
@@ -323,13 +470,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           )}
 
           {/* Booking Button */}
-          <button
-            onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
-          >
-            See If Your Firm Qualifies
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          <QualifyCta ctaHref={ctaHref} />
 
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
@@ -370,6 +511,9 @@ const GoHighLevelLogo: React.FC<{ className?: string }> = ({ className }) => (
     <text x="56" y="33" fill="#FFFFFF" fontFamily="'Syne', Arial, sans-serif" fontWeight="700" fontSize="18">HighLevel</text>
   </svg>
 );
+
+/** Gatorade lemon-lime, for the hero chip. */
+const CHIP_GREEN = '#A3E635';
 
 const StripeLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 468 222.5" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -430,6 +574,7 @@ const VercelLogo: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 const trustLogos = [
+  { name: 'Meta', Logo: MetaLogo, width: 'w-[30px] sm:w-[38px]' },
   { name: 'Google', Logo: GoogleLogo, width: 'w-[70px] sm:w-[90px]' },
   { name: 'AWS', Logo: AWSLogo, width: 'w-[50px] sm:w-[65px]' },
   { name: 'Claude', Logo: ClaudeLogo, width: 'w-[70px] sm:w-[90px]' },
@@ -466,7 +611,14 @@ const TrustBar: React.FC = () => (
             {trustLogos.map((partner, i) => (
               <div
                 key={`${setIndex}-${i}`}
-                className="shrink-0 opacity-50 hover:opacity-80 transition-opacity"
+                // The marquee dims every logo to 50%, which would mute the
+                // blue to grey. Meta is the channel the whole offer runs on,
+                // so it keeps its colour.
+                className={`shrink-0 transition-opacity ${
+                  partner.name === 'Meta'
+                    ? 'opacity-90 hover:opacity-100'
+                    : 'opacity-50 hover:opacity-80'
+                }`}
               >
                 <partner.Logo className={`${partner.width} h-auto`} />
               </div>
@@ -675,6 +827,68 @@ const GoogleReviewsSimpleAnimation = () => {
   );
 };
 
+/**
+ * "Campaigns built and run on Meta" — the chip, defined once.
+ *
+ * It appears twice on the advisory page: leading the hero, and under the
+ * Meta tile in "What You Actually Get". Those two had drifted into
+ * different type, padding, shimmer speed and contents, which is what
+ * happens when a thing is built twice. One definition now; the hero adds
+ * the hover panel around it, nothing else differs.
+ *
+ * The rotating light sits in its own clipping layer rather than on an
+ * overflow-hidden wrapper, because the hero wraps this in a hover panel
+ * that overflow-hidden would cut off. The interior is opaque — the green
+ * is layered OVER --bg-main, not a translucent fill — or the shimmer
+ * rotates through the middle of the chip instead of around its rim.
+ *
+ * States what we actually do and nothing we cannot back. Deliberately NOT
+ * a verification or partner badge: those are specific Meta programmes with
+ * their own criteria, and the chip never says "verified".
+ */
+const MetaCampaignChip: React.FC = () => (
+  <>
+    <span
+      className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
+      aria-hidden="true"
+    >
+      <span
+        className="absolute inset-[-100%] animate-[shimmer_5s_linear_infinite]"
+        style={{
+          background:
+            'conic-gradient(from 0deg at 50% 50%, #bef264, #3f6212, #bef264, #3f6212, #bef264)',
+        }}
+      />
+    </span>
+
+    <span
+      className="relative z-10 inline-flex items-center gap-2 rounded-full px-4 py-1.5"
+      style={{
+        background:
+          'linear-gradient(rgba(163,230,53,0.12), rgba(163,230,53,0.12)), var(--bg-main)',
+      }}
+    >
+      <MetaLogo className="w-[15px] h-auto" />
+      <span
+        className="text-xs sm:text-sm font-semibold tracking-wide"
+        style={{ color: CHIP_GREEN }}
+      >
+        Campaigns built and run on Meta
+      </span>
+      {/* Solid-filled scalloped badge, the shape platforms use for verified
+          accounts. Green rather than Meta's blue. */}
+      <BadgeCheck
+        size={15}
+        className="shrink-0"
+        fill={CHIP_GREEN}
+        stroke="#0a0f1c"
+        strokeWidth={2.5}
+        aria-hidden="true"
+      />
+    </span>
+  </>
+);
+
 const TransformationSection: React.FC = () => {
   return (
     <section className="relative py-14 sm:py-20 px-4" style={{ backgroundColor: 'var(--bg-main)' }}>
@@ -696,11 +910,66 @@ const TransformationSection: React.FC = () => {
             </span>
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Four integrated systems, built and installed for you — not software features, but business outcomes.
+            Five integrated systems, built and installed for you — not software features, but business outcomes.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {/*
+            The ads, first and full width.
+
+            Marcel offered the bottom-centred slot or the top; the top wins
+            on argument. The other four are what a client lands ON — this is
+            what puts a client in front of them at all, and it is the first
+            link in the same chain the funnel diagram draws (ad -> funnel ->
+            qualifier). An orphan fifth card at the bottom would read as an
+            afterthought; leading with it reads as the engine, then the four
+            things it feeds.
+
+            Lime rather than a fifth cool tone, and the same line and
+            verified badge as the "Campaigns built and run on Meta" chip in
+            the hero — the two Meta statements on this page are the same
+            claim, so they look like it. The mark itself stays Meta blue in
+            both, the way the Google card carries Google's own colours.
+          */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: 'circOut' }}
+            className="md:col-span-2 relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#A3E635]/20 p-6 md:p-8"
+          >
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="mb-4 md:mb-5"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center bg-[#16200a] border-2 border-[#A3E635]/30"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(163, 230, 53, 0.45))' }}
+                >
+                  <MetaLogo className="w-9 h-9 md:w-14 md:h-14" />
+                </div>
+              </motion.div>
+
+              {/* The hero's chip, not a lookalike — same component. */}
+              <span className="relative inline-flex rounded-full p-[1px] mb-3 md:mb-4">
+                <MetaCampaignChip />
+              </span>
+
+              <h3 className="text-lg md:text-2xl font-black tracking-tight mb-2 text-white">
+                Meta Ads, Run For You
+              </h3>
+              <p className="text-xs md:text-sm max-w-xl leading-relaxed text-neutral-300">
+                We bring you {usd(AGENCY_ENGAGEMENT_AVG)} tax planning clients through Meta ads — and we
+                make the creative, photo and video, so you never have to film anything or
+                turn yourself into a content creator.
+              </p>
+            </div>
+          </motion.div>
+
           {/* Card 1: Custom Website */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -886,23 +1155,28 @@ const TransformationSection: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 3: COST OF INACTION — Agitate the Pain
 // ─────────────────────────────────────────────────────────────────────────────
-const CostOfInactionSection: React.FC = () => {
+const CostOfInactionSection: React.FC<{ showDeadline?: boolean }> = ({
+  showDeadline = false,
+}) => {
+  // Framed on the advisory outcome, not on the software. The system is
+  // how you get there; what is actually being lost is the planning work
+  // and the clients who pay for it.
   const painPoints = [
     {
-      icon: Clock,
-      text: 'Every hour spent chasing documents, sending reminders, and manually onboarding clients is a billable hour you never get back.',
-    },
-    {
-      icon: TrendingUp,
-      text: 'Premium prospects are Googling you right now. If they see 8 reviews while your competitor has 60+, they\'re already gone.',
+      icon: DollarSign,
+      text: `Every return you file for a client paying 6 figures in tax, without ever raising planning, is a ${usd(AGENCY_ENGAGEMENT_AVG)} engagement someone else eventually sells them.`,
     },
     {
       icon: Users,
-      text: 'High-net-worth clients expect a modern experience — secure portals, instant signatures, professional communication. Email attachments signal "small-time."',
+      text: 'Your best clients do not know you do advisory. They are not withholding the work — they genuinely think you are the person who files the return.',
     },
     {
-      icon: BarChart3,
-      text: 'Your competitors are automating their intake, reviews, and follow-ups. While you administrate, they scale.',
+      icon: TrendingUp,
+      text: 'Compliance fees compress every year. Planning fees do not, because the client is comparing them to the tax they would have paid, not to the firm down the road.',
+    },
+    {
+      icon: Clock,
+      text: 'The firms taking those clients are not better accountants than you. They just got in front of them first, and high earners do not switch advisors twice.',
     },
   ];
 
@@ -929,8 +1203,8 @@ const CostOfInactionSection: React.FC = () => {
             Is Higher Than You Think
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            Every month you rely on email attachments and manual follow-ups, you are bleeding
-            billable hours and losing premium clients who expect a modern experience.
+              It is not the admin. It is the planning work sitting unsold in a book you
+              already have, and the high earners quietly hiring somebody else to do it.
           </p>
         </motion.div>
 
@@ -963,6 +1237,19 @@ const CostOfInactionSection: React.FC = () => {
             );
           })}
         </div>
+
+        {/* The one deadline on this page that is not of our making. It reads as
+            a fifth pain point, which is exactly what it is. */}
+        {showDeadline && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <DeadlineUrgency className="mt-8 md:mt-10" />
+          </motion.div>
+        )}
       </div>
     </section>
   );
@@ -990,121 +1277,76 @@ const ROISection: React.FC = () => {
             className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-4 sm:mb-6"
             style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
           >
-            The Math{' '}
+            You only need{' '}
             <span style={{ color: '#00D632' }}>
-              Speaks for Itself
-            </span>
+              2 advisory clients
+            </span>{' '}
+            a month.
           </h2>
+          {/* Every figure here reads from lib/agency-offer.ts, so it cannot
+              drift from the price stated in the FAQ or on the confirmation
+              pages. */}
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            If the Rainmaker System helps you close just 4-5 new high-value advisory clients
-            this year, it pays for itself. The time you save on admin is pure profit.
+            Two engagements at the {usd(AGENCY_ENGAGEMENT_AVG)} average is{' '}
+            <strong style={{ color: '#ffffff' }}>{usd(AGENCY_ENGAGEMENT_AVG * 2)} a month</strong>{' '}
+            against about {usd(AGENCY_TOTAL_MONTHLY)} all in. That is the bare minimum —
+            and let us be honest, you are not a bare-minimum firm, or you would not be here.
           </p>
         </motion.div>
 
+        {/* Three numbers, and they are the same sentence as the headline:
+            how many clients, what they are worth, what it costs. Every
+            figure is computed from lib/agency-offer.ts rather than typed,
+            so this grid cannot disagree with the price on the page. */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-10 sm:mb-14">
-          {/* Advisory Clients Card - Special Design */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: 'circOut' }}
-            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#00D632]/20"
-          >
-            <AdvisoryClientsAnimation />
-            <div className="px-4 pb-4 md:px-6 md:pb-6 flex items-center justify-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                className="relative inline-flex items-center rounded-full overflow-hidden p-[1px] md:p-[1.5px]"
+          {[
+            {
+              Icon: ContactRound,
+              value: '2',
+              label: 'Advisory clients a month',
+              note: 'The floor, not the target.',
+            },
+            {
+              Icon: DollarSign,
+              value: usd(AGENCY_ENGAGEMENT_AVG * 2),
+              label: 'What those two are worth',
+              note: `At the ${usd(AGENCY_ENGAGEMENT_AVG)} average engagement.`,
+            },
+            {
+              Icon: TrendingUp,
+              value: `${Math.floor((AGENCY_ENGAGEMENT_AVG * 2) / AGENCY_TOTAL_MONTHLY)}x`,
+              label: 'What it costs you, covered',
+              note: `${usd(AGENCY_TOTAL_MONTHLY)} a month all in, ad spend included.`,
+            },
+          ].map(({ Icon, value, label, note }, i) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.12, ease: 'circOut' }}
+              className="relative flex flex-col items-center rounded-2xl md:rounded-3xl border border-[#00D632]/20 bg-gradient-to-br from-slate-900 to-slate-950 px-5 py-8 md:px-6 md:py-10 text-center"
+            >
+              <div
+                className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-[#00D632]/30 bg-[#001a0d] md:h-16 md:w-16"
+                style={{ filter: 'drop-shadow(0 0 24px rgba(0, 214, 50, 0.4))' }}
               >
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #00D632, #00ff3c, #00D632, #00ff3c, #00D632)' }}
-                />
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #00D632, #00ff3c, #00D632, #00ff3c, #00D632)' }}
-                />
-                <span className="relative z-10 inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-[var(--bg-main)]">
-                  <ContactRound className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0 text-[#00D632]" strokeWidth={2.5} />
-                  <span className="text-[var(--text-main)] text-[10px] md:text-sm font-black tracking-[0.1em] md:tracking-[0.15em] uppercase">New Clients</span>
-                </span>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Hours Saved Card - Special Design */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: 'circOut', delay: 0.15 }}
-            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#3b82f6]/20"
-          >
-            <HoursSavedAnimation />
-            <div className="px-4 pb-4 md:px-6 md:pb-6 flex items-center justify-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                className="relative inline-flex items-center rounded-full overflow-hidden p-[1px] md:p-[1.5px]"
+                <Icon className="h-7 w-7 text-[#00D632] md:h-8 md:w-8" strokeWidth={2} />
+              </div>
+              <p
+                className="text-4xl md:text-5xl font-black leading-none"
+                style={{
+                  color: '#00D632',
+                  fontFamily: "'Syne', sans-serif",
+                  filter: 'drop-shadow(0 0 20px rgba(0, 214, 50, 0.4))',
+                }}
               >
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #3b82f6, #60a5fa, #3b82f6, #60a5fa, #3b82f6)' }}
-                />
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #3b82f6, #60a5fa, #3b82f6, #60a5fa, #3b82f6)' }}
-                />
-                <span className="relative z-10 inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-[var(--bg-main)]">
-                  <Save className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0 text-[#3b82f6]" strokeWidth={2.5} />
-                  <span className="text-[var(--text-main)] text-[10px] md:text-sm font-black tracking-[0.1em] md:tracking-[0.15em] uppercase">Time Saved</span>
-                </span>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Google Reviews Card - Special Design */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: 'circOut', delay: 0.3 }}
-            className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-[#fbbf24]/20"
-          >
-            <GoogleReviewsSimpleAnimation />
-            <div className="px-4 pb-4 md:px-6 md:pb-6 flex items-center justify-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                className="relative inline-flex items-center rounded-full overflow-hidden p-[1px] md:p-[1.5px]"
-              >
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] opacity-80"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)' }}
-                />
-                <span
-                  className="absolute inset-[-100%] animate-[shimmer_8s_linear_infinite] blur-md opacity-40"
-                  style={{ background: 'conic-gradient(from 0deg at 50% 50%, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4)' }}
-                />
-                <span className="relative z-10 inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-[var(--bg-main)]">
-                  <svg className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.10z" fill="#4285F4" />
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                  </svg>
-                  <span className="text-[var(--text-main)] text-[10px] md:text-sm font-black tracking-[0.1em] md:tracking-[0.15em] uppercase">Reviews</span>
-                </span>
-              </motion.div>
-            </div>
-          </motion.div>
+                {value}
+              </p>
+              <p className="mt-3 text-sm md:text-base font-bold text-white">{label}</p>
+              <p className="mt-1.5 text-xs md:text-sm text-white/55">{note}</p>
+            </motion.div>
+          ))}
         </div>
 
         {/* Enhanced ROI Callout with shimmer border */}
@@ -1162,174 +1404,22 @@ const ROISection: React.FC = () => {
                   ROI Reality Check
                 </p>
                 <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-200">
-                  The average high-value advisory client brings{' '}
+                  A tax planning engagement runs{' '}
                   <span className="font-bold text-white">
-                    $5,000-$25,000+
-                  </span>{' '}
-                  in annual revenue. If your new digital presence, automated intake, and review engine help you land
-                  even a handful of these clients, the system doesn&apos;t just pay for itself — it
-                  becomes your{' '}
-                  <span className="font-bold" style={{ color: '#00D632' }}>highest-ROI investment</span>.
+                    {usd(AGENCY_ENGAGEMENT_LOW)}&ndash;{usd(AGENCY_ENGAGEMENT_HIGH)}
+                  </span>
+                  , and the client who pays it does not shop you next January — you just
+                  saved them more than most of your book pays you all year. Land{' '}
+                  <span className="font-bold text-white">2 a month</span> and this is not an
+                  expense, it is the{' '}
+                  <span className="font-bold" style={{ color: '#00D632' }}>
+                    cheapest line on your P&amp;L
+                  </span>
+                  .
                 </p>
               </div>
             </div>
           </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SECTION 5: PROJECTION FRAMEWORK — "What to Expect in Your First 90 Days"
-// ─────────────────────────────────────────────────────────────────────────────
-const ProjectionSection: React.FC = () => {
-  const { openBooking } = useBooking();
-
-  const projections = [
-    {
-      icon: GoogleG,
-      label: 'Reputation Multiplier',
-      metric: '3-5',
-      unit: 'Extra Google Reviews Monthly',
-      description:
-        'You can expect 3-5 extra reviews a month as our automated review engine routes your happiest clients to Google — steady social proof that amplifies your visibility and makes high-net-worth prospects choose you over competitors.',
-      color: '#fbbf24',
-    },
-    {
-      icon: Shield,
-      label: 'Command Center',
-      metric: '75',
-      unit: 'Hours Saved',
-      description:
-        'Secure document collection, instant e-signatures, and automated invoicing eliminate the admin that keeps your team from billable work.',
-      color: '#22d3ee',
-    },
-    {
-      icon: Bot,
-      label: '24/7 Intake Engine',
-      metric: '100%',
-      unit: 'Unqualified Filtered',
-      description:
-        'Intelligent sequences vet every inbound lead — only qualified, high-value prospects make it to your calendar.',
-      color: '#a78bfa',
-    },
-    {
-      icon: Monitor,
-      label: 'Premium Trust Asset',
-      metric: '2-3x',
-      unit: 'Booking Likelihood',
-      description:
-        'A conversion-optimized digital presence that turns cold traffic into booked consultations before you pick up the phone.',
-      color: '#60a5fa',
-    },
-  ];
-
-  return (
-    <section className="relative py-14 sm:py-20 px-4" style={{ backgroundColor: 'var(--bg-main)' }}>
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full blur-[120px] bg-blue-500/6 pointer-events-none" />
-
-      <div className="relative z-10 max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10 sm:mb-14"
-        >
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-5"
-            style={{
-              backgroundColor: 'rgba(16,185,129,0.1)',
-              borderColor: 'rgba(16,185,129,0.25)',
-            }}
-          >
-            <CalendarCheck size={14} style={{ color: '#34d399' }} />
-            <span className="text-xs sm:text-sm font-semibold tracking-wide" style={{ color: '#34d399' }}>
-              90-Day Projection
-            </span>
-          </div>
-          <h2
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-4"
-            style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
-          >
-            What to Expect in Your{' '}
-            <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
-              First 90 Days
-            </span>
-          </h2>
-          <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Based on how the system is engineered to work, here is the measurable impact a typical established CPA firm can expect within their first quarter.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 mb-10 sm:mb-14">
-          {projections.map((p, i) => {
-            const Icon = p.icon;
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative rounded-2xl sm:rounded-3xl border p-6 sm:p-8"
-                style={{
-                  backgroundColor: 'rgba(255,255,255,0.03)',
-                  borderColor: 'rgba(255,255,255,0.08)',
-                }}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${p.color}18` }}
-                  >
-                    <Icon size={20} style={{ color: p.color }} />
-                  </div>
-                  <span
-                    className="text-xs font-semibold tracking-wide uppercase"
-                    style={{ color: p.color }}
-                  >
-                    {p.label}
-                  </span>
-                </div>
-                <div className="mb-3">
-                  <span
-                    className="text-3xl sm:text-4xl font-black"
-                    style={{ color: p.color, fontFamily: "'Syne', sans-serif" }}
-                  >
-                    {p.metric}
-                  </span>
-                  <span className="text-sm font-semibold ml-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                    {p.unit}
-                  </span>
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                  {p.description}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <button
-            onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
-          >
-            See If Your Firm Qualifies
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established CPA firms. No startups. No high-pressure pitch.
-          </p>
         </motion.div>
       </div>
     </section>
@@ -1365,9 +1455,9 @@ const FounderStorySection: React.FC = () => {
           className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3"
           style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
         >
-          Built by Someone Who&apos;s Seen CPA Firm Chaos{' '}
+          I Have Watched This From{' '}
           <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-            from the Inside
+            Inside the Firm
           </span>
         </h2>
         <p className="text-xs sm:text-sm font-semibold tracking-[0.15em] uppercase" style={{ color: '#60a5fa' }}>
@@ -1384,27 +1474,37 @@ const FounderStorySection: React.FC = () => {
         style={{ color: 'rgba(255,255,255,0.75)' }}
       >
         <p>
-          I&apos;m Marcel. My wife has been in CPA firms for four years — she&apos;s now the COO of
-          one — and I&apos;ve watched her live through every problem this system solves.
+          I&apos;m Marcel. My wife has been in CPA firms for 4 years — she is the COO of one
+          now — and I have watched the daily in and out of running a firm for long enough to
+          know where the pain actually comes from.
         </p>
         <p>
-          The 70-hour weeks during tax season. Clients who wait until the last minute to send
-          documents. Email inboxes that turn into black holes. Talented CPAs losing deals to
-          competitors with better websites and more Google reviews.
+          It is not the 70-hour weeks. It is what those 70 hours get spent on. 2,000 clients.
+          $500 returns. Documents that arrive on April 12th. And most of those people quietly
+          shopping for a cheaper accountant the following January, because nothing you did
+          last year gave them a reason not to.
         </p>
         <p>
-          The expertise is there. The client work is world-class. But the systems? Broken or
-          nonexistent.
+          That is what commoditized looks like. World-class technical work priced like a
+          utility, because from where the client sits your return and the one down the road
+          are the same product.
         </p>
         <p>
-          So I built the <span className="font-semibold" style={{ color: '#ffffff' }}>Digital Rainmaker System</span> —
-          the infrastructure a modern CPA firm should have. A professional website. A client portal
-          that eliminates email chaos. Automations that handle follow-ups. A review engine that
-          builds your reputation while you focus on client work.
+          <span className="font-semibold" style={{ color: '#ffffff' }}>
+            Tax planning is the opposite of that.
+          </span>{' '}
+          Walk into a business owner writing 6, 7, sometimes 8 figures in tax and show them
+          what they do not have to pay, and you are not a vendor any more. You are the person
+          who saved them more than they earn. Nobody shops that. Nobody haggles over it in
+          January.
+        </p>
+        <p>
+          And you need far fewer of them. A book built on clients like that pays better than
+          2,000 returns ever will, and it does not set your season on fire — because most of
+          those 2,000 were never making you money in the first place.
         </p>
         <p style={{ color: 'rgba(255,255,255,0.9)' }} className="font-medium">
-          No fluff. No complexity. Just the system that lets talented CPAs compete at the highest
-          level — without burning out their team.
+          So I built the system that puts those people in front of you. That is all this is.
         </p>
       </motion.div>
     </div>
@@ -1445,8 +1545,7 @@ const FAQ_BY_VARIANT: Record<string, typeof DEFAULT_FAQ> = {
   BetterClients: betterClientsFaq,
 };
 
-const FAQSection: React.FC<{ variant?: string }> = ({ variant = 'A' }) => {
-  const { openBooking } = useBooking();
+const FAQSection: React.FC<{ variant?: string; ctaHref?: string }> = ({ variant = 'A', ctaHref }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = FAQ_BY_VARIANT[variant] ?? DEFAULT_FAQ;
@@ -1525,13 +1624,7 @@ const FAQSection: React.FC<{ variant?: string }> = ({ variant = 'A' }) => {
           transition={{ duration: 0.6 }}
           className="text-center mt-10 sm:mt-14"
         >
-          <button
-            onClick={() => openBooking()}
-            className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer"
-          >
-            See If Your Firm Qualifies
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          <QualifyCta ctaHref={ctaHref} />
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
           </p>
@@ -1657,8 +1750,7 @@ const ExitIntentPopup: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // STICKY CTA BAR — Appears after scrolling past hero
 // ────────────��────────────────────────────────────────────────────────────────
-const StickyCTA: React.FC = () => {
-  const { openBooking } = useBooking();
+const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -1693,13 +1785,7 @@ const StickyCTA: React.FC = () => {
             >
               Ready to modernize your firm?
             </p>
-            <button
-              onClick={() => openBooking()}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer"
-            >
-              See If Your Firm Qualifies
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            <QualifyCta ctaHref={ctaHref} size="bar" />
           </div>
         </motion.div>
       )}
@@ -1710,7 +1796,7 @@ const StickyCTA: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // URGENCY PILL — Sticky scarcity badge (top-right)
 // ─────────────────────────────────────────────────────────────────────────────
-const UrgencyPill: React.FC = () => {
+const UrgencyPill: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -1726,7 +1812,9 @@ const UrgencyPill: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.4 }}
-          className="fixed top-6 right-6 md:top-8 md:right-8 z-[110]"
+          className={`fixed right-6 md:right-8 z-[110] ${
+            belowBanner ? 'top-[4.5rem] md:top-[5.25rem]' : 'top-6 md:top-8'
+          }`}
         >
           <motion.div
             animate={{ opacity: [1, 0.5, 1] }}
@@ -1745,6 +1833,7 @@ const UrgencyPill: React.FC = () => {
               3 firm spots left
             </span>
           </motion.div>
+
         </motion.div>
       )}
     </AnimatePresence>
@@ -1765,9 +1854,44 @@ interface VslFunnelProps {
   eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
   showExitIntent?: boolean;
+  /** Show the "campaigns run on Meta" chip above the hero headline. */
+  metaChip?: boolean;
+  /**
+   * Render the eyebrow pill. On by default. The advisory VSL turns it off:
+   * with the deadline banner and the Meta chip both above the headline, a
+   * third pill was chrome stacked on chrome.
+   */
+  showEyebrow?: boolean;
+  /**
+   * Which second of the video the poster frame comes from. 0 — the opening
+   * frame — unless a page has a reason to differ. See the note at the
+   * MuxPlayer for why this is not left to Mux.
+   */
+  posterTime?: number;
+  /**
+   * Set this and every conversion CTA becomes a link to it instead of opening
+   * the QualificationProvider modal. Used by the gated advisory funnel, whose
+   * own qualifier page records the lead and has a downsell branch. Leave it
+   * unset on the public pages.
+   */
+  ctaHref?: string;
+  /**
+   * Render the FAQ accordion. On by default. The advisory VSL turns it off:
+   * its objections are answered on the booking-confirmed page instead, once
+   * a call is booked and the visitor is actually reading.
+   */
+  showFaq?: boolean;
+  /**
+   * The December 31 deadline — a bar above the hero and the explained version
+   * inside "The Cost of Doing Nothing". Off by default: the public
+   * /vslfunnel* pages sell the system, not the tax year, and a planning
+   * deadline on a page that never mentions planning reads as borrowed
+   * urgency. On for /advisory-pricing, where the whole offer is planning.
+   */
+  deadlineUrgency?: boolean;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, showEyebrow = true, showFaq = true, deadlineUrgency = false, posterTime = 0 }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1777,18 +1901,17 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
 
   return (
     <div className="min-h-screen pb-14 sm:pb-16">
-      <StaticLogo />
-      <UrgencyPill />
-      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} />
+      {deadlineUrgency && <DeadlineBanner />}
+      <StaticLogo belowBanner={deadlineUrgency} />
+      <UrgencyPill belowBanner={deadlineUrgency} />
+      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} showEyebrow={showEyebrow} hasBanner={deadlineUrgency} posterTime={posterTime} />
       <TrustBar />
       <TransformationSection />
-      <GuaranteeSection accent="blue" />
-      <CostOfInactionSection />
+      <CostOfInactionSection showDeadline={deadlineUrgency} />
       <ROISection />
-      <ProjectionSection />
       <FounderStorySection />
-      <FAQSection variant={variant} />
-      <StickyCTA />
+      {showFaq && <FAQSection variant={variant} ctaHref={ctaHref} />}
+      <StickyCTA ctaHref={ctaHref} />
       {showExitIntent && <ExitIntentPopup />}
     </div>
   );

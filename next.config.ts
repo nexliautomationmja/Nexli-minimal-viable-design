@@ -4,17 +4,52 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // The Book of Business Accelerator PDF lives outside public/ on purpose —
+  // it is the whole $297 product and anything in public/ is a guessable URL.
+  // Files outside public/ are not bundled into the serverless function by
+  // default, so without this the gated download route 404s in production
+  // while working perfectly on localhost.
+  outputFileTracingIncludes: {
+    "/api/advisory-pricing/download": ["./assets/**"],
+  },
   async redirects() {
     return [
-      // The $97 CPA Scaling Roadmap was retired; the demo funnel replaced it.
-      { source: "/roadmap", destination: "/demo-opt-in", permanent: true },
-      { source: "/roadmap/thank-you", destination: "/demo-opt-in", permanent: true },
-      // The /foundation funnel (pitch page -> six questions -> generated
-      // website preview) was replaced by /demo-opt-in -> /demo -> /demo/qualify.
-      { source: "/foundation", destination: "/demo-opt-in", permanent: true },
-      { source: "/foundation/start", destination: "/demo-opt-in", permanent: true },
-      { source: "/foundation/preview/:token*", destination: "/demo-opt-in", permanent: true },
-      { source: "/foundation/thank-you", destination: "/demo/thank-you", permanent: true },
+      // /offer and /thank-you became /BOBA and /BOBA-thank-you. These two
+      // point OLD -> NEW, which is the safe direction: anything already in
+      // the wild (Stripe receipts, GHL emails, ad destinations) still lands
+      // on the live page. Never add a redirect pointing the other way — a
+      // retired funnel once 301'd its own thank-you page to a signup form
+      // and sent every buyer to re-opt-in instead of their download.
+      { source: "/advisory-pricing/offer", destination: "/advisory-pricing/BOBA", permanent: true },
+      { source: "/advisory-pricing/thank-you", destination: "/advisory-pricing/BOBA-thank-you", permanent: true },
+
+      // ── Retired funnels ──────────────────────────────────────────────
+      // The demo funnel, the /vslfunnel* landers, /funnel, /thank-you and
+      // /free-guide were deleted when the advisory funnel became the only
+      // one. Every one of them was live and indexed, so they redirect to
+      // the advisory VSL rather than 404 — old ad destinations, backlinks
+      // and anything already crawled still land somewhere that sells.
+      { source: "/demo", destination: "/advisory-pricing", permanent: true },
+      { source: "/demo/:path*", destination: "/advisory-pricing", permanent: true },
+      { source: "/demo-opt-in", destination: "/advisory-pricing", permanent: true },
+      { source: "/funnel", destination: "/advisory-pricing", permanent: true },
+      { source: "/free-guide", destination: "/advisory-pricing", permanent: true },
+      { source: "/vslfunnel", destination: "/advisory-pricing", permanent: true },
+      { source: "/vslfunnel-admin", destination: "/advisory-pricing", permanent: true },
+      { source: "/vslfunnel-advisory", destination: "/advisory-pricing", permanent: true },
+      { source: "/vslfunnel-betterclients", destination: "/advisory-pricing", permanent: true },
+      { source: "/vslfunnel-offer", destination: "/advisory-pricing", permanent: true },
+      { source: "/vslfunnel-techstack", destination: "/advisory-pricing", permanent: true },
+      // /thank-you was the generic post-form page. It goes to the funnel's
+      // own thank-you, which is the only one left.
+      { source: "/thank-you", destination: "/advisory-pricing/BOBA-thank-you", permanent: true },
+      // These two pointed at the demo funnel, which no longer exists.
+      { source: "/roadmap", destination: "/advisory-pricing", permanent: true },
+      { source: "/roadmap/thank-you", destination: "/advisory-pricing", permanent: true },
+      { source: "/foundation", destination: "/advisory-pricing", permanent: true },
+      { source: "/foundation/start", destination: "/advisory-pricing", permanent: true },
+      { source: "/foundation/preview/:token*", destination: "/advisory-pricing", permanent: true },
+      { source: "/foundation/thank-you", destination: "/advisory-pricing", permanent: true },
     ];
   },
   async headers() {

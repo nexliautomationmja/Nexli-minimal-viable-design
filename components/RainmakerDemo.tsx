@@ -625,7 +625,7 @@ const RainmakerDemo: React.FC = () => {
                                   Hi Sarah! Sorry we missed your call. We&apos;re available to help — would you like to book a quick consultation? Tap below to pick a time that works:
                                 </p>
                                 <div className="rounded-xl bg-violet-500 py-2.5 text-center text-white text-[10px] md:text-xs font-bold">
-                                  Book a Consultation
+                                  See If You Qualify
                                 </div>
                               </div>
                             </div>

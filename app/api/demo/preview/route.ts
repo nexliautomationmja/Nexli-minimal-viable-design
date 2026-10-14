@@ -29,7 +29,9 @@ export const dynamic = 'force-dynamic';
 const PREVIEW_EMAIL = 'preview@nexli.local';
 
 /** Answers that put the lead on each side of the qualifier split. */
-const BRANCH: Record<FunnelPath, Record<string, unknown>> = {
+type PreviewPath = Extract<FunnelPath, 'agency' | 'web'>;
+
+const BRANCH: Record<PreviewPath, Record<string, unknown>> = {
   agency: {
     usBased: true,
     decisionRole: 'sole-owner',
@@ -80,7 +82,7 @@ export async function GET(req: NextRequest) {
   }
 
   const asParam = searchParams.get('as');
-  const as: FunnelPath | null = asParam === 'agency' || asParam === 'web' ? asParam : null;
+  const as: PreviewPath | null = asParam === 'agency' || asParam === 'web' ? asParam : null;
 
   const db = getDb();
   if (!db) {

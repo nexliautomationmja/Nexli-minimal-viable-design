@@ -39,6 +39,10 @@ export const leads = pgTable(
     taxSavings: text("tax_savings"),
     taxSavingsTag: text("tax_savings_tag"),
 
+    // Advisory funnel's last qualifier question — what they can invest per
+    // month. Null on every other funnel, which has no budget question.
+    budget: text("budget"),
+
     // Lead classification
     leadScore: text("lead_score"), // 'raw' | 'qualified' | 'disqualified'
     disqualifyReason: text("disqualify_reason"),
@@ -87,8 +91,17 @@ export const leads = pgTable(
     opportunityAt: timestamp("opportunity_at"),
     purchasedAt: timestamp("purchased_at"),
 
-    // Low-ticket (CPA Scaling Roadmap) purchase — kept separate from the
-    // high-ticket purchased_at signal so Meta reporting stays clean.
+    // Low-ticket ($297 Advisory Pricing Calculator) purchase — kept separate
+    // from the high-ticket purchased_at signal so Meta reporting stays clean.
+    // Also the gate for the qualifier and the calendar: a Stripe session id in
+    // a URL is a weak permanent credential, so entitlement is read from here.
+    advisoryPurchasedAt: timestamp("advisory_purchased_at"),
+    advisoryAmountCents: integer("advisory_amount_cents"),
+
+    // Retired $97 roadmap funnel. Never written to (0 rows). Kept only because
+    // nexli-portal's external-schema.ts still mirrors them and does a bare
+    // select on leads — dropping them before that ships breaks the live portal.
+    // TODO: drop after the portal PR removing them is deployed.
     roadmapPurchasedAt: timestamp("roadmap_purchased_at"),
     roadmapAmountCents: integer("roadmap_amount_cents"),
     stripeCheckoutSessionId: text("stripe_checkout_session_id"),

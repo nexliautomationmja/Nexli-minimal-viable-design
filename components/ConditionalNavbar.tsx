@@ -10,7 +10,8 @@ export default function ConditionalNavbar() {
   // and the whole /demo-opt-in -> /demo demo funnel)
   if (
     pathname === '/revenuecalc' ||
-    pathname === '/booking-confirmed' ||
+    // Prefix, so the -b variant is covered too, same shape as /vslfunnel.
+    pathname.startsWith('/booking-confirmed') ||
     pathname === '/qualify' ||
     pathname === '/thank-you' ||
     pathname === '/profit-calculator' ||
@@ -21,7 +22,10 @@ export default function ConditionalNavbar() {
     // exact match plus a '/demo/' prefix so a future route that merely starts
     // with the letters (e.g. /demo-reel) keeps its navbar.
     pathname === '/demo' ||
-    pathname.startsWith('/demo/')
+    pathname.startsWith('/demo/') ||
+    // The advisory funnel, same exact-plus-prefix shape.
+    pathname === '/advisory-pricing' ||
+    pathname.startsWith('/advisory-pricing/')
   ) {
     return null;
   }

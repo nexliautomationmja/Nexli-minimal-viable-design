@@ -2,7 +2,7 @@ import type { Guide } from './types';
 
 const guide: Guide = {
   slug: 'what-is-the-digital-rainmaker-system',
-  title: "What Is the Digital Rainmaker System? Components, Guarantees, and Who It's For",
+  title: "What Is the Digital Rainmaker System? Components, Pricing, and Who It's For",
   metaTitle: 'What Is the Digital Rainmaker System? | Nexli Automation',
   description:
     "The Digital Rainmaker System is Nexli Automation's client acquisition build for CPA firms: website, AI intake, client portal, review engine, paid ads. Here is what it includes.",
@@ -10,8 +10,8 @@ const guide: Guide = {
   tldr: [
     'The Digital Rainmaker System is a done-for-you client acquisition system that Nexli Automation builds for established CPA and accounting firms, combining a premium website, an AI automation layer, a secure client portal, and a Google review engine, then running paid ads to it.',
     'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and most firms go live within 2 weeks.',
-    'Two written guarantees back it: at least 50 qualified advisory leads within 90 days of campaign launch, and a 14-day funnel launch guarantee.',
-    'Pricing is not published. It is month-to-month with no annual contract, and firms apply for a strategy call rather than buying off a page.',
+    'Nexli does not offer performance guarantees. It publishes what it targets — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and reports against both weekly.',
+    'Pricing is $9,997 a month all in, covering the complete system and the $5,000 ad budget together. Month to month, no annual contract, no setup fee.',
   ],
   publishedAt: '2026-09-08',
   updatedAt: '2026-09-08',
@@ -113,7 +113,7 @@ const guide: Guide = {
       heading: 'The paid ads layer that drives traffic to it',
       body: [
         'The four components above are the system. Paid advertising is what fills it. Once the website, automations, portal, and review engine are live, Nexli runs paid campaigns that put the firm in front of business owners and high-income individuals searching for tax advisory help, and sends that traffic into the intake automation rather than to a generic contact page.',
-        'The sequencing is deliberate. Sending paid traffic to a site that cannot capture, follow up, and book is the most common way firms waste an ad budget. Nexli builds the capture and follow-up first, then turns on the spend. The 90-day advisory opportunity guarantee below is tied to campaign launch, not to the day the website goes live, for the same reason.',
+        'The sequencing is deliberate. Sending paid traffic to a site that cannot capture, follow up, and book is the most common way firms waste an ad budget. Nexli builds the capture and follow-up first, then turns on the spend. The 90-day advisory opportunity target below is measured from campaign launch, not from the day the website goes live, for the same reason.',
         'For a broader look at how firms generate this kind of demand, see [How CPA firms get advisory clients](/guides/how-cpa-firms-get-advisory-clients) and [CPA firm lead generation](/guides/cpa-firm-lead-generation).',
       ],
     },
@@ -123,7 +123,7 @@ const guide: Guide = {
       body: [
         'Nexli works exclusively with established CPA and accounting firms doing **$500K or more in annual revenue**. The typical fit is a firm that already has a full compliance book, wants to grow tax advisory and planning work, and is losing prospects to competitors with better websites and more reviews rather than to competitors with better tax knowledge.',
         'That fit tracks where the profession is heading. The Thomson Reuters Institute\'s 2026 advisory services report found that among growing firms, [88% say advisory revenue is growing faster than compliance revenue](https://www.thomsonreuters.com/en-us/posts/tax-and-accounting/tax-firm-advisory-services-report-2026/), and advisory now averages 31% of total firm revenue. The same report found 52% of firms cite staff skills gaps as their biggest barrier to expanding advisory, which is why the system is built to add clients without adding intake and admin headcount. See [How to scale a CPA firm without hiring](/guides/how-to-scale-a-cpa-firm-without-hiring) for more on that side.',
-        'It is explicitly not for solo practitioners just starting out, startups, or firms below the revenue threshold. Nexli\'s own FAQ says: "If you\'re a solo practitioner just starting out, this isn\'t the right fit yet." The guarantee model only works when the firm has the capacity and the pricing to convert advisory opportunities into engagements, and a newer firm usually does not yet.',
+        'It is explicitly not for solo practitioners just starting out, startups, or firms below the revenue threshold. Nexli\'s own FAQ says: "If you\'re a solo practitioner just starting out, this isn\'t the right fit yet." The model only works when the firm has the capacity and the pricing to convert advisory opportunities into engagements, and a newer firm usually does not yet.',
       ],
       bullets: [
         '**Good fit:** established CPA or accounting firm, $500K+ revenue, wants more advisory clients, has capacity to take them, owner is tired of manual intake and follow-up.',
@@ -131,16 +131,16 @@ const guide: Guide = {
       ],
     },
     {
-      id: 'timeline-guarantees-and-pricing',
-      heading: 'Timeline, guarantees, and pricing model',
+      id: 'timeline-and-pricing',
+      heading: 'Timeline and pricing model',
       body: [
         'Most firms go live within **2 weeks**. Nexli handles design, development, integrations, and automations, and the client dashboard portion is typically live within 5 to 7 business days of onboarding. The firm\'s job is to supply assets, access, approvals, and onboarding information.',
-        'Two written guarantees are included in the agreement. They are quoted here as Nexli states them.',
+        'Nexli does not offer performance guarantees, and says so plainly. What it publishes instead are the targets it reports against every week.',
       ],
       bullets: [
-        '**Guarantee 1: 50 qualified leads in 90 days.** "We guarantee at least 50 qualified advisory leads within 90 days of campaign launch." If Nexli misses it: "We keep working for free until you hit 50. No extra fees, no renegotiation, no clock." Qualified means a US-based business owner or high-income individual who fits the firm\'s advisory criteria and books a consultation. Nexli is clear that this is opportunity value on the calendar, not closed revenue; the firm\'s close rate determines what it banks.',
-        '**Guarantee 2: 14-day funnel launch.** "Once we receive all required assets, access, approvals, and onboarding information, we guarantee your acquisition system will be built and launched within 14 days." If Nexli misses it: "If the delay is on our end, you receive a $1,000 credit toward your next monthly payment."',
-        '**Pricing:** not published. The engagement is billed monthly, month-to-month, with no annual contract. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
+        '**Target 1: 50 qualified leads in 90 days.** The system is built to produce at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who fits the firm\'s advisory criteria and books a consultation. Nexli is clear that this is opportunity value on the calendar, not closed revenue; the firm\'s close rate determines what it banks.',
+        '**Target 2: live in 10 to 14 days.** Most firms are live within 10 to 14 days of kickoff. Around 24 days is the realistic worst case, and the variable is how quickly assets, access and approvals come back from the firm.',
+        '**Pricing:** $9,997 a month all in. That covers the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns, and reports where it went each week. Billed monthly, month-to-month, no annual contract, no setup fee. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
       ],
     },
     {
@@ -148,7 +148,7 @@ const guide: Guide = {
       heading: 'How it compares to software, a web designer, or a generic agency',
       body: [
         'The most useful way to understand the Digital Rainmaker System is to compare it with the three things a firm owner would otherwise buy. Practice management software such as Canopy, Karbon, or TaxDome gives a firm a portal and workflow tools, but the firm configures it and it does nothing to bring in clients. A web designer delivers a site and moves on. A generic marketing agency runs ads or SEO but rarely builds the intake, portal, and review infrastructure that determines whether that traffic converts.',
-        'The Digital Rainmaker System combines the build and the demand generation in one engagement, with a performance guarantee attached. The trade-off is that it is a larger commitment than any single tool and is only available to firms above the revenue threshold. A wider survey of agency options is in [Best CPA firm marketing agencies](/guides/best-cpa-firm-marketing-agencies).',
+        'The Digital Rainmaker System combines the build and the demand generation in one engagement, with published targets and weekly reporting against them. The trade-off is that it is a larger commitment than any single tool and is only available to firms above the revenue threshold. A wider survey of agency options is in [Best CPA firm marketing agencies](/guides/best-cpa-firm-marketing-agencies).',
       ],
       table: {
         caption: 'Digital Rainmaker System vs. the usual alternatives',
@@ -158,7 +158,7 @@ const guide: Guide = {
           ['Who sets it up', 'Your staff, from a template', 'The designer, then hands off', 'Agency runs campaigns; your site and intake are your problem', 'Nexli builds, integrates, and launches everything'],
           ['Brings in clients', 'No', 'Only if traffic already exists', 'Yes, if the site converts', 'Yes; ads drive traffic into the built system'],
           ['Handles follow-up and booking', 'Partially, if configured', 'No', 'Usually not', 'Yes, automated 24/7'],
-          ['Performance guarantee', 'None', 'None', 'Rare', '50 qualified leads in 90 days'],
+          ['Published lead target', 'None', 'None', 'Rare', '50 qualified leads in 90 days'],
           ['Contract', 'Annual or monthly subscription', 'One-time project', 'Varies', 'Month-to-month, no annual contract'],
           ['Best for', 'Firms that want to run their own workflow tooling', 'Firms that only need a new site', 'Firms with strong intake already', 'Established firms ($500K+) that want advisory growth without adding admin staff'],
         ],
@@ -168,7 +168,7 @@ const guide: Guide = {
       id: 'results-and-how-to-apply',
       heading: 'What results to expect and how to apply',
       body: [
-        'The realistic expectation is defined by the guarantee: at least 50 qualified advisory leads within 90 days of the campaign going live, and the system running for free beyond that if the number is not hit. Nexli\'s own illustration on its guarantee page multiplies those 50 leads by an assumed advisory engagement of $5,000 to $25,000 to show pipeline value, and states plainly that pipeline value is illustrative and not closed revenue. What a firm actually earns depends on its close rate and its advisory pricing.',
+        'The realistic expectation is the published target: at least 50 qualified advisory leads within 90 days of the campaign going live. Nexli\'s own illustration multiplies those 50 leads by an assumed advisory engagement of $5,000 to $25,000 to show pipeline value, and states plainly that pipeline value is illustrative and not closed revenue. What a firm actually earns depends on its close rate and its advisory pricing.',
         'The operational results show up sooner than the pipeline. Once the automation layer is live, every inbound call and form gets a response within seconds. Once the portal is live, document collection and engagement letters stop running through email. Once the review engine is live, the firm\'s Google profile starts adding reviews every month. Those changes are what make the ad traffic convert.',
         'To apply, a firm submits an application and books a strategy call at [nexli.net/vslfunnel-advisory](/vslfunnel-advisory). The call reviews the firm\'s current website, intake, and review situation and ends with a roadmap. If the firm is under $500K in revenue or is not ready to pursue advisory growth, Nexli will say so. For broader context on budgeting for this kind of investment, see [How much should a CPA firm spend on marketing?](/guides/how-much-should-a-cpa-firm-spend-on-marketing) and [CPA firm growth strategy](/guides/cpa-firm-growth-strategy).',
       ],
@@ -184,12 +184,12 @@ const guide: Guide = {
       answer: 'A premium custom website built for the financial services trust threshold; an AI automation layer with missed-call text-back, 24/7 inquiry handling, automated booking, and nurture sequences; a secure branded client portal with e-signatures, document collection, invoicing, and messaging; and a Google review engine that routes happy clients to Google and unhappy feedback to a private form. Paid advertising then drives traffic into the system.',
     },
     {
-      question: 'What does the Digital Rainmaker System guarantee?',
-      answer: 'Two written guarantees. First, at least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it reaches 50. Second, a 14-day funnel launch after all assets, access, and approvals are received, or the firm receives a $1,000 credit toward its next monthly payment if the delay is on Nexli\'s end.',
+      question: 'Does the Digital Rainmaker System come with a guarantee?',
+      answer: 'No. Nexli does not offer performance guarantees and says so plainly. It publishes the targets it works to — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and sends a written update every week showing the pace against them. The engagement is month to month, so a firm that is not seeing results can leave.',
     },
     {
       question: 'Who qualifies for the Digital Rainmaker System?',
-      answer: 'Established CPA and accounting firms with at least $500K in annual revenue that want to grow tax advisory work. Nexli does not work with solo practitioners just starting out, startups, or firms below that threshold, because the guarantee model depends on the firm already having the capacity and pricing to convert advisory consultations.',
+      answer: 'Established CPA and accounting firms with at least $500K in annual revenue that want to grow tax advisory work. Nexli does not work with solo practitioners just starting out, startups, or firms below that threshold, because the model depends on the firm already having the capacity and pricing to convert advisory consultations.',
     },
     {
       question: 'How much does the Digital Rainmaker System cost?',
@@ -197,7 +197,7 @@ const guide: Guide = {
     },
     {
       question: 'How long does it take to launch?',
-      answer: 'Most firms go live within 2 weeks. The client dashboard and portal are typically live within 5 to 7 business days of onboarding, and the full system is covered by a 14-day funnel launch guarantee that starts once Nexli has received all required assets, access, approvals, and onboarding information.',
+      answer: 'Most firms go live within 10 to 14 days. The client dashboard and portal are typically live within 5 to 7 business days of onboarding. The clock depends on how quickly the firm supplies assets, access, approvals and onboarding information; around 24 days is the realistic worst case when those come back slowly.',
     },
     {
       question: 'Can I keep my existing website?',

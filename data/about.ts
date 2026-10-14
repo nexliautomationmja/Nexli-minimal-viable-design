@@ -21,7 +21,7 @@ export const aboutFacts: AboutFact[] = [
   { label: 'Email', value: 'mail@nexli.net' },
   { label: 'Serves', value: 'Established CPA and accounting firms with $500K+ in annual revenue (about $40K-$50K a month)' },
   { label: 'Contract terms', value: 'Month to month, no annual contracts' },
-  { label: 'Launch time', value: 'Most firms live within 2 weeks; 14-day funnel launch guarantee' },
+  { label: 'Launch time', value: 'Most firms live in 10 to 14 days; around 24 days if assets come back slowly' },
 ];
 
 export const founderBio: string[] = [
@@ -59,12 +59,13 @@ export const aboutSections: AboutSection[] = [
     heading: 'How we work',
     body: [
       'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. Most firms go live within 2 weeks.',
-      'Terms are month to month. There are no annual contracts, and the firm can stop at the end of any month.',
-      'Two guarantees are written into every engagement.',
+      'Terms are month to month. There are no annual contracts, no setup fee, and the firm can stop at the end of any month.',
+      'We do not offer performance guarantees. What we publish are the targets we work to, and a written update every week showing the pace against them.',
     ],
     bullets: [
-      'Results guarantee: at least 50 qualified advisory leads within 90 days of campaign launch, or Nexli keeps working for free until it hits 50.',
-      'Launch guarantee: live within 14 days, or a $1,000 credit toward the next monthly payment.',
+      'Target: at least 50 qualified advisory leads within 90 days of campaign launch.',
+      'Target: the whole system live in 10 to 14 days of kickoff.',
+      'Reported: a written update every week on what was done in the ad account and what it produced.',
     ],
   },
   {
@@ -83,7 +84,7 @@ export const aboutSections: AboutSection[] = [
       'Revenue per client matters more than client count. Advisory is where CPA firms earn their rate.',
       'Growth should not require hiring. Capacity comes from intake, collection, and delivery systems before it comes from payroll.',
       'A firm should own its demand. Referrals are a gift; a booked calendar is a system.',
-      'Guarantees should be specific. A number, a deadline, and what happens if we miss.',
+      'Targets should be specific and reported. A number, a date, and an honest weekly update on the pace.',
       'Month to month keeps us honest. The firm should stay because the system works, not because a contract says so.',
     ],
   },

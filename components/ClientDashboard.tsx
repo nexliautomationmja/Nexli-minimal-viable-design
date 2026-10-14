@@ -289,7 +289,7 @@ const ClientDashboard: React.FC = () => {
                                 onClick={openBooking}
                                 className="flex items-center justify-center gap-2 bg-cyan-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold hover:bg-cyan-500 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-cyan-600/20 group"
                             >
-                                Book a Consultation
+                                See If You Qualify
                                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                             <button
@@ -863,7 +863,7 @@ const ClientDashboard: React.FC = () => {
                             onClick={openBooking}
                             className="group inline-flex items-center gap-2 px-8 md:px-10 py-3 md:py-4 rounded-full bg-cyan-600 text-white font-bold text-sm hover:bg-cyan-500 transition-all shadow-xl shadow-cyan-600/20"
                         >
-                            Book a Consultation
+                            See If You Qualify
                             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                         </button>
                     </div>

@@ -35,7 +35,7 @@ export default function GuideCta({ heading, body, href, label }: Props) {
         </button>
       </div>
       <p className="mt-6 text-xs text-[var(--text-muted)]">
-        Established CPA firms doing $500K+ a year (about $40K-$50K a month) only. Month-to-month, no annual contracts.
+        Established CPA firms doing $500K+ a year (about $40K-$50K a month) only. Six-month initial term.
       </p>
     </aside>
   );

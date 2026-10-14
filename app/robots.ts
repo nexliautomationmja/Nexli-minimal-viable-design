@@ -6,16 +6,17 @@ const DISALLOW = [
   '/_next/',
   '/dashboard/',
   '/qualify',
-  '/thank-you',
   '/booking-confirmed',
+  '/booking-confirmed-b',
   '/sites/preview',
   '/profit-calculator',
-  // Inner demo-funnel steps: entered from /demo-opt-in -> /demo, never
-  // meaningful as a search result.
-  '/demo/qualify',
-  '/demo/call',
-  '/demo/offer',
-  '/demo/thank-you',
+  // Advisory funnel inner steps. The bare /advisory-pricing landing page is
+  // the ad destination and stays crawlable.
+  '/advisory-pricing/BOBA',
+  '/advisory-pricing/BOBA-thank-you',
+  '/advisory-pricing/qualify',
+  '/advisory-pricing/call',
+  '/advisory-pricing/next-steps',
 ];
 
 /**
