@@ -466,7 +466,7 @@ const DocumentPortal: React.FC = () => {
                                 onClick={openBooking}
                                 className="flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-[var(--text-main)] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md hover:border-cyan-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                             >
-                                Book Now
+                                See If You Qualify
                             </button>
                         </div>
                     </motion.div>
@@ -2194,7 +2194,7 @@ const DocumentPortal: React.FC = () => {
                                 onClick={openBooking}
                                 className="inline-flex items-center gap-2 md:gap-3 bg-cyan-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-cyan-500 hover:scale-105 transition-all shadow-xl shadow-cyan-600/25 active:scale-95 group"
                             >
-                                Book a Consultation
+                                See If You Qualify
                                 <ArrowRight size={16} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                             </button>
                         </div>

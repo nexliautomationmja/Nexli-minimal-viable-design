@@ -73,9 +73,9 @@ export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';
  */
 export const ENGAGEMENT_TERMS = [
   {
-    name: 'Month to month',
+    name: 'Six-month initial term',
     description:
-      'No annual contract and no lock-in. The engagement continues month to month and can be cancelled at any time.',
+      'The engagement runs on a signed agreement with a six-month minimum initial term. After that it continues month to month and can be cancelled with 30 days notice.',
   },
   {
     name: 'No setup fee',

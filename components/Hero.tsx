@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, TrendingUp, ShieldCheck, CalendarX, Repeat, Droplets } from 'lucide-react';
+import { ArrowRight, TrendingUp, ShieldCheck, Receipt, Users, Droplets } from 'lucide-react';
 import { useBooking } from './QualificationProvider';
 
 const Hero: React.FC = () => {
@@ -102,7 +102,18 @@ const Hero: React.FC = () => {
           We build the Digital Rainmaker System, then run ads to it &mdash; so the clients bleeding six figures in taxes land on your calendar.
         </motion.p>
 
-        {/* Trust Signals — No Contracts */}
+        {/*
+          Trust signals.
+
+          These used to read "No Annual Contracts / Month-to-Month / Cancel
+          Anytime". The engagement does have a contract and is not month to
+          month, so two of the three were simply untrue — and they are the
+          first thing on the page, which is the worst place to be wrong.
+          "Cancel Anytime" went too: the engagement has a six-month minimum
+          initial term, so notice given in month two does not end the billing
+          until month six. All three of these are now things we can stand
+          behind without a footnote.
+        */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -110,9 +121,9 @@ const Hero: React.FC = () => {
           className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mb-8 md:mb-10"
         >
           {[
-            { Icon: CalendarX, text: 'No Annual Contracts' },
-            { Icon: Repeat, text: 'Month-to-Month' },
-            { Icon: ShieldCheck, text: 'Cancel Anytime' },
+            { Icon: Receipt, text: 'No Hidden Fees' },
+            { Icon: ShieldCheck, text: 'No Setup Fee' },
+            { Icon: Users, text: 'US-Based CPA Firms Only' },
           ].map((item) => (
             <span
               key={item.text}
@@ -134,7 +145,7 @@ const Hero: React.FC = () => {
             onClick={openBooking}
             className="flex items-center justify-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold md:font-bold hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/20 group backdrop-blur-sm"
           >
-            Book Consultation
+            See If You Qualify
             <ArrowRight size={16} className="md:size-[18px] group-hover:translate-x-1 transition-transform" />
           </button>
           <Link

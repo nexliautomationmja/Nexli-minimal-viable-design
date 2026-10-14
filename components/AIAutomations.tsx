@@ -270,7 +270,7 @@ const AIAutomations: React.FC = () => {
                                 onClick={openBooking}
                                 className="flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-full text-sm font-bold text-[var(--text-main)] border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-md hover:border-violet-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                             >
-                                Book Now
+                                See If You Qualify
                             </button>
                         </div>
                     </motion.div>
@@ -659,7 +659,7 @@ const AIAutomations: React.FC = () => {
                                                                 Hi Sarah! Sorry we missed your call. We&apos;re available to help — would you like to book a quick consultation? Tap below to pick a time that works:
                                                             </p>
                                                             <div className="rounded-xl bg-violet-500 py-2.5 text-center text-white text-[10px] md:text-xs font-bold cursor-pointer hover:bg-violet-400 transition-colors">
-                                                                Book a Consultation
+                                                                See If You Qualify
                                                             </div>
                                                         </div>
                                                     </div>

@@ -187,7 +187,7 @@ export default function About() {
             </li>
             <li>
               Strategy call:{' '}
-              <Link href="/vslfunnel-advisory" className="text-blue-500 underline underline-offset-4">
+              <Link href="/advisory-pricing" className="text-blue-500 underline underline-offset-4">
                 watch the presentation and apply
               </Link>
             </li>

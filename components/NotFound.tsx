@@ -118,10 +118,10 @@ const NotFound: React.FC = () => {
             </a>
             <span className={theme === 'dark' ? 'text-neutral-600' : 'text-slate-300'}>•</span>
             <a
-              href="/free-guide"
+              href="/guides"
               className="text-blue-500 hover:text-blue-400 transition-colors"
             >
-              Free Guide
+              Guides
             </a>
           </div>
         </motion.div>

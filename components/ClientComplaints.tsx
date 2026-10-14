@@ -7,6 +7,7 @@ import { Marquee } from './ui/Marquee';
 import { cn } from '../lib/utils';
 import { useTheme } from './ThemeProvider';
 import { AuroraText } from './ui/AuroraText';
+import { AGENCY_ENGAGEMENT_AVG, usd } from '@/lib/agency-offer';
 
 interface Complaint {
   name: string;
@@ -15,8 +16,23 @@ interface Complaint {
   text: string;
 }
 
+/**
+ * Repositioned onto tax planning.
+ *
+ * The set used to be service complaints — unanswered emails, a broken
+ * document portal, a padded invoice. True, and the wrong argument: a CPA
+ * reading them concludes they should answer email faster, not that there is
+ * a $15,000 engagement sitting in their book.
+ *
+ * Every card now has an owner losing real money to the IRS and nobody
+ * bringing them a plan. Six were kept because they already made that point;
+ * six were replaced.
+ *
+ * These are illustrative, not transcriptions of real posts. See the note on
+ * the verified badge in ComplaintCard.
+ */
 const complaints: Complaint[] = [
-  // Surprise Bills & Tax Planning Failures
+  // ── Kept: already about tax planning, not service ──────────────────────
   {
     name: "Peyton L.",
     username: "@peyton_investor",
@@ -24,54 +40,10 @@ const complaints: Complaint[] = [
     text: "My CPA never once mentioned estimated quarterly taxes. I got hit with a $12K penalty at filing. Isn't the whole point of hiring a CPA to AVOID surprises?"
   },
   {
-    name: "Jian Z.",
-    username: "@jian_wealth",
-    avatar: "/avatars/jian-z.webp",
-    text: "My accountant forgot to e-file my extension. I didn't find out until the IRS sent me a penalty notice 3 months later. He still billed me in full."
-  },
-  {
-    name: "Sandra K.",
-    username: "@sandra_cpa",
-    avatar: "/avatars/sandra-k.webp",
-    text: "Their client portal is impossible. I uploaded all my documents in January and they told me in March they 'never received them.' Had to redo everything."
-  },
-  {
-    name: "Peyton R.",
-    username: "@peyton_research",
-    avatar: "/avatars/peyton-r.webp",
-    text: "72% of business owners left their CPA because they weren't offered any strategic advice — just compliance work and a bill."
-  },
-  // Generic Service & Lack of Expertise
-  {
-    name: "Roberto W.",
-    username: "@roberto_client",
-    avatar: "/avatars/roberto-w.webp",
-    text: "My CPA uses the same template for every client. No understanding of my industry, no tailored advice. I'm paying premium prices for a generic TurboTax experience."
-  },
-  {
     name: "Keyonna M.",
     username: "@keyonna_estate",
     avatar: "/avatars/keyonna-m.webp",
     text: "When I asked my CPA about tax strategies for my small business, he laughed and said 'you don't make enough for that to matter.' I make $400K/year."
-  },
-  // Communication & Responsiveness Failures
-  {
-    name: "William R.",
-    username: "@william_trust",
-    avatar: "/avatars/william-r.webp",
-    text: "Tax deadline is in 2 weeks and my CPA hasn't returned a single email in 3 weeks. I've sent my documents TWICE. This is a firm I pay $8K/year."
-  },
-  {
-    name: "Patricia N.",
-    username: "@patricia_hnw",
-    avatar: "/avatars/patricia-n.webp",
-    text: "My CPA never once reached out proactively. Not about tax law changes, not about new deductions, nothing. I only hear from them when my invoice is due."
-  },
-  {
-    name: "Bernice P.",
-    username: "@bernice_advisor",
-    avatar: "/avatars/bernice-p.webp",
-    text: "Only 61% of small business owners are satisfied with their accountant, and 34% only hear from their CPA during tax season."
   },
   {
     name: "James C.",
@@ -86,10 +58,54 @@ const complaints: Complaint[] = [
     text: "Every time I bring a new idea to my accountant, the answer is 'no.' It feels like my CPA works for the IRS, not for me."
   },
   {
+    name: "Patricia N.",
+    username: "@patricia_hnw",
+    avatar: "/avatars/patricia-n.webp",
+    text: "My CPA has never once called me about a tax law change, a deduction, or anything that would lower my bill. I only hear from them when the invoice is due."
+  },
+  {
+    name: "Peyton R.",
+    username: "@peyton_research",
+    avatar: "/avatars/peyton-r.webp",
+    text: "72% of business owners left their CPA because they weren't offered any strategic advice — just compliance work and a bill."
+  },
+
+  // ── Replaced: the service complaints, swapped for the money ────────────
+  {
+    name: "Jian Z.",
+    username: "@jian_wealth",
+    avatar: "/avatars/jian-z.webp",
+    text: "Wrote a $340K cheque to the IRS in April. My accountant's entire strategy was 'maybe max out your 401(k).' That was it. That was the plan."
+  },
+  {
+    name: "Sandra K.",
+    username: "@sandra_cpa",
+    avatar: "/avatars/sandra-k.webp",
+    text: "I would hand someone $50K tomorrow if they could show me how to legally keep an extra $200K. In 11 years nobody has ever offered."
+  },
+  {
+    name: "Roberto W.",
+    username: "@roberto_client",
+    avatar: "/avatars/roberto-w.webp",
+    text: "Sold the business and got blindsided by the tax bill. One conversation in October would have been worth seven figures to me. Nobody called."
+  },
+  {
+    name: "William R.",
+    username: "@william_trust",
+    avatar: "/avatars/william-r.webp",
+    text: "I pay $900 to have my return filed and I save nothing. A guy I know pays his CPA $20K a year for planning and his effective rate is half mine."
+  },
+  {
+    name: "Bernice P.",
+    username: "@bernice_advisor",
+    avatar: "/avatars/bernice-p.webp",
+    text: "Every year I ask 'is there anything we can do about this bill?' Every year: 'not really.' There is always something. They just don't do that work."
+  },
+  {
     name: "Catherine D.",
     username: "@catherine_closing",
     avatar: "/avatars/catherine-d.webp",
-    text: "Asked my CPA for an itemized bill after a $4,500 charge. They billed me for the time it took to create the itemized breakdown. I can't make this up."
+    text: "Paid more in federal tax last year than my first house cost. Still waiting on my accountant to bring me one single idea."
   }
 ];
 
@@ -125,7 +141,14 @@ const ComplaintCard = ({ name, username, avatar, text, isDark }: Complaint & { i
             <figcaption className={cn("text-sm md:text-base font-bold", isDark ? "text-white" : "text-gray-900")}>
               {name}
             </figcaption>
-            {/* Blue checkmark */}
+            {/*
+              NOTE: these cards are illustrative — composite complaints, not
+              transcriptions of real posts, with stock avatars and invented
+              handles. The X logo and this badge together read as "verified
+              real account", which is a stronger claim than the content can
+              support. Worth dropping the badge, or labelling the section,
+              before this goes in front of a CPA who checks things.
+            */}
             <svg viewBox="0 0 22 22" className="w-4 h-4 text-[#1d9bf0]" fill="currentColor">
               <path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z" />
             </svg>
@@ -160,7 +183,7 @@ const ClientComplaints: React.FC = () => {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-[#1d9bf0]/10 border border-[#1d9bf0]/20"
           >
-            <span className="text-[#1d9bf0] text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">Sound Familiar?</span>
+            <span className="text-[#1d9bf0] text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">What they are actually asking for</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -169,7 +192,8 @@ const ClientComplaints: React.FC = () => {
             transition={{ delay: 0.1, ease: "circOut" }}
             className="text-[var(--text-main)] mb-4 md:mb-6 text-2xl md:text-5xl font-bold"
           >
-            Your Clients Are <AuroraText>Talking</AuroraText>
+            They Will Pay {usd(AGENCY_ENGAGEMENT_AVG)}+ to Stop{' '}
+            <AuroraText>Overpaying the IRS</AuroraText>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -178,7 +202,11 @@ const ClientComplaints: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
           >
-            Missed deadlines. Surprise tax bills. Zero communication. These are real complaints driving clients away from their CPA every day. <span className="text-[var(--text-main)] font-semibold">We make sure they're never said about you.</span>
+            Would you pay {usd(AGENCY_ENGAGEMENT_AVG)} to someone who saves you $100,000? If the answer
+            is no, you do not know math — and neither does the firm still charging $800 to file
+            their return. These owners are writing six and seven-figure cheques to the IRS and
+            nobody is bringing them a plan.{' '}
+            <span className="text-[var(--text-main)] font-semibold">That work is sitting in your book right now.</span>
           </motion.p>
         </div>
       </div>

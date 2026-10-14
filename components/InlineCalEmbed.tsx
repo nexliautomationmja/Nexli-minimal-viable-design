@@ -38,6 +38,9 @@ interface InlineCalEmbedProps {
   onBooked?: () => void;
 }
 
+/** How long to wait for Cal's iframe before offering the direct link. */
+const STALL_MS = 8000;
+
 /**
  * Inline Cal.com embed for post-purchase pages. Uses its own namespace so it
  * never collides with the QualificationProvider modal, and skips the
@@ -62,6 +65,30 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
   const initialized = useRef(false);
   const bookedRef = useRef(false);
   const [booked, setBooked] = useState(false);
+  /**
+   * 'loading' until Cal injects its iframe, 'stalled' if it never does.
+   *
+   * The container used to be an empty 520px box with a faint background and
+   * nothing in it. When Cal's script does not run — an ad blocker or privacy
+   * extension (cal.com is on several common blocklists), a corporate network,
+   * an outage — a qualified lead who has just answered five questions lands
+   * on a blank grey rectangle with no way to book and no way to tell anyone.
+   */
+  const [status, setStatus] = useState<'loading' | 'ready' | 'stalled'>('loading');
+
+  /**
+   * The same booking page, opened directly. cal.com/<link> is the public
+   * host; app.cal.com is what the embed iframe uses. Prefills carry over so
+   * the lead does not retype what they just gave us.
+   */
+  const fallbackUrl = (() => {
+    const qs = new URLSearchParams();
+    if (name) qs.set('name', name);
+    if (email) qs.set('email', email);
+    if (notes) qs.set('notes', notes);
+    const q = qs.toString();
+    return `https://cal.com/${calLink}${q ? `?${q}` : ''}`;
+  })();
 
   useEffect(() => {
     if (initialized.current || !containerRef.current) return;
@@ -157,8 +184,21 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
       },
     });
 
+    // Watch for Cal's iframe rather than trusting the script to have run.
     const el = containerRef.current;
+    const started = Date.now();
+    const poll = window.setInterval(() => {
+      if (el?.querySelector('iframe')) {
+        setStatus('ready');
+        window.clearInterval(poll);
+      } else if (Date.now() - started > STALL_MS) {
+        setStatus('stalled');
+        window.clearInterval(poll);
+      }
+    }, 400);
+
     return () => {
+      window.clearInterval(poll);
       if (el) el.innerHTML = '';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -193,10 +233,45 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
 
   return (
     <div
-      ref={containerRef}
-      className="w-full min-h-[520px] rounded-2xl"
+      className="relative w-full min-h-[520px] rounded-2xl overflow-hidden"
       style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
-    />
+    >
+      {/* Cal injects into this. Anything React renders inside it would be
+          wiped, so the states below are siblings laid over the top. */}
+      <div ref={containerRef} className="w-full" />
+
+      {status === 'loading' && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" aria-live="polite">
+          <span
+            className="h-7 w-7 animate-spin rounded-full border-2 border-white/15"
+            style={{ borderTopColor: brandColor }}
+            aria-hidden="true"
+          />
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            Loading the calendar…
+          </p>
+        </div>
+      )}
+
+      {status === 'stalled' && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center" role="alert">
+          <CalendarCheck size={26} style={{ color: brandColor }} aria-hidden="true" />
+          <p className="max-w-sm text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+            The calendar did not load. An ad blocker or privacy extension will usually do
+            this — open it directly instead and your time is still held.
+          </p>
+          <a
+            href={fallbackUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            style={{ backgroundColor: brandColor }}
+          >
+            Open the booking page
+          </a>
+        </div>
+      )}
+    </div>
   );
 };
 

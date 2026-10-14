@@ -19,7 +19,8 @@
 // different thing: what the CPA charges THEIR client. Conflating the two is
 // the easiest mistake to make in this file.
 
-/** The complete system, flat, every month. No setup fee, no contract. */
+/** The complete system, flat, every month. No setup fee. Six-month minimum
+ *  initial term, then month to month — see components/TermsAndConditions. */
 export const AGENCY_MONTHLY_FEE = 4_997;
 
 /**

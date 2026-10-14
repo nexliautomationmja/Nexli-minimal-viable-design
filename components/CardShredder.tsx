@@ -3,15 +3,29 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from './ThemeProvider';
 
+/**
+ * Each card is a planning engagement that was never sold, labelled with the
+ * work the firm did for that client instead.
+ *
+ * They used to be attrition — "Lost Client", "Chose Competitor", "Walked
+ * Away" — which argued that the problem is clients leaving. It is not. The
+ * clients stayed. The firm filed their returns, did their books, ran their
+ * payroll, and never once raised the conversation worth ten times the fee.
+ *
+ * The figures are deliberately wide. What a planning engagement is worth
+ * tracks what the client is handing the IRS, and these are owners paying
+ * six, seven and eight figures in tax — so $15K and $200K are both real
+ * depending on whose return is open on the desk.
+ */
 const CARDS = [
-    { amount: '$50K', label: 'Lost Client', network: 'visa' as const },
-    { amount: '$120K', label: 'Missed Retainer', network: 'mastercard' as const },
-    { amount: '$75K', label: 'Referral Gone', network: 'visa' as const },
-    { amount: '$200K', label: 'Walked Away', network: 'mastercard' as const },
-    { amount: '$90K', label: 'Never Called', network: 'visa' as const },
-    { amount: '$150K', label: 'Chose Competitor', network: 'mastercard' as const },
-    { amount: '$300K', label: 'Lost Engagement', network: 'visa' as const },
-    { amount: '$65K', label: 'No Follow-Up', network: 'mastercard' as const },
+    { amount: '$15K', label: 'Filed. Never Advised', network: 'visa' as const },
+    { amount: '$120K', label: 'Bookkeeping Only', network: 'mastercard' as const },
+    { amount: '$25K', label: 'Payroll, Not Planning', network: 'visa' as const },
+    { amount: '$200K', label: 'Never Raised It', network: 'mastercard' as const },
+    { amount: '$40K', label: 'Return, No Plan', network: 'visa' as const },
+    { amount: '$75K', label: 'Compliance Only', network: 'mastercard' as const },
+    { amount: '$18K', label: 'Same Client, Every Year', network: 'visa' as const },
+    { amount: '$90K', label: 'Six Figures In Tax', network: 'mastercard' as const },
 ];
 
 const ChipSVG: React.FC = () => (
@@ -90,13 +104,13 @@ const CardShredder: React.FC = () => {
                     transition={{ duration: 0.6 }}
                 >
                     <p className="text-red-500 text-[10px] md:text-xs font-black tracking-[0.25em] uppercase mb-3 md:mb-4">
-                        Every month without a strategy
+                        Every year you only file the return
                     </p>
                     <h2
                         className="text-2xl sm:text-3xl md:text-5xl font-black text-[var(--text-main)] tracking-tight leading-tight mb-3 md:mb-4"
                         style={{ fontFamily: "'Syne', sans-serif" }}
                     >
-                        Your Online Presence Is{' '}
+                        Focusing On Compliance Is{' '}
                         <motion.span
                             className="text-red-500 inline-block"
                             animate={{ scale: [1, 1.03, 1] }}
@@ -106,7 +120,9 @@ const CardShredder: React.FC = () => {
                         </motion.span>
                     </h2>
                     <p className="text-sm md:text-lg text-[var(--text-muted)] max-w-2xl mx-auto">
-                        While you wait to "get around to it," prospects are Googling your firm, judging what they find, and booking with someone else.
+                        Returns, bookkeeping, payroll. All of it billable, none of it the work worth
+                        ten times the fee. Every one of these clients stayed with you — you just
+                        never had the conversation.
                     </p>
                 </motion.div>
             </div>
@@ -213,7 +229,7 @@ const CardShredder: React.FC = () => {
                 <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-red-500/5 border border-red-500/10">
                     <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                     <span className="text-red-400 text-xs md:text-sm font-bold">
-                        The average CPA firm loses $435K+ per year from client attrition — retaining clients and streamlining operations beats the revolving door every time (CPA Trendlines)
+                        Compliance fees compress every year. Planning fees do not — the client is comparing them to the tax they would have paid, not to the firm down the road.
                     </span>
                 </div>
             </motion.div>

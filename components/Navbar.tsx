@@ -69,7 +69,6 @@ const Navbar: React.FC = () => {
     { label: 'AI Automations', view: 'aiAutomations' },
     { label: 'Dashboard', view: 'clientDashboard' },
     { label: 'Google Reviews', view: 'smartReviews', hasGoogleIcon: true },
-    { label: 'Free Guide', view: 'guide' },
   ];
 
   const closeMenu = () => setIsOpen(false);
@@ -180,7 +179,7 @@ const Navbar: React.FC = () => {
                 }}
                 className="bg-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap"
               >
-                Book Now
+                See If You Qualify
               </button>
 
               {/* Mobile Menu Toggle */}

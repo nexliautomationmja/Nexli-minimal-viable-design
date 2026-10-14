@@ -8,7 +8,7 @@
  *
  * Shared by the two pages that have to deliver the news:
  *
- *   /advisory-pricing/offer      the $297 downsell, where the firm lands
+ *   /advisory-pricing/BOBA       the $97 downsell, where the firm lands
  *                                straight out of the qualifier
  *   /advisory-pricing/next-steps the same message after they have bought it
  *

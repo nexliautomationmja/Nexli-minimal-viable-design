@@ -638,7 +638,7 @@ const Services: React.FC = () => {
                             onClick={openBooking}
                             className="inline-flex items-center gap-2 md:gap-3 bg-blue-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-full text-sm md:text-lg font-bold hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-600/25 active:scale-95 group"
                         >
-                            Book a Consultation
+                            See If You Qualify
                             <ArrowRight size={16} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                         </button>
                     </motion.div>

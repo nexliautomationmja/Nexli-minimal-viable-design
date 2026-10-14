@@ -18,6 +18,7 @@ import {
   BOOKING_SYSTEM_VIDEO_ID,
   BOOKING_SYSTEM_VIDEO_TITLE,
   BOOKING_WELCOME_VIDEO_ID,
+  BOOKING_WELCOME_VIDEO_POSTER_TIME,
   BOOKING_WELCOME_VIDEO_TITLE,
 } from '@/lib/demo-config';
 import MuxPlayer from '@mux/mux-player-react';
@@ -730,6 +731,8 @@ const BookingConfirmed: React.FC = () => {
             <div className="relative z-10 p-4 md:p-8">
               <MuxPlayer
                 playbackId={BOOKING_WELCOME_VIDEO_ID}
+                // Without this Mux serves a frame from the middle of the video.
+                thumbnailTime={BOOKING_WELCOME_VIDEO_POSTER_TIME}
                 metadata={{ video_title: BOOKING_WELCOME_VIDEO_TITLE }}
                 streamType="on-demand"
                 accentColor="#22c55e"
