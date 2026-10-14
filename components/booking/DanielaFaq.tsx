@@ -25,12 +25,20 @@ export const DEFAULT_FAQ_ITEMS = [
 
 export interface FaqItem {
   question: string;
-  /** Pre-recorded answer. Page A uses these. */
+  /**
+   * Pre-recorded answer, under public/audio/faq/. Optional: an item with
+   * only an `answer` renders as Daniela's written reply with no player,
+   * which is what page B does until its recordings exist.
+   */
   audio?: string;
   /**
-   * Written answer. When present the item renders as prose instead of a
-   * player — page B uses these, because a page whose job is to answer
-   * everything before the call should not make anyone press play and wait.
+   * The written answer, always visible when present — NOT hidden behind a
+   * "read transcript" toggle.
+   *
+   * With `audio` it is what she is saying, on screen while she says it. A
+   * prospect who cannot play sound, is skimming, or wants to re-read one
+   * sentence is not forced to sit through 90 seconds to get it, and the
+   * one who does press play gets to follow along.
    */
   answer?: string;
 }
@@ -54,7 +62,6 @@ export default function DanielaFaq({
   const { theme } = useTheme();
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   const [faqPlaying, setFaqPlaying] = useState<number | null>(null);
-  const [faqTranscriptOpen, setFaqTranscriptOpen] = useState<number | null>(null);
   const faqAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleFaqPlay = (index: number) => {
@@ -71,11 +78,17 @@ export default function DanielaFaq({
       setFaqPlaying(null);
     }
 
-    // Play pre-recorded audio
-    const audio = new Audio(faqItems[index].audio);
+    const src = faqItems[index].audio;
+    if (!src) return;
+
+    const audio = new Audio(src);
     faqAudioRef.current = audio;
     audio.onended = () => setFaqPlaying(null);
-    audio.play();
+    // A missing or blocked file rejects. Unhandled, that left the button
+    // stuck on Pause with nothing playing and threw in the console; the
+    // catch puts the control back where it was.
+    audio.onerror = () => setFaqPlaying(null);
+    audio.play().catch(() => setFaqPlaying(null));
     setFaqPlaying(index);
   };
 
@@ -94,12 +107,16 @@ export default function DanielaFaq({
           <HelpCircle size={14} className="text-green-400" />
           <span className="text-green-400 text-[9px] md:text-xs font-black tracking-[0.2em] uppercase">{badge}</span>
         </div>
+        {/* `heading` and `intro` were destructured and then never used —
+            both pages got the hard-coded copy below whatever they passed. */}
         <h2 className="text-2xl md:text-5xl font-bold text-[var(--text-main)] mb-4">
-          Questions Before <span className="text-green-500">Your Call?</span>
+          {heading ?? (
+            <>
+              Questions Before <span className="text-green-500">Your Call?</span>
+            </>
+          )}
         </h2>
-        <p className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg">
-          Tap any question to hear Daniela answer it personally — in her own voice.
-        </p>
+        <p className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg">{intro}</p>
       </div>
 
       <div className="max-w-3xl mx-auto space-y-3">
@@ -126,16 +143,26 @@ export default function DanielaFaq({
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
+                  {/*
+                    One layout, three states. It used to be two completely
+                    separate branches — a player OR a bare paragraph — which
+                    made page B's answers look like they came from the site
+                    rather than from a person.
+
+                    Now every answer is from Daniela: avatar, name, bubble.
+                    The player appears above the words when there is a
+                    recording, and the words are always on screen. Nothing
+                    is hidden behind "read transcript".
+                  */}
                   <div className="px-5 md:px-6 pb-5 md:pb-6">
-                    {item.answer ? (
-                      <p className="text-sm md:text-base leading-relaxed text-[var(--text-muted)] whitespace-pre-line">
-                        {item.answer}
-                      </p>
-                    ) : (
+                    {(
                       <div className="flex items-start gap-3">
                         <Image src="/daniela-headshot.png" alt="Daniela" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-green-500/30 flex-shrink-0 mt-0.5" />
                         <div className="flex-1 min-w-0 space-y-2">
                           <p className="text-[10px] font-bold ml-1 text-[var(--text-muted)]">Daniela, COO</p>
+
+                          {/* The player, only where a recording exists. */}
+                          {item.audio && (
                           <div className={`rounded-2xl rounded-bl-md px-4 py-3 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
                             <div className="flex items-center gap-3">
                               <button
@@ -167,34 +194,29 @@ export default function DanielaFaq({
                               </div>
                             </div>
                           </div>
-  
-                          {/* Transcript toggle */}
-                          <button
-                            type="button"
-                            onClick={() => setFaqTranscriptOpen(faqTranscriptOpen === i ? null : i)}
-                            className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-green-400 transition-colors ml-1"
-                          >
-                            <ChevronDown size={14} className={`transition-transform duration-300 ${faqTranscriptOpen === i ? 'rotate-180' : ''}`} />
-                            {faqTranscriptOpen === i ? 'Hide transcript' : 'Read transcript'}
-                          </button>
-  
-                          <AnimatePresence>
-                            {faqTranscriptOpen === i && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="overflow-hidden"
+                          )}
+
+                          {/* What she says, on screen. Always open.
+                              This replaces a "Read transcript" toggle whose
+                              panel only ever said "Transcript will be
+                              available after playback" — it was never wired
+                              to anything and nothing ever filled it in. */}
+                          {item.answer && (
+                            <div
+                              className={`rounded-2xl rounded-bl-md px-4 py-3 ${
+                                theme === 'dark'
+                                  ? 'bg-white/[0.04] border border-white/10'
+                                  : 'bg-slate-50 border border-slate-200'
+                              }`}
+                            >
+                              <p
+                                className="text-sm md:text-[0.95rem] leading-relaxed whitespace-pre-line"
+                                style={{ color: 'var(--text-muted)' }}
                               >
-                                <div className={`rounded-2xl rounded-bl-md p-4 ${theme === 'dark' ? 'bg-white/[0.04] border border-white/10' : 'bg-slate-50 border border-slate-200'}`}>
-                                  <p className="text-sm text-[var(--text-muted)] leading-relaxed italic">
-                                    Transcript will be available after playback.
-                                  </p>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                                {item.answer}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
