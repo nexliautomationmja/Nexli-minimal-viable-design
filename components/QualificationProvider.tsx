@@ -2,9 +2,11 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle, XCircle, Building2, Target, DollarSign, Crown, X, User, Wallet } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent, generateEventId } from '@/lib/meta-events';
 import { getAttribution } from '@/lib/attribution';
+import { ADVISORY_PATH } from '@/lib/advisory-config';
 import {
   type ContactErrors,
   type ContactInput,
@@ -197,6 +199,7 @@ function ContactStep({
 }) {
   const [form, setForm] = useState<ContactInput>({ ...EMPTY_CONTACT });
   const [smsOptIn, setSmsOptIn] = useState(false);
+  const [smsError, setSmsError] = useState(false);
   const [errors, setErrors] = useState<ContactErrors>({});
 
   const set = (key: keyof ContactInput, value: string) => {
@@ -208,7 +211,10 @@ function ContactStep({
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const found = validateContact(form);
-    if (Object.keys(found).length) {
+    // Consent is required to continue, so it gets the same treatment as a
+    // missing field rather than failing silently.
+    setSmsError(!smsOptIn);
+    if (Object.keys(found).length || !smsOptIn) {
       setErrors(found);
       return;
     }
@@ -230,11 +236,19 @@ function ContactStep({
     <div>
       <label htmlFor={`q-${key}`} className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
         {label}
+        {/* Every field here is required. Marking them says so before the
+            visitor finds out by failing. The asterisk is aria-hidden and
+            `required` on the input carries the same fact to a screen
+            reader, so it is not read out as punctuation mid-label. */}
+        <span className="ml-0.5 text-red-400" aria-hidden="true">
+          *
+        </span>
       </label>
       <input
         id={`q-${key}`}
         value={form[key]}
         onChange={(ev) => set(key, ev.target.value)}
+        required
         aria-invalid={errors[key] ? true : undefined}
         aria-describedby={errors[key] ? `q-${key}-err` : undefined}
         className={FIELD_CLASS}
@@ -251,6 +265,12 @@ function ContactStep({
 
   return (
     <form onSubmit={submit} noValidate className="space-y-3">
+      <p className="text-[11px] text-[var(--text-muted)]">
+        <span className="text-red-400" aria-hidden="true">
+          *
+        </span>{' '}
+        All fields required
+      </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {field('firstName', 'First name', { type: 'text', autoComplete: 'given-name', placeholder: 'Jane' })}
         {field('lastName', 'Last name', { type: 'text', autoComplete: 'family-name', placeholder: 'Smith' })}
@@ -275,12 +295,24 @@ function ContactStep({
         })}
       </div>
 
-      {/* TCPA: marketing consent is an UNTICKED affirmative opt-in and must
-          stay that way. A pre-ticked box is not consent, and carriers reject
-          A2P 10DLC campaigns that collect it that way. */}
+      {/*
+        TCPA: unticked by default, so ticking it is an affirmative act by
+        the visitor — which is what consent means. It is also REQUIRED to
+        continue, on Marcel's instruction (13 Oct 2026).
+
+        Requiring it is a deliberate trade, not an oversight. The rule that
+        consent cannot be a condition applies to the purchase of goods or
+        services; this gates a free consultation, so it sits outside that
+        prong. Do not pre-tick it — that is the thing A2P 10DLC registration
+        rejects, and a deregistered brand loses appointment reminders along
+        with the marketing.
+      */}
       <button
         type="button"
-        onClick={() => setSmsOptIn((v) => !v)}
+        onClick={() => {
+          setSmsOptIn((v) => !v);
+          setSmsError(false);
+        }}
         aria-pressed={smsOptIn}
         className="flex w-full items-start gap-2.5 text-left pt-1"
       >
@@ -294,10 +326,19 @@ function ContactStep({
           {smsOptIn && <CheckCircle size={11} className="text-white" />}
         </span>
         <span className="text-[11px] leading-relaxed text-[var(--text-muted)]">
-          Text me occasional tips and offers. Optional — message and data rates may apply,
-          reply STOP to opt out.
+          Text me occasional tips and offers
+          <span className="ml-0.5 text-red-400" aria-hidden="true">
+            *
+          </span>
+          . Message and data rates may apply; reply STOP to opt out at any time.
         </span>
       </button>
+
+      {smsError && (
+        <p className="text-xs text-red-400" role="alert">
+          Tick the box above to continue — we send call reminders and planning deadlines by text.
+        </p>
+      )}
 
       <button
         type="submit"
@@ -566,6 +607,7 @@ function NotQualifiedModal({ onClose }: { onClose: () => void }) {
 // ---------------------------------------------------------------------------
 export default function QualificationProvider({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [qualificationStatus, setQualificationStatus] = useState<QualificationStatus>('pending');
   const answersRef = useRef<QualificationAnswers | null>(null);
@@ -722,14 +764,28 @@ export default function QualificationProvider({ children }: { children: React.Re
     }
   }, [theme]);
 
+  /**
+   * Every "book a call" button on the site routes through here, so this is
+   * the one place that decides where booking starts.
+   *
+   * It sends people to the advisory VSL — the top of the funnel, not the
+   * qualifier and not the old modal.
+   *
+   * The video is the real first filter. It states the price and what the
+   * system is built to produce, so anyone who reaches the questions has
+   * been told before they answer. Dropping someone straight onto the form
+   * gets you people who book a call on "yeah, sure" with no idea what they
+   * are walking into — and the modal it replaced was worse again, because
+   * anyone who failed its six questions hit a dead end with no contact
+   * captured and nothing to downsell them.
+   *
+   * The modal below is left in place rather than ripped out. It is dead
+   * weight while this points elsewhere, but removing it is a separate
+   * change with its own blast radius.
+   */
   const openBooking = useCallback(() => {
-    if (qualificationStatus === 'qualified') {
-      openCalPopup();
-    } else {
-      setQualificationStatus('pending');
-      setIsOpen(true);
-    }
-  }, [qualificationStatus, openCalPopup]);
+    router.push(ADVISORY_PATH);
+  }, [router]);
 
   const handleResult = useCallback((status: QualificationStatus, answers: QualificationAnswers) => {
     setQualificationStatus(status);

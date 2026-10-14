@@ -263,9 +263,38 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
       }
     }
 
+    /**
+     * A one-click way back into the funnel from an email.
+     *
+     * /api/advisory-pricing/resume takes an HMAC-signed lead token, sets the
+     * session cookie and bounces to `to` — so a nurture email can drop
+     * someone straight back on the calendar or the offer page from any
+     * device, with no form to re-fill and no duplicate lead row.
+     *
+     * It points at the same place the app just sent them, which is what
+     * makes it a RESUME rather than a restart: a firm that qualified and
+     * closed the tab gets the calendar back, and a not-a-fit gets the $97
+     * page back.
+     *
+     * The token expires on the same clock as the cookie. It is still a
+     * bearer credential in a URL — forward the email, forward the access —
+     * which is why the paid pages gate on the purchase recorded against the
+     * lead row rather than on this.
+     *
+     * Written to the CONTACT as well as sent in the webhook, so a workflow
+     * built later, which never saw this payload, can still link them back.
+     */
+    const resumeDestination = cfg.nextPath[path] ?? cfg.nextPath[cfg.unqualifiedPath];
+    const resumeUrl = resumeDestination
+      ? `${SITE_URL}/api/advisory-pricing/resume?t=${encodeURIComponent(
+          await createDemoToken(leadId),
+        )}&to=${encodeURIComponent(resumeDestination)}`
+      : null;
+
     // ── GoHighLevel: contact + tags + a note with every answer ────────────
     if (lead?.email) {
       const sync = await syncContactToGhl({
+        resumeUrl,
         email: lead.email,
         firstName: lead.firstName,
         lastName: lead.lastName,
@@ -393,6 +422,14 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
           tax_savings: answers.taxSavings,
           tax_savings_label: qualificationLabel("taxSavings", answers.taxSavings),
           tax_savings_tag: answers.taxSavingsTag,
+          // The advisory funnel's deciding answer. It was being written to
+          // the lead row but left out of the payload, so GHL received the
+          // verdict without the reason for it — no way to segment a firm
+          // that said "under $10k" from one that failed on role or revenue.
+          // Null on the demo funnel, which never asks it.
+          budget: answers.budget,
+          budget_label: qualificationLabel("budget", answers.budget),
+          resume_url: resumeUrl,
           lead_score: scoring.classification,
           utm_source: attribution.utm_source || null,
           utm_medium: attribution.utm_medium || null,

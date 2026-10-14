@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { getSiteUrl } from "./site";
 import {
   ADVISORY_OFFER_PATH,
+  ADVISORY_PRICE_VALUE,
   ADVISORY_THANK_YOU_PATH,
   getAdvisoryPriceId,
 } from "./advisory-config";
@@ -103,9 +104,61 @@ function attributionMetadata(a: CheckoutAttributionFields): Record<string, strin
  * object literal buys nothing.
  */
 
-/** The $297 one-time calculator. Throws if the Price id is unset. */
+/** The one-time line item. Throws if the Price id is unset. */
 function resolveAdvisoryLineItem(): Stripe.Checkout.SessionCreateParams.LineItem {
   return { price: getAdvisoryPriceId(), quantity: 1 };
+}
+
+/**
+ * Refuse to open a checkout whose Stripe Price disagrees with the page.
+ *
+ * The page renders ADVISORY_PRICE_VALUE and Stripe charges whatever the
+ * Price id says. Nothing used to reconcile the two, so a stale id meant the
+ * site advertised one number and the card was billed another — silently,
+ * with no error anywhere, until a chargeback. This has already been a near
+ * miss twice: the id pointed at the retired $297 Price after the offer
+ * dropped to $97, in test and then again in live.
+ *
+ * Stripe Prices are immutable in amount, so "changing the price" in the
+ * Dashboard always yields a NEW id. That is exactly the step that gets
+ * forgotten, which is why this check exists rather than a comment telling
+ * someone to remember.
+ *
+ * One extra API call per checkout, cached for the life of the process.
+ * If Stripe cannot be reached the checkout proceeds — a transient outage
+ * should not take the funnel down, and the mismatch it is guarding against
+ * is a config error, not a runtime one.
+ */
+let _verifiedPriceId: string | null = null;
+async function assertAdvisoryPriceMatches(stripe: Stripe): Promise<void> {
+  const priceId = getAdvisoryPriceId();
+  if (_verifiedPriceId === priceId) return;
+
+  let price: Stripe.Price;
+  try {
+    price = await stripe.prices.retrieve(priceId);
+  } catch (err) {
+    console.error(
+      `[Stripe] could not verify ${priceId} against ADVISORY_PRICE_VALUE — proceeding:`,
+      err,
+    );
+    return;
+  }
+
+  const expected = ADVISORY_PRICE_VALUE * 100;
+  if (price.unit_amount !== expected) {
+    throw new Error(
+      `Stripe price mismatch: ${priceId} charges ` +
+        `${price.unit_amount == null ? "nothing" : `$${price.unit_amount / 100}`} but the site ` +
+        `advertises $${ADVISORY_PRICE_VALUE}. Create a Price for $${ADVISORY_PRICE_VALUE} and ` +
+        `update STRIPE_ADVISORY_PRICE_ID — a Price's amount cannot be edited, so changing it ` +
+        `in the Dashboard always produces a new id.`,
+    );
+  }
+  if (!price.active) {
+    throw new Error(`Stripe price ${priceId} is archived. Point STRIPE_ADVISORY_PRICE_ID at an active Price.`);
+  }
+  _verifiedPriceId = priceId;
 }
 
 /**
@@ -136,6 +189,7 @@ export async function createAdvisoryCheckoutSession(
   params: OneTimeCheckoutParams
 ): Promise<{ sessionId: string; checkoutUrl: string }> {
   const stripe = getStripe();
+  await assertAdvisoryPriceMatches(stripe);
   const lineItem = resolveAdvisoryLineItem();
   const site = getSiteUrl();
   const a = params.attribution || {};
