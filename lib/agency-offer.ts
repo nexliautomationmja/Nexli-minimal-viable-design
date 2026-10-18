@@ -97,13 +97,21 @@ export const AGENCY_ENGAGEMENT_AVG =
 export const AGENCY_PIPELINE_VALUE = AGENCY_LEADS * AGENCY_ENGAGEMENT_LOW;
 
 /**
- * How long a build takes, as a range rather than a deadline. Most firms are
- * live by AGENCY_LAUNCH_DAYS; AGENCY_LAUNCH_DAYS_MAX is the realistic worst
- * case when assets, access and approvals come back slowly. Not the same
- * clock as AGENCY_DAYS, and no longer a guarantee with a credit attached.
+ * How long a build takes. Most firms are live by AGENCY_LAUNCH_DAYS;
+ * AGENCY_LAUNCH_DAYS_MAX is the outer edge when assets, access and
+ * approvals come back slowly.
+ *
+ * MAX IS 21 BECAUSE THE ENGAGEMENT LETTER SAYS 21. It read 24 before,
+ * which meant the site described a worst case slower than the document
+ * the client signs — the one mismatch in this set that could actually be
+ * held against the firm. The signed term is the ceiling; marketing copy
+ * does not get to be looser than it.
+ *
+ * Not the same clock as AGENCY_DAYS, and not a guarantee with a credit
+ * attached.
  */
 export const AGENCY_LAUNCH_DAYS = 14;
 export const AGENCY_LAUNCH_DAYS_MIN = 10;
-export const AGENCY_LAUNCH_DAYS_MAX = 24;
+export const AGENCY_LAUNCH_DAYS_MAX = 21;
 
 export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;

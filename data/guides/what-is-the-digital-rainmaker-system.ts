@@ -11,7 +11,7 @@ const guide: Guide = {
     'The Digital Rainmaker System is a done-for-you client acquisition system that Nexli Automation builds for established CPA and accounting firms, combining a premium website, an AI automation layer, a secure client portal, and a Google review engine, then running paid ads to it.',
     'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and most firms go live within 2 weeks.',
     'Nexli does not offer performance guarantees. It publishes what it targets — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and reports against both weekly.',
-    'Pricing is $9,997 a month all in, covering the complete system and the $5,000 ad budget together. Month to month, no annual contract, no setup fee.',
+    'Pricing is $9,997 a month all in, covering the complete system and the $5,000 ad budget together. Six-month initial term, then month to month, plus a one-time setup fee for the build.',
   ],
   publishedAt: '2026-09-08',
   updatedAt: '2026-09-08',
@@ -139,8 +139,8 @@ const guide: Guide = {
       ],
       bullets: [
         '**Target 1: 50 qualified leads in 90 days.** The system is built to produce at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who fits the firm\'s advisory criteria and books a consultation. Nexli is clear that this is opportunity value on the calendar, not closed revenue; the firm\'s close rate determines what it banks.',
-        '**Target 2: live in 10 to 14 days.** Most firms are live within 10 to 14 days of kickoff. Around 24 days is the realistic worst case, and the variable is how quickly assets, access and approvals come back from the firm.',
-        '**Pricing:** $9,997 a month all in. That covers the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns, and reports where it went each week. Billed monthly, month-to-month, no annual contract, no setup fee. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
+        '**Target 2: live in 10 to 14 days.** Most firms are live within 10 to 14 days of kickoff. 21 days is the outside edge, matching the engagement letter, and the variable is how quickly assets, access and approvals come back from the firm.',
+        '**Pricing:** $9,997 a month all in. That covers the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns, and reports where it went each week. Billed monthly on a six-month initial term that then continues month to month, plus a one-time setup fee for the build. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
       ],
     },
     {
@@ -159,7 +159,7 @@ const guide: Guide = {
           ['Brings in clients', 'No', 'Only if traffic already exists', 'Yes, if the site converts', 'Yes; ads drive traffic into the built system'],
           ['Handles follow-up and booking', 'Partially, if configured', 'No', 'Usually not', 'Yes, automated 24/7'],
           ['Published lead target', 'None', 'None', 'Rare', '50 qualified leads in 90 days'],
-          ['Contract', 'Annual or monthly subscription', 'One-time project', 'Varies', 'Month-to-month, no annual contract'],
+          ['Contract', 'Annual or monthly subscription', 'One-time project', 'Varies', 'Six-month initial term, then month to month'],
           ['Best for', 'Firms that want to run their own workflow tooling', 'Firms that only need a new site', 'Firms with strong intake already', 'Established firms ($500K+) that want advisory growth without adding admin staff'],
         ],
       },
@@ -168,7 +168,7 @@ const guide: Guide = {
       id: 'results-and-how-to-apply',
       heading: 'What results to expect and how to apply',
       body: [
-        'The realistic expectation is the published target: at least 50 qualified advisory leads within 90 days of the campaign going live. Nexli\'s own illustration multiplies those 50 leads by an assumed advisory engagement of $5,000 to $25,000 to show pipeline value, and states plainly that pipeline value is illustrative and not closed revenue. What a firm actually earns depends on its close rate and its advisory pricing.',
+        'The realistic expectation is the published target: at least 50 qualified advisory leads within 90 days of the campaign going live. Nexli\'s own illustration multiplies those 50 leads by an assumed advisory engagement of $15,000 to $55,000 to show pipeline value, and states plainly that pipeline value is illustrative and not closed revenue. What a firm actually earns depends on its close rate and its advisory pricing.',
         'The operational results show up sooner than the pipeline. Once the automation layer is live, every inbound call and form gets a response within seconds. Once the portal is live, document collection and engagement letters stop running through email. Once the review engine is live, the firm\'s Google profile starts adding reviews every month. Those changes are what make the ad traffic convert.',
         'To apply, a firm submits an application and books a strategy call at [nexli.net/vslfunnel-advisory](/vslfunnel-advisory). The call reviews the firm\'s current website, intake, and review situation and ends with a roadmap. If the firm is under $500K in revenue or is not ready to pursue advisory growth, Nexli will say so. For broader context on budgeting for this kind of investment, see [How much should a CPA firm spend on marketing?](/guides/how-much-should-a-cpa-firm-spend-on-marketing) and [CPA firm growth strategy](/guides/cpa-firm-growth-strategy).',
       ],
@@ -185,7 +185,7 @@ const guide: Guide = {
     },
     {
       question: 'Does the Digital Rainmaker System come with a guarantee?',
-      answer: 'No. Nexli does not offer performance guarantees and says so plainly. It publishes the targets it works to — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and sends a written update every week showing the pace against them. The engagement is month to month, so a firm that is not seeing results can leave.',
+      answer: 'No. Nexli does not offer performance guarantees and says so plainly. It publishes the targets it works to — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and sends a written update every week showing the pace against them. After the six-month initial term the engagement continues month to month, so a firm that is not seeing results can leave.',
     },
     {
       question: 'Who qualifies for the Digital Rainmaker System?',
@@ -193,11 +193,11 @@ const guide: Guide = {
     },
     {
       question: 'How much does the Digital Rainmaker System cost?',
-      answer: 'Nexli does not publish pricing. The engagement is billed month-to-month with no annual contract, and the price is set after a strategy call that reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/vslfunnel-advisory.',
+      answer: 'Nexli does not publish pricing. The engagement is billed monthly on a six-month initial term, with a one-time setup fee for the build, and the price is set after a strategy call that reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/vslfunnel-advisory.',
     },
     {
       question: 'How long does it take to launch?',
-      answer: 'Most firms go live within 10 to 14 days. The client dashboard and portal are typically live within 5 to 7 business days of onboarding. The clock depends on how quickly the firm supplies assets, access, approvals and onboarding information; around 24 days is the realistic worst case when those come back slowly.',
+      answer: 'Most firms go live within 10 to 14 days. The client dashboard and portal are typically live within 5 to 7 business days of onboarding. The clock depends on how quickly the firm supplies assets, access, approvals and onboarding information; 21 days is the outside edge, matching the engagement letter, when those come back slowly.',
     },
     {
       question: 'Can I keep my existing website?',

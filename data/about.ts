@@ -20,8 +20,8 @@ export const aboutFacts: AboutFact[] = [
   { label: 'Founder', value: 'Marcel Allen' },
   { label: 'Email', value: 'mail@nexli.net' },
   { label: 'Serves', value: 'Established CPA and accounting firms with $500K+ in annual revenue (about $40K-$50K a month)' },
-  { label: 'Contract terms', value: 'Month to month, no annual contracts' },
-  { label: 'Launch time', value: 'Most firms live in 10 to 14 days; around 24 days if assets come back slowly' },
+  { label: 'Contract terms', value: 'Six-month initial term, then month to month' },
+  { label: 'Launch time', value: 'Most firms live in 10 to 14 days; 21 days at the outside, which is what the engagement letter commits to' },
 ];
 
 export const founderBio: string[] = [
@@ -59,7 +59,7 @@ export const aboutSections: AboutSection[] = [
     heading: 'How we work',
     body: [
       'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. Most firms go live within 2 weeks.',
-      'Terms are month to month. There are no annual contracts, no setup fee, and the firm can stop at the end of any month.',
+      'The initial term is six months — long enough for the campaigns to have actually run — and after that it continues month to month. There is a one-time setup fee for the build, quoted on the call.',
       'We do not offer performance guarantees. What we publish are the targets we work to, and a written update every week showing the pace against them.',
     ],
     bullets: [
@@ -85,7 +85,7 @@ export const aboutSections: AboutSection[] = [
       'Growth should not require hiring. Capacity comes from intake, collection, and delivery systems before it comes from payroll.',
       'A firm should own its demand. Referrals are a gift; a booked calendar is a system.',
       'Targets should be specific and reported. A number, a date, and an honest weekly update on the pace.',
-      'Month to month keeps us honest. The firm should stay because the system works, not because a contract says so.',
+      'Six months, then month to month. Long enough to judge the work on results rather than on a first impression, short enough that we have to keep earning it.',
     ],
   },
   {
