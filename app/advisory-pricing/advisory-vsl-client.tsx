@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 
 import VslFunnel from '@/components/VslFunnel';
-import { AGENCY_ENGAGEMENT_AVG, usd } from '@/lib/agency-offer';
+import { AGENCY_ENGAGEMENT_LOW, usd } from '@/lib/agency-offer';
 import {
   ADVISORY_VSL_VIDEO_PLAYBACK_ID,
   ADVISORY_VSL_VIDEO_TITLE,
@@ -55,7 +55,7 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
           Stop Competing for the $800 Client.{' '}
           Get Positioned for the{' '}
           <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-            {usd(AGENCY_ENGAGEMENT_AVG)} One
+            {usd(AGENCY_ENGAGEMENT_LOW)} One
           </span>
         </>
       }

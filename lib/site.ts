@@ -78,9 +78,9 @@ export const ENGAGEMENT_TERMS = [
       'The engagement runs on a signed agreement with a six-month minimum initial term. After that it continues month to month and can be cancelled with 30 days notice.',
   },
   {
-    name: 'No setup fee',
+    name: 'One flat monthly fee, plus setup',
     description:
-      'One flat monthly fee for the complete system. There is no setup fee, no deposit and no per-component pricing.',
+      'One flat monthly fee for the complete system, with no per-component pricing, plus a one-time setup fee covering the build. The setup fee is quoted on the call because it depends on what the firm already has.',
   },
   {
     name: 'Typically live in 10 to 14 days',

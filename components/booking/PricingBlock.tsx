@@ -86,7 +86,8 @@ export default function PricingBlock() {
         </motion.div>
 
         <p className="mt-6 text-sm text-white/55">
-          No setup fee, no deposit. Six-month initial term, then month to month.
+          Plus a one-time setup fee for the build, quoted on the call.
+          Six-month initial term, then month to month.
         </p>
       </motion.div>
 

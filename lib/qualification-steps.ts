@@ -277,7 +277,7 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     key: 'budget',
     type: 'choice',
     question: 'Where does that sit for your firm right now?',
-    hint: 'The complete system is $9,997 a month all in. That covers the build, the campaigns and the $5,000 ad budget together — one invoice, no setup fee, six-month initial term.',
+    hint: 'The complete system is $9,997 a month all in. That covers the build, the campaigns and the $5,000 ad budget together — one invoice, six-month initial term. A one-time setup fee for the build is quoted on the call.',
     foundationHint: 'The complete system is $9,997 a month all in — the build, the campaigns and the $5,000 ad budget together.',
     options: budgetOptions,
   },

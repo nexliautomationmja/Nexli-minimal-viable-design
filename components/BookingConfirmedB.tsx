@@ -72,7 +72,7 @@ const TIMELINE = [
     Icon: FileSignature,
     when: 'Day 0',
     title: 'You sign. That is the whole commitment.',
-    body: 'No setup fee and no deposit. You sign the agreement and the first month starts the day we do.',
+    body: 'You sign the agreement, settle the one-time setup fee for the build, and the first month starts the day we do.',
   },
   {
     Icon: Sparkles,
