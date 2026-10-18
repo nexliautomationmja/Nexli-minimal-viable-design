@@ -73,14 +73,14 @@ export default function PipelineMath() {
           <div className="text-center sm:text-left">
             <p className="text-3xl sm:text-4xl font-black text-white" style={OUTFIT}>
               <AnimatedNumber
-                value={AGENCY_ENGAGEMENT_AVG}
+                value={AGENCY_ENGAGEMENT_LOW}
                 format={dollars}
                 animateOnView
                 duration={1100}
               />
             </p>
             <p className="mt-1 text-xs sm:text-sm leading-snug" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Average engagement ({usd(AGENCY_ENGAGEMENT_LOW)} to {usd(AGENCY_ENGAGEMENT_HIGH)})
+              At the floor ({usd(AGENCY_ENGAGEMENT_LOW)}; engagements run to {usd(AGENCY_ENGAGEMENT_HIGH)})
             </p>
           </div>
 

@@ -122,7 +122,7 @@ const Hero: React.FC = () => {
         >
           {[
             { Icon: Receipt, text: 'No Hidden Fees' },
-            { Icon: ShieldCheck, text: 'No Setup Fee' },
+            { Icon: ShieldCheck, text: 'Built In 10-14 Days' },
             { Icon: Users, text: 'US-Based CPA Firms Only' },
           ].map((item) => (
             <span

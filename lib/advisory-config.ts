@@ -14,7 +14,7 @@
 // display and for the InitiateCheckout / Purchase pixel events.
 // ---------------------------------------------------------------------------
 
-import { AGENCY_ENGAGEMENT_AVG } from './agency-offer';
+import { AGENCY_ENGAGEMENT_LOW } from './agency-offer';
 
 export const ADVISORY_PRODUCT_ID = 'advisory-pricing';
 export const ADVISORY_PRODUCT_NAME = 'Book of Business Accelerator';
@@ -192,7 +192,7 @@ export const ACCELERATOR_CLOSE_RATE = 0.2;
 
 /** $60,000. */
 export const ACCELERATOR_TARGET =
-  ACCELERATOR_TOP_N * ACCELERATOR_CLOSE_RATE * AGENCY_ENGAGEMENT_AVG;
+  ACCELERATOR_TOP_N * ACCELERATOR_CLOSE_RATE * AGENCY_ENGAGEMENT_LOW;
 
 /** The PDF's honest lower band: the same four clients at $7K–$12K each. */
 export const ACCELERATOR_LOW_FEE = 7_000;

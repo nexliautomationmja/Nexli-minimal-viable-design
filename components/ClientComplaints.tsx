@@ -7,7 +7,7 @@ import { Marquee } from './ui/Marquee';
 import { cn } from '../lib/utils';
 import { useTheme } from './ThemeProvider';
 import { AuroraText } from './ui/AuroraText';
-import { AGENCY_ENGAGEMENT_AVG, usd } from '@/lib/agency-offer';
+import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW, usd } from '@/lib/agency-offer';
 
 interface Complaint {
   name: string;
@@ -192,7 +192,7 @@ const ClientComplaints: React.FC = () => {
             transition={{ delay: 0.1, ease: "circOut" }}
             className="text-[var(--text-main)] mb-4 md:mb-6 text-2xl md:text-5xl font-bold"
           >
-            They Will Pay {usd(AGENCY_ENGAGEMENT_AVG)}+ to Stop{' '}
+            They Will Pay {usd(AGENCY_ENGAGEMENT_LOW)}+ to Stop{' '}
             <AuroraText>Overpaying the IRS</AuroraText>
           </motion.h2>
           <motion.p
@@ -202,7 +202,7 @@ const ClientComplaints: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-[var(--text-muted)] max-w-2xl mx-auto text-sm md:text-lg px-4"
           >
-            Would you pay {usd(AGENCY_ENGAGEMENT_AVG)} to someone who saves you $100,000? If the answer
+            Would you pay {usd(AGENCY_ENGAGEMENT_LOW)} to someone who saves you $100,000? If the answer
             is no, you do not know math — and neither does the firm still charging $800 to file
             their return. These owners are writing six and seven-figure cheques to the IRS and
             nobody is bringing them a plan.{' '}

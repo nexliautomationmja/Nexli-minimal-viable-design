@@ -963,7 +963,7 @@ const TransformationSection: React.FC = () => {
                 Meta Ads, Run For You
               </h3>
               <p className="text-xs md:text-sm max-w-xl leading-relaxed text-neutral-300">
-                We bring you {usd(AGENCY_ENGAGEMENT_AVG)} tax planning clients through Meta ads — and we
+                We bring you {usd(AGENCY_ENGAGEMENT_LOW)}+ tax planning clients through Meta ads — and we
                 make the creative, photo and video, so you never have to film anything or
                 turn yourself into a content creator.
               </p>
@@ -1164,7 +1164,7 @@ const CostOfInactionSection: React.FC<{ showDeadline?: boolean }> = ({
   const painPoints = [
     {
       icon: DollarSign,
-      text: `Every return you file for a client paying 6 figures in tax, without ever raising planning, is a ${usd(AGENCY_ENGAGEMENT_AVG)} engagement someone else eventually sells them.`,
+      text: `Every return you file for a client paying 6 figures in tax, without ever raising planning, is an engagement worth ${usd(AGENCY_ENGAGEMENT_LOW)} at the very least — and someone else eventually sells it to them.`,
     },
     {
       icon: Users,
@@ -1287,10 +1287,13 @@ const ROISection: React.FC = () => {
               drift from the price stated in the FAQ or on the confirmation
               pages. */}
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            Two engagements at the {usd(AGENCY_ENGAGEMENT_AVG)} average is{' '}
-            <strong style={{ color: '#ffffff' }}>{usd(AGENCY_ENGAGEMENT_AVG * 2)} a month</strong>{' '}
-            against about {usd(AGENCY_TOTAL_MONTHLY)} all in. That is the bare minimum —
-            and let us be honest, you are not a bare-minimum firm, or you would not be here.
+            Two engagements at {usd(AGENCY_ENGAGEMENT_LOW)} — the{' '}
+            <strong style={{ color: '#ffffff' }}>bottom</strong> of the range, not the middle —
+            is{' '}
+            <strong style={{ color: '#ffffff' }}>{usd(AGENCY_ENGAGEMENT_LOW * 2)} a month</strong>{' '}
+            against about {usd(AGENCY_TOTAL_MONTHLY)} all in. Price two at the top of the range
+            instead and it is {usd(AGENCY_ENGAGEMENT_HIGH * 2)}. Everything below is the worst
+            case, and the worst case already pays.
           </p>
         </motion.div>
 
@@ -1308,13 +1311,13 @@ const ROISection: React.FC = () => {
             },
             {
               Icon: DollarSign,
-              value: usd(AGENCY_ENGAGEMENT_AVG * 2),
+              value: usd(AGENCY_ENGAGEMENT_LOW * 2),
               label: 'What those two are worth',
-              note: `At the ${usd(AGENCY_ENGAGEMENT_AVG)} average engagement.`,
+              note: `At ${usd(AGENCY_ENGAGEMENT_LOW)} each — the floor. The ceiling is ${usd(AGENCY_ENGAGEMENT_HIGH)}.`,
             },
             {
               Icon: TrendingUp,
-              value: `${Math.floor((AGENCY_ENGAGEMENT_AVG * 2) / AGENCY_TOTAL_MONTHLY)}x`,
+              value: `${Math.floor((AGENCY_ENGAGEMENT_LOW * 2) / AGENCY_TOTAL_MONTHLY)}x`,
               label: 'What it costs you, covered',
               note: `${usd(AGENCY_TOTAL_MONTHLY)} a month all in, ad spend included.`,
             },
@@ -1404,14 +1407,16 @@ const ROISection: React.FC = () => {
                   ROI Reality Check
                 </p>
                 <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-200">
-                  A tax planning engagement runs{' '}
-                  <span className="font-bold text-white">
-                    {usd(AGENCY_ENGAGEMENT_LOW)}&ndash;{usd(AGENCY_ENGAGEMENT_HIGH)}
-                  </span>
-                  , and the client who pays it does not shop you next January — you just
-                  saved them more than most of your book pays you all year. Land{' '}
-                  <span className="font-bold text-white">2 a month</span> and this is not an
-                  expense, it is the{' '}
+                  A tax planning engagement starts at{' '}
+                  <span className="font-bold text-white">{usd(AGENCY_ENGAGEMENT_LOW)}</span>{' '}
+                  and firms are charging up to{' '}
+                  <span className="font-bold text-white">{usd(AGENCY_ENGAGEMENT_HIGH)}</span>{' '}
+                  for the same work. {usd(AGENCY_ENGAGEMENT_LOW)} is the worst you should expect
+                  to make from one, not the target. And the client who pays it does not shop you
+                  next January — you just saved them more than most of your book pays you all
+                  year. Land{' '}
+                  <span className="font-bold text-white">2 a month</span> at the floor and this
+                  is not an expense, it is the{' '}
                   <span className="font-bold" style={{ color: '#00D632' }}>
                     cheapest line on your P&amp;L
                   </span>
