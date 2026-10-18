@@ -85,7 +85,7 @@ export const ENGAGEMENT_TERMS = [
   {
     name: 'Typically live in 10 to 14 days',
     description:
-      'Most firms are live within 10 to 14 days of kickoff. The variable is how quickly assets, access and approvals come back; around 24 days is the realistic worst case when they come back slowly.',
+      'Most firms are live within 10 to 14 days of kickoff. The variable is how quickly assets, access and approvals come back; 21 days is the outside edge, which is what the engagement letter commits to.',
   },
   {
     name: 'One monthly price, ad spend included',

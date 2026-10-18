@@ -6,7 +6,7 @@
  * Facts stated here must match lib/site.ts: $500K+ per year minimum,
  * Nexli runs the ads and the firm funds ad spend separately, pricing is
  * $9,997/mo all in, covering the system and the $5,000 ad budget together,
- * month to month, no guarantees offered.
+ * six-month initial term, no guarantees offered.
  */
 export interface VslFaqItem {
   q: string;
@@ -22,7 +22,7 @@ const whatCounts: VslFaqItem = {
 
 const whatItCosts: VslFaqItem = {
   q: 'What does it cost?',
-  a: "$9,997 a month, all in. One number and one invoice: the website, the portal, the funnel and the automations, plus the $5,000 ad budget, which runs through us so it reaches the campaigns on schedule. Month to month, no setup fee, no annual contract. The math is simple: if it helps you close 4-5 new advisory clients this year at $5,000-$25,000 each, it has paid for itself several times over.",
+  a: "$9,997 a month, all in. One number and one invoice: the website, the portal, the funnel and the automations, plus the $5,000 ad budget, which runs through us so it reaches the campaigns on schedule. There is also a one-time setup fee for the build, quoted on the call. The initial term is six months, then it continues month to month. The math is simple: if it helps you close 4-5 new advisory clients this year at $15,000-$55,000 each, it has paid for itself several times over.",
 };
 
 const whoRunsAds: VslFaqItem = {
@@ -32,7 +32,7 @@ const whoRunsAds: VslFaqItem = {
 
 const howLong: VslFaqItem = {
   q: 'How long until we are live, and what do we need to do?',
-  a: 'Most firms go live in 10 to 14 days once we have your branding, logins, approvals and onboarding details. Around 24 days is the realistic worst case, and the variable is how fast those come back from you. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
+  a: 'Most firms go live in 10 to 14 days once we have your branding, logins, approvals and onboarding details. 21 days is the outside edge, and it is what the engagement letter commits to. The variable is how fast those come back from you. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
 };
 
 const existingWebsite: VslFaqItem = {
@@ -42,7 +42,7 @@ const existingWebsite: VslFaqItem = {
 
 const canWeCancel: VslFaqItem = {
   q: 'Can we cancel?',
-  a: 'Yes. Engagements are month to month with no annual contracts. You stay because the system is producing, not because a contract says so.',
+  a: 'The initial term is six months, which is how long it takes for the campaigns to have genuinely run. After that it continues month to month and you can end it on 30 days notice. You stay because the system is producing, not because a contract says so.',
 };
 
 const salesPitch: VslFaqItem = {
@@ -135,7 +135,7 @@ export const offerFaq: VslFaqItem[] = [
   },
   {
     q: 'Do you guarantee results?',
-    a: 'No, and we would be careful of anyone who does. What we publish is the target: at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who matches the criteria you set with us and has asked your firm to contact them — a lead, not closed revenue. You get a written update every week showing the pace against that number, and the engagement is month to month, so if it is not working you are not stuck.',
+    a: 'No, and we would be careful of anyone who does. What we publish is the target: at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who matches the criteria you set with us and has asked your firm to contact them — a lead, not closed revenue. You get a written update every week showing the pace against that number, and after the six-month initial term the engagement continues month to month, so you are not tied to it indefinitely.',
   },
   whatItCosts,
   whoRunsAds,

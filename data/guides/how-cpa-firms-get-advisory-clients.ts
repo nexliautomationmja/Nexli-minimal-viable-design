@@ -108,7 +108,7 @@ const guide: Guide = {
       body: [
         'Advisory fails to sell when it is vague. Hourly consulting with no defined output makes the prospect price the uncertainty and walk. The fix is to productize the first engagement so the prospect knows exactly what they are buying and what happens next.',
         'A workable structure has three tiers. The entry engagement is a fixed-fee tax planning review: the firm analyzes the last two returns and the current-year picture, identifies the strategies that apply, quantifies the savings, and delivers a written plan in a meeting. That is a bounded project a business owner can say yes to in one call. The second tier is implementation of the plan, priced by scope. The third tier is an ongoing advisory relationship with quarterly planning, priced monthly or annually and bundled with compliance.',
-        'Price the entry engagement against the savings, not the hours. If the review routinely surfaces five figures of tax savings, a four-figure fee is an easy decision, and the firm has earned the right to propose the ongoing relationship. Nexli\'s own pipeline math assumes $5,000 to $25,000 per advisory engagement, which is the range firms in this model report when the offer is aimed at the profiles above.',
+        'Price the entry engagement against the savings, not the hours. If the review routinely surfaces five figures of tax savings, a four-figure fee is an easy decision, and the firm has earned the right to propose the ongoing relationship. Nexli\'s own pipeline math assumes $15,000 to $55,000 per advisory engagement, which is the range firms in this model report when the offer is aimed at the profiles above.',
       ],
     },
     {
@@ -156,7 +156,7 @@ const guide: Guide = {
       heading: 'How Nexli does this',
       body: [
         'Nexli Automation is a CPA firm growth agency. It builds the system described above, called the Digital Rainmaker System, and then runs paid ads to it. The build includes a premium website structured around the firm\'s advisory offer, an AI automation layer for missed-call text-back, 24/7 intake, automated booking, and nurture sequences, a secure client document portal, and a Google review engine that adds 3-5 extra Google reviews per month. Most firms go live within 2 weeks.',
-        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), month to month with no annual contracts and no setup fee. It does not offer performance guarantees. What it publishes are targets: at least 50 qualified advisory leads within 90 days of campaign launch, and a build live in 10 to 14 days, reported on weekly.',
+        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), on a six-month initial term that then continues month to month, with a one-time setup fee for the build. It does not offer performance guarantees. What it publishes are targets: at least 50 qualified advisory leads within 90 days of campaign launch, and a build live in 10 to 14 days, reported on weekly.',
         'If that fits your firm, [watch the short presentation and apply for a strategy call](/vslfunnel-advisory). For a full breakdown of the components, read [What Is the Digital Rainmaker System?](/guides/what-is-the-digital-rainmaker-system).',
       ],
     },
@@ -175,7 +175,7 @@ const guide: Guide = {
     {
       question: 'What should a CPA firm charge for a tax planning engagement?',
       answer:
-        'Price it against the savings the review typically surfaces, not the hours it takes. For business owners and high earners with six-figure tax exposure, entry engagements commonly land in the low four figures to low five figures, with implementation and ongoing advisory priced separately. Nexli\'s pipeline math assumes $5,000 to $25,000 per engagement.',
+        'Price it against the savings the review typically surfaces, not the hours it takes. For business owners and high earners with six-figure tax exposure, entry engagements commonly land in the low four figures to low five figures, with implementation and ongoing advisory priced separately. Nexli\'s pipeline math assumes $15,000 to $55,000 per engagement.',
     },
     {
       question: 'Can a firm that mostly does compliance work move into advisory?',
