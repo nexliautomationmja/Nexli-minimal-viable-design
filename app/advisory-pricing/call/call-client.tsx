@@ -26,6 +26,8 @@ import { BOOKING_CONFIRMED_B_PATH, DEMO_CAL_LINK } from '@/lib/demo-config';
 export interface AdvisoryCallClientProps {
   fullName: string;
   email: string;
+  /** E.164, or '' when the stored number could not be normalised. */
+  phone: string;
   /** Signed lead cookie — authenticates the booking callback. */
   leadToken: string;
   /** Call-prep block prefilled into Cal's notes field. */
@@ -35,6 +37,7 @@ export interface AdvisoryCallClientProps {
 export default function AdvisoryCallClient({
   fullName,
   email,
+  phone,
   leadToken,
   notes,
 }: AdvisoryCallClientProps) {
@@ -70,6 +73,7 @@ export default function AdvisoryCallClient({
         bookedEndpoint="/api/advisory-pricing/booked"
         name={fullName}
         email={email}
+        phone={phone}
         leadToken={leadToken}
         notes={notes}
         scheduleContentName="Advisory Engine Growth Call"

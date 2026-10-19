@@ -14,6 +14,18 @@ interface InlineCalEmbedProps {
   bookedEndpoint: string;
   name: string;
   email: string;
+  /**
+   * E.164 only (+15551234567). Prefills Cal's phone field, which is what
+   * its SMS reminders are sent to — so a wrong value here is worse than a
+   * blank one. Pass it through toE164() in lib/contact-validation; that
+   * returns '' rather than guessing, and '' is skipped below.
+   *
+   * Requires a phone question to exist on the event type (Cal: Event Type
+   * > Advanced > Booking Questions). Cal drops a prefill for a field it
+   * does not have, with no error anywhere — if the number is not landing,
+   * check the event type before suspecting this code.
+   */
+  phone?: string;
   /** Paid Stripe session id — doubles as authentication for bookedEndpoint. */
   sessionId?: string;
   /**
@@ -52,6 +64,7 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
   bookedEndpoint,
   name,
   email,
+  phone,
   sessionId,
   leadToken,
   notes,
@@ -85,6 +98,7 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
     const qs = new URLSearchParams();
     if (name) qs.set('name', name);
     if (email) qs.set('email', email);
+    if (phone) qs.set('attendeePhoneNumber', phone);
     if (notes) qs.set('notes', notes);
     const q = qs.toString();
     return `https://cal.com/${calLink}${q ? `?${q}` : ''}`;
@@ -132,6 +146,11 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
       config: {
         name,
         email,
+        // Cal's identifier for the phone question. Omitted entirely when
+        // blank — passing '' makes Cal render the field as touched-and-
+        // empty, which trips its own validation before the visitor has
+        // typed anything.
+        ...(phone ? { attendeePhoneNumber: phone } : {}),
         notes: notes || '',
         layout: 'month_view',
         // theme is set once in the ns('ui') call below — setting it in both

@@ -37,6 +37,37 @@ export function digitsOf(phone: string): string {
 }
 
 /**
+ * A phone in E.164 (+15551234567), or '' when it cannot be known.
+ *
+ * Phones are stored exactly as the visitor typed them — optin-service only
+ * checks there are ten digits, so the column holds '(555) 123-4567' and
+ * '555.123.4567' alike. Cal.com's phone field rejects anything that is not
+ * E.164, and rejects it silently: the prefill simply does not appear.
+ *
+ * Assumes +1 for a bare ten-digit number, which this funnel can do because
+ * the qualifier asks whether the firm is US-based and routes anyone who is
+ * not away before the calendar.
+ *
+ * Returns '' rather than guessing on anything else. A blank field the
+ * visitor fills in themselves beats a wrong number they do not notice,
+ * because that number is what the SMS reminders go to.
+ */
+export function toE164(phone: string): string {
+  const raw = (phone || '').trim();
+  if (!raw) return '';
+
+  const digits = digitsOf(raw);
+
+  // Typed with an international prefix — trust it rather than re-deriving.
+  if (raw.startsWith('+')) return digits.length >= 8 ? `+${digits}` : '';
+
+  if (digits.length === 10) return `+1${digits}`;
+  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
+
+  return '';
+}
+
+/**
  * Returns a per-field error map; empty means valid. Messages are written to
  * be shown to the visitor, so they say what to do rather than what is wrong.
  */
