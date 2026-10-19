@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>Before your call</title>
+</head>
+<!--
+  Advisory funnel — the pre-call reminder. Pairs with the SMS of the same
+  name in "VSL ADVISORY BOOKING REMINDERS".
+
+  NOT the same email as booking-confirmed.html. That one fires the instant
+  someone books, off the inbound webhook, and its job is "you are booked,
+  here is everything". This one fires later, off the appointment, and its
+  job is "you have not looked at it yet, and here is what it is worth".
+  Two jobs, two files — one template serving both would need two different
+  sets of merge tags in the same markup.
+
+  MERGE TAGS: this workflow is triggered by the APPOINTMENT, not by an
+  inbound webhook. So it is {{contact.first_name}}, NOT
+  {{inboundWebhookRequest.firstName}} — there is no webhook payload in
+  this flow and that tag renders blank.
+
+  THE LINK IS A PLAIN URL, ON PURPOSE. /booking-confirmed-b is ungated
+  (no cookie check in app/booking-confirmed-b/page.tsx), so a bare link
+  opens fine on any device. A resume URL would also greet them by name,
+  but it only exists in the booking webhook's payload and on the contact
+  custom field — neither of which this flow can rely on yet. Swap the
+  href for {{contact.resume_url}} once the GHL contact sync is confirmed
+  writing that field, and not before: a blank href here is a dead email.
+
+  {{appointment.start_time}} IS NOT GUARANTEED. The Cal connector has not
+  been picking up records. Send yourself a test first — if that tag
+  renders empty, delete the "Your call" block marked below. It is in its
+  own row so it can be removed without touching anything else.
+
+  THE NUMBERS ARE THE CPA'S CLIENTS, NOT OUR FEE. $15,000-$55,000 is what
+  a firm charges for a tax planning engagement — AGENCY_ENGAGEMENT_LOW /
+  _HIGH in lib/agency-offer.ts. The copy says so explicitly, because an
+  unqualified dollar range in an email from a vendor reads as the price.
+
+  $15,000 is deliberately framed as the FLOOR, not an average. It is the
+  bottom of the range, so it is the honest worst case — and a reader who
+  thinks of themselves as above average places themselves above it
+  without us having to flatter them.
+
+  PASTE INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+  GHL's WYSIWYG rewrites pasted markup: it wraps everything in paragraph
+  tags, forces Verdana, and strips font-size and padding it does not
+  expect.
+
+  Tables and inline styles only. No flexbox, no grid, no web fonts, no CSS
+  animation, no gradient text — none of it survives Outlook or Gmail.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <!-- Preheader: inbox preview text, hidden in the body. -->
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    The website, the portal and the ad setup &mdash; three minutes before we talk.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Logo -->
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 0 18px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4ade80;">Before your call</p>
+              <h1 style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                {{contact.first_name}}, three minutes before we talk.
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Lede -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                Look at the website we build you, the client portal your clients log into, and the ad setup that fills it. It is all on one page, running live &mdash; not slides, not a video of a demo.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ===================== PRIMARY CTA ===================== -->
+          <tr>
+            <td style="padding: 0 0 34px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #0d1f16; border: 1px solid #2f7d52; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">See what gets built for you.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">Three minutes. No form, nothing to download.</p>
+
+                    <!-- Padding lives on the table cell, never on the link. An
+                         editor or client that strips display:inline-block makes
+                         padding on an inline link do nothing, which is what made
+                         the text burst out of the pill once before. A cell
+                         always makes a box. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="https://www.nexli.net/booking-confirmed-b" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Watch it now&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- The three things -->
+          <tr>
+            <td style="padding: 0 0 8px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">What you are looking at</p>
+            </td>
+          </tr>
+
+          <!-- A table, not a <ul>. Outlook renders list bullets at an
+               unpredictable indent and ignores list-style spacing. -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">01</span>&nbsp;&nbsp;<strong style="color: #ffffff;">The website.</strong> Live, on your own domain, with your brand.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">02</span>&nbsp;&nbsp;<strong style="color: #ffffff;">The client portal.</strong> Draft an engagement letter and send it. That is the real flow.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">03</span>&nbsp;&nbsp;<strong style="color: #ffffff;">The ad setup.</strong> Photo and video, several angles, produced for you. You never go on camera.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- The number. The whole reason the three minutes are worth it. -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #121826; border-left: 3px solid #4ade80; border-radius: 6px; padding: 22px 22px;">
+                    <p style="margin: 0 0 10px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">Why it is worth three minutes</p>
+                    <p style="margin: 0 0 12px 0; font-size: 17px; line-height: 1.55; color: #ffffff; font-weight: 700;">
+                      That machine is how we land you tax planning clients at <span style="color: #4ade80;">$15,000 to $55,000</span> per engagement.
+                    </p>
+                    <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                      And $15,000 is the <strong style="color: #ffffff;">floor</strong>, not the average. That is the bottom of the range &mdash; the worst one of these is worth more than a year of $800 returns.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ================================================================
+               YOUR CALL — delete this whole <tr> if {{appointment.start_time}}
+               renders blank in your test send. It is isolated here precisely
+               so it can be removed without disturbing anything above or below.
+               ================================================================ -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="border: 1px solid #1c2433; border-radius: 10px; padding: 16px 20px;">
+                    <p style="margin: 0 0 4px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">Your call</p>
+                    <p style="margin: 0; font-size: 17px; line-height: 1.5; font-weight: 700; color: #ffffff;">{{appointment.start_time}}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- ================= END "YOUR CALL" BLOCK ========================= -->
+
+          <!-- Closing -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                Read it and come to the call with the only question left: when do we start.
+              </p>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
+                <tr>
+                  <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                    <a href="https://www.nexli.net/booking-confirmed-b" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Open the page&nbsp;&rarr;</span></a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; Marcel</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                Nexli Automation &middot; <a href="https://www.nexli.net/booking-confirmed-b" target="_blank" style="color: #4ade80; text-decoration: none;">Your pre-call page</a>
+              </p>
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                You are receiving this because you booked a call with Nexli.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
