@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>You qualified</title>
+</head>
+<!--
+  Advisory funnel — the abandoned-booking nudge. Fires for a lead who
+  CLEARED the qualifier and then never picked a time.
+
+  SIX TEMPLATES IN THIS FOLDER NOW. The first two and this one are
+  webhook-triggered; the three reminders are appointment-triggered, and
+  the merge tags are NOT interchangeable:
+
+    WEBHOOK-TRIGGERED — {{inboundWebhookRequest.*}}
+      qualified-no-booking.html   THIS ONE — cleared the bar, no booking
+      booking-confirmed.html      booked — "here is everything"
+
+    APPOINTMENT-TRIGGERED — {{contact.*}}
+      booking-reminder.html       at confirmation — "three minutes"
+      booking-reminder-48h.html   two days out, PLEASURE
+      booking-reminder-24h.html   one day out, PAIN
+      booking-reminder-30min.html thirty minutes — logistics
+
+  THE FLOW THIS BELONGS TO:
+      Trigger  Inbound Webhook (the qualifier one)
+      Filter   funnel_path = agency
+      Wait     20 minutes
+      If/Else  has tag "call booked"  -> yes: end
+                                      -> no:  this email + the SMS
+
+  The "call booked" tag is written by app/api/advisory-pricing/booked
+  when they book, so the branch is reliable and needs no extra tracking.
+
+  THE RESUME URL GOES TO THE CALENDAR, NOT THE PRE-CALL PAGE. In this
+  payload it is built from nextPath['agency'] in
+  lib/qualification-service.ts, which is the call page. So the button
+  below lands them on the booking screen already signed in — no
+  re-typing, no second qualifier. That is the entire reason this email
+  uses a resume URL where the reminder emails use a plain link.
+
+  ONE JOB: PICK A TIME. No price, no $15K-$55K, no three-things list.
+  They have just answered six questions and been told they qualify; the
+  only thing between them and a call is a calendar. Anything else here
+  gives them something new to think about instead of something to click.
+
+  WHY THEY DROPPED OFF IS USUALLY NOT DOUBT. It is usually a phone, a
+  client walking in, a tab closed. So the tone is "you are nearly
+  there", not "are you still interested" — the second one invites them
+  to reconsider a decision they already made.
+
+  PASTE INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+
+  Tables and inline styles only.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <!-- Preheader: inbox preview text, hidden in the body. -->
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    Your answers cleared the bar. All that is left is picking a time.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Logo -->
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 0 18px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4ade80;">Your firm qualified</p>
+              <h1 style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                {{inboundWebhookRequest.firstName}}, you just did not pick a time.
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Lede -->
+          <tr>
+            <td style="padding: 0 0 28px 0;">
+              <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #b4bcc8;">
+                Your answers cleared the bar, so there is nothing else to fill in and no second form. The calendar is the only thing left.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ===================== PRIMARY CTA ===================== -->
+          <tr>
+            <td style="padding: 0 0 32px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #0d1f16; border: 1px solid #2f7d52; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">Pick a time.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">It opens straight on your calendar &mdash; nothing to re-enter.</p>
+
+                    <!-- Padding lives on the table cell, never on the link. An
+                         editor or client that strips display:inline-block makes
+                         padding on an inline link do nothing, which is what made
+                         the text burst out of the pill once before. A cell
+                         always makes a box. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Book my call&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- What the call actually is. Removes the two reasons someone
+               hesitates over a calendar link: length, and being sold at. -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #121826; border-left: 3px solid #4ade80; border-radius: 6px; padding: 18px 20px;">
+                    <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">What it is</p>
+                    <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                      <strong style="color: #ffffff;">45 minutes, camera on, no slide deck.</strong> We go through what we would build for your firm and what it costs. If it is not a fit, we will say so on the call rather than chase you afterwards.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Closing -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                Takes about twenty seconds.
+              </p>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
+                <tr>
+                  <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                    <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Open my calendar&nbsp;&rarr;</span></a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; Marcel</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                Nexli Automation &middot; <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="color: #4ade80; text-decoration: none;">Your calendar</a>
+              </p>
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                You are receiving this because you asked whether your firm is a fit.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
