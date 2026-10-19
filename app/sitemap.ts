@@ -10,7 +10,7 @@ type Freq = NonNullable<Entry['changeFrequency']>;
 const BUILD_TIME = new Date();
 
 /**
- * Deliberately excluded: /qualify (a redirect now), /booking-confirmed and
+ * Deliberately excluded: /qualify (a redirect now), /booking-confirmed-b and
  * the advisory funnel's inner steps — they only make sense mid-funnel and
  * are noindexed in robots.ts.
  *

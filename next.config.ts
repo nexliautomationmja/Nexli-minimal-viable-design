@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
       // on the live page. Never add a redirect pointing the other way — a
       // retired funnel once 301'd its own thank-you page to a signup form
       // and sent every buyer to re-opt-in instead of their download.
+      // Confirmation page A is deleted; B is the only one. Anything still
+      // pointing at A — a GHL workflow, an old email, a bookmark — lands on
+      // B instead of a 404.
+      { source: "/booking-confirmed", destination: "/booking-confirmed-b", permanent: true },
+
       { source: "/advisory-pricing/offer", destination: "/advisory-pricing/BOBA", permanent: true },
       { source: "/advisory-pricing/thank-you", destination: "/advisory-pricing/BOBA-thank-you", permanent: true },
 

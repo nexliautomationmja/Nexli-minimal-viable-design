@@ -18,6 +18,7 @@ import { requireAdvisoryLeadRow } from '@/lib/advisory-session';
 import { qualificationLabel } from '@/lib/qualification-steps';
 import { leads } from '@/lib/leads-schema';
 import { ADVISORY_OFFER_PATH, ADVISORY_QUALIFY_PATH } from '@/lib/advisory-config';
+import { toE164 } from '@/lib/contact-validation';
 import AdvisoryCallClient from './call-client';
 
 export const dynamic = 'force-dynamic';
@@ -64,6 +65,11 @@ export default async function AdvisoryCallPage() {
   const firstName = (lead.firstName || '').trim();
   const lastName = (lead.lastName || '').trim();
   const fullName = [firstName, lastName].filter(Boolean).join(' ') || firstName || 'there';
+  // Given at the opt-in, stored as typed. Normalised here rather than at
+  // write time: the raw string is what GHL and Meta already received, and
+  // rewriting the column would put this funnel's rows out of step with
+  // every other one.
+  const phone = toE164(lead.phone || '');
 
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#0a0f1c' }}>
@@ -102,6 +108,7 @@ export default async function AdvisoryCallPage() {
       <AdvisoryCallClient
         fullName={fullName}
         email={lead.email || ''}
+        phone={phone}
         leadToken={leadToken}
         notes={buildNotes(lead)}
       />

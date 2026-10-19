@@ -21,11 +21,13 @@
 
 import { useCallback } from 'react';
 import InlineCalEmbed from '@/components/InlineCalEmbed';
-import { BOOKING_CONFIRMED_PATH, DEMO_CAL_LINK } from '@/lib/demo-config';
+import { BOOKING_CONFIRMED_B_PATH, DEMO_CAL_LINK } from '@/lib/demo-config';
 
 export interface AdvisoryCallClientProps {
   fullName: string;
   email: string;
+  /** E.164, or '' when the stored number could not be normalised. */
+  phone: string;
   /** Signed lead cookie — authenticates the booking callback. */
   leadToken: string;
   /** Call-prep block prefilled into Cal's notes field. */
@@ -35,6 +37,7 @@ export interface AdvisoryCallClientProps {
 export default function AdvisoryCallClient({
   fullName,
   email,
+  phone,
   leadToken,
   notes,
 }: AdvisoryCallClientProps) {
@@ -42,13 +45,21 @@ export default function AdvisoryCallClient({
     // Cal is still showing its own confirmation at this point, so the same
     // 1800ms the popup flow used — redirecting instantly reads as a glitch,
     // and it gives the keepalive POST headroom to land.
+    //
+    // THIS ONLY RUNS IF CAL'S OWN "Redirect on booking" FIELD IS EMPTY.
+    // When that event-type setting has a URL in it, Cal navigates the parent
+    // window the instant the booking lands — at 0ms, against the 1800ms
+    // below — and the visitor goes wherever Cal says instead of here. It was
+    // once pointed at the BOBA downsell, so a firm that had just qualified
+    // and booked was shown the $97 consolation offer. Leave that field blank
+    // on the event type; this component owns the destination.
     const qs = new URLSearchParams();
     if (fullName) qs.set('name', fullName);
     if (email) qs.set('email', email);
     const suffix = qs.toString() ? `?${qs.toString()}` : '';
 
     window.setTimeout(() => {
-      window.location.href = `${BOOKING_CONFIRMED_PATH}${suffix}`;
+      window.location.href = `${BOOKING_CONFIRMED_B_PATH}${suffix}`;
     }, 1800);
   }, [fullName, email]);
 
@@ -62,6 +73,7 @@ export default function AdvisoryCallClient({
         bookedEndpoint="/api/advisory-pricing/booked"
         name={fullName}
         email={email}
+        phone={phone}
         leadToken={leadToken}
         notes={notes}
         scheduleContentName="Advisory Engine Growth Call"

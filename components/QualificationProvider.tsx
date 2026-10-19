@@ -657,7 +657,7 @@ export default function QualificationProvider({ children }: { children: React.Re
           path === '/demo' ||
           path.startsWith('/demo/') ||
           // The advisory funnel books through its own inline embed on the
-          // 'advisory-growth-call' namespace and lands on /booking-confirmed.
+          // 'advisory-growth-call' namespace and lands on /booking-confirmed-b.
           // That namespace already keeps it off this handler; the path check
           // is belt and braces, so a future page on the default namespace
           // cannot silently bypass /api/advisory-pricing/booked.
@@ -729,7 +729,7 @@ export default function QualificationProvider({ children }: { children: React.Re
         }
 
         // Redirect to thank-you page (fires Meta Lead + Schedule pixel events)
-        // then thank-you page links to /booking-confirmed for call prep
+        // then thank-you page links to /booking-confirmed-b for call prep
         const params = new URLSearchParams();
         if (attendeeEmail) params.set('email', attendeeEmail);
         if (attendeeName) params.set('name', attendeeName);
