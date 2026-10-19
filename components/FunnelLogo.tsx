@@ -2,9 +2,24 @@
 
 import React from 'react';
 
-/** Fixed, non-linking brand anchor for self-contained funnel pages (Firm Foundation sales + thank-you). */
+/**
+ * Non-linking brand anchor for self-contained funnel pages.
+ *
+ * Absolute on phones, fixed from md up.
+ *
+ * It was fixed at every width. That is fine on a short hero page, but
+ * /booking-confirmed-b scrolls for twelve thousand pixels, and on a 390px
+ * screen the pill sat permanently over the top-left of whatever you had
+ * scrolled to — it was covering the opening words of the website section's
+ * body copy ("A real one, runn…"). There is no left margin to hide in at
+ * phone width the way there is on desktop.
+ *
+ * Absolute puts it at the top of the page, where it scrolls away after the
+ * hero. The pages that use it all give <main> enough top padding (pt-24)
+ * that it never overlaps their own first element.
+ */
 const FunnelLogo: React.FC = () => (
-  <div className="fixed top-6 left-6 md:top-8 md:left-8 z-[110]">
+  <div className="absolute md:fixed top-6 left-6 md:top-8 md:left-8 z-[110]">
     <div
       className="flex items-center gap-2 backdrop-blur-md px-3 py-2 md:px-4 md:py-2 rounded-full border"
       style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.05)' }}
