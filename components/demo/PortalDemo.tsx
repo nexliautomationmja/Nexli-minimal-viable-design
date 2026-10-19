@@ -1679,11 +1679,20 @@ const CSS = `
   .pd-header { display: none; }
   .pd-content { padding: 1rem; }
   .pd-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pd-two { grid-template-columns: 1fr; }
-  .pd-rev { grid-template-columns: 1fr; }
+  /* minmax(0, 1fr), never a bare 1fr. A bare 1fr track has an automatic
+     minimum of MIN-CONTENT, and the activity rows are white-space: nowrap —
+     so "Redwood Realty Partners signed the Fractional CFO engagement letter"
+     set a 398px floor the grid could not go under. That pushed .pd-two to
+     549px inside a 324px column, .pd-frame clipped the overflow with
+     overflow-x: hidden, and every activity row lost its right-hand end with
+     no scrollbar to reach it. The ellipsis could never fire, because the
+     track was wide enough that nothing needed truncating.
+     The base rules above already use minmax(0, 1fr); these overrode them. */
+  .pd-two { grid-template-columns: minmax(0, 1fr); }
+  .pd-rev { grid-template-columns: minmax(0, 1fr); }
   .pd-h1 { font-size: 1.25rem; }
   .pd-frame { min-height: 0; }
-  .pd-doc-grid, .pd-choices, .pd-org-grid, .pd-sign, .pd-doc-fee { grid-template-columns: 1fr; }
+  .pd-doc-grid, .pd-choices, .pd-org-grid, .pd-sign, .pd-doc-fee { grid-template-columns: minmax(0, 1fr); }
   .pd-doc { padding: 1.25rem; max-height: none; }
 }
 @media (max-width: 480px) {
