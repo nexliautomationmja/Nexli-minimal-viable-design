@@ -17,32 +17,26 @@ export const DEMO_OFFER_PATH = '/demo/offer';
 export const DEMO_THANK_YOU_PATH = '/demo/thank-you';
 
 /**
- * Where a booked growth call lands. Shared with the VSL funnel rather than
- * demo-specific: welcome video, the Rainmaker walkthrough and the intel form
- * are the same prep either way. Optional ?name= and ?email=: the email seeds
- * the "send me a copy" field, the name rides along on the intel submission.
- */
-export const BOOKING_CONFIRMED_PATH = '/booking-confirmed';
-
-/**
- * The B variant of the confirmation page: same hero and welcome video, then
- * the product itself — website, portal, engagement letters, organizer — plus
- * the price and what happens after signing. Marcel points traffic at it by
- * hand; nothing in the app assigns anyone to it.
+ * Where a booked growth call lands. The only confirmation page.
+ *
+ * The A variant (/booking-confirmed, components/BookingConfirmed.tsx) is
+ * gone. It was the older prep page — welcome video, Rainmaker walkthrough,
+ * intel form — and the split test it was the control for never ran. B
+ * replaced it with the pre-call brief: the website, the portal, the ad
+ * library, the system diagram, the price and the FAQ. /booking-confirmed
+ * 308s here in next.config so anything already in the wild still lands.
+ *
+ * Optional ?name=, which the call page appends so the page greets them.
+ * Ungated: the resume link has to open on a phone that has never visited.
  */
 export const BOOKING_CONFIRMED_B_PATH = '/booking-confirmed-b';
 
 /**
- * The two Mux assets on the confirmation pages. Both were inline string
- * literals in components/BookingConfirmed.tsx until the B variant needed the
- * same welcome video — two pages playing one asset from two literals is how
- * they end up playing different things.
+ * The welcome video on the confirmation page.
  *
- * ONE constant, BOTH pages. /booking-confirmed and /booking-confirmed-b are
- * a split test, so the welcome video has to be the control: if A played the
- * old cut and B the new one, a difference in bookings would no longer be
- * attributable to the page. Split this into a B-only constant only if the
- * video itself is the thing being tested.
+ * A constant rather than an inline literal because it used to be one, in
+ * two components at once, and the two drifted. There is one page left now,
+ * but the Mux id caveats below are the real reason this stays here.
  *
  * PLAYBACK id, not the asset id. This cut's asset is
  * DK6eZgzxK7WLvaY9coo101dFfXYzzlc33dFrgAjWQAs4, which does NOT resolve —
@@ -72,8 +66,9 @@ export const BOOKING_WELCOME_VIDEO_TITLE = 'Booking Confirmed - Thank You';
  */
 export const BOOKING_WELCOME_VIDEO_POSTER_TIME = 0;
 
-export const BOOKING_SYSTEM_VIDEO_ID = 'i02jTMTuY028ZUWRHJsjSRBEEYBJGPcl005sEV3iOARIn00';
-export const BOOKING_SYSTEM_VIDEO_TITLE = 'Digital Rainmaker System Demo';
+// BOOKING_SYSTEM_VIDEO_ID / _TITLE lived here for the Rainmaker walkthrough
+// on page A and went with it. The asset is still in Mux
+// (i02jTMTuY028ZUWRHJsjSRBEEYBJGPcl005sEV3iOARIn00) if it is ever wanted.
 
 /** leads.form_source for anyone who opts in to the demo. */
 export const DEMO_FORM_SOURCE = 'demo-optin';

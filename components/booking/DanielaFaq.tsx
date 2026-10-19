@@ -9,7 +9,7 @@ import { useTheme } from '../ThemeProvider';
 /**
  * Daniela's pre-recorded answers, shared by both confirmation pages.
  *
- * Lifted out of BookingConfirmed because the B variant needs the same
+ * Lifted out of the since-deleted BookingConfirmed because B needed the same
  * objection handling without the 370-line intel block that used to sit
  * above it. The four state values and the play handler were used by this
  * section alone, so they came with it.
@@ -44,7 +44,7 @@ export interface FaqItem {
 }
 
 export interface DanielaFaqProps {
-  /** Override the questions; defaults to the six on page A. */
+  /** Override the questions; defaults to the six below. */
   items?: FaqItem[];
   /** Section eyebrow. Voice-specific by default. */
   badge?: string;

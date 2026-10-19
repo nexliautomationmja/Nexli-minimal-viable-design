@@ -1,10 +1,13 @@
 // ---------------------------------------------------------------------------
-// The B variant of the booking confirmation page.
+// The booking confirmation page. The only one — /booking-confirmed (A) was
+// deleted and now 308s here.
 //
-// This is where the advisory funnel lands every booking: the call page's
-// onBooked redirect comes here, and the resume_url in the confirmation email
-// and the Cal reminders points here too. /booking-confirmed (A) is now only
-// reached by the retired demo funnel.
+// Every booking lands here: the call page's onBooked redirect, and the
+// resume_url in the confirmation email and the Cal reminders.
+//
+// The -b in the path is vestigial, from when this was the B arm of a split
+// test that never ran. Kept because resume URLs already issued to real
+// contacts encode it, and those tokens live for 30 days.
 //
 // Ungated on purpose. The resume link has to open on a phone that has never
 // visited the site, and the page shows nothing that isn't already in the
