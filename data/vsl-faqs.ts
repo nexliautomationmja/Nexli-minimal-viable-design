@@ -5,7 +5,7 @@
  *
  * Facts stated here must match lib/site.ts: $500K+ per year minimum,
  * Nexli runs the ads and the firm funds ad spend separately, pricing is
- * $9,997/mo all in, covering the system and the $5,000 ad budget together,
+ * $9,997/mo plus a one-time setup fee, covering the system and the $5,000 ad budget,
  * six-month initial term, no guarantees offered.
  */
 export interface VslFaqItem {
@@ -22,7 +22,7 @@ const whatCounts: VslFaqItem = {
 
 const whatItCosts: VslFaqItem = {
   q: 'What does it cost?',
-  a: "$9,997 a month, all in. One number and one invoice: the website, the portal, the funnel and the automations, plus the $5,000 ad budget, which runs through us so it reaches the campaigns on schedule. There is also a one-time setup fee for the build, quoted on the call. The initial term is six months, then it continues month to month. The math is simple: if it helps you close 4-5 new advisory clients this year at $15,000-$55,000 each, it has paid for itself several times over.",
+  a: "$9,997 a month. One recurring number and one invoice: the website, the portal, the funnel and the automations, plus the $5,000 ad budget, which runs through us so it reaches the campaigns on schedule. There is also a one-time setup fee for the build, quoted on the call. The initial term is six months, then it continues month to month. The math is simple: if it helps you close 4-5 new advisory clients this year at $15,000-$55,000 each, it has paid for itself several times over.",
 };
 
 const whoRunsAds: VslFaqItem = {

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>You're booked</title>
+</head>
+<!--
+  Advisory funnel — Flow 1, the only email in it. Fires immediately on the
+  booking webhook (GHL_ADVISORY_BOOKING_WEBHOOK_URL).
+
+  ONE JOB: get them back onto /booking-confirmed-b, which is the whole
+  pre-call brief — the website, the portal demo, the ad library, the system
+  diagram, the price and the FAQ in Daniela's voice. Someone who reads that
+  page before the call arrives knowing what the thing costs and what it is,
+  and the call becomes "when do we start" instead of "what is this".
+
+  It is NOT a reminder. Reminders live in Flow 2, triggered off the Cal.com
+  connector, which knows the actual time of day. Do not add waits here.
+
+  THE LINK IS A RESUME URL, NOT A PLAIN ONE. /booking-confirmed-b greets
+  them by name and the resume route signs them in first, so the page works
+  on a phone that has never visited the site. A bare link to the page would
+  still load, but a bare link to any gated page in this funnel would not —
+  keep using resume_url and the pattern stays correct everywhere.
+
+  The token expires on the same 30-day clock as the session cookie. Fine
+  here: this email sends within seconds of the booking.
+
+  PASTE INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+  GHL's WYSIWYG rewrites pasted markup: it wraps everything in paragraph
+  tags, forces Verdana, and strips font-size and padding it does not expect.
+
+  MERGE FIELDS: the booking webhook sends camelCase for names and
+  snake_case for the rest — {{inboundWebhookRequest.firstName}} but
+  {{inboundWebhookRequest.resume_url}}. That split is real; check the
+  captured sample in the trigger before changing any tag. The opt-in
+  webhook used snake_case throughout, so do not copy tags between flows.
+
+  Tables and inline styles only. No flexbox, no grid, no web fonts, no CSS
+  animation, no gradient text — none of it survives Outlook or Gmail.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <!-- Preheader: inbox preview text, hidden in the body. -->
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    The website, the portal, the ads and the price — all of it, before we speak.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Logo -->
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 0 18px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4ade80;">Booking confirmed</p>
+              <h1 style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                {{inboundWebhookRequest.firstName}}, your call is booked. Here is everything, before we speak.
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Lede -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                Most calls like this start with twenty minutes of me explaining what the thing is. I would rather you already knew.
+              </p>
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                So everything is on one page: the website your clients land on, the portal they log into, the ads we run and what they cost, the whole system drawn end to end, and the price with nothing held back for the call.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ===================== PRIMARY CTA ===================== -->
+          <tr>
+            <td style="padding: 0 0 34px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #0d1f16; border: 1px solid #2f7d52; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 10px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">Before the call</p>
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">See exactly what gets built for you.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">Click through the real portal. Watch the ads. Read the price. Ten minutes, no form.</p>
+
+                    <!-- Padding lives on the table cell, never on the link. An
+                         editor or client that strips display:inline-block makes
+                         padding on an inline link do nothing, which is what made
+                         the text burst out of the pill once before. A cell
+                         always makes a box. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">See what we build&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- What is on the page -->
+          <tr>
+            <td style="padding: 0 0 8px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">What is on it</p>
+            </td>
+          </tr>
+
+          <!-- A table, not a <ul>. Outlook renders list bullets at an
+               unpredictable indent and ignores list-style spacing. -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">01</span>&nbsp;&nbsp;The website, running live &mdash; not a screenshot of one.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">02</span>&nbsp;&nbsp;The client portal. Draft an engagement letter and send it. That is the real flow.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">03</span>&nbsp;&nbsp;The ads. Several angles, photo and video, and who makes them &mdash; not you.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">04</span>&nbsp;&nbsp;The whole system drawn out, from the ad to your calendar.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">
+                    <span style="color: #4ade80; font-weight: 800;">05</span>&nbsp;&nbsp;What it costs, and the questions people ask, answered before you have to ask them.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- The setup fee, said before the call rather than on it. The
+               monthly is on the page; this is the part a sticker price
+               alone would hide, and finding out on the call is the kind of
+               surprise that loses a deal that was otherwise closed. -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #121826; border-left: 3px solid #4ade80; border-radius: 6px; padding: 18px 20px;">
+                    <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">One thing the page does not price</p>
+                    <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                      There is a <strong style="color: #ffffff;">one-time setup cost</strong> to build and implement the system &mdash; the website, the portal, the funnel and the automations all have to be made before any of it runs. The monthly is on the page. We will put a number on the setup on the call, because it depends on what you already have.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Closing -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                Read it and come to the call with the only question left: when do we start.
+              </p>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto;">
+                <tr>
+                  <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                    <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Open my pre-call page&nbsp;&rarr;</span></a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; Marcel</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                Nexli Automation &middot; <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="color: #4ade80; text-decoration: none;">Your pre-call page</a>
+              </p>
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                You are receiving this because you booked a call with Nexli.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

@@ -1291,7 +1291,8 @@ const ROISection: React.FC = () => {
             <strong style={{ color: '#ffffff' }}>bottom</strong> of the range, not the middle —
             is{' '}
             <strong style={{ color: '#ffffff' }}>{usd(AGENCY_ENGAGEMENT_LOW * 2)} a month</strong>{' '}
-            against about {usd(AGENCY_TOTAL_MONTHLY)} all in. Price two at the top of the range
+            against about {usd(AGENCY_TOTAL_MONTHLY)} a month, plus a one-time setup fee for the
+            build. Price two at the top of the range
             instead and it is {usd(AGENCY_ENGAGEMENT_HIGH * 2)}. Everything below is the worst
             case, and the worst case already pays.
           </p>
@@ -1319,7 +1320,7 @@ const ROISection: React.FC = () => {
               Icon: TrendingUp,
               value: `${Math.floor((AGENCY_ENGAGEMENT_LOW * 2) / AGENCY_TOTAL_MONTHLY)}x`,
               label: 'What it costs you, covered',
-              note: `${usd(AGENCY_TOTAL_MONTHLY)} a month all in, ad spend included.`,
+              note: `${usd(AGENCY_TOTAL_MONTHLY)} a month, ad spend included, plus a one-time setup fee.`,
             },
           ].map(({ Icon, value, label, note }, i) => (
             <motion.div
