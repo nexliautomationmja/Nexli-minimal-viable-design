@@ -27,6 +27,7 @@ import {
   ADVISORY_PATH,
   ADVISORY_PRODUCT_NAME,
   ADVISORY_QUALIFY_PATH,
+  TAG_ADVISORY_INCOMPLETE,
 } from "@/lib/advisory-config";
 
 export const runtime = "nodejs";
@@ -51,6 +52,10 @@ export async function POST(req: NextRequest) {
     // Adding the opt-in tag here would recreate the two-stages-at-once
     // problem it was removed to fix.
     baseTags: [],
+    // Finishing clears the incomplete tag that /partial applied at the
+    // contact step. The tag has to mean STILL unfinished, or the
+    // abandonment sequence chases firms that went on to book.
+    removeTags: [TAG_ADVISORY_INCOMPLETE],
     qualifiedPath: "agency",
     unqualifiedPath: "not-a-fit",
     nextPath: { agency: ADVISORY_CALL_PATH, "not-a-fit": ADVISORY_OFFER_PATH },

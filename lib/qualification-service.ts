@@ -16,6 +16,7 @@ import { eq, sql as dsql } from "drizzle-orm";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
+import { upsertLeadByEmail } from "@/lib/lead-upsert";
 import { scoreLead } from "@/lib/lead-scoring";
 import { sendCAPIEvent } from "@/lib/meta-capi";
 import { syncContactToGhl } from "@/lib/ghl-sync";
@@ -144,62 +145,23 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
       // The opt-in route inserted blind, which was survivable when it ran
       // once per visitor. This endpoint is retried — people abandon the
       // qualifier and come back — so a blind insert would mint a new row
-      // every attempt. leads.email has no unique constraint, so the match
-      // is done here rather than with onConflict.
-      try {
-        const [existing] = await db
-          .select()
-          .from(leads)
-          .where(dsql`lower(${leads.email}) = ${contact.email}`)
-          .orderBy(dsql`${leads.createdAt} desc`)
-          .limit(1);
-        if (existing) lead = existing;
-      } catch (err) {
-        console.error("[Qualify] email lookup failed:", err);
-      }
-
-      const contactValues = {
-        firstName: contact.firstName,
-        lastName: contact.lastName,
-        email: contact.email,
-        phone: contact.phone,
-        firmName: contact.firmName,
-        marketingSmsOptIn: contact.marketingSmsOptIn,
-        // Service texts are covered by the disclosure shown at the contact
-        // step; only the marketing flag is an explicit tick.
-        nonMarketingSmsOptIn: true,
-        updatedAt: new Date(),
-      };
-
-      try {
-        if (lead) {
-          await db.update(leads).set(contactValues).where(eq(leads.id, lead.id));
-          leadId = lead.id;
-        } else {
-          const [inserted] = await db
-            .insert(leads)
-            .values({
-              ...contactValues,
-              formSource: cfg.formSource ?? "advisory-qualifier",
-              utmSource: attribution.utm_source ?? null,
-              utmMedium: attribution.utm_medium ?? null,
-              utmCampaign: attribution.utm_campaign ?? null,
-              utmTerm: attribution.utm_term ?? null,
-              utmContent: attribution.utm_content ?? null,
-              fbclid: attribution.fbclid ?? null,
-              fbp: attribution.fbp ?? null,
-              fbc: attribution.fbc ?? null,
-              landingPage: attribution.landing_page ?? null,
-              referrer: attribution.referrer ?? null,
-              ipAddress: ip !== "unknown" ? ip : null,
-              userAgent,
-            })
-            .returning({ id: leads.id });
-          leadId = inserted?.id ?? null;
-        }
-      } catch (err) {
-        console.error("[Qualify] lead upsert failed:", err);
-      }
+      // every attempt.
+      //
+      // Shared with the partial-capture route, which usually writes this
+      // same row a few seconds earlier (the moment the contact step is
+      // submitted). Both must match identically or one person becomes two
+      // leads, so the matching lives in lib/lead-upsert.
+      const upserted = await upsertLeadByEmail({
+        db,
+        contact,
+        formSource: cfg.formSource ?? "advisory-qualifier",
+        attribution,
+        ip,
+        userAgent,
+        logTag: "Qualify",
+      });
+      lead = upserted.lead;
+      leadId = upserted.leadId;
 
       if (!leadId) {
         return NextResponse.json(

@@ -372,6 +372,16 @@ export interface QualificationStepsCardProps {
    * contact step — existing callers can keep ignoring it.
    */
   onComplete?: (answers: QualificationAnswers, contact?: QualificationContact) => void;
+  /**
+   * Fires the moment the contact step is submitted, before the remaining
+   * questions. Only meaningful for a step list that has a contact step
+   * which is not last — the advisory funnel's is fifth of six.
+   *
+   * It exists so the details can be banked before someone abandons. The
+   * handler must not block or throw: this fires while the next question is
+   * already animating in, and nothing in the UI waits for it.
+   */
+  onContact?: (contact: QualificationContact, answersSoFar: QualificationAnswers) => void;
   /** Hide the icon/heading block (the host page supplies its own). */
   hideHeader?: boolean;
   /** Hide the six progress dots (the host page renders its own progress UI). */
@@ -385,6 +395,7 @@ export function QualificationStepsCard({
   steps = QUALIFICATION_STEPS,
   onResult,
   onComplete,
+  onContact,
   hideHeader = false,
   hideProgress = false,
   onStepChange,
@@ -454,6 +465,14 @@ export function QualificationStepsCard({
 
   const handleContact = (value: QualificationContact) => {
     setContact(value);
+    // Bank it before they answer anything else. Wrapped because a throw
+    // here would strand them on the contact step with no way forward, and
+    // a lead we failed to pre-save is still a lead we can save at the end.
+    try {
+      onContact?.(value, answers);
+    } catch {
+      /* never block the flow */
+    }
     advance(answers, value);
   };
 

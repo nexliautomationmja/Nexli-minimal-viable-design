@@ -69,6 +69,10 @@ export default function AdvisoryQualifyPage() {
         <QualifyFlow
           steps={ADVISORY_QUALIFICATION_STEPS}
           endpoint="/api/advisory-pricing/qualify"
+          // The contact step is fifth of six, so without this a firm that
+          // gives us their details and never answers the budget question
+          // leaves no trace at all.
+          partialEndpoint="/api/advisory-pricing/partial"
           contentName="Advisory Qualifier"
           qualifiedPath={ADVISORY_CALL_PATH}
           unqualifiedPath={ADVISORY_OFFER_PATH}

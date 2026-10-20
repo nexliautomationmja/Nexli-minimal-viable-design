@@ -67,6 +67,18 @@ export interface QualifyFlowProps {
   steps?: QualificationStepDef[];
   /** Meta content_name, so the two funnels stay separable in reporting. */
   contentName?: string;
+  /**
+   * Route that banks the contact details as soon as the contact step is
+   * submitted, before the remaining questions.
+   *
+   * Only set it for a step list whose contact step is NOT last. The
+   * advisory funnel's is fifth of six, so without this a firm that typed
+   * their details and closed the tab on the budget question left no trace
+   * anywhere — the single POST below never fired.
+   *
+   * Unset (the demo funnel) and nothing extra happens.
+   */
+  partialEndpoint?: string;
 }
 
 const QualifyFlow: React.FC<QualifyFlowProps> = ({
@@ -77,6 +89,7 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
   footnote = 'Six questions. About a minute. No sales pitch until we know you are a fit.',
   steps,
   contentName = 'Demo Qualifier',
+  partialEndpoint,
 }) => {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -93,6 +106,35 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
     (next: string) =>
       intent === 'website' && next.startsWith(DEMO_CALL_PATH) ? `${next}?from=website` : next,
     [intent],
+  );
+
+  /**
+   * Bank the contact details the moment they are given, mid-flow.
+   *
+   * Fire and forget, and deliberately so: the next question is already on
+   * screen by the time this resolves. Nothing waits for it, nothing reads
+   * the response, and a failure leaves us exactly where we were before
+   * this existed — the completing POST still saves everything.
+   *
+   * keepalive, because the whole point is the person who abandons. If
+   * they close the tab a second after submitting the contact step, a
+   * normal fetch is cancelled and we lose the very lead this is for.
+   *
+   * No Meta event here. CompleteRegistration and Lead both fire from
+   * handleComplete; firing Lead twice would double-count every conversion
+   * and train the algorithm on people who abandon.
+   */
+  const handleContact = useCallback(
+    (contact: QualificationContact) => {
+      if (!partialEndpoint) return;
+      fetch(partialEndpoint, {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contact, attribution: getAttribution() }),
+      }).catch(() => {});
+    },
+    [partialEndpoint],
   );
 
   const handleComplete = useCallback(
@@ -221,6 +263,7 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
               hideHeader
               hideProgress
               onStepChange={setStep}
+              onContact={handleContact}
               onComplete={handleComplete}
             />
           )}

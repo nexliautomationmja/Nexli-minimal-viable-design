@@ -178,6 +178,23 @@ export const TAG_ADVISORY_BUYER = 'advisory buyer';
 export const TAG_ADVISORY_QUALIFIED = 'advisory qualified';
 export const TAG_ADVISORY_NOT_A_FIT = 'advisory not a fit';
 
+/**
+ * Gave us their details and never answered the last question.
+ *
+ * The contact step is question five of six, and the qualifier only POSTs
+ * once, at the end — so until the partial-capture route existed, someone
+ * who typed their name, email and phone and then closed the tab produced
+ * nothing at all. No row, no contact, no webhook. Five answers and a
+ * phone number, lost.
+ *
+ * /api/advisory-pricing/partial now writes the row as soon as the contact
+ * step is submitted and applies this tag. recordQualification removes it
+ * when they finish, so the tag means exactly one thing: STILL unfinished.
+ * Anything that nurtures on it must therefore trigger on the tag being
+ * ADDED and branch on whether it is still present, not fire blind.
+ */
+export const TAG_ADVISORY_INCOMPLETE = 'advisory incomplete';
+
 // ── The headline math, straight from page 3 of the PDF ────────────────────
 // 20 top clients × a 20% close rate × the average engagement = $60,000.
 // Derived rather than hard-coded so the site and the PDF cannot drift.
