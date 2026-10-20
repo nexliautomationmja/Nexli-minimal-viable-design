@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>The clients already on your books</title>
+</head>
+<!--
+  ===========================================================================
+  NOT-A-FIT SEQUENCE. Three touches, for a firm that completed the
+  qualifier and did NOT clear the bar.
+  ===========================================================================
+
+    step1-not-yet.html    20 min  not yet is not no
+    step2-the-sixty.html  day 1   the clients already on your books
+    step3-the-door.html   day 2   come back when you have done it
+
+  THEY HAVE JUST BEEN TOLD NO. That is the only fact that matters about
+  this audience, and it governs every line. The site has already routed
+  them to /advisory-pricing/BOBA, so they know. Nothing here may
+  re-state the rejection, explain the bar, or imply the firm is too
+  small to be taken seriously. The frame is SEQUENCING, not worth: the
+  ads system is the wrong tool for where they are, and there is a right
+  one.
+
+  WHY THEY FAILED VARIES. Not US-based, not the decision maker, under
+  $400K, or budget below the line. The payload carries
+  decision_role_label, annual_revenue_label, budget_label and us_based
+  if you ever want to branch. These three emails deliberately do NOT
+  branch: naming the specific reason reads as justifying the rejection,
+  and the answer is the same either way.
+
+  THE OFFER IS THE $97 BOOK OF BUSINESS ACCELERATOR. resume_url in THIS
+  payload points at /advisory-pricing/BOBA, because nextPath['not-a-fit']
+  is the offer page. The calendar is gated and they cannot reach it.
+
+  THE $60,000 IS A WORKED EXAMPLE AND THE COPY MUST SAY SO.
+  ACCELERATOR_TARGET is 20 clients x a 20% close rate x $15,000, and
+  lib/advisory-config.ts is explicit that the close rate is an
+  ASSUMPTION, not a promise. Step 2 states it as an assumption and gives
+  the PDF's honest lower band ($7K-$12K per engagement) underneath.
+  Do not remove either hedge.
+
+  TRIGGER: the qualifier webhook, not-a-fit branch. So
+  {{inboundWebhookRequest.*}}.
+
+  BRANCH ON THE BUYER TAG, NOT A TIMER ALONE. Buying applies 'advisory
+  buyer'; check for it before every send or you sell the guide to
+  someone who already owns it.
+
+  PASTE INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+  Tables and inline styles only.
+
+  THIS ONE: the arithmetic, and the most carefully hedged email in the
+  whole project. ACCELERATOR_TARGET is a WORKED EXAMPLE - 20 clients x a
+  20% close rate x $15,000 - and lib/advisory-config.ts states that the
+  close rate is an assumption, not a promise. Both hedges are in the
+  copy and neither may be removed: the sentence that calls it an
+  assumption, and the lower band of $7K-$12K per engagement.
+
+  Selling a $97 PDF on an unhedged $60,000 claim is how a cheap product
+  turns into a refund queue and a reputation problem.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    Twenty clients you already have. The maths, with the assumption stated.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 20px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4ade80;">The worked example</p>
+              <h1 style="margin: 0; font-size: 33px; line-height: 1.13; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                {{inboundWebhookRequest.firstName}}, the next <span style="color: #4ade80;">$60,000</span> is already on your client list.
+              </h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #b4bcc8;">Not new clients. The ones whose returns you are already filing.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 28px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #121826; border-left: 3px solid #4ade80; border-radius: 6px; padding: 20px 22px;">
+                    <p style="margin: 0 0 10px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #8b94a3;">Page three of the Accelerator</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;"><span style="color: #4ade80; font-weight: 800;">20</span>&nbsp;&nbsp;Pull your twenty highest-income clients. You know who they are.</td></tr><tr><td style="padding: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;"><span style="color: #4ade80; font-weight: 800;">4</span>&nbsp;&nbsp;Assume one in five says yes to a planning engagement.</td></tr><tr><td style="padding: 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;"><span style="color: #4ade80; font-weight: 800;">$60,000</span>&nbsp;&nbsp;Four engagements at $15,000, the bottom of the range.</td></tr></table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #b4bcc8;"><strong style="color: #ffffff;">That one-in-five is an assumption, not a promise.</strong> It is a worked example to show you the shape, and your number will be your own. At the guide&rsquo;s more conservative band &mdash; four engagements at $7,000 to $12,000 &mdash; it is still $28,000 to $48,000 from a list you already own.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #b4bcc8;">No ad spend. No funnel. No system. A list, a script and four conversations you were always allowed to have.</p>
+            </td>
+          </tr>
+
+
+          <tr>
+            <td style="padding: 0 0 32px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #0d1f16; border: 1px solid #2f7d52; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">It is $97.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">One engagement makes that back about a hundred times over.</p>
+                    <!-- Padding on the cell, never the link. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Get the Accelerator&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">Thirty-day refund if it is not useful. I would rather you asked for it than stayed quiet.</p>
+              <p style="margin: 14px 0 0 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; Marcel</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                Nexli Automation &middot; <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="color: #4ade80; text-decoration: none;">The Accelerator</a><br />
+                You are receiving this because you went through our qualifier.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

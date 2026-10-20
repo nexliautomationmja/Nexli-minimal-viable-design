@@ -10,6 +10,7 @@ import { BOOKING_CONFIRMED_B_PATH, TAG_CALL_BOOKED } from "@/lib/demo-config";
 import {
   ADVISORY_CALL_PATH,
   ADVISORY_PRODUCT_NAME,
+  TAG_ADVISORY_BOOKED,
   TAG_ADVISORY_BUYER,
   TAG_ADVISORY_OPT_IN,
   TAG_ADVISORY_QUALIFIED,
@@ -135,6 +136,10 @@ export async function POST(req: NextRequest) {
     if (lead?.email) {
       await syncContactToGhl({
         resumeUrl,
+        // Onto the contact, not just into the webhook payload, so a
+        // tag-triggered reminder flow can wait until a fixed period
+        // BEFORE the call rather than after the booking.
+        bookingStart: startTime || null,
         email: lead.email,
         firstName: lead.firstName,
         lastName: lead.lastName,
@@ -151,6 +156,11 @@ export async function POST(req: NextRequest) {
           ...(lead.advisoryPurchasedAt ? [TAG_ADVISORY_BUYER] : []),
           TAG_ADVISORY_QUALIFIED,
           TAG_CALL_BOOKED,
+          // The one the appointment reminder workflow triggers on. The
+          // other two read as qualification states, and 'agency pitch'
+          // — which the qualifier applies — is on every firm that
+          // cleared the bar whether or not they ever booked.
+          TAG_ADVISORY_BOOKED,
         ],
         // Belt and braces. The qualifier already strips this, but a booking
         // cannot coexist with "opted in and done nothing since" under any

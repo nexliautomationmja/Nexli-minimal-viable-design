@@ -40,6 +40,14 @@ export interface SyncContactInput {
   /** One-click link back into the funnel, stored so ANY later workflow or
    *  email can use it — not just the one the webhook triggers. */
   resumeUrl?: string | null;
+  /**
+   * ISO start time of a booked call, written to the booking_start custom
+   * field. Without it a reminder workflow can only wait a fixed period
+   * from the booking itself, which is wrong for anyone who books three
+   * weeks out — "48 hours before the call" needs the call's time on the
+   * contact to count back from.
+   */
+  bookingStart?: string | null;
   /** Extra lines appended to the note, e.g. "Booked the growth call". */
   noteHeading?: string;
   extraNoteLines?: string[];
@@ -115,6 +123,7 @@ export async function syncContactToGhl(input: SyncContactInput): Promise<SyncRes
     nexli_lead_score: input.leadScore ?? null,
     nexli_funnel_path: input.funnelPath ?? null,
     resume_url: input.resumeUrl ?? null,
+    booking_start: input.bookingStart ?? null,
   });
 
   const upserted = await upsertContact({

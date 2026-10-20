@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>Closing this out</title>
+</head>
+<!--
+  ===========================================================================
+  BOBA ABANDONED CHECKOUT. Three touches, for someone who clicked buy on
+  the $97 Book of Business Accelerator and did not finish paying.
+  ===========================================================================
+
+    step1-still-open.html   30 min  your checkout is still open
+    step2-what-97-buys.html day 1   the method, and the refund
+    step3-closing-out.html  day 2   short, last
+
+  FIRES AT CHECKOUT START, NOT PURCHASE. app/api/advisory-pricing/
+  checkout fires GHL_ADVISORY_CHECKOUT_WEBHOOK_URL before redirecting to
+  Stripe, with stage: "checkout_started". Completing the payment is a
+  separate event that applies 'advisory buyer'.
+
+  SO CHECK FOR 'advisory buyer' BEFORE EVERY SEND. Otherwise you chase a
+  customer for a product they already own, thirty minutes after they
+  bought it, which is the single worst email in this whole project.
+
+  AND TURN OFF RE-ENTRY. The webhook fires on every checkout START, so a
+  visitor who clicks buy, bounces, comes back and clicks again triggers
+  two runs of this workflow and gets everything twice.
+
+  KEEP IT LIGHT. This is $97, not $9,997. The commonest reason someone
+  does not finish is that they did not have a card to hand or something
+  interrupted them - not doubt. Treating a $97 decision as agonising is
+  what makes it feel agonising, so there is no pain framing anywhere in
+  this sequence and no hard close. Step 1 assumes an interruption,
+  because it usually was one.
+
+  resume_url POINTS AT THE OFFER PAGE, not at Stripe. A checkout session
+  is single use and expires, so a link to the old one would be dead by
+  the time the email lands; the offer page opens a fresh session on
+  click. That is stated in the route's own comment and it is why these
+  buttons say "finish" rather than "pay".
+
+  THE $60,000 IS A WORKED EXAMPLE. 20 clients x a 20% close rate x
+  $15,000, and lib/advisory-config.ts says the close rate is an
+  ASSUMPTION. Step 2 is the only one that touches the number and it
+  carries the hedge. Do not remove it.
+
+  TRIGGER: the checkout webhook. So {{inboundWebhookRequest.*}}.
+
+  PASTE INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+
+  THIS ONE: the last, and the shortest. Two emails have said everything
+  a $97 product warrants. A third that pushes is how a small purchase
+  earns an unsubscribe and costs the relationship.
+
+  No expiring price - $97 is the price and saying otherwise would be a
+  lie. It says it is the last one, so the workflow must stop here.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    Last one about this. The link stays live.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 20px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4ade80;">Last one from me</p>
+              <h1 style="margin: 0; font-size: 32px; line-height: 1.14; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                {{inboundWebhookRequest.firstName}}, I will leave it there.
+              </h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #b4bcc8;">You started an order and did not finish it, and I have now sent two emails about ninety-seven dollars. That is plenty.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #b4bcc8;">The link still works and the price is not going anywhere. If you want it, it is there; if the timing is wrong, that is a completely reasonable thing for it to be.</p>
+            </td>
+          </tr>
+
+
+          <tr>
+            <td style="padding: 0 0 32px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #0d1f16; border: 1px solid #2f7d52; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">The Book of Business Accelerator.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">$97. Thirty-day refund.</p>
+                    <!-- Padding on the cell, never the link. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#16a34a" style="border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="{{inboundWebhookRequest.resume_url}}" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Finish checkout&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">Either way, good luck with the season.</p>
+              <p style="margin: 14px 0 0 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; Marcel</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                You are receiving this because you started an order with us.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

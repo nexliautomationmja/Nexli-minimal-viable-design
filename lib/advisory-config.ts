@@ -195,6 +195,27 @@ export const TAG_ADVISORY_NOT_A_FIT = 'advisory not a fit';
  */
 export const TAG_ADVISORY_INCOMPLETE = 'advisory incomplete';
 
+/**
+ * Picked a time on the calendar.
+ *
+ * Added because the two tags that already fired on a booking are both
+ * badly named for it. 'agency pitch' comes from FUNNEL_PATH_TAG and is
+ * applied by the QUALIFIER — every firm that clears the bar has it,
+ * booked or not, so a reminder flow keyed on it would text people who
+ * have no call. 'advisory qualified' sounds like it means qualified but
+ * is in fact only written at booking. Neither reads as "booked".
+ *
+ * This one says what it means, and it is what the appointment reminder
+ * workflow triggers on. That workflow cannot use the Cal.com connector,
+ * which has never picked up a booking from this event type.
+ *
+ * A TAG ALONE IS NOT ENOUGH FOR TIMED REMINDERS. It says they booked,
+ * not when the call is, so "wait until 48 hours before" has nothing to
+ * count back from. The booking time goes onto the contact as the
+ * booking_start custom field in the same write — see ghl-sync.
+ */
+export const TAG_ADVISORY_BOOKED = 'advisory booked';
+
 // ── The headline math, straight from page 3 of the PDF ────────────────────
 // 20 top clients × a 20% close rate × the average engagement = $60,000.
 // Derived rather than hard-coded so the site and the PDF cannot drift.
