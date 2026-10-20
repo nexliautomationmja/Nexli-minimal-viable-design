@@ -25,7 +25,13 @@ export default function ConditionalNavbar() {
     pathname.startsWith('/demo/') ||
     // The advisory funnel, same exact-plus-prefix shape.
     pathname === '/advisory-pricing' ||
-    pathname.startsWith('/advisory-pricing/')
+    pathname.startsWith('/advisory-pricing/') ||
+    // The Accelerator funnel. The landing page is crawlable and the inner
+    // steps are not, but that is a robots question — every page here is
+    // still a funnel page, and a funnel page with the site nav on it is
+    // five ways out of a page with one job.
+    pathname === '/accelerator' ||
+    pathname.startsWith('/accelerator/')
   ) {
     return null;
   }
