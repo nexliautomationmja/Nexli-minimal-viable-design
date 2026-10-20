@@ -101,9 +101,11 @@ export default function PricingBlock() {
             theme-aware because this card is always on the dark pricing
             panel, unlike the chip at the top of the page.
 
-            Still no number. It depends on what the firm already has, and
-            inventing a figure here to look transparent would be worse than
-            saying plainly that it is quoted on the call. */}
+            Still no number, but no hedging either. It used to end "because
+            it depends on what your firm already has", which read as a reason
+            the fee might vary and invited the firm to start negotiating it
+            down from a number nobody had said yet. It is one build, and
+            almost nobody arrives with any of it already in place. */}
         <div className="relative mx-auto mt-8 max-w-lg rounded-2xl p-[1px]">
           <span
             className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
@@ -135,8 +137,7 @@ export default function PricingBlock() {
               </span>
               <span className="mt-1.5 block text-xs md:text-sm leading-relaxed text-white/60">
                 The website, the portal, the funnel and the automations all have
-                to be built before any of it runs. It is quoted on the call,
-                because it depends on what your firm already has.
+                to be built before any of it runs. One fee, quoted on the call.
               </span>
             </span>
           </div>
