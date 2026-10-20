@@ -64,9 +64,22 @@ export const ADVISORY_PARTIAL_CONFIG: PartialLeadConfig = {
   rateLimitKey: "advisory-partial",
   formSource: ADVISORY_FORM_SOURCE,
   ghlSource: `${ADVISORY_PRODUCT_NAME} - Qualifier (incomplete)`,
-  webhookUrl:
-    process.env.GHL_ADVISORY_PARTIAL_WEBHOOK_URL ||
-    process.env.GHL_ADVISORY_QUALIFY_WEBHOOK_URL,
+  /**
+   * Its own webhook, with NO fallback to the qualifier's.
+   *
+   * It used to fall back, on the reasoning that a misconfigured env var
+   * should not lose the lead entirely. That was wrong. The qualifier
+   * webhook triggers the "completed the qualifier" workflow, and this
+   * payload carries no funnel_path and no `qualified` — so an unset
+   * variable would have run the completed-qualifier flow for someone who
+   * did not complete it, routing an unfinished firm as though it had
+   * been judged. Silence is the safer failure.
+   *
+   * Unset means no webhook and a console warning. The row and the GHL
+   * contact are still written either way, so nothing is actually lost —
+   * only the automation waits.
+   */
+  webhookUrl: process.env.GHL_ADVISORY_PARTIAL_WEBHOOK_URL,
   webhookEnvName: "GHL_ADVISORY_PARTIAL_WEBHOOK_URL",
   webhookSource: "advisory-qualifier-partial",
   // Back to the qualifier, not onward: they still have a question to
