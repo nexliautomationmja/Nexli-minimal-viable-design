@@ -1,18 +1,18 @@
 Subject: This is how you land $15K to $55K clients
 
 
-{{contact.first_name}},
+Hello, {{inboundWebhookRequest.firstName}}
 
 Looking forward to this one. We're on in two days.
 
 If you haven't had a look yet, it's worth three minutes before we talk:
 
-{{contact.resume_url}}
+https://www.nexli.net/booking-confirmed-b
 
 The website, the client portal, and the ad setup that fills it. That's
-how you land tax planning clients at $15,000 to $55,000 per engagement —
-and $15,000 is the floor of that range, not the average.
+how you land tax planning clients at $15,000 to $55,000 per engagement
+— and $15,000 is the floor of that range, not the average.
 
-See you {{appointment.start_time}}.
+See you {{contact.booking_start}}.
 
 — Marcel

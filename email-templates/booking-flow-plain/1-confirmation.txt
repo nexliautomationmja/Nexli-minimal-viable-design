@@ -1,13 +1,13 @@
 Subject: You're booked — one thing before we talk
 
 
-{{contact.first_name}},
+Hello, {{inboundWebhookRequest.firstName}}
 
-You're on my calendar for {{appointment.start_time}}.
+You're on my calendar for {{contact.booking_start}}
 
 Before we speak, have a look at this:
 
-{{contact.resume_url}}
+https://www.nexli.net/booking-confirmed-b
 
 It's the website we'd build you, the client portal, the ad setup, and
 what the whole thing costs. Three minutes, and it means we don't spend

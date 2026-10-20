@@ -1,7 +1,7 @@
 Subject: Do you like the clients you have right now?
 
 
-{{contact.first_name}},
+Hello, {{inboundWebhookRequest.firstName}}
 
 One question before tomorrow, and it's worth answering honestly to
 yourself rather than to me.
@@ -15,9 +15,9 @@ dollars cheaper.
 You're good at this work. The model is what's broken — compliance pays
 once a year and competes on price. Planning pays what it's worth.
 
-That's what we're talking about tomorrow at {{appointment.start_time}}.
+That's what we're talking about tomorrow at {{contact.booking_start}}.
 If you want the five-minute version first, it's all here:
 
-{{contact.resume_url}}
+https://www.nexli.net/booking-confirmed-b
 
 — Marcel

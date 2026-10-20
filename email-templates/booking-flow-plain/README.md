@@ -24,15 +24,27 @@ processor, or smart quotes creep in and look wrong in a text email.
 
 ## Merge tags
 
-This workflow is triggered by the APPOINTMENT, so:
+Written for the INBOUND WEBHOOK flow, so the name comes from the payload:
 
-    {{contact.first_name}}
-    {{appointment.start_time}}     works here, since the trigger is the appointment
-    {{contact.resume_url}}         custom field, written by the booked route
+    {{inboundWebhookRequest.firstName}}
+    {{contact.booking_start}}      the custom field, NOT the webhook value
 
-If {{contact.resume_url}} comes back blank on a test send, the GHL contact
-sync is not writing it and the link is dead — use the plain URL
-https://www.nexli.net/booking-confirmed-b until that is fixed.
+THE DATE IS THE CUSTOM FIELD ON PURPOSE. The webhook carries
+booking_start as a raw ISO timestamp, so
+{{inboundWebhookRequest.booking_start}} renders literally as
+2026-11-05T17:00:00.000Z in the body of the email. The custom field is a
+GHL Date/Time, which GHL formats into the location's timezone. Map
+booking_start into that field in the workflow, or these emails print a
+machine timestamp at a prospect.
+
+If the field is empty on a test send, drop the date sentence rather than
+shipping a blank or an ISO string — "we're on in two days" carries the
+message on its own.
+
+PLAIN URL, NOT A RESUME LINK. /booking-confirmed-b is ungated, so the
+bare link opens on any device. The resume URL would also greet them by
+name, but it depends on the GHL contact sync having written it, and a
+blank href is a dead email.
 
 ## The four
 
