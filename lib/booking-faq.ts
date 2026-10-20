@@ -32,6 +32,21 @@ import {
  *
  *     npx tsx scripts/generate-faq-audio.ts --force --only b-pricing
  *
+ * OUTSTANDING: the pricing answer still ends "because it depends on what
+ * you already have". That clause was removed everywhere else on
+ * 2026-10-20 — the pricing card, the confirmation email and the SEO
+ * answer in lib/site.ts — because it read as a reason the fee might vary
+ * and invited a firm to negotiate down from a number nobody had said
+ * yet. It is one build, and almost nobody arrives with any of it in
+ * place.
+ *
+ * It survives HERE only because b-pricing.mp3 was rendered from this
+ * exact string and the ElevenLabs key has since been rotated, so the
+ * clip cannot be re-rendered. Changing the text alone would have
+ * Daniela saying a sentence the page does not show. Fix both together:
+ * put a working ELEVENLABS_API_KEY in .env.local, drop the clause, and
+ * run the command above.
+ *
  * Dropping `audio` from an item is safe — it falls back to her written
  * reply with no player, and the layout is identical either way.
  *

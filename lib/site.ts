@@ -80,7 +80,7 @@ export const ENGAGEMENT_TERMS = [
   {
     name: 'One flat monthly fee, plus setup',
     description:
-      'One flat monthly fee for the complete system, with no per-component pricing, plus a one-time setup fee covering the build. The setup fee is quoted on the call because it depends on what the firm already has.',
+      'One flat monthly fee for the complete system, with no per-component pricing, plus a one-time setup fee covering the build. The setup fee is quoted on the call.',
   },
   {
     name: 'Typically live in 10 to 14 days',
