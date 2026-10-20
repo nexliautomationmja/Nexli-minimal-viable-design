@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Megaphone } from 'lucide-react';
+import { Megaphone, Wrench } from 'lucide-react';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import {
   AGENCY_AD_SPEND,
@@ -85,8 +85,64 @@ export default function PricingBlock() {
           </span>
         </motion.div>
 
-        <p className="mt-6 text-sm text-white/55">
-          Plus a one-time setup fee for the build, quoted on the call.
+        {/* The setup fee, given its own card.
+            It used to be half of a grey sentence under the ad-spend box,
+            sharing a line with the contract term — the one cost on the page
+            that is NOT inside the big number, set smaller than everything
+            that is. A firm that reads $9,997, books, and meets the setup fee
+            on the call has been surprised by us, which is the expensive kind
+            of surprise.
+
+            Amber, not green, and deliberately. The green box above explains
+            what is INSIDE the monthly; this is the thing that sits outside
+            it. Matching them would blur the only distinction that matters
+            here. The shimmer rim is the hero chip's pattern (a rotating
+            conic gradient behind a 1px inset) — hard-coded rather than
+            theme-aware because this card is always on the dark pricing
+            panel, unlike the chip at the top of the page.
+
+            Still no number. It depends on what the firm already has, and
+            inventing a figure here to look transparent would be worse than
+            saying plainly that it is quoted on the call. */}
+        <div className="relative mx-auto mt-8 max-w-lg rounded-2xl p-[1px]">
+          <span
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
+            aria-hidden="true"
+          >
+            <span
+              className="absolute inset-[-100%] animate-[shimmer_6s_linear_infinite]"
+              style={{
+                background:
+                  'conic-gradient(from 0deg at 50% 50%, #fbbf24, #78350f, #fbbf24, #78350f, #fbbf24)',
+              }}
+            />
+          </span>
+
+          <div
+            className="relative z-10 flex items-start gap-3.5 rounded-2xl px-4 py-4 text-left md:px-5 md:py-5"
+            style={{ background: 'linear-gradient(rgba(251,191,36,0.07), rgba(251,191,36,0.07)), #0b1120' }}
+          >
+            <span
+              className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-[#1c1206]"
+              aria-hidden="true"
+            >
+              <Wrench className="h-4 w-4 text-amber-400" strokeWidth={2} />
+            </span>
+            <span>
+              <span className="block text-base md:text-lg font-black leading-snug text-white">
+                Plus a one-time{' '}
+                <span className="text-amber-300">setup fee</span> for the build
+              </span>
+              <span className="mt-1.5 block text-xs md:text-sm leading-relaxed text-white/60">
+                The website, the portal, the funnel and the automations all have
+                to be built before any of it runs. It is quoted on the call,
+                because it depends on what your firm already has.
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <p className="mt-5 text-sm text-white/55">
           Six-month initial term, then month to month.
         </p>
       </motion.div>
