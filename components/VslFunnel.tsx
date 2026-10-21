@@ -21,6 +21,7 @@ import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
 import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
 import DeadlineUrgency, { DeadlineBanner } from './advisory/DeadlineUrgency';
+import UrgencyPill from './funnel/UrgencyPill';
 import MetaLogo from './icons/MetaLogo';
 
 // Google "G" icon matching lucide-react component interface
@@ -1793,53 +1794,6 @@ const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
             </p>
             <QualifyCta ctaHref={ctaHref} size="bar" />
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// URGENCY PILL — Sticky scarcity badge (top-right)
-// ─────────────────────────────────────────────────────────────────────────────
-const UrgencyPill: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }) => {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4 }}
-          className={`fixed right-6 md:right-8 z-[110] ${
-            belowBanner ? 'top-[4.5rem] md:top-[5.25rem]' : 'top-6 md:top-8'
-          }`}
-        >
-          <motion.div
-            animate={{ opacity: [1, 0.5, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-full border backdrop-blur-md shadow-lg"
-            style={{
-              backgroundColor: 'rgba(239,68,68,0.12)',
-              borderColor: 'rgba(239,68,68,0.3)',
-              boxShadow: '0 4px 20px rgba(239,68,68,0.15)',
-            }}
-          >
-            <span
-              className="w-2 h-2 rounded-full bg-red-500 animate-pulse"
-            />
-            <span className="text-[11px] sm:text-xs font-bold text-red-400 tracking-wide uppercase">
-              3 firm spots left
-            </span>
-          </motion.div>
-
         </motion.div>
       )}
     </AnimatePresence>

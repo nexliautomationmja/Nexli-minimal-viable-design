@@ -3,15 +3,24 @@
 // ---------------------------------------------------------------------------
 // What actually gets built, as a flow — booking-confirmed B.
 //
-//     [ Ad ] -> [ Funnel ] -> [ Qualifier ]
-//                                  |
-//                        +---------+---------+
-//                   [ Qualified ]      [ Not a fit ]
+//     [ Ad ] -> [ The offer ] -> [ Qualifier ]
+//                                      |
+//                        +-------------+-------------+
+//              [ Qualified: VSL + calendar ]   [ Not a fit: keeps the
+//                                                guide, you keep the lead ]
 //
 // The list of deliverables two sections down says WHAT we build. This says
 // how the pieces connect, which is the thing a firm cannot picture from a
 // list, and it answers the question the list raises: what happens to the
 // leads who are not ready? They are not thrown away.
+//
+// THE FREEBIE IS THE ENTRY, NOT THE CONSOLATION. This diagram used to show
+// a generic "funnel" page in the middle and put the guide on the not-a-fit
+// branch, as though it were what you hand someone who failed. That is
+// backwards and it misdescribes the funnel we actually run: the free guide
+// is the thing the ad promises, answering the questions is how you get it,
+// and everybody who answers receives it. Qualifying is what the offer DOES,
+// not a gate in front of it.
 //
 // Theme-aware, unlike AdCreativeLab above it. This is page content, so it
 // uses the page's own tokens (--glass-bg / --glass-border / --text-main) and
@@ -31,7 +40,7 @@ import {
   Gift,
   ListFilter,
   Megaphone,
-  MousePointerClick,
+  UserPlus,
 } from 'lucide-react';
 
 const GREEN = 'rgba(34,197,94,';
@@ -45,14 +54,14 @@ const STAGES = [
     body: 'Photo and video angles running on Meta, pointed at business owners and high earners in your market.',
   },
   {
-    Icon: MousePointerClick,
-    label: 'The funnel',
-    body: 'A landing page built for one job: get the right person to raise their hand.',
+    Icon: Gift,
+    label: 'The offer',
+    body: 'A free guide or a low-ticket product, built to be worth having on its own. It is what the ad promises and what makes the right person raise their hand.',
   },
   {
     Icon: ListFilter,
     label: 'The qualifier',
-    body: 'A short set of questions that sorts a real prospect from a tyre-kicker before they reach your calendar.',
+    body: 'Answering a short set of questions is how they get it. That is also what sorts a real prospect from a tyre-kicker, before anyone reaches your calendar.',
   },
 ];
 
@@ -186,18 +195,18 @@ export default function SystemFlow() {
         <Node
           Icon={CalendarCheck}
           className="h-full"
-          label="Qualified → your calendar"
-          body="Books straight onto your calendar with their answers attached, so you open the call already knowing the firm."
+          label="Qualified → the video, then your calendar"
+          body="They are shown a short video making the case for the work, with your calendar directly beneath it. They book without going anywhere, answers attached, so you open the call already knowing the firm."
         />
         {/* Amber, never red. A lead who is not ready today is not a loss,
             and colouring them like one would argue against the point the
             copy is making. */}
         <Node
-          Icon={Gift}
+          Icon={UserPlus}
           tone="amber"
           className="h-full"
-          label="Not a fit → freebie or low-ticket"
-          body="Gets a guide or a small paid offer instead, and stays in follow-up. Nothing you paid to reach is thrown away."
+          label="Not a fit → you still get the lead"
+          body="They receive what they came for and nothing else is asked of them. You keep the contact and they stay in follow-up, so nothing you paid to reach is thrown away."
         />
       </div>
     </div>
