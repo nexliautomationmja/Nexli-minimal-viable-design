@@ -91,8 +91,19 @@ export default function AcceleratorNextClient({
             or it reads as a vague upsell. Three things we do, then the
             number their client pays THEM, then the calendar. */}
         <div className="mt-9 text-center">
+          {/* The turn, before the promise. A CPA reading this has a book
+              full of referrals who argue over an $800 invoice, and naming
+              that first is what makes the next sentence land as relief
+              rather than as another pitch. Red against the green below:
+              the colours carry the before/after on their own. */}
+          <p
+            className="text-xl sm:text-2xl md:text-3xl font-black leading-[1.12] tracking-tight"
+            style={{ ...OUTFIT, color: '#f87171' }}
+          >
+            Ditch the referrals who are broke.
+          </p>
           <h2
-            className="text-2xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.08] tracking-tight text-white"
+            className="mt-3 text-2xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.08] tracking-tight text-white"
             style={OUTFIT}
           >
             We keep your calendar full of people paying{' '}
