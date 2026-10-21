@@ -72,36 +72,47 @@ export default function AcceleratorNextClient({
 
   return (
     <>
-      <section className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6 pb-10">
-        {/* The video had no introduction — it sat directly under a grey
-            line about spam folders, so nothing told anyone why to press
-            play.
+      <section className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6 pb-4">
+        {/* The pitch, ABOVE the video rather than under it.
 
-            This sentence is not new to the page. It was buried in the
-            hero's sub-paragraph as an aside ("there is a version of this
-            where we bring you the clients"), which is the right promise
-            in the wrong place and at the wrong volume. It has been moved
-            here, not duplicated — the hero now only confirms delivery.
+            It used to sit below, which meant the video had to sell itself
+            from a cold open — the page said "it is sending, check your
+            spam" and then put up a player with no stated reason to press
+            it. Now the claim is made first and the video is the evidence
+            for it.
 
-            The eyebrow carries the "while you wait" hinge that came out
-            of that sentence, and marks the pivot from delivery to pitch.
+            Two lines only, and they are the two that do the work: what we
+            put on their calendar, and what those people pay. Everything
+            else that used to be here has moved below the calendar, where
+            it answers "how" for whoever is still reading.
 
-            Deliberately smaller than the pitch headline below the video.
-            This introduces the VSL; that one is still the page's
-            argument. */}
-        {/* A plain div, not motion. Nothing else in this file animates
-            in — the page opens with a video and a calendar, both of
-            which arrive on their own schedule — so one block fading up
-            would read as a glitch rather than a flourish. */}
-        <div className="mb-7 text-center">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/45">
-            While you wait
-          </p>
-          <p
-            className="mt-3 text-xl sm:text-2xl md:text-3xl font-black leading-[1.12] tracking-tight text-white"
+            A plain div, not motion. Nothing else in this file animates in
+            — the page opens with a video and a calendar, both of which
+            arrive on their own schedule — so one block fading up would
+            read as a glitch rather than a flourish. */}
+        <div className="mb-5 text-center">
+          <h2
+            className="text-2xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.08] tracking-tight text-balance text-white"
             style={OUTFIT}
           >
-            We can bring the <span style={{ color: '#4ade80' }}>leads</span> for you.
+            We keep your calendar full of people paying{' '}
+            <span style={{ color: '#4ade80' }}>6 &amp; 7 figures</span> in taxes.
+          </h2>
+
+          {/* The asymmetry, immediately. A firm handing the IRS seven
+              figures does not experience $15,000 as a cost, and that —
+              not our fee, not our features — is why these engagements
+              close. Said in their client's terms, under the headline it
+              is evidence for. */}
+          <p
+            className="mt-3 text-base sm:text-lg leading-snug max-w-xl mx-auto"
+            style={{ color: 'rgba(255,255,255,0.75)' }}
+          >
+            People like that would pay{' '}
+            <span className="font-black" style={{ color: '#4ade80' }}>
+              {usd(AGENCY_ENGAGEMENT_LOW)} to {usd(AGENCY_ENGAGEMENT_HIGH)}+
+            </span>{' '}
+            for tax planning without blinking.
           </p>
         </div>
 
@@ -139,75 +150,12 @@ export default function AcceleratorNextClient({
           />
         </div>
 
-        {/* The whole reason this page holds a qualified firm for ten
-            minutes. The guide is work they have to go and do; this is the
-            same outcome with the work removed, and it has to be concrete
-            or it reads as a vague upsell. Three things we do, then the
-            number their client pays THEM, then the calendar. */}
-        <div className="mt-9 text-center">
-          {/* The turn, before the promise. A CPA reading this has a book
-              full of referrals who argue over an $800 invoice, and naming
-              that first is what makes the next sentence land as relief
-              rather than as another pitch. Red against the green below:
-              the colours carry the before/after on their own. */}
-          <p
-            className="text-xl sm:text-2xl md:text-3xl font-black leading-[1.12] tracking-tight"
-            style={{ ...OUTFIT, color: '#f87171' }}
-          >
-            Ditch the referrals who are broke.
-          </p>
-          <h2
-            className="mt-3 text-2xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.08] tracking-tight text-white"
-            style={OUTFIT}
-          >
-            We keep your calendar full of people paying{' '}
-            <span style={{ color: '#4ade80' }}>6 &amp; 7 figures</span> in taxes.
-          </h2>
-          <p
-            className="mt-4 text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
-            style={{ color: 'rgba(255,255,255,0.7)' }}
-          >
-            Consistent lead flow, done for you end to end. You do the planning.
-            We do every single thing that gets them in front of you.
-          </p>
-
-          <div className="mt-8 grid gap-3 sm:grid-cols-3 text-left">
-            {[
-              ['The ads', 'Written, produced and run on Meta. You never go on camera.'],
-              ['The qualifying', 'Sorted before they reach you, so you are not on calls with tyre-kickers.'],
-              ['Your calendar', 'They book straight onto it, already knowing what planning costs.'],
-            ].map(([title, body]) => (
-              <div
-                key={title}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4"
-              >
-                <p className="text-sm font-black text-white" style={OUTFIT}>
-                  {title}
-                </p>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-white/60">{body}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* The whole argument in one line. A firm handing the IRS
-              seven figures does not experience $15,000 as a cost, and
-              that asymmetry — not our fee, not our features — is why
-              these engagements close. Say it in their client's terms. */}
-          <p
-            className="mt-8 text-lg sm:text-2xl font-black leading-snug text-white max-w-2xl mx-auto"
-            style={OUTFIT}
-          >
-            People like that would pay{' '}
-            <span style={{ color: '#4ade80' }}>
-              {usd(AGENCY_ENGAGEMENT_LOW)} to {usd(AGENCY_ENGAGEMENT_HIGH)}+
-            </span>{' '}
-            for tax planning without blinking. Next to what they hand the IRS,
-            it is a rounding error.
-          </p>
-          <p className="mt-4 text-base sm:text-lg font-bold text-white">
-            Pick a time below. I will show you exactly how it is built.
-          </p>
-        </div>
+        {/* The only thing between the video and the calendar. The
+            calendar itself is meant to be visible from here without
+            scrolling, so anything else put here costs a booking. */}
+        <p className="mt-4 text-center text-base sm:text-lg font-bold text-balance text-white">
+          Pick a time below. I will show you exactly how it is built.
+        </p>
       </section>
 
       <section className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6 pb-20">
@@ -231,6 +179,42 @@ export default function AcceleratorNextClient({
           bookedTitle="You're booked."
           onBooked={onBooked}
         />
+
+        {/* BELOW the calendar on purpose.
+
+            These three answer "how does that work", which is a question
+            you only have once you believe the claim — and the people who
+            believe it should be booking, not reading. Above the calendar
+            this cost roughly 300px of scroll before anyone could see a
+            time slot. Below it, it is there for whoever wants it and
+            costs the rest nothing. */}
+        <div className="mt-12 text-center">
+          <p
+            className="text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
+            style={{ color: 'rgba(255,255,255,0.7)' }}
+          >
+            Consistent lead flow, done for you end to end. You do the planning.
+            We do every single thing that gets them in front of you.
+          </p>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-3 text-left">
+            {[
+              ['The ads', 'Written, produced and run on Meta. You never go on camera.'],
+              ['The qualifying', 'Sorted before they reach you, so you are not on calls with tyre-kickers.'],
+              ['Your calendar', 'They book straight onto it, already knowing what planning costs.'],
+            ].map(([title, body]) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4"
+              >
+                <p className="text-sm font-black text-white" style={OUTFIT}>
+                  {title}
+                </p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-white/60">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </>
   );

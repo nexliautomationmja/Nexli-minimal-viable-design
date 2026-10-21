@@ -95,9 +95,9 @@ export default async function AcceleratorNextPage() {
         <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[900px] h-[540px] rounded-full blur-[130px] bg-emerald-500/10" />
       </div>
 
-      <section className="relative z-10 px-4 sm:px-6 pt-24 md:pt-28 pb-6 text-center">
+      <section className="relative z-10 px-4 sm:px-6 pt-20 pb-4 text-center">
         <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-5"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-4"
           style={{ backgroundColor: 'rgba(16,185,129,0.1)', borderColor: 'rgba(16,185,129,0.25)' }}
         >
           <span
@@ -116,7 +116,7 @@ export default async function AcceleratorNextPage() {
         </h1>
 
         <p
-          className="mt-4 text-sm sm:text-base leading-relaxed max-w-xl mx-auto"
+          className="mt-3 text-sm sm:text-base leading-relaxed max-w-xl mx-auto"
           style={{ color: 'rgba(255,255,255,0.65)' }}
         >
           Give it about {ACCELERATOR_DELIVERY_MINUTES} minutes to land.
@@ -129,7 +129,7 @@ export default async function AcceleratorNextPage() {
             other saying different numbers. The email address is the only
             part worth keeping, so it is inline. */}
         {lead.email && (
-          <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="mt-4 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
             Going to <span className="font-semibold text-white">{lead.email}</span>.
             Check spam if it has not arrived in fifteen.
           </p>
