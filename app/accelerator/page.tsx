@@ -29,7 +29,6 @@ import {
   ACCELERATOR_TARGET,
   ACCELERATOR_TOP_N,
 } from '@/lib/advisory-config';
-import { AGENCY_ENGAGEMENT_LOW } from '@/lib/agency-offer';
 import { ACCELERATOR_QUALIFY_PATH } from '@/lib/accelerator-config';
 import { SITE_URL } from '@/lib/site';
 
@@ -43,26 +42,23 @@ const CONSERVATIVE_HIGH = CONSERVATIVE_COUNT * ACCELERATOR_HIGH_FEE;
 export const metadata: Metadata = {
   title: `The Book of Business Accelerator | Free for CPA firms | Nexli`,
   description:
-    `A free playbook for CPA firms: how to find the ${ACCELERATOR_TOP_N} clients on your own books who are overpaying tax, what to charge them for planning, and how to have the conversation.`,
+    `A free playbook for CPA firms: how to pull up to ${usd(ACCELERATOR_TARGET)} out of the book of business you already have. No ads, no funnel, no system to buy.`,
   alternates: { canonical: `${SITE_URL}/accelerator` },
 };
 
-const STEPS = [
-  {
-    n: '01',
-    title: 'Pull the twenty',
-    body: `Which of your clients are overpaying, and how to spot them from returns you have already filed.`,
-  },
-  {
-    n: '02',
-    title: 'Price the work',
-    body: 'What a planning engagement is worth, and how to say the number out loud without flinching.',
-  },
-  {
-    n: '03',
-    title: 'Have the conversation',
-    body: 'The approach that turns a compliance client into a planning client.',
-  },
+/**
+ * Three questions it ANSWERS, not three steps it tells you to take.
+ *
+ * This section used to be the method - pull the twenty, price the work,
+ * have the conversation - which is the guide's actual content laid out
+ * on a page you can read without downloading anything. Naming what a
+ * reader will know afterwards sells it; naming what to do removes the
+ * reason to open the file.
+ */
+const ANSWERS = [
+  'Which of the clients already on your books are quietly overpaying',
+  'What that planning work is genuinely worth, and what to charge for it',
+  'How to raise it with a compliance client without it feeling like a sale',
 ];
 
 export default function AcceleratorLandingPage() {
@@ -97,7 +93,7 @@ export default function AcceleratorLandingPage() {
 
           <div className="mt-9 flex justify-center">
             <FunnelCta href={ACCELERATOR_QUALIFY_PATH} size="lg">
-              Send me the Accelerator
+              Download it for free
             </FunnelCta>
           </div>
 
@@ -111,26 +107,26 @@ export default function AcceleratorLandingPage() {
       <section className="relative z-10 px-4 sm:px-6 pb-14 md:pb-20">
         <RimCard className="mx-auto max-w-2xl" innerClassName="p-6 sm:p-9">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/45">
-            The worked example
+            What it shows you
           </p>
 
-          <div className="mt-5 space-y-3.5">
-            {[
-              [String(ACCELERATOR_TOP_N), 'your highest-income clients. You know who they are.'],
-              [String(CONSERVATIVE_COUNT), `say yes to a planning engagement.`],
-              [usd(ACCELERATOR_TARGET), `at ${usd(AGENCY_ENGAGEMENT_LOW)} each, the bottom of the range.`],
-            ].map(([figure, label]) => (
-              <div key={label} className="flex items-baseline gap-3">
-                <span
-                  className="shrink-0 text-xl sm:text-2xl font-black tabular-nums"
-                  style={{ ...OUTFIT, color: '#4ade80' }}
-                >
-                  {figure}
-                </span>
-                <span className="text-sm sm:text-base leading-relaxed text-white/70">{label}</span>
-              </div>
-            ))}
-          </div>
+          {/* The promise, not the derivation. The old version printed
+              "20 clients x 4 say yes x $15,000" down the page, which is
+              the guide's own arithmetic - readable, memorable, and
+              enough to skip the download. The number survives; the
+              method does not. */}
+          <p
+            className="mt-4 text-xl sm:text-2xl md:text-3xl font-black leading-[1.15] text-white"
+            style={OUTFIT}
+          >
+            How to pull up to{' '}
+            <span style={{ color: '#4ade80' }}>{usd(ACCELERATOR_TARGET)}</span>{' '}
+            that is already hiding in your existing book of business.
+          </p>
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-white/70">
+            No ads, no funnel, no system to buy. The clients are people whose
+            returns you are already filing.
+          </p>
 
           {/* Both hedges. Do not remove either — see the header comment. */}
           <p className="mt-6 pt-5 border-t border-white/10 text-sm leading-relaxed text-white/60">
@@ -139,13 +135,12 @@ export default function AcceleratorLandingPage() {
                 disagree if ACCELERATOR_CLOSE_RATE moves off 0.2 — if it
                 ever does, this word changes with it. */}
             <strong className="text-white">
-              That one-in-five is an assumption, not a promise.
+              {usd(ACCELERATOR_TARGET)} is a worked example, not a promise.
             </strong>{' '}
-            It is there to show you the shape; your number will be your own. At
-            the guide&rsquo;s more conservative band &mdash; {CONSERVATIVE_COUNT}{' '}
-            engagements at {usd(ACCELERATOR_LOW_FEE)} to {usd(ACCELERATOR_HIGH_FEE)}{' '}
-            &mdash; it is {usd(CONSERVATIVE_LOW)} to {usd(CONSERVATIVE_HIGH)} from a
-            list you already own.
+            It assumes a close rate the guide states plainly, and your number
+            will be your own. On its more conservative band it is{' '}
+            {usd(CONSERVATIVE_LOW)} to {usd(CONSERVATIVE_HIGH)} &mdash; still
+            from clients you already have.
           </p>
         </RimCard>
       </section>
@@ -160,38 +155,31 @@ export default function AcceleratorLandingPage() {
             A method, not a motivational PDF.
           </h2>
 
-          <div className="mt-9 grid gap-4 sm:gap-5">
-            {STEPS.map((s) => (
+          <p className="mt-5 text-center text-base sm:text-lg leading-relaxed text-white/70">
+            By the end of it you will know:
+          </p>
+
+          <div className="mt-7 grid gap-3 sm:gap-4">
+            {ANSWERS.map((a) => (
               <div
-                key={s.n}
-                className="flex gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6"
+                key={a}
+                className="flex gap-3.5 rounded-2xl border border-white/10 bg-white/[0.03] p-5"
               >
                 <span
-                  className="shrink-0 text-base font-black tabular-nums"
-                  style={{ ...OUTFIT, color: '#4ade80' }}
+                  aria-hidden="true"
+                  className="mt-0.5 shrink-0 text-lg font-black leading-none"
+                  style={{ color: '#4ade80' }}
                 >
-                  {s.n}
+                  &rarr;
                 </span>
-                <div>
-                  <p className="text-base sm:text-lg font-black text-white" style={OUTFIT}>
-                    {s.title}
-                  </p>
-                  <p className="mt-1.5 text-sm sm:text-base leading-relaxed text-white/65">
-                    {s.body}
-                  </p>
-                </div>
+                <p className="text-sm sm:text-base leading-relaxed text-white/75">{a}</p>
               </div>
             ))}
           </div>
 
-          <p className="mt-8 text-center text-base leading-relaxed text-white/65">
-            No ad spend. No funnel. No system to buy. A list, a script, and{' '}
-            {CONSERVATIVE_COUNT} conversations you were always allowed to have.
-          </p>
-
           <div className="mt-9 flex justify-center">
             <FunnelCta href={ACCELERATOR_QUALIFY_PATH} size="lg">
-              Send me the Accelerator
+              Download it for free
             </FunnelCta>
           </div>
 
