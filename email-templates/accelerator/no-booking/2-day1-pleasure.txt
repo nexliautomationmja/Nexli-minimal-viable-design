@@ -1,0 +1,36 @@
+Subject: What three of those clients a month does to a firm
+
+--- EMAIL ---
+
+Hello {{inboundWebhookRequest.firstName}}
+
+Three tax planning clients a month, at the floor of the range.
+
+    3 x $15,000 = $45,000 a month
+
+That is at $15,000, the bottom. The top of the same range is $55,000,
+and the same three clients there is $165,000 a month.
+
+One in five is an assumption, not a promise - your number will be your
+own. But notice what it is NOT: it is not more returns, it is not
+longer hours, and it is not you going and finding anybody.
+
+It is the same three conversations a month, with people who were
+already looking for someone to have them with.
+
+{{inboundWebhookRequest.resume_url}}
+
+- Marcel
+
+
+--- SMS ---
+
+{{inboundWebhookRequest.firstName}}, 3 planning clients a month at the
+floor is an extra $45,000 a month. At the top of the range it is
+$165,000.
+
+What would that do for the firm?
+
+{{inboundWebhookRequest.resume_url}}
+
+Reply STOP to opt out.

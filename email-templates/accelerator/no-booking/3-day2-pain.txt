@@ -1,0 +1,38 @@
+Subject: Do you like the clients you have right now?
+
+--- EMAIL ---
+
+Hello {{inboundWebhookRequest.firstName}}
+
+Worth answering honestly to yourself rather than to me.
+
+The ones who argue about an $800 invoice. The ones who send a shoebox
+in April and want it back by Friday. The ones who leave for someone
+fifty dollars cheaper after six years.
+
+And the referral that finally lands turns out to be someone after free
+advice.
+
+You are good at this work. The model is what is broken - compliance
+pays once a year and competes on price, and the only lever you control
+is working more hours you do not have.
+
+The clients on the other side of this already pay six and seven figures
+in tax. $15,000 to $55,000 for planning is a rounding error to them.
+
+{{inboundWebhookRequest.resume_url}}
+
+- Marcel
+
+
+--- SMS ---
+
+{{inboundWebhookRequest.firstName}}, honest question - do you like the
+clients you have right now?
+
+The ones arguing over an $800 invoice. The ones who leave for fifty
+dollars cheaper.
+
+{{inboundWebhookRequest.resume_url}}
+
+Reply STOP to opt out.
