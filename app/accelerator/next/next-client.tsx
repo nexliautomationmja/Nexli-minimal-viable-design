@@ -11,9 +11,10 @@
 // "watch this, then pick a time without going anywhere".
 //
 // So: a bare MuxPlayer, three lines of copy, and InlineCalEmbed. The
-// pattern is lifted from BOBA/offer-client.tsx, including thumbnailTime —
-// Mux serves a frame from the MIDDLE of the asset when you do not ask for
-// one, which on these cuts means a burned-in caption as the poster.
+// pattern is lifted from BOBA/offer-client.tsx — the player chrome and
+// thumbnailTime both. Mux serves a frame from the MIDDLE of the asset
+// when you do not ask for one, which on these cuts means a burned-in
+// caption as the poster.
 //
 // The booking side mirrors call-client.tsx exactly: same bookedEndpoint,
 // same scheduleContentName (the CAPI and pixel content_name must agree),
@@ -23,7 +24,7 @@
 import { useCallback } from 'react';
 import MuxPlayer from '@mux/mux-player-react';
 import InlineCalEmbed from '@/components/InlineCalEmbed';
-import { RimCard, OUTFIT } from '@/components/funnel/primitives';
+import { OUTFIT } from '@/components/funnel/primitives';
 import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW } from '@/lib/agency-offer';
 import { BOOKING_CONFIRMED_B_PATH, DEMO_CAL_LINK } from '@/lib/demo-config';
 import {
@@ -104,7 +105,26 @@ export default function AcceleratorNextClient({
           </p>
         </div>
 
-        <RimCard innerClassName="p-2 sm:p-3">
+        {/* The same chrome as every other VSL on the site — BOBA's offer
+            page, booking-confirmed B, the main VSL funnel: a thin border,
+            a big shadow, and the video edge to edge inside it.
+
+            This used to be a RimCard, which is the wrong primitive for a
+            video. RimCard is a showpiece PANEL: spinning conic rim, opaque
+            navy gradient interior, blurred orbs, and padding. Around copy
+            that reads as a feature. Around a 16:9 video it reads as a
+            picture frame, and the 8-12px of interior padding shrinks the
+            video inside the space it occupies while the rim competes with
+            the thing you are meant to be watching. VslFunnel removed
+            exactly this bezel for exactly this reason (see its note) —
+            this page had quietly reintroduced it.
+
+            border-white/10 rather than var(--glass-border), which the
+            other three use. Same colour in dark mode, but this funnel is
+            hardcoded dark while that variable follows the theme toggle, so
+            the var would flip to near-black here if the theme ever
+            changed under it. */}
+        <div className="overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl">
           <MuxPlayer
             playbackId={ACCELERATOR_VSL_VIDEO_PLAYBACK_ID}
             streamType="on-demand"
@@ -113,9 +133,11 @@ export default function AcceleratorNextClient({
             thumbnailTime={0}
             metadata={{ video_title: ACCELERATOR_VSL_VIDEO_TITLE }}
             accentColor="#16a34a"
-            style={{ aspectRatio: '16/9', width: '100%', borderRadius: '1rem', overflow: 'hidden' }}
+            // No radius of its own: the wrapper clips it. display:block
+            // kills the inline-element gap under the player.
+            style={{ aspectRatio: '16/9', width: '100%', display: 'block' }}
           />
-        </RimCard>
+        </div>
 
         {/* The whole reason this page holds a qualified firm for ten
             minutes. The guide is work they have to go and do; this is the
