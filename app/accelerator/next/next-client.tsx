@@ -72,6 +72,38 @@ export default function AcceleratorNextClient({
   return (
     <>
       <section className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6 pb-10">
+        {/* The video had no introduction — it sat directly under a grey
+            line about spam folders, so nothing told anyone why to press
+            play.
+
+            This sentence is not new to the page. It was buried in the
+            hero's sub-paragraph as an aside ("there is a version of this
+            where we bring you the clients"), which is the right promise
+            in the wrong place and at the wrong volume. It has been moved
+            here, not duplicated — the hero now only confirms delivery.
+
+            The eyebrow carries the "while you wait" hinge that came out
+            of that sentence, and marks the pivot from delivery to pitch.
+
+            Deliberately smaller than the pitch headline below the video.
+            This introduces the VSL; that one is still the page's
+            argument. */}
+        {/* A plain div, not motion. Nothing else in this file animates
+            in — the page opens with a video and a calendar, both of
+            which arrive on their own schedule — so one block fading up
+            would read as a glitch rather than a flourish. */}
+        <div className="mb-7 text-center">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/45">
+            While you wait
+          </p>
+          <p
+            className="mt-3 text-xl sm:text-2xl md:text-3xl font-black leading-[1.12] tracking-tight text-white"
+            style={OUTFIT}
+          >
+            We can bring the <span style={{ color: '#4ade80' }}>leads</span> for you.
+          </p>
+        </div>
+
         <RimCard innerClassName="p-2 sm:p-3">
           <MuxPlayer
             playbackId={ACCELERATOR_VSL_VIDEO_PLAYBACK_ID}

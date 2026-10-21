@@ -119,9 +119,7 @@ export default async function AcceleratorNextPage() {
           className="mt-4 text-sm sm:text-base leading-relaxed max-w-xl mx-auto"
           style={{ color: 'rgba(255,255,255,0.65)' }}
         >
-          Give it about {ACCELERATOR_DELIVERY_MINUTES} minutes to land. While you
-          wait &mdash; there is a version of this where we bring you the clients
-          and you never do any of it yourself.
+          Give it about {ACCELERATOR_DELIVERY_MINUTES} minutes to land.
         </p>
 
         {/* NOT DeliveryBlock. That component hardcodes "it lands in the
