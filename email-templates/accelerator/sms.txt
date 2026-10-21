@@ -1,0 +1,57 @@
+Accelerator delivery - the two SMS
+==================================
+
+Same branch as the emails: funnel_path = "agency" or "not-a-fit".
+Send alongside the email, not instead of it - SMS cannot carry the PDF,
+so its job is to tell them the inbox has it and, on the qualified
+branch, to carry the one link worth clicking.
+
+ASCII only. Type apostrophes and hyphens directly rather than pasting
+from a doc: a smart quote drops the message out of GSM-7 encoding and
+segments go from 153 characters to 67, so the same text silently costs
+three times as much to send.
+
+
+--------------------------------------------------------------------
+1. QUALIFIED   funnel_path = "agency"   (send with 1-qualified.txt)
+--------------------------------------------------------------------
+
+{{inboundWebhookRequest.firstName}}, your Accelerator just landed in
+your inbox.
+
+Your firm also cleared the bar for the done-for-you version - we fill
+your calendar with $15K to $55K planning clients:
+
+{{inboundWebhookRequest.resume_url}}
+
+Reply STOP to opt out.
+
+
+~235 characters, 2 segments.
+
+The link is the whole point of this one. It opens /accelerator/next
+signed in - the walkthrough and the calendar - so the SMS does the job
+the email's button does, for the half of people who never open email on
+a phone.
+
+
+--------------------------------------------------------------------
+2. NOT QUALIFIED   funnel_path = "not-a-fit"   (send with 2-free-lead.txt)
+--------------------------------------------------------------------
+
+{{inboundWebhookRequest.firstName}}, your Book of Business Accelerator
+is in your inbox. Free, nothing to click.
+
+Page three is where it starts: twenty clients, four conversations,
+$60,000.
+
+Reply STOP to opt out.
+
+
+~195 characters, 2 segments.
+
+NO LINK, deliberately. resume_url on this branch opens
+/accelerator/sending, which is a delivery confirmation with nothing on
+it - a dead end. And no agency pitch either: the email plants that as a
+later conversation, and repeating it in a text to someone who was just
+told they are not a fit is pushing. Delivery, one instruction, done.
