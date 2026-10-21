@@ -158,7 +158,25 @@ export default function AcceleratorNextClient({
         </p>
       </section>
 
-      <section className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6 pb-20">
+      {/* WIDER than the section above it, and counter-intuitively that
+          is what makes the calendar SMALLER.
+
+          Cal's month_view puts the time list beside the date grid, but
+          only above its own internal breakpoint. At the 720px this
+          section used to be it fell back to stacking them, so the embed
+          rendered 905px tall - taller than a laptop viewport, with the
+          times pushed off the bottom of the screen behind a scroll. At
+          848px Cal lays them out side by side and the same embed is
+          534px. Pick a day, the times are already next to it.
+
+          5xl was measured too and changes nothing: still 534px, just a
+          wider calendar. 4xl is where the gain stops.
+
+          Phones are unaffected - 598px either way. Cal forces the month
+          grid below ~768px no matter what layout it is given, which is
+          also why column_view was tried here and dropped: no change on
+          mobile and 34px TALLER on desktop. */}
+      <section className="relative z-10 mx-auto w-full max-w-4xl px-4 sm:px-6 pb-20">
         <InlineCalEmbed
           calLink={DEMO_CAL_LINK}
           // Its own namespace. Sharing 'advisory-growth-call' risks the two
