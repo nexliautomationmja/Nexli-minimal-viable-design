@@ -77,6 +77,25 @@ export interface QualifierConfig {
   nextPath: Partial<Record<FunnelPath, string>>;
   /** This funnel's qualifier page, for the CAPI event_source_url fallback. */
   sourcePath: string;
+  /**
+   * Replaces FUNNEL_PATH_TAG for the listed outcomes.
+   *
+   * FUNNEL_PATH_TAG maps a funnel path to one tag globally, which works
+   * while one funnel owns each path. The Accelerator funnel also routes
+   * its qualified firms down 'agency' — deliberately, so every booking
+   * and reminder workflow is reused — but its UNQUALIFIED firms must not
+   * get 'advisory not a fit'. That tag drives the sequence selling the
+   * $97 guide, and an Accelerator lead has just been given that guide
+   * free. Being sold something you were handed ten minutes ago is the
+   * kind of thing people remember.
+   *
+   * So the override is per-path, not per-funnel: Accelerator passes a
+   * replacement for 'not-a-fit' only and inherits 'agency pitch'.
+   *
+   * Undefined on the advisory and demo funnels, which keeps their
+   * behaviour bit-for-bit unchanged.
+   */
+  pathTagOverride?: Partial<Record<FunnelPath, string>>;
 }
 
 export async function recordQualification(req: NextRequest, cfg: QualifierConfig) {
@@ -135,6 +154,9 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
       // on the demo funnel must not disqualify anyone.
       !(answers.budget !== null && DISQUALIFYING_BUDGETS.includes(answers.budget));
     const path: FunnelPath = qualified ? cfg.qualifiedPath : cfg.unqualifiedPath;
+    // Resolved once: the contact tags and the webhook payload must agree,
+    // and they are written three hundred lines apart.
+    const pathTag = cfg.pathTagOverride?.[path] ?? FUNNEL_PATH_TAG[path];
 
     const db = getDb();
     let lead: typeof leads.$inferSelect | null = null;
@@ -211,7 +233,13 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
             annualRevenue: answers.annualRevenue,
             taxSavings: answers.taxSavings,
             taxSavingsTag: answers.taxSavingsTag,
-            budget: answers.budget,
+            // Only when this funnel asked. The Accelerator qualifier has
+            // no budget question, so answers.budget is null for it — and
+            // writing that null would wipe the answer a returning lead
+            // gave the advisory funnel. That answer is the reason
+            // lib/advisory-fit.ts can tell someone WHY they were turned
+            // away, and it is the record that a firm said no to $9,997.
+            ...(answers.budget !== null ? { budget: answers.budget } : {}),
             leadScore: scoring.classification,
             disqualifyReason:
               scoring.classification === "disqualified" ? scoring.reason : null,
@@ -264,7 +292,7 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
         firmName: lead.firmName,
         websiteUrl: lead.websiteUrl,
         source: cfg.ghlSource,
-        tags: [...cfg.baseTags, FUNNEL_PATH_TAG[path]],
+        tags: [...cfg.baseTags, pathTag],
         // ghl-sync removes after adding, so the contact is never momentarily
         // untagged between the two calls.
         removeTags: cfg.removeTags,
@@ -362,7 +390,7 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           source: cfg.webhookSource,
-          tag: FUNNEL_PATH_TAG[path],
+          tag: pathTag,
           funnel_path: path,
           qualified,
           lead_id: leadId,

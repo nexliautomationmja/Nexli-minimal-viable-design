@@ -1,0 +1,32 @@
+Subject: You did not pick a time
+
+--- EMAIL ---
+
+Hello {{inboundWebhookRequest.firstName}}
+
+You cleared the bar and then closed the tab, which usually means
+something more urgent happened rather than you deciding against it.
+
+The page is still there, and so is the calendar:
+
+{{inboundWebhookRequest.resume_url}}
+
+Nothing to fill in. Your answers are already attached, so picking a
+time takes about twenty seconds.
+
+45 minutes, camera on, no slide deck. If your firm is not a fit I will
+say so on the call rather than chase you for a month afterwards.
+
+- Marcel
+
+
+--- SMS ---
+
+{{inboundWebhookRequest.firstName}}, you cleared the bar but did not
+pick a time.
+
+{{inboundWebhookRequest.resume_url}}
+
+20 seconds - your answers are already attached.
+
+Reply STOP to opt out.

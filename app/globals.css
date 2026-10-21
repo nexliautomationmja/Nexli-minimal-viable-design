@@ -116,8 +116,31 @@ html {
 /* WCAG 2.2.2: a conic gradient rotating forever is exactly the motion this
    is for. Holding it still costs the design nothing — the opaque interior
    and the blurred orbs carry the card. */
+/* The gentle bob under an icon chip.
+   A named class, for the same reason .rim-spin is one: the reduced-motion
+   rule below can stop every instance at once, and an arbitrary-value
+   Tailwind class cannot be targeted.
+   Two copies of this effect already exist and NEITHER is guarded -
+   Services.tsx builds it from eight framer-motion transitions, and
+   ProfitCalculator declares `pc-float` in an inline <style> that nothing
+   else can reach. New floats should use this. */
+@keyframes icon-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.icon-float {
+  animation: icon-float 3s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .rim-spin {
+  .rim-spin,
+  .icon-float {
     animation: none;
   }
 }

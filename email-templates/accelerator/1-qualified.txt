@@ -1,0 +1,26 @@
+Subject: Your Accelerator - and the version where you do none of it
+
+
+Hello {{inboundWebhookRequest.firstName}}
+
+Your Book of Business Accelerator is attached. Start on page three: pull
+your twenty highest-income clients, and work the list.
+
+It works. It also means twenty conversations you have to go and have,
+one at a time, between everything else you are doing.
+
+There is a version where we do that part instead.
+
+We build the ads, the funnel and the qualifying, and business owners
+land on your calendar already knowing that tax planning costs $15,000 to
+$55,000. You do the planning. We do every single thing that gets them in
+front of you.
+
+Your firm cleared the bar for it. Here is the walkthrough and a calendar
+if you want to talk it through:
+
+{{inboundWebhookRequest.resume_url}}
+
+Either way, read the guide. It is yours.
+
+- Marcel

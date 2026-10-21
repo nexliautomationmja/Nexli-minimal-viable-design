@@ -1,0 +1,18 @@
+Subject: You're booked — one thing before we talk
+
+
+Hello, {{inboundWebhookRequest.firstName}}
+
+You're on my calendar for {{contact.booking_start}}
+
+Before we speak, have a look at this:
+
+https://www.nexli.net/booking-confirmed-b
+
+It's the website we'd build you, the client portal, the ad setup, and
+what the whole thing costs. Three minutes, and it means we don't spend
+your call on me explaining things you could have read.
+
+Come with the only question left: when do we start.
+
+— Marcel

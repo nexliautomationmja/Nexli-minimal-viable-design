@@ -1,0 +1,14 @@
+Subject: We're on in 30 minutes
+
+
+Hello, {{inboundWebhookRequest.firstName}}
+
+We're on in about half an hour.
+
+The Zoom link is in your calendar invite and in the confirmation email
+from when you booked. Either one works — worth opening it a minute or
+two early.
+
+See you shortly.
+
+— Marcel

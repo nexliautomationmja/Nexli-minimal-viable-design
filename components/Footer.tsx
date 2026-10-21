@@ -25,7 +25,12 @@ const Footer: React.FC = () => {
     pathname === '/demo' ||
     pathname.startsWith('/demo/') ||
     pathname === '/advisory-pricing' ||
-    pathname.startsWith('/advisory-pricing/')
+    pathname.startsWith('/advisory-pricing/') ||
+    // The Accelerator funnel. Same reasoning as the navbar: the landing
+    // page is crawlable, but a sitemap of eleven other pages under a free
+    // offer is eleven ways to not fill in the form.
+    pathname === '/accelerator' ||
+    pathname.startsWith('/accelerator/')
   )
     return null;
 

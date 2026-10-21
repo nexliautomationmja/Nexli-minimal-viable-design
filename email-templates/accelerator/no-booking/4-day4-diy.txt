@@ -1,0 +1,43 @@
+Subject: You can do it yourself. Here is what that costs.
+
+--- EMAIL ---
+
+Hello {{inboundWebhookRequest.firstName}}
+
+You have the Accelerator. It works. I would rather say that plainly
+than pretend otherwise to sell you something.
+
+Here is what doing it yourself actually involves.
+
+Twenty clients, pulled from returns you have to go back through.
+Twenty conversations you have to initiate, price and hold your nerve
+in. Each one scheduled around a week that is already full. And when
+you stop - because something urgent lands in March, as it always does
+- the pipeline stops with you, because you ARE the pipeline.
+
+That is not a criticism of the method. That is the method. It asks for
+the one thing you have least of.
+
+The other version asks for none of it. We build the ads, the funnel
+and the qualifying, it runs whether you are at your desk or not, and
+the conversations arrive already warm.
+
+Same outcome. The difference is who does the twenty conversations and
+whether it still happens in your busiest month.
+
+{{inboundWebhookRequest.resume_url}}
+
+- Marcel
+
+
+--- SMS ---
+
+{{inboundWebhookRequest.firstName}}, the guide works. It also asks for
+20 conversations you have to go and start, in a week that is already
+full.
+
+The other version asks for none of them.
+
+{{inboundWebhookRequest.resume_url}}
+
+Reply STOP to opt out.

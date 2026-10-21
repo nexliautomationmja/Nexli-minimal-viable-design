@@ -20,6 +20,10 @@ import { getDb } from '@/lib/db';
 import { leads } from '@/lib/leads-schema';
 import { requireAdvisoryLead } from '@/lib/advisory-session';
 import { reasonFor } from '@/lib/advisory-fit';
+import {
+  ACCELERATOR_FORM_SOURCE,
+  ACCELERATOR_SENDING_PATH,
+} from '@/lib/accelerator-config';
 import { ADVISORY_PRODUCT_NAME, ADVISORY_THANK_YOU_PATH } from '@/lib/advisory-config';
 import { CANVAS } from '@/components/funnel/primitives';
 import AdvisoryOfferClient from './offer-client';
@@ -53,6 +57,7 @@ export default async function AdvisoryOfferPage({
           decisionRole: leads.decisionRole,
           annualRevenue: leads.annualRevenue,
           budget: leads.budget,
+          formSource: leads.formSource,
         })
         .from(leads)
         .where(eq(leads.id, leadId))
@@ -62,6 +67,20 @@ export default async function AdvisoryOfferPage({
   // Already bought it — send them to what they paid for rather than selling
   // it to them again.
   if (lead?.advisoryPurchasedAt) redirect(ADVISORY_THANK_YOU_PATH);
+
+  // Came in through the free funnel — do not sell them the Accelerator.
+  //
+  // This page opens by naming their rejection (reasonFor, below) and then
+  // asks $97 for the Book of Business Accelerator. An /accelerator lead
+  // who missed the bar is having that exact product emailed to them, free,
+  // as this renders. Reaching here is a stray link, an old email or the
+  // back button, and the result would read as a bait-and-switch.
+  //
+  // formSource is the right test precisely BECAUSE lead-upsert writes it
+  // on INSERT only: it records the funnel a lead was BORN in, which does
+  // not change when they later wander. A firm that started on the advisory
+  // funnel keeps 'advisory-qualifier' and still sees this page, correctly.
+  if (lead?.formSource === ACCELERATOR_FORM_SOURCE) redirect(ACCELERATOR_SENDING_PATH);
 
   // Only when the qualifier actually said so. Someone who arrives from an
   // email without having answered gets the plain sales page, not a rejection

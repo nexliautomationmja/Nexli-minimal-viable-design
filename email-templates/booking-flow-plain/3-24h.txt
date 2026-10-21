@@ -1,0 +1,23 @@
+Subject: Do you like the clients you have right now?
+
+
+Hello, {{inboundWebhookRequest.firstName}}
+
+One question before tomorrow, and it's worth answering honestly to
+yourself rather than to me.
+
+Do you actually like the clients you have right now?
+
+The ones who argue about an $800 invoice. The ones who send a shoebox in
+April and want it back by Friday. The ones who leave for someone fifty
+dollars cheaper.
+
+You're good at this work. The model is what's broken — compliance pays
+once a year and competes on price. Planning pays what it's worth.
+
+That's what we're talking about tomorrow at {{contact.booking_start}}.
+If you want the five-minute version first, it's all here:
+
+https://www.nexli.net/booking-confirmed-b
+
+— Marcel

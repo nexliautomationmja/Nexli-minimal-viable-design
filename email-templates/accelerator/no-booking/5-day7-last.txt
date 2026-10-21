@@ -1,0 +1,43 @@
+Subject: January is decided in October
+
+--- EMAIL ---
+
+Hello {{inboundWebhookRequest.firstName}}
+
+Last one from me about this.
+
+Not a deadline I invented - just how the arithmetic falls. The build
+takes up to 21 days: the website, the portal, the funnel, the ad
+account and the automations. Then the campaigns have to actually run
+before anyone books anything with you. And planning conversations
+happen before year end, not in April when the only honest answer is
+"too late".
+
+A firm that starts in late autumn has leads in the diary for the one
+quarter that matters. A firm that starts in February has built a very
+good system for next year.
+
+That is the whole of it. I have written to you a few times about one
+45-minute call and I will stop here.
+
+The link stays live for a while yet. If the timing is wrong, it is
+wrong - that is a perfectly good reason, and I would rather hear it
+next year than keep writing to you this one.
+
+{{inboundWebhookRequest.resume_url}}
+
+Either way, good luck this season.
+
+- Marcel
+
+
+--- SMS ---
+
+{{inboundWebhookRequest.firstName}}, the build takes 21 days and then
+the campaigns have to run. Planning happens before year end, not in
+April.
+
+Last one from me:
+{{inboundWebhookRequest.resume_url}}
+
+Reply STOP to opt out.

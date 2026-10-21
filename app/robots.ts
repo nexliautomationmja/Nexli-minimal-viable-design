@@ -17,6 +17,11 @@ const DISALLOW = [
   '/advisory-pricing/qualify',
   '/advisory-pricing/call',
   '/advisory-pricing/next-steps',
+  // Accelerator funnel inner steps. /accelerator itself stays crawlable —
+  // it is the ad destination and a legitimate free-resource page.
+  '/accelerator/qualify',
+  '/accelerator/next',
+  '/accelerator/sending',
 ];
 
 /**

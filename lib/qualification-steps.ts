@@ -285,6 +285,40 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
 
 export const ADVISORY_QUALIFICATION_STEP_COUNT = ADVISORY_QUALIFICATION_STEPS.length;
 
+/**
+ * The Accelerator funnel's five questions: the advisory list minus budget.
+ *
+ * DERIVED, NOT COPIED. A second literal array would drift — someone edits a
+ * question on one funnel, the other keeps the old wording, and two ad
+ * campaigns quietly start asking different things. Filtering the existing
+ * array means the keys, the option lists and the question text can only
+ * ever be identical.
+ *
+ * DROPPING BUDGET IS SAFE. recordQualification only gates on budget when it
+ * is non-null, and normalizeQualificationAnswers yields null for a step
+ * that was never asked. The demo funnel has always run through that same
+ * code path without a budget question.
+ *
+ * WHY BUDGET GOES AT ALL: nothing here costs anything. Asking a firm what
+ * it can spend, before handing it a free guide, is the fastest way to lose
+ * the lead this funnel exists to collect.
+ */
+const ACCELERATOR_HINTS: Partial<Record<QualificationStepKey, string>> = {
+  // The advisory hint says this decides "which of our two options actually
+  // fits your firm". There is only one thing on offer here.
+  annualRevenue: 'So we know which version of the playbook applies to you.',
+  // And this is what they are actually getting.
+  contact: 'Where we send the Accelerator. It arrives by email in a few minutes.',
+};
+
+export const ACCELERATOR_QUALIFICATION_STEPS: QualificationStepDef[] =
+  ADVISORY_QUALIFICATION_STEPS.filter((step) => step.key !== 'budget').map((step) => {
+    const hint = ACCELERATOR_HINTS[step.key];
+    return hint ? { ...step, foundationHint: hint } : step;
+  });
+
+export const ACCELERATOR_QUALIFICATION_STEP_COUNT = ACCELERATOR_QUALIFICATION_STEPS.length;
+
 function pickOption(value: unknown, options: QualificationOption[]): string | null {
   return typeof value === 'string' && options.some((o) => o.value === value) ? value : null;
 }
