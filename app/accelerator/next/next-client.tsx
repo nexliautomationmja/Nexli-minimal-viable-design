@@ -96,8 +96,7 @@ export default function AcceleratorNextClient({
             style={OUTFIT}
           >
             We keep your calendar full of people paying{' '}
-            <span style={{ color: '#4ade80' }}>six and seven figures</span> in
-            taxes.
+            <span style={{ color: '#4ade80' }}>6 &amp; 7 figures</span> in taxes.
           </h2>
           <p
             className="mt-4 text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
