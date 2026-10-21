@@ -95,7 +95,9 @@ export default function AcceleratorNextClient({
             className="text-2xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.08] tracking-tight text-white"
             style={OUTFIT}
           >
-            Or we keep your calendar full of them.
+            We keep your calendar full of people paying{' '}
+            <span style={{ color: '#4ade80' }}>six and seven figures</span> in
+            taxes.
           </h2>
           <p
             className="mt-4 text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
@@ -123,18 +125,23 @@ export default function AcceleratorNextClient({
             ))}
           </div>
 
+          {/* The whole argument in one line. A firm handing the IRS
+              seven figures does not experience $15,000 as a cost, and
+              that asymmetry — not our fee, not our features — is why
+              these engagements close. Say it in their client's terms. */}
           <p
-            className="mt-8 text-lg sm:text-xl font-black leading-snug text-white max-w-xl mx-auto"
+            className="mt-8 text-lg sm:text-2xl font-black leading-snug text-white max-w-2xl mx-auto"
             style={OUTFIT}
           >
-            Business owners who pay{' '}
+            People like that would pay{' '}
             <span style={{ color: '#4ade80' }}>
-              {usd(AGENCY_ENGAGEMENT_LOW)} to {usd(AGENCY_ENGAGEMENT_HIGH)}
+              {usd(AGENCY_ENGAGEMENT_LOW)} to {usd(AGENCY_ENGAGEMENT_HIGH)}+
             </span>{' '}
-            for tax planning, on your calendar.
+            for tax planning without blinking. Next to what they hand the IRS,
+            it is a rounding error.
           </p>
-          <p className="mt-3 text-sm sm:text-base text-white/65">
-            Pick a time below and I will show you exactly how it is built.
+          <p className="mt-4 text-base sm:text-lg font-bold text-white">
+            Pick a time below. I will show you exactly how it is built.
           </p>
         </div>
       </section>
