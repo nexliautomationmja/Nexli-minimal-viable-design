@@ -114,4 +114,22 @@ export const AGENCY_LAUNCH_DAYS = 14;
 export const AGENCY_LAUNCH_DAYS_MIN = 10;
 export const AGENCY_LAUNCH_DAYS_MAX = 21;
 
+/**
+ * How many firms we can take on at once.
+ *
+ * A real delivery constraint, not a countdown: every build is ads written
+ * and produced, a qualifier configured and a calendar wired, and the number
+ * of those that can run concurrently is small. AGENCY_LAUNCH_DAYS_MAX is 21
+ * days of work per firm — that is the ceiling this number comes from.
+ *
+ * IT IS A CLAIM ON A PAGE, SO IT HAS TO BE TRUE. Edit it when capacity
+ * changes. A scarcity badge that reads the same number for a year is the
+ * kind of thing a CPA notices, and this audience is paid to notice.
+ *
+ * One constant because two pages show it now - the VSL funnel and
+ * /accelerator/next - and two hardcoded threes drift the moment one is
+ * updated.
+ */
+export const AGENCY_FIRM_SPOTS = 3;
+
 export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;

@@ -17,9 +17,18 @@ import React from 'react';
  * Absolute puts it at the top of the page, where it scrolls away after the
  * hero. The pages that use it all give <main> enough top padding (pt-24)
  * that it never overlaps their own first element.
+ *
+ * `belowBanner` drops it clear of a DeadlineBanner, which is a full-width
+ * in-flow bar at the very top of the page - at top-6 the logo lands on top
+ * of it. Same two values VslFunnel's StaticLogo and the UrgencyPill use, so
+ * the three stay in line.
  */
-const FunnelLogo: React.FC = () => (
-  <div className="absolute md:fixed top-6 left-6 md:top-8 md:left-8 z-[110]">
+const FunnelLogo: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }) => (
+  <div
+    className={`absolute md:fixed left-6 md:left-8 z-[110] ${
+      belowBanner ? 'top-[4.5rem] md:top-[5.25rem]' : 'top-6 md:top-8'
+    }`}
+  >
     <div
       className="flex items-center gap-2 backdrop-blur-md px-3 py-2 md:px-4 md:py-2 rounded-full border"
       style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.05)' }}

@@ -20,6 +20,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { eq } from 'drizzle-orm';
 import FunnelLogo from '@/components/FunnelLogo';
+import UrgencyPill from '@/components/funnel/UrgencyPill';
+import { DeadlineBanner } from '@/components/advisory/DeadlineUrgency';
 import { getDb } from '@/lib/db';
 import { leads } from '@/lib/leads-schema';
 import { DEMO_COOKIE, readDemoLead } from '@/lib/demo-session';
@@ -89,12 +91,33 @@ export default async function AcceleratorNextPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#0a0f1c' }}>
-      <FunnelLogo />
+      {/* The same bar the advisory VSL carries, and the same component -
+          not a copy of the sentence. December 31 is the one real deadline
+          in this business and it applies to a firm reading this page for
+          exactly the reason it applies there: planning sold in November
+          lands on April's return, planning sold in February cannot.
+
+          In flow at the very top, so the logo and the capacity pill both
+          take belowBanner to clear it. Out of season it renders the
+          sentence without a day count rather than disappearing. */}
+      <DeadlineBanner />
+      <FunnelLogo belowBanner />
+      {/* Capacity, top-right, three seconds after load. The delay is the
+          point: it arrives once they have read what the offer is, not as
+          a greeting. */}
+      <UrgencyPill belowBanner />
 
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[900px] h-[540px] rounded-full blur-[130px] bg-emerald-500/10" />
       </div>
 
+      {/* pt-20 is NOT trimmed to pay for the banner's height. The banner
+          is in flow, but the logo and the capacity pill are FIXED, and
+          belowBanner drops both to roughly 110px from the top of the
+          screen. Reclaiming the banner height here pulled the "On its way"
+          badge up into that row, where it collided with the pill at 390px.
+          The first in-flow element has to clear the fixed chrome, not the
+          banner. */}
       <section className="relative z-10 px-4 sm:px-6 pt-20 pb-4 text-center">
         <div
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-4"
