@@ -24,11 +24,14 @@ import { useCallback } from 'react';
 import MuxPlayer from '@mux/mux-player-react';
 import InlineCalEmbed from '@/components/InlineCalEmbed';
 import { RimCard, OUTFIT } from '@/components/funnel/primitives';
+import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW } from '@/lib/agency-offer';
 import { BOOKING_CONFIRMED_B_PATH, DEMO_CAL_LINK } from '@/lib/demo-config';
 import {
   ACCELERATOR_VSL_VIDEO_PLAYBACK_ID,
   ACCELERATOR_VSL_VIDEO_TITLE,
 } from '@/lib/accelerator-config';
+
+const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 
 export interface AcceleratorNextClientProps {
   fullName: string;
@@ -82,21 +85,56 @@ export default function AcceleratorNextClient({
           />
         </RimCard>
 
-        <div className="mt-8 text-center">
+        {/* The whole reason this page holds a qualified firm for ten
+            minutes. The guide is work they have to go and do; this is the
+            same outcome with the work removed, and it has to be concrete
+            or it reads as a vague upsell. Three things we do, then the
+            number their client pays THEM, then the calendar. */}
+        <div className="mt-9 text-center">
           <h2
-            className="text-xl sm:text-2xl md:text-3xl font-black leading-[1.1] tracking-tight text-white"
+            className="text-2xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.08] tracking-tight text-white"
             style={OUTFIT}
           >
-            Or we do the whole thing for you.
+            Or we keep your calendar full of them.
           </h2>
           <p
-            className="mt-3 text-sm sm:text-base leading-relaxed max-w-xl mx-auto"
-            style={{ color: 'rgba(255,255,255,0.65)' }}
+            className="mt-4 text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
+            style={{ color: 'rgba(255,255,255,0.7)' }}
           >
-            The guide works. It also means twenty conversations you have to go
-            and have. If you would rather those clients arrived already knowing
-            what planning costs, that is what we build &mdash; pick a time below
-            and we will walk you through it.
+            Consistent lead flow, done for you end to end. You do the planning.
+            We do every single thing that gets them in front of you.
+          </p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3 text-left">
+            {[
+              ['The ads', 'Written, produced and run on Meta. You never go on camera.'],
+              ['The qualifying', 'Sorted before they reach you, so you are not on calls with tyre-kickers.'],
+              ['Your calendar', 'They book straight onto it, already knowing what planning costs.'],
+            ].map(([title, body]) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4"
+              >
+                <p className="text-sm font-black text-white" style={OUTFIT}>
+                  {title}
+                </p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-white/60">{body}</p>
+              </div>
+            ))}
+          </div>
+
+          <p
+            className="mt-8 text-lg sm:text-xl font-black leading-snug text-white max-w-xl mx-auto"
+            style={OUTFIT}
+          >
+            Business owners who pay{' '}
+            <span style={{ color: '#4ade80' }}>
+              {usd(AGENCY_ENGAGEMENT_LOW)} to {usd(AGENCY_ENGAGEMENT_HIGH)}
+            </span>{' '}
+            for tax planning, on your calendar.
+          </p>
+          <p className="mt-3 text-sm sm:text-base text-white/65">
+            Pick a time below and I will show you exactly how it is built.
           </p>
         </div>
       </section>

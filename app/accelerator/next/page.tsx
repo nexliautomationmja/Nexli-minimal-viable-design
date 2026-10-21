@@ -120,8 +120,8 @@ export default async function AcceleratorNextPage() {
           style={{ color: 'rgba(255,255,255,0.65)' }}
         >
           Give it about {ACCELERATOR_DELIVERY_MINUTES} minutes to land. While you
-          wait &mdash; there is a version of this where you do not do any of it
-          yourself.
+          wait &mdash; there is a version of this where we bring you the clients
+          and you never do any of it yourself.
         </p>
 
         {/* NOT DeliveryBlock. That component hardcodes "it lands in the
