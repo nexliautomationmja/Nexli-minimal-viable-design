@@ -1,0 +1,25 @@
+Subject: Your Book of Business Accelerator (attached)
+
+
+Hello {{inboundWebhookRequest.firstName}}
+
+Your Book of Business Accelerator is attached. Free, no catch, nothing
+to click.
+
+Start on page three. Pull your twenty highest-income clients - the ones
+whose returns you are already filing - and work that list. Four
+planning engagements out of twenty is sixty thousand dollars from people
+who already have your mobile number.
+
+That is the whole play, and you do not need us for it.
+
+When you have landed that first $60,000, there is a conversation worth
+having. We run the other side of this: ads, funnel, qualifying, and
+business owners arriving on your calendar already knowing tax planning
+costs $15,000 to $55,000 an engagement. That only makes sense once the
+revenue is there to put behind it - which is exactly what the guide is
+for.
+
+Work the book first. Then come and find me.
+
+- Marcel
