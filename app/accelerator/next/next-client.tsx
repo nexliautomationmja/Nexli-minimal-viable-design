@@ -92,7 +92,7 @@ export default function AcceleratorNextClient({
             read as a glitch rather than a flourish. */}
         <div className="mb-5 text-center">
           <h2
-            className="text-2xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.08] tracking-tight text-balance text-white"
+            className="text-xl sm:text-3xl md:text-[2.5rem] font-black leading-[1.2] sm:leading-[1.08] tracking-tight text-balance text-white"
             style={OUTFIT}
           >
             We keep your calendar full of people paying{' '}
@@ -105,7 +105,7 @@ export default function AcceleratorNextClient({
               close. Said in their client's terms, under the headline it
               is evidence for. */}
           <p
-            className="mt-3 text-base sm:text-lg leading-snug max-w-xl mx-auto"
+            className="mt-2.5 text-[15px] sm:text-lg leading-snug max-w-xl mx-auto"
             style={{ color: 'rgba(255,255,255,0.75)' }}
           >
             People like that would pay{' '}
