@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { formatBookingStart } from "@/lib/booking-time";
 import { and, eq } from "drizzle-orm";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getDb } from "@/lib/db";
@@ -37,6 +38,15 @@ export async function POST(req: NextRequest) {
     const eventId = typeof body.event_id === "string" ? body.event_id.slice(0, 100) : null;
     const bookingUid = typeof body.booking_uid === "string" ? body.booking_uid.slice(0, 200) : "";
     const startTime = typeof body.start_time === "string" ? body.start_time.slice(0, 100) : "";
+    // The attendee's IANA zone, captured in their browser at booking time.
+    // Untrusted, so formatBookingStart validates it and falls back to
+    // Eastern rather than throwing.
+    const attendeeTimezone =
+      typeof body.attendee_timezone === "string" ? body.attendee_timezone.slice(0, 64) : "";
+    // Cal's ISO instant is kept as-is for GHL's date filters and wait steps;
+    // this is the one that goes in an email. '' when there is no usable
+    // timestamp, so a template can fall back to the raw value.
+    const startTimeDisplay = formatBookingStart(startTime, attendeeTimezone);
 
     if (!isCheckoutSessionId(sessionId)) {
       return NextResponse.json({ error: "Invalid session." }, { status: 400 });
@@ -125,6 +135,10 @@ export async function POST(req: NextRequest) {
           product: FOUNDATION_PRODUCT_NAME,
           booking_uid: bookingUid,
           booking_start: startTime,
+          // Readable, in the attendee's own zone and always naming it.
+          // Use THIS one in email and SMS templates; booking_start
+          // stays machine-readable for GHL's date logic.
+          booking_start_display: startTimeDisplay,
           stripe_session_id: session.id,
           submitted_at: new Date().toISOString(),
         }),
