@@ -29,6 +29,7 @@ import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW } from '@/lib/agency-offe
 import { BOOKING_CONFIRMED_B_PATH, DEMO_CAL_LINK } from '@/lib/demo-config';
 import {
   ACCELERATOR_VSL_VIDEO_PLAYBACK_ID,
+  ACCELERATOR_VSL_VIDEO_POSTER_TIME,
   ACCELERATOR_VSL_VIDEO_TITLE,
 } from '@/lib/accelerator-config';
 
@@ -139,9 +140,10 @@ export default function AcceleratorNextClient({
           <MuxPlayer
             playbackId={ACCELERATOR_VSL_VIDEO_PLAYBACK_ID}
             streamType="on-demand"
-            // Mux returns a mid-asset frame when no time is given, which on
-            // these cuts is a caption mid-sentence. 0 is the clean open.
-            thumbnailTime={0}
+            // Mux returns a mid-asset frame when no time is given, so a
+            // value is always required. Which one, and why it is not 0, is
+            // documented beside the constant.
+            thumbnailTime={ACCELERATOR_VSL_VIDEO_POSTER_TIME}
             metadata={{ video_title: ACCELERATOR_VSL_VIDEO_TITLE }}
             accentColor="#16a34a"
             // No radius of its own: the wrapper clips it. display:block

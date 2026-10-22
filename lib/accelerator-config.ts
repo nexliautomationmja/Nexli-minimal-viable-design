@@ -23,7 +23,6 @@
 // the file immediately would empty the page; the wait is what keeps a
 // qualified firm watching the VSL. Do not add an on-page download here.
 // ---------------------------------------------------------------------------
-import { ADVISORY_VSL_VIDEO_PLAYBACK_ID } from './advisory-config';
 
 // ── Paths ─────────────────────────────────────────────────────────────────
 export const ACCELERATOR_PATH = '/accelerator';
@@ -62,19 +61,36 @@ export const TAG_ACCELERATOR_FREE = 'accelerator free lead';
 // ── The VSL on /accelerator/next ──────────────────────────────────────────
 
 /**
- * PLACEHOLDER. Currently the advisory VSL.
- *
- * /accelerator/next is a different pitch — "you have the guide, and you can
- * do this yourself; here is what it looks like when we do it for you" —
- * spoken to someone who has not been shown a price. The advisory cut opens
- * on a different premise. Swap this the moment Marcel supplies a playback
- * id; it is the one thing on that page written for the wrong audience.
+ * The Accelerator cut. This page held the ADVISORY video until now, which
+ * opens on a premise its audience has never heard — it addresses someone
+ * already quoted $9,997, and a firm here has not been shown a price at all.
  *
  * PLAYBACK id, not the asset id: https://stream.mux.com/<id>.m3u8 returns
- * 200 for a playback id and 400 for an asset id.
+ * 200 for a playback id and 400 for an asset id. Verified 200, as is
+ * https://image.mux.com/<id>/thumbnail.jpg.
  */
-export const ACCELERATOR_VSL_VIDEO_PLAYBACK_ID = ADVISORY_VSL_VIDEO_PLAYBACK_ID;
+export const ACCELERATOR_VSL_VIDEO_PLAYBACK_ID =
+  'eDzBFPO0188wQDYCsxxUzG7hLz7enGvIBAw97EFY9oU00';
 export const ACCELERATOR_VSL_VIDEO_TITLE = 'Accelerator — Done For You';
+
+/**
+ * Which second the poster frame comes from.
+ *
+ * NOT 0, which is the house default everywhere else. Mux serves a mid-asset
+ * frame when given no time at all, so a value is always required; the
+ * question is only which one.
+ *
+ * This cut is captioned from the first frame to the last, so there is no
+ * text-free frame to find and the choice is between captions. At 0 she is
+ * mid-laugh with her eyes shut under "HEY GIVE YOUR". At 2.5 she is looking
+ * down the lens, composed, and the burned-in caption reads "ACCELERATOR" —
+ * which is the one word worth having frozen on a page about to ask someone
+ * to press play.
+ *
+ * Preview any other frame before changing this:
+ * https://image.mux.com/<playback id>/thumbnail.jpg?time=2.5
+ */
+export const ACCELERATOR_VSL_VIDEO_POSTER_TIME = 2.5;
 
 /**
  * Roughly how long the GHL workflow waits before emailing the PDF.
