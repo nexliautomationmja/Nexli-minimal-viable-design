@@ -174,6 +174,38 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
         bookedRef.current = true;
 
         const data = e?.detail?.data ?? {};
+
+        /**
+         * The attendee's own IANA time zone, so the confirmation email can
+         * say "11:30 AM PST" to someone in California rather than the
+         * Eastern time our calendar runs on. Cal gives us an ISO instant in
+         * UTC and nothing else, and an instant with no zone is how people
+         * miss calls.
+         *
+         * Cal's payload shape for bookingSuccessful is not contractual and
+         * has moved between versions, so the attendee paths are tried and
+         * then abandoned in favour of the browser's own zone. That fallback
+         * is arguably the better source anyway: the person booking IS the
+         * attendee, this runs in their browser, and resolvedOptions() is
+         * exactly what Cal itself used to render the slots they just
+         * chose from.
+         *
+         * Wrapped because resolvedOptions can throw in a locked-down
+         * browser, and a missing label must never cost us the booking
+         * record.
+         */
+        let attendeeTimezone = '';
+        try {
+          attendeeTimezone =
+            data.booking?.attendees?.[0]?.timeZone ||
+            data.attendees?.[0]?.timeZone ||
+            data.timeZone ||
+            Intl.DateTimeFormat().resolvedOptions().timeZone ||
+            '';
+        } catch {
+          attendeeTimezone = '';
+        }
+
         const scheduleEventId = generateEventId();
         trackMetaEvent(
           'Schedule',
@@ -195,6 +227,7 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
             event_id: scheduleEventId,
             booking_uid: data.uid ?? data.booking?.uid ?? '',
             start_time: data.date ?? data.booking?.startTime ?? '',
+            attendee_timezone: attendeeTimezone,
           }),
         }).catch(() => {});
 
