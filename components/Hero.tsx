@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, TrendingUp, ShieldCheck, Receipt, Users, Droplets } from 'lucide-react';
+import { ArrowRight, TrendingUp, Receipt, Users, Droplets } from 'lucide-react';
 import { useBooking } from './QualificationProvider';
 
 const Hero: React.FC = () => {
@@ -111,8 +111,15 @@ const Hero: React.FC = () => {
           first thing on the page, which is the worst place to be wrong.
           "Cancel Anytime" went too: the engagement has a six-month minimum
           initial term, so notice given in month two does not end the billing
-          until month six. All three of these are now things we can stand
-          behind without a footnote.
+          until month six. What is left is what we can stand behind without a
+          footnote.
+
+          TWO, NOT THREE. "Built In 10-14 Days" was removed - it is a delivery
+          promise made before anyone has told us what they already have, and
+          lib/agency-offer puts the outer edge at AGENCY_LAUNCH_DAYS_MAX = 21
+          anyway, which is also what the engagement letter says. A range on
+          the homepage that the signed document contradicts is the one kind
+          of mismatch that can actually be held against the firm.
         */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -122,7 +129,6 @@ const Hero: React.FC = () => {
         >
           {[
             { Icon: Receipt, text: 'No Hidden Fees' },
-            { Icon: ShieldCheck, text: 'Built In 10-14 Days' },
             { Icon: Users, text: 'US-Based CPA Firms Only' },
           ].map((item) => (
             <span
