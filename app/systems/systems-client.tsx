@@ -7,14 +7,15 @@
 // app/better-clients/better-clients-client.tsx for why these are not one
 // shared component.
 //
-// THE HEADLINE CONCEDES BEFORE IT ARGUES. "You are not working too little"
-// is the half that makes the rest survivable: this reader works brutal
-// hours and knows it, and an opening line that reads as "try harder" or
-// "you are lazy" loses them in the first second. Agree with them, then move
-// the blame off effort and onto the absence of a system.
+// THE HEADLINE ATTACKS THE BEHAVIOUR, NOT THE PERSON. The alternative
+// drafted for this page opened "You Hate Your Firm", which is a guess
+// about the reader: a partner running a $1-5M practice can be proud of it
+// and frustrated by it at once, and the ones who do not hate it leave on
+// the first line. "Swinging blind" names what they are DOING - no data, no
+// metrics, running on instinct - which is the argument anyway.
 // ---------------------------------------------------------------------------
 
-import VslFunnel from '@/components/VslFunnel';
+import VslFunnel, { CHIP_GREEN } from '@/components/VslFunnel';
 import {
   SYSTEMS_VSL_PLAYBACK_ID,
   SYSTEMS_VSL_POSTER_TIME,
@@ -39,15 +40,27 @@ export default function SystemsVslClient({ ctaHref }: { ctaHref: string }) {
       // their belowBanner offset.
       deadlineUrgency={false}
       ctaHref={ctaHref}
+      // TWO ACCENTS, SAME LOGIC AS /better-clients: the page's own colour on
+      // the state they are stuck in, and the shared green on the money. Green
+      // means the same thing on every angle; violet is this page's problem
+      // colour the way red is Better Clients'.
+      //
+      // "Help you scale" rather than "will scale you". The difference is a
+      // promise of a specific financial outcome versus a description of what
+      // systems do, and this site does not make the first kind - the same
+      // reason the 10-14 day build chip came off the homepage and the PDF
+      // calls its own arithmetic an illustration.
+      //
+      // Title case, not the caps it was drafted in. Three lines of caps at
+      // hero size is a wall, and the other three angles are title case.
       headline={
         <>
-          You Are Not Working Too Little.{' '}
-          {/* Violet, not the red the other pages use. #a78bfa -> #7c3aed is the
-              violet already declared in VslFunnel's EYEBROW_TONES, so this is
-              the palette's purple rather than a new one. */}
+          Stop{' '}
           <span className="bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
-            You Are Working Without Systems
+            Swinging Blind
           </span>
+          . Implement Systems That Help You Scale to{' '}
+          <span style={{ color: CHIP_GREEN }}>$100K+ a Month in Profit</span>
         </>
       }
       // The McDonald's line earns its place: it is the fastest way to make
