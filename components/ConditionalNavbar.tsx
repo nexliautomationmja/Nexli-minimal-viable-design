@@ -26,6 +26,14 @@ export default function ConditionalNavbar() {
     // The advisory funnel, same exact-plus-prefix shape.
     pathname === '/advisory-pricing' ||
     pathname.startsWith('/advisory-pricing/') ||
+    // The belief-angle VSLs. Top-level routes so the ad URL is short, which
+    // is why they need naming here at all — their three siblings under
+    // /advisory-pricing/ are covered by the prefix above. THIS LIST AND
+    // FOOTER'S ARE SEPARATE AND HAVE DRIFTED BEFORE: a fourth angle has to
+    // be added to both.
+    pathname === '/better-clients' ||
+    pathname === '/systems' ||
+    pathname === '/acquisition' ||
     // The Accelerator funnel. The landing page is crawlable and the inner
     // steps are not, but that is a robots question — every page here is
     // still a funnel page, and a funnel page with the site nav on it is

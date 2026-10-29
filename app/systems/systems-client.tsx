@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------------------
 // The SYSTEMS cut of the advisory VSL.
 //
-// Near-copy of ../advisory-vsl-client by design; see the note in
-// ../better-clients/better-clients-client.tsx for why these are not one
+// Near-copy of app/advisory-pricing/advisory-vsl-client by design; see the note in
+// app/better-clients/better-clients-client.tsx for why these are not one
 // shared component.
 //
 // THE HEADLINE CONCEDES BEFORE IT ARGUES. "You are not working too little"
@@ -33,12 +33,19 @@ export default function SystemsVslClient({ ctaHref }: { ctaHref: string }) {
       metaChip
       showEyebrow={false}
       showFaq={false}
-      deadlineUrgency
+      // NO DEADLINE BANNER on the angle pages, unlike /advisory-pricing.
+      // Turning it off also moves the logo and the capacity pill back up to
+      // the top of the screen — VslFunnel passes this same flag through as
+      // their belowBanner offset.
+      deadlineUrgency={false}
       ctaHref={ctaHref}
       headline={
         <>
           You Are Not Working Too Little.{' '}
-          <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
+          {/* Violet, not the red the other pages use. #a78bfa -> #7c3aed is the
+              violet already declared in VslFunnel's EYEBROW_TONES, so this is
+              the palette's purple rather than a new one. */}
+          <span className="bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
             You Are Working Without Systems
           </span>
         </>

@@ -11,7 +11,8 @@
 // Same reasoning as /advisory-pricing/next-steps being called that rather
 // than /not-a-fit.
 //
-// Noindex and absent from the sitemap, like its two siblings.
+// Noindex and absent from the sitemap, like its two siblings — see the note
+// in app/better-clients/page.tsx for why.
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { VSL_ANGLE_ACQUISITION, qualifyPathForAngle } from '@/lib/advisory-config';
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
-    url: '/advisory-pricing/acquisition',
+    url: '/acquisition',
     type: 'website',
   },
 };

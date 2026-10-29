@@ -11,10 +11,12 @@
 // Google choose between four pages making the same offer is self-inflicted
 // duplicate content. They are deliberately absent from app/sitemap.ts too.
 //
-// Nested under /advisory-pricing/ on purpose: ConditionalNavbar and Footer
-// both suppress site chrome with a startsWith('/advisory-pricing/') check,
-// so a nested route gets that for free. A flat sibling would need both files
-// edited, and those two lists have already drifted apart once.
+// A TOP-LEVEL ROUTE, so the URL in the ad reads /better-clients rather than
+// /advisory-pricing/better-clients. That costs two registrations that nesting would
+// have given free: this path has to be added to BOTH ConditionalNavbar and
+// Footer, or the page ships with the site navbar and footer wrapped around a
+// funnel page. Those two lists are separate and have already drifted apart
+// once, so when a fourth angle is added, add it to both.
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { VSL_ANGLE_BETTER_CLIENTS, qualifyPathForAngle } from '@/lib/advisory-config';
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
-    url: '/advisory-pricing/better-clients',
+    url: '/better-clients',
     type: 'website',
   },
 };

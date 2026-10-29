@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------------------
 // The ACQUISITION cut of the advisory VSL.
 //
-// Near-copy of ../advisory-vsl-client by design; see the note in
-// ../better-clients/better-clients-client.tsx for why these are not one
+// Near-copy of app/advisory-pricing/advisory-vsl-client by design; see the note in
+// app/better-clients/better-clients-client.tsx for why these are not one
 // shared component.
 //
 // THE HEADLINE CREDITS REFERRALS BEFORE IT LIMITS THEM. "Referrals built
@@ -14,7 +14,7 @@
 // that they do not SCALE. That one is defensible.
 // ---------------------------------------------------------------------------
 
-import VslFunnel from '@/components/VslFunnel';
+import VslFunnel, { CHIP_GREEN } from '@/components/VslFunnel';
 import {
   ACQUISITION_VSL_PLAYBACK_ID,
   ACQUISITION_VSL_POSTER_TIME,
@@ -33,12 +33,20 @@ export default function AcquisitionVslClient({ ctaHref }: { ctaHref: string }) {
       metaChip
       showEyebrow={false}
       showFaq={false}
-      deadlineUrgency
+      // NO DEADLINE BANNER on the angle pages, unlike /advisory-pricing.
+      // Turning it off also moves the logo and the capacity pill back up to
+      // the top of the screen — VslFunnel passes this same flag through as
+      // their belowBanner offset.
+      deadlineUrgency={false}
       ctaHref={ctaHref}
       headline={
         <>
           Referrals Built Your Firm.{' '}
-          <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
+          {/* The Meta chip's own lime, imported rather than repeated. The chip
+              sits directly above this line saying the campaigns run on Meta,
+              and the colour is what ties the two together. Solid, not a
+              gradient: the chip is solid. */}
+          <span style={{ color: CHIP_GREEN }}>
             They Will Not Scale It
           </span>
         </>

@@ -514,7 +514,12 @@ const GoHighLevelLogo: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 /** Gatorade lemon-lime, for the hero chip. */
-const CHIP_GREEN = '#A3E635';
+/**
+ * The Meta chip's lime. Exported because /acquisition sets its headline to
+ * the same colour deliberately — the chip sits directly above it and the
+ * two are meant to read as one statement. A second literal would drift.
+ */
+export const CHIP_GREEN = '#A3E635';
 
 const StripeLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 468 222.5" fill="none" xmlns="http://www.w3.org/2000/svg">

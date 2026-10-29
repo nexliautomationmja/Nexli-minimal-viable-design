@@ -7,7 +7,7 @@
 // and moves nothing.
 //
 // Noindex and absent from the sitemap, like its two siblings — see the note
-// in ../better-clients/page.tsx for why.
+// in app/better-clients/page.tsx for why.
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { VSL_ANGLE_SYSTEMS, qualifyPathForAngle } from '@/lib/advisory-config';
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
-    url: '/advisory-pricing/systems',
+    url: '/systems',
     type: 'website',
   },
 };

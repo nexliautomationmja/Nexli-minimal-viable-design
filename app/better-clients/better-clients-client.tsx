@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 // The BETTER CLIENTS cut of the advisory VSL.
 //
-// A deliberate near-copy of ./../advisory-vsl-client. That file's own header
+// A deliberate near-copy of app/advisory-pricing/advisory-vsl-client. That file's own header
 // says not to collapse these into one shared component, and the reason holds
 // here: the whole point of four pages is that they diverge — first the
 // headline, then the video, then whatever a test says next. A shared
@@ -37,7 +37,11 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
       metaChip
       showEyebrow={false}
       showFaq={false}
-      deadlineUrgency
+      // NO DEADLINE BANNER on the angle pages, unlike /advisory-pricing.
+      // Turning it off also moves the logo and the capacity pill back up to
+      // the top of the screen — VslFunnel passes this same flag through as
+      // their belowBanner offset.
+      deadlineUrgency={false}
       ctaHref={ctaHref}
       // The belief: more leads is the answer. The turn: you are optimising
       // the wrong number. Keep the figure as AGENCY_ENGAGEMENT_LOW rather
