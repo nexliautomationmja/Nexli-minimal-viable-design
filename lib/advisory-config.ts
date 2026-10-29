@@ -124,6 +124,56 @@ export const ADVISORY_VSL_VIDEO_PLAYBACK_ID =
  */
 export const ADVISORY_VSL_VIDEO_TITLE = 'Daniela VSL - CPA Ads ($15K)';
 
+// ── The belief-angle VSLs ─────────────────────────────────────────────────
+//
+// Three siblings of /advisory-pricing, each arguing against a different
+// belief a firm owner already holds. Same page, same chrome, same qualifier:
+// only the headline, the subheading and eventually the video differ.
+//
+//   /advisory-pricing                  "I hired an agency and got trash leads"
+//   /advisory-pricing/better-clients   "I need more leads"
+//   /advisory-pricing/systems          "I need to grind harder"
+//   /advisory-pricing/acquisition      "referrals work better"
+//
+// ALL THREE PLAYBACK IDS BELOW ARE PLACEHOLDERS pointing at the advisory
+// cut. That cut argues the agency objection, so right now the Systems page
+// promises systems and plays a video about agencies. This is the same
+// mismatch /accelerator/next shipped with for weeks and it is tolerable only
+// because these pages are not taking traffic yet. Swap each one as its cut
+// is recorded; nothing else has to change.
+//
+// VERIFY A PLAYBACK ID BEFORE WIRING IT. https://stream.mux.com/<id>.m3u8 and
+// https://image.mux.com/<id>/thumbnail.jpg both return 200 for a playback id
+// and 400 for an asset id. Note the id never appears in the server HTML —
+// mux-player sets it as a DOM property on hydration — so curl cannot confirm
+// the page is using it. Check in a browser.
+
+export const BETTER_CLIENTS_VSL_PLAYBACK_ID = ADVISORY_VSL_VIDEO_PLAYBACK_ID;
+export const BETTER_CLIENTS_VSL_TITLE = 'Better Clients VSL';
+
+export const SYSTEMS_VSL_PLAYBACK_ID = ADVISORY_VSL_VIDEO_PLAYBACK_ID;
+export const SYSTEMS_VSL_TITLE = 'Systems VSL';
+
+export const ACQUISITION_VSL_PLAYBACK_ID = ADVISORY_VSL_VIDEO_PLAYBACK_ID;
+export const ACQUISITION_VSL_TITLE = 'Acquisition VSL';
+
+/**
+ * Which second each poster frame comes from.
+ *
+ * Separate from the ids because the frame is a property of the CUT, not of
+ * the page: when a real video arrives its best frame will not be the
+ * placeholder's. Mux serves a mid-asset frame when given no time at all, so
+ * a value is always required.
+ *
+ * 0 while these all share the advisory cut. Preview any other frame at
+ * https://image.mux.com/<playback id>/thumbnail.jpg?time=2.5 before changing
+ * one — these cuts are captioned throughout, so every frame has text on it
+ * and the choice is between captions, not away from them.
+ */
+export const BETTER_CLIENTS_VSL_POSTER_TIME = 0;
+export const SYSTEMS_VSL_POSTER_TIME = 0;
+export const ACQUISITION_VSL_POSTER_TIME = 0;
+
 /**
  * The VSL on the $97 offer page.
  *
@@ -166,6 +216,27 @@ export const ADVISORY_PATH = '/advisory-pricing';
 export const ADVISORY_OFFER_PATH = '/advisory-pricing/BOBA';
 export const ADVISORY_THANK_YOU_PATH = '/advisory-pricing/BOBA-thank-you';
 export const ADVISORY_QUALIFY_PATH = '/advisory-pricing/qualify';
+
+/**
+ * The `angle` each page appends to its CTA, and the only thing that carries
+ * which belief converted into GoHighLevel.
+ *
+ * Four pages share one qualifier, so form_source, the CAPI content_name and
+ * the GHL `source` field are identical across all of them. landing_page does
+ * discriminate, but lib/lead-upsert writes attribution columns on INSERT
+ * only — a returning lead keeps the landing_page from whichever page they
+ * saw first, forever. This param does not have that problem.
+ */
+export const VSL_ANGLE_AGENCY = 'agency';
+export const VSL_ANGLE_BETTER_CLIENTS = 'better-clients';
+export const VSL_ANGLE_SYSTEMS = 'systems';
+export const VSL_ANGLE_ACQUISITION = 'acquisition';
+
+/** `/advisory-pricing/qualify?angle=systems` */
+export function qualifyPathForAngle(angle: string): string {
+  return `${ADVISORY_QUALIFY_PATH}?angle=${encodeURIComponent(angle)}`;
+}
+
 export const ADVISORY_CALL_PATH = '/advisory-pricing/call';
 export const ADVISORY_NEXT_STEPS_PATH = '/advisory-pricing/next-steps';
 
