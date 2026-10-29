@@ -43,21 +43,27 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
       // their belowBanner offset.
       deadlineUrgency={false}
       ctaHref={ctaHref}
-      // The belief: more leads is the answer. The turn: you are optimising
-      // the wrong number. Keep the figure as AGENCY_ENGAGEMENT_LOW rather
-      // than a literal — it is the same $15,000 the video, the ROI section
-      // and the nurture emails all quote, and a hardcoded one here is how
-      // that set drifts apart.
+      // THE ORIGINAL BETTER CLIENTS COPY, at $15,000 rather than the $8,000
+      // the first cut said. This is the wording that ran on
+      // /vslfunnel-betterclients and outperformed everything else Marcel has
+      // advertised, so it is restored verbatim rather than rewritten — the
+      // only change is the figure.
+      //
+      // AGENCY_ENGAGEMENT_LOW, never a literal. It is the same $15,000 the
+      // re-recorded video says out loud, that the ROI section below computes
+      // from, and that the nurture emails quote. A hardcoded number here is
+      // how that set drifts apart, and the $8,000/$15,000 split between the
+      // two cuts is exactly what that drift looks like.
       headline={
         <>
-          You Do Not Need More Leads.{' '}
-          You Need Clients Who Can Pay{' '}
+          Stop Competing for the $800 Client.{' '}
+          Get Positioned for the{' '}
           <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-            {usd(AGENCY_ENGAGEMENT_LOW)}
+            {usd(AGENCY_ENGAGEMENT_LOW)} One
           </span>
         </>
       }
-      subheadline="Chasing volume is a race to the bottom: more $800 returns, thinner margins, no leverage. The firms pulling ahead stopped counting leads and started filtering for the ones who write five-figure cheques."
+      subheadline="Before you spend a dollar on ads, your firm needs the infrastructure that makes ads work. Most CPA firms skip this step — and waste thousands finding out the hard way."
     />
   );
 }
