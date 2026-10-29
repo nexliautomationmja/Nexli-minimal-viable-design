@@ -14,7 +14,7 @@
 // the ARGUMENT, and anything else that differs is an uncontrolled variable.
 // ---------------------------------------------------------------------------
 
-import VslFunnel from '@/components/VslFunnel';
+import VslFunnel, { CHIP_GREEN } from '@/components/VslFunnel';
 import { AGENCY_ENGAGEMENT_LOW, usd } from '@/lib/agency-offer';
 import {
   BETTER_CLIENTS_VSL_PLAYBACK_ID,
@@ -54,13 +54,27 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
       // from, and that the nurture emails quote. A hardcoded number here is
       // how that set drifts apart, and the $8,000/$15,000 split between the
       // two cuts is exactly what that drift looks like.
+      // TWO COLOURS, BECAUSE THE HEADLINE IS A COMPARISON. The whole
+      // sentence turns on $800 against $15,000, and colouring only one of
+      // them leaves the reader to find the other. Red is the number they
+      // are stuck with, green is the one on offer.
+      //
+      // #f87171 is red-400, the same red the gradient started on and the
+      // accent red used elsewhere on dark. CHIP_GREEN is the Meta chip's
+      // lime, imported from VslFunnel rather than repeated, so the chip
+      // sitting directly above the headline and the figure inside it are
+      // the same value.
+      //
+      // The nouns stay white. Colouring "Client" and "One" would spread the
+      // emphasis across four words and the contrast would stop being a
+      // contrast.
       headline={
         <>
-          Stop Competing for the $800 Client.{' '}
+          Stop Competing for the{' '}
+          <span style={{ color: '#f87171' }}>$800</span> Client.{' '}
           Get Positioned for the{' '}
-          <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-            {usd(AGENCY_ENGAGEMENT_LOW)} One
-          </span>
+          <span style={{ color: CHIP_GREEN }}>{usd(AGENCY_ENGAGEMENT_LOW)}</span>{' '}
+          One
         </>
       }
       subheadline="Before you spend a dollar on ads, your firm needs the infrastructure that makes ads work. Most CPA firms skip this step — and waste thousands finding out the hard way."
