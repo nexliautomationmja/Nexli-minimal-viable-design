@@ -49,6 +49,10 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
       // advertised, so it is restored verbatim rather than rewritten — the
       // only change is the figure.
       //
+      // The plus is not decoration: AGENCY_ENGAGEMENT_LOW is the BOTTOM of
+      // the $15,000-$55,000 range in lib/agency-offer, so a bare $15,000
+      // understates it and the plus is the more accurate claim.
+      //
       // AGENCY_ENGAGEMENT_LOW, never a literal. It is the same $15,000 the
       // re-recorded video says out loud, that the ROI section below computes
       // from, and that the nurture emails quote. A hardcoded number here is
@@ -73,7 +77,7 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
           Stop Competing for the{' '}
           <span style={{ color: '#f87171' }}>$800</span> Client.{' '}
           Get Positioned for the{' '}
-          <span style={{ color: CHIP_GREEN }}>{usd(AGENCY_ENGAGEMENT_LOW)}</span>{' '}
+          <span style={{ color: CHIP_GREEN }}>{usd(AGENCY_ENGAGEMENT_LOW)}+</span>{' '}
           One
         </>
       }
