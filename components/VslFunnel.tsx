@@ -126,7 +126,12 @@ const StaticLogo: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }
 // ─────────────────────────────────────────────────────────────────────────────
 interface HeroProps {
   headline?: React.ReactNode;
-  subheadline?: string;
+  /**
+   * ReactNode, not string, so a subheadline can colour a figure the way
+   * the headline does. Every existing caller passes a plain string and
+   * is unaffected - a string is a ReactNode.
+   */
+  subheadline?: React.ReactNode;
   muxPlaybackId?: string;
   videoTitle?: string;
   eyebrowText?: React.ReactNode;
@@ -1810,7 +1815,12 @@ const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 interface VslFunnelProps {
   headline?: React.ReactNode;
-  subheadline?: string;
+  /**
+   * ReactNode, not string, so a subheadline can colour a figure the way
+   * the headline does. Every existing caller passes a plain string and
+   * is unaffected - a string is a ReactNode.
+   */
+  subheadline?: React.ReactNode;
   variant?: string;
   muxPlaybackId?: string;
   videoTitle?: string;

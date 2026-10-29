@@ -88,14 +88,25 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
       // /systems and /acquisition. A firm that reads this has been given
       // the frame the other two pages argue inside.
       //
-      // Plain text, not JSX: subheadline is typed string, so there is no
-      // bolding or colour available here. The three nouns have to carry
-      // themselves.
+      // The figure is the same green as the headline's $15,000+, which is
+      // the Meta chip's lime. Both are the money on offer; the only red on
+      // the page stays on the $800 they are stuck with. subheadline was
+      // widened from string to ReactNode to allow this.
       //
       // "$100K+ a month in profit" is the READER'S ambition, stated as
       // theirs — "you think you need X to scale to Y" — not a number we
       // are promising to produce. Keep it that way round.
-      subheadline="You think you need more leads, more people and more clients to scale to $100K+ a month in profit. What you actually need is better clients, better systems and a better acquisition channel."
+      subheadline={
+        <>
+          You think you need more leads, more people and more clients to scale
+          to{' '}
+          <span className="font-bold" style={{ color: CHIP_GREEN }}>
+            $100K+ a month in profit
+          </span>
+          . What you actually need is better clients, better systems and a
+          better acquisition channel.
+        </>
+      }
     />
   );
 }
