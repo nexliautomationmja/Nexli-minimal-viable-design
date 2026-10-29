@@ -81,7 +81,21 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
           One
         </>
       }
-      subheadline="Before you spend a dollar on ads, your firm needs the infrastructure that makes ads work. Most CPA firms skip this step — and waste thousands finding out the hard way."
+      // NAMES ALL THREE ANGLES IN ONE SENTENCE. "More leads, more people,
+      // more clients" is the belief every one of these pages is built to
+      // break, and the second half is the map: better clients, better
+      // systems, a better acquisition channel — which is /better-clients,
+      // /systems and /acquisition. A firm that reads this has been given
+      // the frame the other two pages argue inside.
+      //
+      // Plain text, not JSX: subheadline is typed string, so there is no
+      // bolding or colour available here. The three nouns have to carry
+      // themselves.
+      //
+      // "$100K+ a month in profit" is the READER'S ambition, stated as
+      // theirs — "you think you need X to scale to Y" — not a number we
+      // are promising to produce. Keep it that way round.
+      subheadline="You think you need more leads, more people and more clients to scale to $100K+ a month in profit. What you actually need is better clients, better systems and a better acquisition channel."
     />
   );
 }
