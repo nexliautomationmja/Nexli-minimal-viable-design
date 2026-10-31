@@ -33,8 +33,20 @@ import React, { useEffect, useState } from 'react';
 import { CalendarClock } from 'lucide-react';
 import { currentTaxYear, daysUntilYearEnd, isPlanningSeason } from '@/lib/tax-year-deadline';
 
-const RED_BG = 'rgba(239,68,68,0.12)';
-const RED_BORDER = 'rgba(239,68,68,0.3)';
+// Emerald, not the red this used to be, and not the lime of the Meta chip.
+//
+// Red was right when the message was a deadline you could miss. The message
+// is now that there is enough runway to be live before filing season, which
+// is a green light, and a red bar saying it reads as a warning about good
+// news.
+//
+// Emerald rather than CHIP_GREEN because the two greens mean different
+// things on these pages: lime marks the money on offer in a headline, this
+// is positive STATUS, the same emerald /accelerator/sending uses for "on its
+// way". A full-bleed lime bar would also shout over the headline it sits
+// above.
+const GO_BG = 'rgba(16,185,129,0.12)';
+const GO_BORDER = 'rgba(16,185,129,0.3)';
 
 /** Null until mounted, so the first client render matches the server HTML. */
 function useDeadline() {
@@ -62,17 +74,17 @@ function useDeadline() {
   return state;
 }
 
-function DaysChip({ days, year }: { days: number; year?: number }) {
+function DaysChip({ days }: { days: number }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 whitespace-nowrap"
-      style={{ background: RED_BG, borderColor: RED_BORDER }}
+      style={{ background: GO_BG, borderColor: GO_BORDER }}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" aria-hidden="true" />
-      <span className="text-[11px] font-black uppercase tracking-[0.12em] text-red-400">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+      <span className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-300">
         {days === 0
-          ? `Last day of ${year ?? ''}`.trim()
-          : `${days} day${days === 1 ? '' : 's'} left in ${year ?? ''}`.trim()}
+          ? 'Last day to start'
+          : `${days} day${days === 1 ? '' : 's'} to get built`}
       </span>
     </span>
   );
@@ -91,10 +103,11 @@ export function DeadlinePill({ className = '' }: { className?: string }) {
       className={`flex flex-wrap items-center gap-x-2.5 gap-y-2 text-sm ${className}`}
       style={{ color: 'rgba(255,255,255,0.6)' }}
     >
-      {show && d && <DaysChip days={d.days} year={d.thisYear} />}
+      {show && d && <DaysChip days={d.days} />}
       <span>
-        Get built before filing season and your firm sells{' '}
-        <strong className="text-white">{d ? d.nextYear : 'next year'}</strong> planning all year.
+        Start now and spend{' '}
+        <strong className="text-white">{d ? d.nextYear : 'next year'}</strong> selling planning,
+        not building.
       </span>
     </p>
   );
@@ -120,14 +133,14 @@ export default function DeadlineUrgency({ className = '' }: { className?: string
   return (
     <div
       className={`rounded-2xl border p-5 sm:p-6 ${className}`}
-      style={{ background: RED_BG, borderColor: RED_BORDER }}
+      style={{ background: GO_BG, borderColor: GO_BORDER }}
     >
       <div className="flex flex-wrap items-center gap-3">
-        <CalendarClock size={18} className="text-red-400 shrink-0" aria-hidden="true" />
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-red-400">
+        <CalendarClock size={18} className="text-emerald-300 shrink-0" aria-hidden="true" />
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-300">
           Why this has to be now
         </p>
-        {d?.inSeason && <DaysChip days={d.days} year={d.thisYear} />}
+        {d?.inSeason && <DaysChip days={d.days} />}
       </div>
 
       <p className="mt-3 text-sm sm:text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
@@ -171,7 +184,7 @@ export function DeadlineBanner({ className = '' }: { className?: string }) {
   return (
     <div
       className={`relative z-[120] w-full border-b px-4 py-1.5 sm:py-2.5 ${className}`}
-      style={{ background: RED_BG, borderColor: RED_BORDER }}
+      style={{ background: GO_BG, borderColor: GO_BORDER }}
     >
       {/*
         Deliberately NOT flex-wrap. Wrapping put the chip on its own line and
@@ -180,17 +193,17 @@ export function DeadlineBanner({ className = '' }: { className?: string }) {
         wraps inside the space that is left, and the bar stays at ~42px.
       */}
       <div className="mx-auto flex max-w-4xl items-center justify-center gap-2.5">
-        <CalendarClock size={15} className="hidden shrink-0 text-red-400 sm:block" aria-hidden="true" />
-        {d?.inSeason && <DaysChip days={d.days} year={d.thisYear} />}
+        <CalendarClock size={15} className="hidden shrink-0 text-emerald-300 sm:block" aria-hidden="true" />
+        {d?.inSeason && <DaysChip days={d.days} />}
         <span
           className="text-left text-[11px] font-semibold leading-snug sm:text-center sm:text-sm"
           style={{ color: 'rgba(255,255,255,0.82)' }}
         >
-          Get built now and sell{' '}
+          Start now and spend{' '}
           <strong className="font-black text-white">
             {d ? d.nextYear : 'next year'}
           </strong>{' '}
-          planning from January.
+          selling planning, not building.
         </span>
       </div>
     </div>
