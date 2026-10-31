@@ -33,20 +33,19 @@ import React, { useEffect, useState } from 'react';
 import { CalendarClock } from 'lucide-react';
 import { currentTaxYear, daysUntilYearEnd, isPlanningSeason } from '@/lib/tax-year-deadline';
 
-// Emerald, not the red this used to be, and not the lime of the Meta chip.
+// Red, and it stays red.
 //
-// Red was right when the message was a deadline you could miss. The message
-// is now that there is enough runway to be live before filing season, which
-// is a green light, and a red bar saying it reads as a warning about good
-// news.
+// It was briefly switched to emerald on the reasoning that the message is
+// now permission rather than a deadline, and switched straight back. The
+// bar is the only urgency on the page that is not the capacity pill, and
+// red is what makes it read as urgency at a glance; green made it look
+// like a status notice people scroll past.
 //
-// Emerald rather than CHIP_GREEN because the two greens mean different
-// things on these pages: lime marks the money on offer in a headline, this
-// is positive STATUS, the same emerald /accelerator/sending uses for "on its
-// way". A full-bleed lime bar would also shout over the headline it sits
-// above.
-const GO_BG = 'rgba(16,185,129,0.12)';
-const GO_BORDER = 'rgba(16,185,129,0.3)';
+// The COPY is still the runway version - the bar argues "61 days to get
+// built", not "December 31 or you miss it". Red carries that fine: a short
+// runway is a real deadline, just not the one it used to name.
+const RED_BG = 'rgba(239,68,68,0.12)';
+const RED_BORDER = 'rgba(239,68,68,0.3)';
 
 /** Null until mounted, so the first client render matches the server HTML. */
 function useDeadline() {
@@ -78,10 +77,10 @@ function DaysChip({ days }: { days: number }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 whitespace-nowrap"
-      style={{ background: GO_BG, borderColor: GO_BORDER }}
+      style={{ background: RED_BG, borderColor: RED_BORDER }}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
-      <span className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-300">
+      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" aria-hidden="true" />
+      <span className="text-[11px] font-black uppercase tracking-[0.12em] text-red-400">
         {days === 0
           ? 'Last day to start'
           : `${days} day${days === 1 ? '' : 's'} to get built`}
@@ -133,11 +132,11 @@ export default function DeadlineUrgency({ className = '' }: { className?: string
   return (
     <div
       className={`rounded-2xl border p-5 sm:p-6 ${className}`}
-      style={{ background: GO_BG, borderColor: GO_BORDER }}
+      style={{ background: RED_BG, borderColor: RED_BORDER }}
     >
       <div className="flex flex-wrap items-center gap-3">
-        <CalendarClock size={18} className="text-emerald-300 shrink-0" aria-hidden="true" />
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-300">
+        <CalendarClock size={18} className="text-red-400 shrink-0" aria-hidden="true" />
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-red-400">
           Why this has to be now
         </p>
         {d?.inSeason && <DaysChip days={d.days} />}
@@ -184,7 +183,7 @@ export function DeadlineBanner({ className = '' }: { className?: string }) {
   return (
     <div
       className={`relative z-[120] w-full border-b px-4 py-1.5 sm:py-2.5 ${className}`}
-      style={{ background: GO_BG, borderColor: GO_BORDER }}
+      style={{ background: RED_BG, borderColor: RED_BORDER }}
     >
       {/*
         Deliberately NOT flex-wrap. Wrapping put the chip on its own line and
@@ -193,7 +192,7 @@ export function DeadlineBanner({ className = '' }: { className?: string }) {
         wraps inside the space that is left, and the bar stays at ~42px.
       */}
       <div className="mx-auto flex max-w-4xl items-center justify-center gap-2.5">
-        <CalendarClock size={15} className="hidden shrink-0 text-emerald-300 sm:block" aria-hidden="true" />
+        <CalendarClock size={15} className="hidden shrink-0 text-red-400 sm:block" aria-hidden="true" />
         {d?.inSeason && <DaysChip days={d.days} />}
         <span
           className="text-left text-[11px] font-semibold leading-snug sm:text-center sm:text-sm"
