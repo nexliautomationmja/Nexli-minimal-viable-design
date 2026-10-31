@@ -33,11 +33,12 @@ export default function AcquisitionVslClient({ ctaHref }: { ctaHref: string }) {
       metaChip
       showEyebrow={false}
       showFaq={false}
-      // NO DEADLINE BANNER on the angle pages, unlike /advisory-pricing.
-      // Turning it off also moves the logo and the capacity pill back up to
-      // the top of the screen — VslFunnel passes this same flag through as
-      // their belowBanner offset.
-      deadlineUrgency={false}
+      // The banner is back, carrying the 2027 line rather than the old
+      // December 31 one. This flag also offsets the logo and the capacity
+      // pill — VslFunnel passes it through as their belowBanner value — and
+      // switches on the explained version of the same argument further down
+      // the page, so the two cannot disagree.
+      deadlineUrgency
       ctaHref={ctaHref}
       // NAMES A CEILING, NOT A FAULT. "Referrals built your firm" was true
       // but inert - it credited them and then took it away. This version

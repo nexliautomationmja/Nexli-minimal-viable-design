@@ -37,11 +37,12 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
       metaChip
       showEyebrow={false}
       showFaq={false}
-      // NO DEADLINE BANNER on the angle pages, unlike /advisory-pricing.
-      // Turning it off also moves the logo and the capacity pill back up to
-      // the top of the screen — VslFunnel passes this same flag through as
-      // their belowBanner offset.
-      deadlineUrgency={false}
+      // The banner is back, carrying the 2027 line rather than the old
+      // December 31 one. This flag also offsets the logo and the capacity
+      // pill — VslFunnel passes it through as their belowBanner value — and
+      // switches on the explained version of the same argument further down
+      // the page, so the two cannot disagree.
+      deadlineUrgency
       ctaHref={ctaHref}
       // THE ORIGINAL BETTER CLIENTS COPY, at $15,000 rather than the $8,000
       // the first cut said. This is the wording that ran on
