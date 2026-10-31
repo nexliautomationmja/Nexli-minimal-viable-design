@@ -59,7 +59,7 @@ export default function SystemsVslClient({ ctaHref }: { ctaHref: string }) {
           <span className="bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
             Swinging Blind
           </span>
-          . Implement Systems That Help You Scale to{' '}
+          . Implement AI Systems That Help You Scale to{' '}
           <span style={{ color: CHIP_GREEN }}>$100K+ a Month in Profit</span>
         </>
       }

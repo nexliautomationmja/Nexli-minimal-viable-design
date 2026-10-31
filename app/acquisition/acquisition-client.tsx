@@ -39,15 +39,21 @@ export default function AcquisitionVslClient({ ctaHref }: { ctaHref: string }) {
       // their belowBanner offset.
       deadlineUrgency={false}
       ctaHref={ctaHref}
+      // NAMES A CEILING, NOT A FAULT. "Referrals built your firm" was true
+      // but inert - it credited them and then took it away. This version
+      // concedes the win and puts a number on where it stops, which is the
+      // actual argument: referrals scale linearly with how many people know
+      // you, and that runs out.
+      //
+      // Green on the number they want, white on the one they have. $1M is
+      // not a failure, so it does not get the red that /better-clients puts
+      // on the $800 client - there is nothing wrong with where they are,
+      // only with what will carry them further.
       headline={
         <>
-          Referrals Built Your Firm.{' '}
-          {/* The Meta chip's own lime, imported rather than repeated. The chip
-              sits directly above this line saying the campaigns run on Meta,
-              and the colour is what ties the two together. Solid, not a
-              gradient: the chip is solid. */}
+          Referrals Got You to $1 Million.{' '}
           <span style={{ color: CHIP_GREEN }}>
-            They Will Not Scale It
+            They Will Not Get You to $10 Million
           </span>
         </>
       }
