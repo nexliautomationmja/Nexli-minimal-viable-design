@@ -315,8 +315,15 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
 
   return (
     <section
+      /*
+        The mobile top padding was clearing the fixed logo and capacity pill.
+        Both are desktop-only now (see the wrapper in VslFunnel), so on a
+        phone there is nothing left overlapping this section and the space
+        was reading as a hole above the headline. Desktop is unchanged,
+        because there both are still there to clear.
+      */
       className={`relative pb-16 md:pb-24 px-4 ${
-        hasBanner ? 'pt-16 md:pt-24' : 'pt-24 md:pt-32'
+        hasBanner ? 'pt-8 md:pt-24' : 'pt-12 md:pt-32'
       }`}
     >
       {/* Background glow */}
@@ -1877,8 +1884,32 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
   return (
     <div className="min-h-screen pb-14 sm:pb-16">
       {deadlineUrgency && <DeadlineBanner />}
-      <StaticLogo belowBanner={deadlineUrgency} />
-      <UrgencyPill belowBanner={deadlineUrgency} />
+      {/*
+        DESKTOP ONLY, and this is the whole reason the wrapper exists.
+
+        On a phone the deadline banner, the brand badge, the capacity pill
+        and the Meta chip stack into four rows of chrome above the headline,
+        and the headline is the only one of the five doing any selling. Two
+        of the four earn their place - the banner carries the deadline
+        argument and the Meta chip is proof - so the two that go are the two
+        that are purely decorative here: the brand badge, which anchors
+        nothing on a page that has no navbar and tells an ad visitor
+        something they do not need before the first sentence, and the
+        scarcity pill.
+
+        Both are kept on desktop, where they sit in the margins beside the
+        headline rather than stacking on top of it.
+
+        CSS rather than a conditional render: these are the first pixels
+        after hydration and a width check in JS either flashes or mismatches.
+        The pill's own three-second timer still runs behind display:none,
+        which costs nothing and keeps UrgencyPill reusable - /accelerator/next
+        mounts the same component and is not affected by any of this.
+      */}
+      <div className="hidden md:block">
+        <StaticLogo belowBanner={deadlineUrgency} />
+        <UrgencyPill belowBanner={deadlineUrgency} />
+      </div>
       <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} showEyebrow={showEyebrow} hasBanner={deadlineUrgency} posterTime={posterTime} />
       <TrustBar />
       <TransformationSection />
