@@ -14,12 +14,49 @@
 // that they do not SCALE. That one is defensible.
 // ---------------------------------------------------------------------------
 
-import VslFunnel, { CHIP_GREEN } from '@/components/VslFunnel';
+import React from 'react';
+import VslFunnel from '@/components/VslFunnel';
 import {
   ACQUISITION_VSL_PLAYBACK_ID,
   ACQUISITION_VSL_POSTER_TIME,
   ACQUISITION_VSL_TITLE,
 } from '@/lib/advisory-config';
+
+/**
+ * The spectrum on "$10 Million".
+ *
+ * Sampled off the Apple Intelligence icon rather than guessed: the six stops
+ * are the hues that actually appear around that glyph, read clockwise from
+ * the top of its arch - yellow-green, amber, orange, coral, then the violet
+ * and periwinkle of the two legs. Each one is nudged up in saturation,
+ * because the icon is 80px of colour sitting on dark grey and the same
+ * values go muddy at 60px headline weight.
+ *
+ * Warm to cool, left to right, so the sentence brightens where the reader
+ * enters it and cools onto the number. The violet is deliberately the same
+ * #A78BFA that /systems puts on "Swinging Blind" - three sibling pages, one
+ * palette.
+ *
+ * WHY box-decoration-break: slice, which is the default and is named here
+ * only so nobody "fixes" it. This phrase wraps - two lines on desktop, three
+ * at 390px. slice lays the gradient across the fragments as though they were
+ * one unbroken box, so the sentence sweeps the spectrum ONCE and "$10
+ * Million" lands in the violet-to-blue tail. clone was tried and looks worse:
+ * it repaints the full sweep per line, and on desktop "Million" orphans onto
+ * a line of its own and crams all six stops into seven letters.
+ *
+ * Inline rather than Tailwind because six stops need more than the single
+ * via- that from-/via-/to- allows.
+ */
+const SPECTRUM_TEXT: React.CSSProperties = {
+  backgroundImage:
+    'linear-gradient(90deg, #BFD94F 0%, #F2B33D 22%, #F58A42 40%, #F26B57 58%, #A78BFA 79%, #6D8AF7 100%)',
+  backgroundClip: 'text',
+  WebkitBackgroundClip: 'text',
+  color: 'transparent',
+  boxDecorationBreak: 'slice',
+  WebkitBoxDecorationBreak: 'slice',
+};
 
 export default function AcquisitionVslClient({ ctaHref }: { ctaHref: string }) {
   return (
@@ -46,14 +83,14 @@ export default function AcquisitionVslClient({ ctaHref }: { ctaHref: string }) {
       // actual argument: referrals scale linearly with how many people know
       // you, and that runs out.
       //
-      // Green on the number they want, white on the one they have. $1M is
-      // not a failure, so it does not get the red that /better-clients puts
-      // on the $800 client - there is nothing wrong with where they are,
-      // only with what will carry them further.
+      // The ceiling is the spectrum, the floor is plain white. $1M is not a
+      // failure, so it does not get the red that /better-clients puts on the
+      // $800 client - there is nothing wrong with where they are, only with
+      // what will carry them further.
       headline={
         <>
           Referrals Got You to $1 Million.{' '}
-          <span style={{ color: CHIP_GREEN }}>
+          <span style={SPECTRUM_TEXT}>
             They Will Not Get You to $10 Million
           </span>
         </>
