@@ -99,23 +99,33 @@ export const ADVISORY_THANKYOU_VIDEO_TITLE = 'Book of Business Accelerator — W
 /**
  * The VSL on /advisory-pricing — the funnel's landing page.
  *
- * A re-record of the Better Clients VSL whose audio says $15,000 rather than
- * $8,000, so it agrees with AGENCY_ENGAGEMENT_AVG and with every other number
- * in the funnel. The public /vslfunnel-betterclients page keeps the original
- * $8,000 cut; the two are deliberately different videos.
+ * The AGENCY cut, swapped in 2 November 2026 alongside the headline that
+ * argues the same thing. Its captions run price-shoppers, what a firm
+ * legally keeps, and the partner who shows up — the lead-QUALITY argument,
+ * not the lead-volume one that /better-clients owns.
  *
- * PLAYBACK id, not the asset id. The asset id for this cut is
- * 4btVOu9GtQgOzrLm5feIqdG8xUIvC2E8EFstnDwiYbg, which does NOT resolve —
- * https://stream.mux.com/<id>.m3u8 returns 200 for a playback id and 400 for
- * an asset id, which is the quickest way to tell them apart. Both were
- * checked that way before this swap.
+ * PLAYBACK id, not the asset id. https://stream.mux.com/<id>.m3u8 returns
+ * 200 for a playback id and 400 for an asset id, which is the quickest way
+ * to tell them apart; this one was checked that way, along with its
+ * thumbnail, before the swap.
  *
- * Previous cut: 4MS5DZOqaCLjkxU4zrYaVbPZi9fyoJ8ZNisqkuz16Z8 (asset
- * vGfoTlNWAwq00ODLqD015qcl007GI201SAweqSUVPIuGxlY). Still live in Mux, so
- * it can be put back by swapping the id below and nothing else.
+ * THE AUDIO FIGURE IS UNCONFIRMED FOR THIS CUT. The previous video was a
+ * re-record whose audio said $15,000 rather than $8,000, which is why the
+ * page states $15,000 — the subheadline reads AGENCY_ENGAGEMENT_LOW and the
+ * rest of the funnel is built on the same number. Four frames of this cut
+ * were sampled and none named a figure, so nothing is known to disagree,
+ * but nobody has listened to it end to end. If it says a different number,
+ * the video or the funnel's arithmetic has to move — not the page copy
+ * alone, because the opt-in headline, PipelineMath's $750,000 and the
+ * nurture emails all read the same constant.
+ *
+ * Previous cuts, both still live in Mux and restorable by swapping the id
+ * below and nothing else:
+ *   6GrhZJ89yT9to6NOSN02d01ZKNPvkx7pnMVkvGS00ZeMx8  ($15,000 re-record)
+ *   4MS5DZOqaCLjkxU4zrYaVbPZi9fyoJ8ZNisqkuz16Z8     ($8,000 original)
  */
 export const ADVISORY_VSL_VIDEO_PLAYBACK_ID =
-  '6GrhZJ89yT9to6NOSN02d01ZKNPvkx7pnMVkvGS00ZeMx8';
+  'DAz01n02SQs7nrMKmVTDAQ02vE1gXoPdenIIiBKL01G2MdM';
 
 /**
  * Daniela presents this cut, not Jasmine — the public /vslfunnel-betterclients
@@ -135,12 +145,10 @@ export const ADVISORY_VSL_VIDEO_TITLE = 'Daniela VSL - CPA Ads ($15K)';
 //   /advisory-pricing/systems          "I need to grind harder"
 //   /advisory-pricing/acquisition      "referrals work better"
 //
-// ALL THREE PLAYBACK IDS BELOW ARE PLACEHOLDERS pointing at the advisory
-// cut. That cut argues the agency objection, so right now the Systems page
-// promises systems and plays a video about agencies. This is the same
-// mismatch /accelerator/next shipped with for weeks and it is tolerable only
-// because these pages are not taking traffic yet. Swap each one as its cut
-// is recorded; nothing else has to change.
+// Each angle has its own cut as of 2 November 2026. They were placeholders
+// pointing at the advisory video for a while, which meant the Systems page
+// promised systems and played a video about agencies; that is fixed. Each id
+// below was checked against stream.mux.com and image.mux.com before wiring.
 //
 // VERIFY A PLAYBACK ID BEFORE WIRING IT. https://stream.mux.com/<id>.m3u8 and
 // https://image.mux.com/<id>/thumbnail.jpg both return 200 for a playback id
@@ -148,13 +156,16 @@ export const ADVISORY_VSL_VIDEO_TITLE = 'Daniela VSL - CPA Ads ($15K)';
 // mux-player sets it as a DOM property on hydration — so curl cannot confirm
 // the page is using it. Check in a browser.
 
-export const BETTER_CLIENTS_VSL_PLAYBACK_ID = ADVISORY_VSL_VIDEO_PLAYBACK_ID;
+export const BETTER_CLIENTS_VSL_PLAYBACK_ID =
+  'mMdc7SPqpRspzwM5ozRfApnNr4fEkiP02vRZOcKvSWBg';
 export const BETTER_CLIENTS_VSL_TITLE = 'Better Clients VSL';
 
-export const SYSTEMS_VSL_PLAYBACK_ID = ADVISORY_VSL_VIDEO_PLAYBACK_ID;
+export const SYSTEMS_VSL_PLAYBACK_ID =
+  'MOzPjnV4QY3Y85OYCcUcyNLtdHatO1r7YY9qtNLDoic';
 export const SYSTEMS_VSL_TITLE = 'Systems VSL';
 
-export const ACQUISITION_VSL_PLAYBACK_ID = ADVISORY_VSL_VIDEO_PLAYBACK_ID;
+export const ACQUISITION_VSL_PLAYBACK_ID =
+  'ofWX01agb2iNVd3qiqFG7ybD4202DW2qRAEFEySOkd4lY';
 export const ACQUISITION_VSL_TITLE = 'Acquisition VSL';
 
 /**
@@ -165,7 +176,8 @@ export const ACQUISITION_VSL_TITLE = 'Acquisition VSL';
  * placeholder's. Mux serves a mid-asset frame when given no time at all, so
  * a value is always required.
  *
- * 0 while these all share the advisory cut. Preview any other frame at
+ * 0 on all three: each cut opens on the speaker already framed, so the first
+ * frame is a usable one. Preview any other frame at
  * https://image.mux.com/<playback id>/thumbnail.jpg?time=2.5 before changing
  * one — these cuts are captioned throughout, so every frame has text on it
  * and the choice is between captions, not away from them.
