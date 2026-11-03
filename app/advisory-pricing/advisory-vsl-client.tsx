@@ -59,12 +59,19 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
       // grants it, then moves the failure off count and onto quality, which
       // is the belief the rest of the page spends three minutes installing.
       //
+      // "Your last agency", second person, not "the agency". It accuses a
+      // specific firm the reader actually hired instead of an abstraction,
+      // and "last" quietly says there will be another one.
+      //
+      // The repeat on "leads" is the hinge: the word they were sold, then
+      // the same word turned against them.
+      //
       // Warm gradient on the bad news, matching the page's existing
       // treatment. Green is the good outcome across these four pages and
       // the coloured half here is the thing that went wrong.
       headline={
         <>
-          The Agency Guaranteed Leads.{' '}
+          Your Last Agency Guaranteed You Leads.{' '}
           <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
             The Leads Couldn&apos;t Afford You.
           </span>
