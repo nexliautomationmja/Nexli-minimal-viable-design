@@ -107,6 +107,24 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
 
   try {
     const body = await req.json().catch(() => ({}));
+
+    /**
+     * Which VSL argument sent them, when the funnel has more than one door.
+     *
+     * Four advisory landing pages feed one qualifier, so form_source, the
+     * CAPI content_name and the GHL `source` field are the same whichever
+     * belief converted. This is the signal that is not.
+     *
+     * It arrives from a query string, so it is clamped before it is allowed
+     * to become a GoHighLevel tag — an unbounded string here would create
+     * arbitrary tags in the CRM on demand.
+     */
+    const rawAngle = typeof body?.angle === "string" ? body.angle : "";
+    const angle =
+      /^[a-z0-9-]{1,32}$/.test(rawAngle.trim().toLowerCase())
+        ? rawAngle.trim().toLowerCase()
+        : null;
+    const angleTag = angle ? `vsl ${angle}` : null;
     const answers = normalizeQualificationAnswers(body?.answers);
     const eventId = typeof body?.event_id === "string" ? body.event_id.slice(0, 100) : null;
     const leadEventId =
@@ -292,7 +310,7 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
         firmName: lead.firmName,
         websiteUrl: lead.websiteUrl,
         source: cfg.ghlSource,
-        tags: [...cfg.baseTags, pathTag],
+        tags: [...cfg.baseTags, pathTag, ...(angleTag ? [angleTag] : [])],
         // ghl-sync removes after adding, so the contact is never momentarily
         // untagged between the two calls.
         removeTags: cfg.removeTags,
@@ -391,6 +409,10 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
         body: JSON.stringify({
           source: cfg.webhookSource,
           tag: pathTag,
+          // Null on funnels with a single landing page. A workflow that
+          // wants to branch on the argument should read this rather than
+          // landing_page, which is only correct on a lead's first visit.
+          vsl_angle: angle,
           funnel_path: path,
           qualified,
           lead_id: leadId,

@@ -75,7 +75,12 @@ export const DISQUALIFYING_ROLE = 'not-decision-maker';
 export const goalOptions: QualificationOption[] = [
   { value: 'generate-leads', label: 'We need help generating new leads and finding clients' },
   { value: 'better-website', label: 'Upgrade our website and digital presence' },
-  { value: 'streamline-ops', label: 'Streamline operations and reduce manual work' },
+  // Label only. The VALUE stays 'streamline-ops', so nothing stored,
+  // scored or tagged changes - goalTagMap below still maps it to
+  // warm_automations, and every existing lead keeps its answer. Adding a
+  // fifth option instead would have split one intent across two values
+  // and made the goal breakdown useless.
+  { value: 'streamline-ops', label: 'Implement AI and systems to reduce manual work' },
   { value: 'more-reviews', label: 'Get more Google reviews and improve our reputation' },
 ];
 

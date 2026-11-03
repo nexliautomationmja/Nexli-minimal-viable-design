@@ -1,22 +1,25 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// The Better Clients VSL — now the funnel's landing page.
+// The AGENCY cut — the funnel's landing page, and the original of the four.
 //
 // Props mirror app/vslfunnel-betterclients — same eyebrow, exit-intent and
 // the /revenuecalc hero button both off — with two deliberate divergences:
-// the VIDEO and the headline figure. Both are $15,000 here.
+// the VIDEO and the headline figure.
 //
-// The public page runs the original cut, whose audio says $8,000, under the
-// "$8,000 One" headline. This page runs the re-record whose audio says
-// $15,000, which is AGENCY_ENGAGEMENT_AVG and the number the rest of the
-// funnel is built on: the opt-in headline, PipelineMath's $750,000, the
-// nurture emails' $800/$15,000 grid and the call page all use it.
+// The public page runs the original cut, whose audio says $8,000. This page
+// runs the re-record whose audio says $15,000, which is AGENCY_ENGAGEMENT_AVG
+// and the number the rest of the funnel is built on: the opt-in headline,
+// PipelineMath's $750,000, the nurture emails' $800/$15,000 grid and the call
+// page all use it. The subheadline below reads the same constant, so the
+// video, the page copy and the funnel's maths cannot drift apart.
 //
-// So the video, the page copy and the funnel's own maths now agree. Change
-// one of the three and you have to change all three — the headline figure
-// below comes from AGENCY_ENGAGEMENT_AVG, and the video is a separate upload
-// that has to be re-recorded, not re-rendered.
+// THIS PAGE ARGUES THE AGENCY OBJECTION, not the volume one. It carried the
+// Better Clients headline for a while, which was a placeholder and a
+// duplicate: /better-clients now owns "$800 client versus $15,000 client",
+// and this page owns "the agency did what it promised and it still did not
+// work". Keep the two arguments apart — four pages pointing one qualifier is
+// only worth running if each attacks a different belief.
 //
 // Keeping this and the public page as separate call sites is what makes the
 // split possible — do not collapse them back into a shared component.
@@ -50,16 +53,44 @@ export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
       // in February is planning against a year that is already written.
       deadlineUrgency
       ctaHref={ctaHref}
+      // CONCEDES THE FIRST SENTENCE SO THE SECOND ONE LANDS. The reader's
+      // agency really did deliver the leads it sold — arguing otherwise
+      // picks a fight with something they watched happen. So the headline
+      // grants it, then moves the failure off count and onto quality, which
+      // is the belief the rest of the page spends three minutes installing.
+      //
+      // "Your last agency", second person, not "the agency". It accuses a
+      // specific firm the reader actually hired instead of an abstraction,
+      // and "last" quietly says there will be another one.
+      //
+      // The repeat on "leads" is the hinge: the word they were sold, then
+      // the same word turned against them.
+      //
+      // Warm gradient on the bad news, matching the page's existing
+      // treatment. Green is the good outcome across these four pages and
+      // the coloured half here is the thing that went wrong.
       headline={
         <>
-          Stop Competing for the $800 Client.{' '}
-          Get Positioned for the{' '}
+          Your Last Agency Guaranteed You Leads.{' '}
           <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">
-            {usd(AGENCY_ENGAGEMENT_LOW)} One
+            The Leads Couldn&apos;t Afford You.
           </span>
         </>
       }
-      subheadline="Before you spend a dollar on ads, your firm needs the infrastructure that makes ads work. Most CPA firms skip this step — and waste thousands finding out the hard way."
+      // Names what the agency was actually paid for. "Measured on" rather
+      // than "cared about": the complaint is a broken incentive, not bad
+      // faith, and the first is both fairer and harder to argue with.
+      //
+      // The figure is AGENCY_ENGAGEMENT_LOW, never a literal — it is the
+      // same number the video says out loud.
+      subheadline={
+        <>
+          They were paid for volume, so volume is what you got. Nobody was
+          measured on whether those people could afford a{' '}
+          {usd(AGENCY_ENGAGEMENT_LOW)} engagement — and that is the only
+          number that decides whether ads work for a firm like yours.
+        </>
+      }
     />
   );
 }

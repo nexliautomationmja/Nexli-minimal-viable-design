@@ -29,7 +29,29 @@ const OUTFIT: CSSProperties = {
   fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif",
 };
 
-export default function AdvisoryQualifyPage() {
+/**
+ * `?angle=` is set by whichever VSL sent them — see qualifyPathForAngle in
+ * lib/advisory-config. Four landing pages feed this one qualifier, and this
+ * is the only signal that survives into GoHighLevel saying which argument
+ * did the work.
+ *
+ * Already force-dynamic above, so reading searchParams costs nothing.
+ * Untrusted (it is a URL), so it is clamped to a short slug before going
+ * anywhere near a tag.
+ */
+function readAngle(raw: string | string[] | undefined): string | undefined {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (!value) return undefined;
+  const slug = value.trim().toLowerCase().slice(0, 32);
+  return /^[a-z0-9-]+$/.test(slug) ? slug : undefined;
+}
+
+export default async function AdvisoryQualifyPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const angle = readAngle((await searchParams).angle);
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#0a0f1c' }}>
       <FunnelLogo />
@@ -74,6 +96,7 @@ export default function AdvisoryQualifyPage() {
           // leaves no trace at all.
           partialEndpoint="/api/advisory-pricing/partial"
           contentName="Advisory Qualifier"
+          angle={angle}
           qualifiedPath={ADVISORY_CALL_PATH}
           unqualifiedPath={ADVISORY_OFFER_PATH}
           footnote="A few questions. About a minute. We tell you either way."

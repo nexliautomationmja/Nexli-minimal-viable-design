@@ -79,6 +79,21 @@ export interface QualifyFlowProps {
    * Unset (the demo funnel) and nothing extra happens.
    */
   partialEndpoint?: string;
+  /**
+   * Which VSL argument sent them here — 'systems', 'acquisition' and so on.
+   *
+   * Four landing pages feed this one qualifier, so form_source, the CAPI
+   * content_name and the GHL `source` field are identical no matter which
+   * door someone came through. landing_page does discriminate, but only on
+   * a lead's FIRST visit: lib/lead-upsert writes attribution columns on
+   * INSERT only, so a returning firm reports as whichever page they saw
+   * first, forever. This travels with the submission instead, which is why
+   * it is the thing that actually tells you which belief converted.
+   *
+   * Passed straight through to the endpoint; the route decides what to do
+   * with it. Absent on funnels that do not set it.
+   */
+  angle?: string;
 }
 
 const QualifyFlow: React.FC<QualifyFlowProps> = ({
@@ -90,6 +105,7 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
   steps,
   contentName = 'Demo Qualifier',
   partialEndpoint,
+  angle,
 }) => {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -131,10 +147,14 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
         method: 'POST',
         keepalive: true,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contact, attribution: getAttribution() }),
+        body: JSON.stringify({
+          contact,
+          attribution: getAttribution(),
+          ...(angle ? { angle } : {}),
+        }),
       }).catch(() => {});
     },
-    [partialEndpoint],
+    [partialEndpoint, angle],
   );
 
   const handleComplete = useCallback(
@@ -174,6 +194,7 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
             event_id: eventId,
             lead_event_id: leadEventId,
             attribution: getAttribution(),
+            ...(angle ? { angle } : {}),
           }),
         });
         const data = await res.json().catch(() => null);
