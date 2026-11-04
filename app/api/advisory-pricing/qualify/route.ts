@@ -21,7 +21,8 @@
 import { NextRequest } from "next/server";
 import { recordQualification } from "@/lib/qualification-service";
 import {
-  ADVISORY_CALL_PATH,
+  callPathForAngle,
+  safeAngle,
   ADVISORY_FORM_SOURCE,
   ADVISORY_OFFER_PATH,
   ADVISORY_PATH,
@@ -58,7 +59,14 @@ export async function POST(req: NextRequest) {
     removeTags: [TAG_ADVISORY_INCOMPLETE],
     qualifiedPath: "agency",
     unqualifiedPath: "not-a-fit",
-    nextPath: { agency: ADVISORY_CALL_PATH, "not-a-fit": ADVISORY_OFFER_PATH },
+    // Per angle: a firm that came through /systems/qualify is sent to
+    // /systems/call, not to the agency funnel's. safeAngle falls back to
+    // agency for anything unrecognised — this value ends up in a redirect,
+    // and the POST body is untrusted.
+    nextPath: (angle) => ({
+      agency: callPathForAngle(safeAngle(angle)),
+      "not-a-fit": ADVISORY_OFFER_PATH,
+    }),
     sourcePath: ADVISORY_QUALIFY_PATH,
   });
 }

@@ -17,13 +17,17 @@ import { DEMO_COOKIE } from '@/lib/demo-session';
 import { requireAdvisoryLeadRow } from '@/lib/advisory-session';
 import { qualificationLabel } from '@/lib/qualification-steps';
 import { leads } from '@/lib/leads-schema';
-import { ADVISORY_OFFER_PATH, ADVISORY_QUALIFY_PATH } from '@/lib/advisory-config';
+import {
+  ADVISORY_OFFER_PATH,
+  anglePath,
+  qualifyPathForAngle,
+  type VslAngle,
+} from '@/lib/advisory-config';
 import { toE164 } from '@/lib/contact-validation';
 import AdvisoryCallClient from './call-client';
 
-export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
+/** Re-exported by each of the four route files. */
+export const callMetadata: Metadata = {
   title: 'Your firm is a fit | Nexli',
   description: 'Pick a time to walk through the advisory engine.',
   robots: 'noindex, nofollow',
@@ -49,8 +53,8 @@ function buildNotes(lead: typeof leads.$inferSelect): string {
   return lines.join('\n');
 }
 
-export default async function AdvisoryCallPage() {
-  const { lead } = await requireAdvisoryLeadRow();
+export default async function CallStep({ angle }: { angle: VslAngle }) {
+  const { lead } = await requireAdvisoryLeadRow(anglePath(angle));
 
   // A missing row fails closed: no funnelPath means not qualified, so back to
   // the qualifier rather than through to the calendar.
@@ -58,7 +62,8 @@ export default async function AdvisoryCallPage() {
   // Checked explicitly rather than by copying the demo page's `=== 'web'`
   // test: this funnel's unqualified value is 'not-a-fit', and a firm that
   // missed the bar goes to the $97 downsell.
-  if (!lead?.funnelPath) redirect(ADVISORY_QUALIFY_PATH);
+  // Back to THIS angle's qualifier, so a bounce does not re-badge them.
+  if (!lead?.funnelPath) redirect(qualifyPathForAngle(angle));
   if (lead.funnelPath !== 'agency') redirect(ADVISORY_OFFER_PATH);
 
   const leadToken = (await cookies()).get(DEMO_COOKIE)?.value || '';

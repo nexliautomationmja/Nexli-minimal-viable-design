@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 // The ACQUISITION cut of the advisory VSL.
 //
-// Near-copy of app/advisory-pricing/advisory-vsl-client by design; see the note in
+// Near-copy of app/agency/agency-client by design; see the note in
 // app/better-clients/better-clients-client.tsx for why these are not one
 // shared component.
 //

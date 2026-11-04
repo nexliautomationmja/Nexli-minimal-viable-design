@@ -25,6 +25,19 @@ const nextConfig: NextConfig = {
       // B instead of a 404.
       { source: "/booking-confirmed", destination: "/booking-confirmed-b", permanent: true },
 
+      // The VSL moved to /agency on 4 Nov 2026. This is in live ad
+      // destinations and in sent email, so it 301s rather than 404s. ONLY
+      // the bare path: the funnel's inner steps still live under
+      // /advisory-pricing/ and must not be swept up by a :path* rule.
+      { source: "/advisory-pricing", destination: "/agency", permanent: true },
+      // The three funnel steps moved under their own angle on 4 Nov 2026.
+      // These are live resume links in already-sent email, so they 301 to
+      // the agency angle. Next forwards the query string, which is what
+      // keeps an old ?angle=systems link attributed to Systems rather than
+      // silently re-badged — see the note in app/_funnel/qualify-step.
+      { source: "/advisory-pricing/qualify", destination: "/agency/qualify", permanent: true },
+      { source: "/advisory-pricing/call", destination: "/agency/call", permanent: true },
+      { source: "/advisory-pricing/next-steps", destination: "/agency/next-steps", permanent: true },
       { source: "/advisory-pricing/offer", destination: "/advisory-pricing/BOBA", permanent: true },
       { source: "/advisory-pricing/thank-you", destination: "/advisory-pricing/BOBA-thank-you", permanent: true },
 
@@ -34,27 +47,27 @@ const nextConfig: NextConfig = {
       // one. Every one of them was live and indexed, so they redirect to
       // the advisory VSL rather than 404 — old ad destinations, backlinks
       // and anything already crawled still land somewhere that sells.
-      { source: "/demo", destination: "/advisory-pricing", permanent: true },
-      { source: "/demo/:path*", destination: "/advisory-pricing", permanent: true },
-      { source: "/demo-opt-in", destination: "/advisory-pricing", permanent: true },
-      { source: "/funnel", destination: "/advisory-pricing", permanent: true },
-      { source: "/free-guide", destination: "/advisory-pricing", permanent: true },
-      { source: "/vslfunnel", destination: "/advisory-pricing", permanent: true },
-      { source: "/vslfunnel-admin", destination: "/advisory-pricing", permanent: true },
-      { source: "/vslfunnel-advisory", destination: "/advisory-pricing", permanent: true },
-      { source: "/vslfunnel-betterclients", destination: "/advisory-pricing", permanent: true },
-      { source: "/vslfunnel-offer", destination: "/advisory-pricing", permanent: true },
-      { source: "/vslfunnel-techstack", destination: "/advisory-pricing", permanent: true },
+      { source: "/demo", destination: "/agency", permanent: true },
+      { source: "/demo/:path*", destination: "/agency", permanent: true },
+      { source: "/demo-opt-in", destination: "/agency", permanent: true },
+      { source: "/funnel", destination: "/agency", permanent: true },
+      { source: "/free-guide", destination: "/agency", permanent: true },
+      { source: "/vslfunnel", destination: "/agency", permanent: true },
+      { source: "/vslfunnel-admin", destination: "/agency", permanent: true },
+      { source: "/vslfunnel-advisory", destination: "/agency", permanent: true },
+      { source: "/vslfunnel-betterclients", destination: "/agency", permanent: true },
+      { source: "/vslfunnel-offer", destination: "/agency", permanent: true },
+      { source: "/vslfunnel-techstack", destination: "/agency", permanent: true },
       // /thank-you was the generic post-form page. It goes to the funnel's
       // own thank-you, which is the only one left.
       { source: "/thank-you", destination: "/advisory-pricing/BOBA-thank-you", permanent: true },
       // These two pointed at the demo funnel, which no longer exists.
-      { source: "/roadmap", destination: "/advisory-pricing", permanent: true },
-      { source: "/roadmap/thank-you", destination: "/advisory-pricing", permanent: true },
-      { source: "/foundation", destination: "/advisory-pricing", permanent: true },
-      { source: "/foundation/start", destination: "/advisory-pricing", permanent: true },
-      { source: "/foundation/preview/:token*", destination: "/advisory-pricing", permanent: true },
-      { source: "/foundation/thank-you", destination: "/advisory-pricing", permanent: true },
+      { source: "/roadmap", destination: "/agency", permanent: true },
+      { source: "/roadmap/thank-you", destination: "/agency", permanent: true },
+      { source: "/foundation", destination: "/agency", permanent: true },
+      { source: "/foundation/start", destination: "/agency", permanent: true },
+      { source: "/foundation/preview/:token*", destination: "/agency", permanent: true },
+      { source: "/foundation/thank-you", destination: "/agency", permanent: true },
     ];
   },
   async headers() {

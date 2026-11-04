@@ -21,6 +21,13 @@
 // work". Keep the two arguments apart — four pages pointing one qualifier is
 // only worth running if each attacks a different belief.
 //
+// THE VARIANT IS "Agency-Angle" NOW, not "BetterClients". It kept the old
+// name from when this page ran the Better Clients copy, so the one page
+// taking ad traffic was reporting a ViewContent content_name that named a
+// different argument than the one on screen — and a sibling page was
+// reporting the near-identical "BetterClients-Angle". Meta history before
+// 4 November 2026 sits under the old name.
+//
 // Keeping this and the public page as separate call sites is what makes the
 // split possible — do not collapse them back into a shared component.
 // ---------------------------------------------------------------------------
@@ -32,10 +39,10 @@ import {
   ADVISORY_VSL_VIDEO_TITLE,
 } from '@/lib/advisory-config';
 
-export default function AdvisoryVslClient({ ctaHref }: { ctaHref: string }) {
+export default function AgencyVslClient({ ctaHref }: { ctaHref: string }) {
   return (
     <VslFunnel
-      variant="BetterClients"
+      variant="Agency-Angle"
       muxPlaybackId={ADVISORY_VSL_VIDEO_PLAYBACK_ID}
       videoTitle={ADVISORY_VSL_VIDEO_TITLE}
       showHiddenDrain={false}

@@ -23,11 +23,14 @@ import FunnelLogo from '@/components/FunnelLogo';
 import DeliveryBlock from '@/components/advisory/DeliveryBlock';
 import { requireAdvisoryBuyer } from '@/lib/advisory-session';
 import { reasonFor } from '@/lib/advisory-fit';
-import { ADVISORY_REFUND_DAYS } from '@/lib/advisory-config';
+import {
+  ADVISORY_REFUND_DAYS,
+  anglePath,
+  type VslAngle,
+} from '@/lib/advisory-config';
 
-export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
+/** Re-exported by each of the four route files. */
+export const nextStepsMetadata: Metadata = {
   title: 'Your guide, and where to go next | Nexli',
   robots: 'noindex, nofollow',
 };
@@ -36,8 +39,11 @@ const OUTFIT: CSSProperties = {
   fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif",
 };
 
-export default async function AdvisoryNextStepsPage() {
-  const { lead } = await requireAdvisoryBuyer();
+// Nothing ON this page differs between the four angles. The angle is taken
+// only so a cold visitor bounces back to the VSL they came from rather than
+// to whichever one happened to be the default.
+export default async function NextStepsStep({ angle }: { angle: VslAngle }) {
+  const { lead } = await requireAdvisoryBuyer(anglePath(angle));
   const firstName = (lead.firstName || '').trim();
   const reason = reasonFor(lead);
 

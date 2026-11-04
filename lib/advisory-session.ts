@@ -45,9 +45,12 @@ export async function loadAdvisoryBuyer(leadId: string): Promise<AdvisoryBuyer |
  * Page guard for everything behind the purchase: thank-you (cookie branch),
  * qualify, call, next-steps. Sends non-buyers to the sales page.
  */
-export async function requireAdvisoryBuyer(): Promise<AdvisoryBuyer> {
+export async function requireAdvisoryBuyer(
+  /** See requireAdvisoryLeadRow — each angle sends cold visitors to its own VSL. */
+  noCookiePath: string = ADVISORY_PATH,
+): Promise<AdvisoryBuyer> {
   const leadId = await readDemoLead();
-  if (!leadId) redirect(ADVISORY_PATH);
+  if (!leadId) redirect(noCookiePath);
   const buyer = await loadAdvisoryBuyer(leadId);
   if (!buyer) redirect(ADVISORY_OFFER_PATH);
   return buyer;
@@ -77,9 +80,18 @@ export interface AdvisoryLead {
  * that only wants a first name can carry on; a caller gating on `funnelPath`
  * must read null as "has not qualified" and never as "allowed through".
  */
-export async function requireAdvisoryLeadRow(): Promise<AdvisoryLead> {
+/**
+ * @param noCookiePath Where someone with no session is sent. Each angle
+ *   passes its own VSL, because every angle now owns its whole funnel: a
+ *   cold visitor opening /systems/call should land back on /systems, not be
+ *   handed the agency argument they never asked about. Defaults to the
+ *   agency VSL for the callers that are not angle-specific.
+ */
+export async function requireAdvisoryLeadRow(
+  noCookiePath: string = ADVISORY_PATH,
+): Promise<AdvisoryLead> {
   const leadId = await readDemoLead();
-  if (!leadId) redirect(ADVISORY_PATH);
+  if (!leadId) redirect(noCookiePath);
 
   const db = getDb();
   if (!db) return { leadId, lead: null };

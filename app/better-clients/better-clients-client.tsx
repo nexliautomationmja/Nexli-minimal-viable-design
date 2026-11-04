@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 // The BETTER CLIENTS cut of the advisory VSL.
 //
-// A deliberate near-copy of app/advisory-pricing/advisory-vsl-client. That file's own header
+// A deliberate near-copy of app/agency/agency-client. That file's own header
 // says not to collapse these into one shared component, and the reason holds
 // here: the whole point of four pages is that they diverge — first the
 // headline, then the video, then whatever a test says next. A shared

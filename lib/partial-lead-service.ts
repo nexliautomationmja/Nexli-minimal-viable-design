@@ -45,7 +45,8 @@ import { SITE_URL } from "@/lib/site";
 import {
   ADVISORY_FORM_SOURCE,
   ADVISORY_PRODUCT_NAME,
-  ADVISORY_QUALIFY_PATH,
+  qualifyPathForAngle,
+  safeAngle,
   TAG_ADVISORY_INCOMPLETE,
 } from "@/lib/advisory-config";
 
@@ -57,7 +58,14 @@ export interface PartialLeadConfig {
   webhookEnvName: string;
   webhookSource: string;
   /** Where a resume link should drop them. */
-  resumePath: string;
+  /**
+   * Where the resume link points.
+   *
+   * A function when it depends on the angle: someone who abandoned on
+   * /systems/qualify has to be sent back THERE, not to whichever angle
+   * happens to be the default. Takes the already-clamped angle, or null.
+   */
+  resumePath: string | ((angle: string | null) => string);
 }
 
 export const ADVISORY_PARTIAL_CONFIG: PartialLeadConfig = {
@@ -85,7 +93,7 @@ export const ADVISORY_PARTIAL_CONFIG: PartialLeadConfig = {
   // Back to the qualifier, not onward: they still have a question to
   // answer, and the pages past it are gated on a funnel path they do not
   // have yet.
-  resumePath: ADVISORY_QUALIFY_PATH,
+  resumePath: (angle) => qualifyPathForAngle(safeAngle(angle)),
 };
 
 export async function recordPartialLead(req: NextRequest, cfg: PartialLeadConfig) {
@@ -117,6 +125,22 @@ export async function recordPartialLead(req: NextRequest, cfg: PartialLeadConfig
 
     const contact = { ...candidate, marketingSmsOptIn: raw.marketingSmsOptIn === true };
     const attribution = (body?.attribution ?? {}) as Record<string, string | null>;
+    /**
+     * Which VSL sent them. QualifyFlow has always put this in the partial
+     * body as well as the full one; until now only the full submit read it,
+     * so a firm that gave its details and then vanished was the one group
+     * with no angle recorded anywhere — exactly the group the abandonment
+     * sequence chases, and the one where knowing the argument matters most.
+     *
+     * Same clamp as lib/qualification-service: it arrives in a POST body
+     * and ends up in a CRM tag and a URL.
+     */
+    const rawAngle = typeof body?.angle === "string" ? body.angle : "";
+    const angle =
+      /^[a-z0-9-]{1,32}$/.test(rawAngle.trim().toLowerCase())
+        ? rawAngle.trim().toLowerCase()
+        : null;
+    const angleTag = angle ? `vsl ${angle}` : null;
     const userAgent = req.headers.get("user-agent") || "";
 
     const db = getDb();
@@ -143,9 +167,11 @@ export async function recordPartialLead(req: NextRequest, cfg: PartialLeadConfig
      */
     const alreadyFinished = Boolean(lead?.funnelPath);
 
+    const resumePath =
+      typeof cfg.resumePath === "function" ? cfg.resumePath(angle) : cfg.resumePath;
     const resumeUrl = `${SITE_URL}/api/advisory-pricing/resume?t=${encodeURIComponent(
       await createDemoToken(leadId),
-    )}&to=${encodeURIComponent(cfg.resumePath)}`;
+    )}&to=${encodeURIComponent(resumePath)}`;
 
     if (!alreadyFinished) {
       await syncContactToGhl({
@@ -156,7 +182,7 @@ export async function recordPartialLead(req: NextRequest, cfg: PartialLeadConfig
         phone: contact.phone,
         firmName: contact.firmName,
         source: cfg.ghlSource,
-        tags: [TAG_ADVISORY_INCOMPLETE],
+        tags: [TAG_ADVISORY_INCOMPLETE, ...(angleTag ? [angleTag] : [])],
         attribution,
         noteHeading: "Started the advisory qualifier",
         extraNoteLines: [
@@ -184,6 +210,7 @@ export async function recordPartialLead(req: NextRequest, cfg: PartialLeadConfig
             utm_campaign: attribution.utm_campaign || null,
             fbclid: attribution.fbclid || null,
             landing_page: attribution.landing_page || null,
+            vsl_angle: angle,
             submitted_at: new Date().toISOString(),
           }),
         }).catch(() => {});

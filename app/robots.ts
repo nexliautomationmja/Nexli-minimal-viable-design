@@ -1,5 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '../lib/site';
+import {
+  VSL_ANGLES,
+  callPathForAngle,
+  nextStepsPathForAngle,
+  qualifyPathForAngle,
+} from '../lib/advisory-config';
 
 const DISALLOW = [
   '/api/',
@@ -10,13 +16,18 @@ const DISALLOW = [
   '/booking-confirmed-b',
   '/sites/preview',
   '/profit-calculator',
-  // Advisory funnel inner steps. The bare /advisory-pricing landing page is
-  // the ad destination and stays crawlable.
+  // The $97 tier, still under the original path.
   '/advisory-pricing/BOBA',
   '/advisory-pricing/BOBA-thank-you',
-  '/advisory-pricing/qualify',
-  '/advisory-pricing/call',
-  '/advisory-pricing/next-steps',
+  // Every angle's inner steps. DERIVED from VSL_ANGLES rather than typed
+  // out: twelve hand-written lines is twelve chances to forget one, and a
+  // fifth angle would silently ship a crawlable qualifier. The four landing
+  // pages themselves stay crawlable — they are the ad destinations.
+  ...VSL_ANGLES.flatMap((angle) => [
+    qualifyPathForAngle(angle),
+    callPathForAngle(angle),
+    nextStepsPathForAngle(angle),
+  ]),
   // Accelerator funnel inner steps. /accelerator itself stays crawlable —
   // it is the ad destination and a legitimate free-resource page.
   '/accelerator/qualify',

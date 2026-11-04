@@ -74,7 +74,17 @@ export interface QualifierConfig {
    *  advisory funnel splits agency/not-a-fit. */
   qualifiedPath: FunnelPath;
   unqualifiedPath: FunnelPath;
-  nextPath: Partial<Record<FunnelPath, string>>;
+  /**
+   * Where each outcome lands.
+   *
+   * A function when the destination depends on which angle the lead came
+   * through — the advisory funnel passes one, because /systems/qualify has
+   * to send a qualified firm to /systems/call and not to /agency/call. The
+   * argument is the already-clamped angle, or null when none was sent.
+   */
+  nextPath:
+    | Partial<Record<FunnelPath, string>>
+    | ((angle: string | null) => Partial<Record<FunnelPath, string>>);
   /** This funnel's qualifier page, for the CAPI event_source_url fallback. */
   sourcePath: string;
   /**
@@ -125,6 +135,10 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
         ? rawAngle.trim().toLowerCase()
         : null;
     const angleTag = angle ? `vsl ${angle}` : null;
+    // Resolved once, here, because the angle is only known after the body
+    // is parsed and three places downstream need the same answer.
+    const nextPath =
+      typeof cfg.nextPath === "function" ? cfg.nextPath(angle) : cfg.nextPath;
     const answers = normalizeQualificationAnswers(body?.answers);
     const eventId = typeof body?.event_id === "string" ? body.event_id.slice(0, 100) : null;
     const leadEventId =
@@ -292,7 +306,7 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
      * Written to the CONTACT as well as sent in the webhook, so a workflow
      * built later, which never saw this payload, can still link them back.
      */
-    const resumeDestination = cfg.nextPath[path] ?? cfg.nextPath[cfg.unqualifiedPath];
+    const resumeDestination = nextPath[path] ?? nextPath[cfg.unqualifiedPath];
     const resumeUrl = resumeDestination
       ? `${SITE_URL}/api/advisory-pricing/resume?t=${encodeURIComponent(
           await createDemoToken(leadId),
@@ -458,7 +472,7 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
     const res = NextResponse.json({
       ok: true,
       path,
-      next: cfg.nextPath[path] ?? cfg.nextPath[cfg.unqualifiedPath],
+      next: nextPath[path] ?? nextPath[cfg.unqualifiedPath],
     });
 
     // When this qualifier IS the lead capture it also owns the session —
