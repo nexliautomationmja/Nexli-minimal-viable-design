@@ -349,8 +349,15 @@ function ContactStep({
         <ArrowRight size={16} aria-hidden="true" />
       </button>
 
+      {/*
+        Not "send your results" any more. There is no results document at
+        the end of either funnel, and this line sits directly under a step
+        that now gives real reasons for asking — contradicting it in the
+        footnote undoes the work. Neutral on purpose: the same form collects
+        for the advisory call and for the Accelerator download.
+      */}
       <p className="text-center text-[11px] text-[var(--text-muted)]">
-        We use this to send your results and prepare the call. No spam.
+        We use this for the next step and nothing else. No spam.
       </p>
     </form>
   );

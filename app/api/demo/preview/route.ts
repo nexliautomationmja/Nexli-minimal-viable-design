@@ -51,7 +51,7 @@ const BRANCH: Record<PreviewPath, Record<string, unknown>> = {
     goal: 'better-website',
     goalTag: 'warm_full_system',
     problemDuration: 'few-months',
-    annualRevenue: 'under-400k',
+    annualRevenue: 'under-750k',
     taxSavings: 'under-10k',
     taxSavingsTag: 'taxplan_compliance',
     leadScore: 'disqualified',

@@ -3,7 +3,7 @@
 //
 // WHY A SECOND FUNNEL. Meta's optimiser needs roughly fifty conversions a
 // week before it learns anything useful, and the advisory funnel will never
-// produce that: it is gated on a $400K revenue floor and a $9,997/month
+// produce that: it is gated on a $750K revenue floor and a $9,997/month
 // budget question, by design. This funnel exists to feed the optimiser. It
 // gives the Book of Business Accelerator away, captures the contact, and
 // lets Meta optimise against a number it can actually reach.

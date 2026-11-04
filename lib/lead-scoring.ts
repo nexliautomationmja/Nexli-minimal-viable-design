@@ -32,11 +32,22 @@ export interface ScoringResult {
 // Configurable thresholds — EDIT THESE to change qualification criteria
 // ---------------------------------------------------------------------------
 
-/** Revenue tiers that qualify a lead */
-const QUALIFYING_REVENUES = ['400k-500k', '500k-1m', '1m-5m', '5m+'];
+/** Revenue tiers that qualify a lead. The floor is $750K as of 3 Nov 2026. */
+const QUALIFYING_REVENUES = ['750k-1m', '1m-5m', '5m+'];
 
-/** Revenue tiers that disqualify a lead. 'under-500k' kept for legacy submissions from the old form. */
-const DISQUALIFYING_REVENUES = ['under-400k', 'under-500k'];
+/**
+ * Revenue tiers that disqualify a lead.
+ *
+ * Carries retired band values so a lead captured under an older form still
+ * scores: 'under-500k' came from the original form, and 'under-400k' and
+ * '400k-500k' from the $400K floor this replaced. All sit below $750K.
+ *
+ * '500k-1m' is deliberately absent from BOTH lists. It straddles the new
+ * line, so a firm that answered it could be at $600K or $900K and there is
+ * no honest way to score it either way — falling through to unclassified is
+ * the correct outcome, not an oversight.
+ */
+const DISQUALIFYING_REVENUES = ['under-750k', 'under-400k', '400k-500k', 'under-500k'];
 
 /** Decision roles that qualify a lead */
 const QUALIFYING_ROLES = ['sole-owner', 'partner-authority'];
