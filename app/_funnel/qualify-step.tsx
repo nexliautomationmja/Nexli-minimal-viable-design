@@ -1,6 +1,12 @@
 // ---------------------------------------------------------------------------
 // Advisory funnel, page 2 — the qualifier. Reached from the VSL.
 //
+// ONE IMPLEMENTATION, FOUR ROUTES. Every angle has its own
+// /<angle>/qualify, and each of those route files is a thin wrapper that
+// renders this with its own angle. The question list, the copy and the
+// layout are identical across all four and must stay that way — the angle
+// changes which argument got them here, not what is asked of them.
+//
 // Open to anyone: there is no opt-in in front of this funnel, so this page
 // is where a visitor first identifies themselves. Four questions, then
 // contact details, then the budget question — and that is the fork. Clear
@@ -16,11 +22,15 @@ import type { CSSProperties } from 'react';
 import FunnelLogo from '@/components/FunnelLogo';
 import QualifyFlow from '@/components/demo/QualifyFlow';
 import { ADVISORY_QUALIFICATION_STEPS } from '@/lib/qualification-steps';
-import { ADVISORY_CALL_PATH, ADVISORY_OFFER_PATH } from '@/lib/advisory-config';
+import {
+  ADVISORY_OFFER_PATH,
+  callPathForAngle,
+  isVslAngle,
+  type VslAngle,
+} from '@/lib/advisory-config';
 
-export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
+/** Re-exported by each of the four route files. */
+export const qualifyMetadata: Metadata = {
   title: 'Is your firm a fit? | Nexli',
   robots: 'noindex, nofollow',
 };
@@ -30,14 +40,17 @@ const OUTFIT: CSSProperties = {
 };
 
 /**
- * `?angle=` is set by whichever VSL sent them — see qualifyPathForAngle in
- * lib/advisory-config. Four landing pages feed this one qualifier, and this
- * is the only signal that survives into GoHighLevel saying which argument
- * did the work.
+ * The angle now comes from the ROUTE, so `?angle=` is no longer how a visitor
+ * is attributed — /systems/qualify is self-describing.
  *
- * Already force-dynamic above, so reading searchParams costs nothing.
- * Untrusted (it is a URL), so it is clamped to a short slug before going
- * anywhere near a tag.
+ * It is still read, and still wins when valid, for one reason: the old
+ * /advisory-pricing/qualify 301s to /agency/qualify and Next forwards the
+ * query string with it. An ad or an email sent before the restructure
+ * carries ?angle=systems, and honouring it keeps that click attributed to
+ * Systems instead of silently re-badging it as Agency.
+ *
+ * Untrusted (it is a URL), so it is clamped to a short slug and then checked
+ * against the known angles before it is allowed to override anything.
  */
 function readAngle(raw: string | string[] | undefined): string | undefined {
   const value = Array.isArray(raw) ? raw[0] : raw;
@@ -46,12 +59,15 @@ function readAngle(raw: string | string[] | undefined): string | undefined {
   return /^[a-z0-9-]+$/.test(slug) ? slug : undefined;
 }
 
-export default async function AdvisoryQualifyPage({
+export default async function QualifyStep({
+  angle: routeAngle,
   searchParams,
 }: {
+  angle: VslAngle;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const angle = readAngle((await searchParams).angle);
+  const fromQuery = readAngle((await searchParams).angle);
+  const angle = isVslAngle(fromQuery) ? fromQuery : routeAngle;
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#0a0f1c' }}>
       <FunnelLogo />
@@ -97,7 +113,10 @@ export default async function AdvisoryQualifyPage({
           partialEndpoint="/api/advisory-pricing/partial"
           contentName="Advisory Qualifier"
           angle={angle}
-          qualifiedPath={ADVISORY_CALL_PATH}
+          qualifiedPath={callPathForAngle(angle)}
+          // Still the $97 page. Each angle now has its own /next-steps
+          // route, but nothing routes to it until that tier is retired and
+          // this fork is repointed.
           unqualifiedPath={ADVISORY_OFFER_PATH}
           footnote="A few questions. About a minute. We tell you either way."
         />

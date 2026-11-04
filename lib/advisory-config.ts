@@ -216,7 +216,11 @@ export const ADVISORY_DOWNLOAD_PATH = '/api/advisory-pricing/download';
  * ad destination. There is no opt-in in front of it any more; contact
  * details are collected inside the qualifier.
  */
-export const ADVISORY_PATH = '/advisory-pricing';
+// The agency angle's paths, kept under their original names because a lot
+// of callers want "the default funnel" rather than a specific angle: the
+// /qualify redirect, PipelineMath's CTA, the CAPI event_source_url
+// fallbacks. Each angle's own paths come from the helpers further down.
+export const ADVISORY_PATH = '/agency';
 
 /**
  * The $297 page. No longer the main path — it is the downsell a firm lands on
@@ -227,7 +231,7 @@ export const ADVISORY_PATH = '/advisory-pricing';
 // redirects in next.config.ts cover the old paths, not the lowercase one.
 export const ADVISORY_OFFER_PATH = '/advisory-pricing/BOBA';
 export const ADVISORY_THANK_YOU_PATH = '/advisory-pricing/BOBA-thank-you';
-export const ADVISORY_QUALIFY_PATH = '/advisory-pricing/qualify';
+export const ADVISORY_QUALIFY_PATH = '/agency/qualify';
 
 /**
  * The `angle` each page appends to its CTA, and the only thing that carries
@@ -245,12 +249,78 @@ export const VSL_ANGLE_SYSTEMS = 'systems';
 export const VSL_ANGLE_ACQUISITION = 'acquisition';
 
 /** `/advisory-pricing/qualify?angle=systems` */
-export function qualifyPathForAngle(angle: string): string {
-  return `${ADVISORY_QUALIFY_PATH}?angle=${encodeURIComponent(angle)}`;
+/**
+ * Every angle, in the order they were built. Exported so route files,
+ * robots.ts and the redirect table cannot disagree about which four exist.
+ */
+export const VSL_ANGLES = [
+  VSL_ANGLE_AGENCY,
+  VSL_ANGLE_BETTER_CLIENTS,
+  VSL_ANGLE_SYSTEMS,
+  VSL_ANGLE_ACQUISITION,
+] as const;
+
+export type VslAngle = (typeof VSL_ANGLES)[number];
+
+/** Narrows an untrusted string — a URL segment, a webhook field — to an angle. */
+export function isVslAngle(value: string | null | undefined): value is VslAngle {
+  return typeof value === 'string' && (VSL_ANGLES as readonly string[]).includes(value);
 }
 
-export const ADVISORY_CALL_PATH = '/advisory-pricing/call';
-export const ADVISORY_NEXT_STEPS_PATH = '/advisory-pricing/next-steps';
+// ── Each angle owns its whole funnel ─────────────────────────────────────
+//
+// /acquisition -> /acquisition/qualify -> /acquisition/call
+//                                      -> /acquisition/next-steps
+//
+// Until 4 November 2026 all four angles shared one funnel under
+// /advisory-pricing/ and were told apart only by a ?angle= query param. The
+// pages were always identical; what differed was reporting. Giving each
+// angle its own path means the URL itself carries the attribution, so it
+// survives in places a query string does not: analytics path reports, a
+// shared link, a screenshot in an ad review.
+//
+// THE PAGES ARE STILL ONE IMPLEMENTATION. app/_funnel holds the three steps
+// and the twelve route files are thin wrappers that pass their own angle.
+// Four copies of a funnel is how four funnels drift; this is four doors
+// into one.
+//
+// The old /advisory-pricing/* paths 301 to the agency angle — they are in
+// already-sent email as resume links, so they cannot 404.
+
+/** `/agency`, `/systems`, … the VSL itself. */
+export function anglePath(angle: string): string {
+  return `/${angle}`;
+}
+
+/** `/systems/qualify` — where that angle's VSL button points. */
+export function qualifyPathForAngle(angle: string): string {
+  return `/${angle}/qualify`;
+}
+
+/** `/systems/call` — the calendar, for a firm that cleared the bar. */
+export function callPathForAngle(angle: string): string {
+  return `/${angle}/call`;
+}
+
+/** `/systems/next-steps` — the terminus for a firm that did not. */
+export function nextStepsPathForAngle(angle: string): string {
+  return `/${angle}/next-steps`;
+}
+
+/**
+ * Falls back to the agency angle for anything unrecognised.
+ *
+ * The angle reaching the API is untrusted: it arrives in a POST body that
+ * anyone can shape. Routing a stranger's lead to `/<whatever they sent>/call`
+ * would be an open redirect, so unknown values land on the original funnel
+ * rather than being echoed back into a URL.
+ */
+export function safeAngle(value: string | null | undefined): VslAngle {
+  return isVslAngle(value) ? value : VSL_ANGLE_AGENCY;
+}
+
+export const ADVISORY_CALL_PATH = '/agency/call';
+export const ADVISORY_NEXT_STEPS_PATH = '/agency/next-steps';
 
 /** leads.form_source for anyone who completes this funnel's qualifier. */
 export const ADVISORY_FORM_SOURCE = 'advisory-qualifier';

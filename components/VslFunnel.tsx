@@ -22,6 +22,7 @@ import MuxPlayer from '@mux/mux-player-react';
 import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
 import DeadlineUrgency, { DeadlineBanner } from './advisory/DeadlineUrgency';
 import UrgencyPill from './funnel/UrgencyPill';
+import VslDisclaimer from './funnel/VslDisclaimer';
 import MetaLogo from './icons/MetaLogo';
 
 // Google "G" icon matching lucide-react component interface
@@ -1917,6 +1918,13 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
       <ROISection />
       <FounderStorySection />
       {showFaq && <FAQSection variant={variant} ctaHref={ctaHref} />}
+      {/*
+        Last thing on the page, above the sticky bar. These pages suppress
+        the site Footer, so without this there is no disclaimer, no privacy
+        link and no copyright anywhere on an ad destination that quotes
+        money figures.
+      */}
+      <VslDisclaimer />
       <StickyCTA ctaHref={ctaHref} />
       {showExitIntent && <ExitIntentPopup />}
     </div>

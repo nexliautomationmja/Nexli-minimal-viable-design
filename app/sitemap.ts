@@ -19,7 +19,7 @@ const BUILD_TIME = new Date();
  * that lists a 404 is worse than one that omits a page, because it is an
  * active claim that the URL is worth crawling.
  *
- * /advisory-pricing and /accelerator are the two ad destinations and the
+ * /agency and /accelerator are the two ad destinations and the
  * only funnel pages that stay crawlable. Their inner steps — the
  * qualifiers, the calendars, the delivery confirmations — are in
  * robots.ts DISALLOW and are deliberately absent here.
@@ -29,7 +29,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Freq }[]
   { path: '/guides', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/about', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/rainmaker', priority: 0.9, changeFrequency: 'monthly' },
-  { path: '/advisory-pricing', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/agency', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/accelerator', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/ai-automations', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/client-dashboard', priority: 0.8, changeFrequency: 'monthly' },

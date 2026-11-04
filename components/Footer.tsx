@@ -31,9 +31,20 @@ const Footer: React.FC = () => {
     // /advisory-pricing/ are covered by the prefix above. THIS LIST AND
     // THE NAVBAR'S ARE SEPARATE AND HAVE DRIFTED BEFORE: a fourth angle has to
     // be added to both.
+    // Exact match plus the '/<angle>/' prefix, because each angle now owns
+    // its whole funnel — /systems/qualify, /systems/call and
+    // /systems/next-steps all have to lose the chrome too. Before the
+    // restructure those steps sat under '/advisory-pricing/' and were
+    // covered by the prefix above; exact matches alone would have put the
+    // navbar and footer back on nine funnel pages.
+    pathname === '/agency' ||
+    pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||
+    pathname.startsWith('/better-clients/') ||
     pathname === '/systems' ||
+    pathname.startsWith('/systems/') ||
     pathname === '/acquisition' ||
+    pathname.startsWith('/acquisition/') ||
     // The Accelerator funnel. Same reasoning as the navbar: the landing
     // page is crawlable, but a sitemap of eleven other pages under a free
     // offer is eleven ways to not fill in the form.
