@@ -152,7 +152,7 @@ export default async function AdvisoryNextStepsPage() {
           >
             <Mail size={15} className="mt-0.5 shrink-0" aria-hidden="true" />
             <span>
-              When that changes — you cross $400K, or the decision becomes yours —
+              When that changes — you cross $750K, or the decision becomes yours —
               email <span className="font-semibold text-white/80">mail@nexli.net</span> and
               we will pick this up where we left off.
             </span>

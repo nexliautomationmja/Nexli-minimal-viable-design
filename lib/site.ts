@@ -60,7 +60,7 @@ export const ORG_DESCRIPTION =
 
 /**
  * Public-facing minimum annual revenue. Intentionally stays at $500K+ in marketing copy.
- * The booking gate itself accepts $400K+ (see DISQUALIFYING_REVENUE in components/QualificationProvider.tsx).
+ * The booking gate itself accepts $750K+ (see DISQUALIFYING_REVENUE in components/QualificationProvider.tsx).
  */
 export const MIN_REVENUE = '$500K+';
 export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';

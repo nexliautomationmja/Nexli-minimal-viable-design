@@ -50,7 +50,7 @@ export function reasonFor(lead: FitAnswers): FitReason {
   }
   if (lead.annualRevenue === DISQUALIFYING_REVENUE) {
     return {
-      heading: 'Below about $400K, this would be the wrong spend.',
+      heading: 'Below about $750K, this would be the wrong spend.',
       body: 'The engine assumes a firm with capacity to absorb new advisory clients and the cash flow to run ads while they convert. Under that mark, the honest answer is that the guide plus your existing referrals will move you further than we would.',
     };
   }

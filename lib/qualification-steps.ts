@@ -98,15 +98,34 @@ export const problemDurationOptions: QualificationOption[] = [
   { value: 'over-a-year', label: 'Over a year' },
 ];
 
+// ── Revenue: the floor moved to $750K on 3 November 2026 ─────────────────
+//
+// It was $400K, split across five bands. The bar is now $750K and anything
+// under it is a hard no, so the three bands below the line collapse into
+// one: there is no decision to make with the difference between a $200K
+// firm and a $600K firm when both get the same answer. Four options also
+// beats five on a step every visitor has to clear.
+//
+// $5M+ stays its own band rather than merging into $1M+. Those firms
+// qualify like any other, but they are the enterprise conversation, and
+// that is worth being able to see in the data.
+//
+// THE OLD VALUES STILL EXIST IN THE DATABASE. Leads captured before today
+// carry 'under-400k', '400k-500k' and '500k-1m'. Nothing rewrites them and
+// nothing should — they are what the firm actually answered. Two
+// consequences: qualificationLabel falls back to printing the raw value for
+// a band no longer listed here, and lib/lead-scoring keeps the retired
+// values in its own lists so re-scoring an old lead still lands somewhere
+// sensible. '500k-1m' straddles the new line and is deliberately in neither
+// of those lists, because a firm that answered it could be either side.
 export const annualRevenueOptions: QualificationOption[] = [
-  { value: 'under-400k', label: 'Under $400K per year' },
-  { value: '400k-500k', label: '$400K – $500K per year' },
-  { value: '500k-1m', label: '$500K – $1M per year' },
+  { value: 'under-750k', label: 'Under $750K per year' },
+  { value: '750k-1m', label: '$750K – $1M per year' },
   { value: '1m-5m', label: '$1M – $5M per year' },
   { value: '5m+', label: '$5M+ per year' },
 ];
 
-export const DISQUALIFYING_REVENUE = 'under-400k';
+export const DISQUALIFYING_REVENUE = 'under-750k';
 
 export const taxSavingsOptions: QualificationOption[] = [
   { value: '100k-plus', label: '$100K+ saved in a single engagement' },
@@ -271,11 +290,18 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     options: goalOptions,
   },
   {
+    // GIVES A REASON WORTH THE DETAILS. "Where should we send your results?"
+    // asked for a phone number in exchange for a noun nobody had been
+    // promised - there is no "results" document at the end of this, and the
+    // visitor can tell. Both reasons below are things the funnel actually
+    // does: the answers are on the screen in front of whoever takes the
+    // call, and recordQualification stores a resume destination so a closed
+    // tab comes back to the calendar rather than to question one.
     key: 'contact',
     type: 'contact',
-    question: 'Where should we send your results?',
-    hint: 'So we can send the details and get the right person on the call.',
-    foundationHint: 'So we can send the details and get the right person on the call.',
+    question: 'Who should we prepare this for?',
+    hint: 'So we read your answers before the call rather than on it — and so you can pick up where you left off if this tab closes.',
+    foundationHint: 'So we read your answers before the call rather than on it — and so you can pick up where you left off if this tab closes.',
     options: null,
   },
   {
@@ -308,18 +334,28 @@ export const ADVISORY_QUALIFICATION_STEP_COUNT = ADVISORY_QUALIFICATION_STEPS.le
  * it can spend, before handing it a free guide, is the fastest way to lose
  * the lead this funnel exists to collect.
  */
-const ACCELERATOR_HINTS: Partial<Record<QualificationStepKey, string>> = {
+const ACCELERATOR_OVERRIDES: Partial<
+  Record<QualificationStepKey, Partial<QualificationStepDef>>
+> = {
   // The advisory hint says this decides "which of our two options actually
   // fits your firm". There is only one thing on offer here.
-  annualRevenue: 'So we know which version of the playbook applies to you.',
+  annualRevenue: { foundationHint: 'So we know which version of the playbook applies to you.' },
   // And this is what they are actually getting.
-  contact: 'Where we send the Accelerator. It arrives by email in a few minutes.',
+  //
+  // The question is pinned too, not just the hint. The advisory funnel's
+  // contact step now asks "Who should we prepare this for?", which is right
+  // when the next step is a call and wrong when it is a PDF download — the
+  // Accelerator keeps the wording it has always had.
+  contact: {
+    question: 'Where should we send your results?',
+    foundationHint: 'Where we send the Accelerator. It arrives by email in a few minutes.',
+  },
 };
 
 export const ACCELERATOR_QUALIFICATION_STEPS: QualificationStepDef[] =
   ADVISORY_QUALIFICATION_STEPS.filter((step) => step.key !== 'budget').map((step) => {
-    const hint = ACCELERATOR_HINTS[step.key];
-    return hint ? { ...step, foundationHint: hint } : step;
+    const override = ACCELERATOR_OVERRIDES[step.key];
+    return override ? { ...step, ...override } : step;
   });
 
 export const ACCELERATOR_QUALIFICATION_STEP_COUNT = ACCELERATOR_QUALIFICATION_STEPS.length;
