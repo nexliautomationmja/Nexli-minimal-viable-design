@@ -126,12 +126,28 @@ type Turn = { role: 'user' | 'assistant'; content: string };
  */
 function sendTranscript(payload: Record<string, unknown>): void {
   const url = process.env.GHL_CANDOR_WEBHOOK_URL;
-  if (!url) return; // Logged below either way; the webhook is optional.
+  if (!url) {
+    console.warn('[Candor] GHL_CANDOR_WEBHOOK_URL not set — transcript not sent');
+    return;
+  }
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
-  }).catch(() => {});
+  })
+    // Fire and forget, but NOT silent. The first version swallowed
+    // everything, which meant a rotated webhook URL or a GHL outage would
+    // lose transcripts with nothing anywhere to say so — and the only
+    // symptom would be Marcel slowly noticing he had stopped receiving
+    // them. The request still never blocks or fails the answer.
+    .then((res) => {
+      if (!res.ok) {
+        console.error(`[Candor] transcript webhook returned ${res.status}`);
+      }
+    })
+    .catch((err) => {
+      console.error('[Candor] transcript webhook failed:', err);
+    });
 }
 
 function parseHistory(raw: unknown): Turn[] {
