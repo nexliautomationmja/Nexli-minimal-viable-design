@@ -17,10 +17,11 @@
 // first answer the chips come back minus the ones already asked, which is
 // what turns one question into four.
 //
-// MOTION BUDGET: FOUR THINGS, per the rule in app/accelerator/landing-body.
-// The composer rim turns, turns rise as they arrive, the caret blinks, and
-// Daniela's presence dot pulses. Nothing else moves. If a fifth is ever
-// proposed, one of these comes out.
+// MOTION BUDGET, per the rule in app/accelerator/landing-body: the composer
+// rim turns, turns rise as they arrive, the caret blinks, Daniela's presence
+// dot pulses, and — added at Marcel's request, matching the portal's Meta
+// chip — the Candor chip's rim turns. Both rims are .rim-spin, so reduced
+// motion stops them. Nothing else moves.
 //
 // PARAGRAPH COLOURS ARE INLINE, NOT UTILITIES. app/globals.css declares
 // `p { color: var(--text-muted) }` outside any @layer, and in Tailwind v4 an
@@ -32,12 +33,22 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUp, Play } from 'lucide-react';
+import { ArrowUp, History, Play, SquarePen } from 'lucide-react';
 import MuxPlayer from '@mux/mux-player-react';
 import { Eyebrow, OUTFIT, RimCard } from '@/components/funnel/primitives';
 import VslDisclaimer from '@/components/funnel/VslDisclaimer';
 import FunnelLogo from '@/components/FunnelLogo';
 import DanielaAvatar from '@/components/candor/DanielaAvatar';
+import CandorChip from '@/components/candor/CandorChip';
+import ChatHistory from '@/components/candor/ChatHistory';
+import {
+  type Conversation,
+  type Turn,
+  loadConversations,
+  newConversationId,
+  saveConversations,
+  upsertConversation,
+} from '@/lib/candor-history';
 import { renderInline } from '@/lib/inline-markdown';
 import {
   CANDOR_OBJECTIONS,
@@ -67,15 +78,6 @@ function splitParagraphs(text: string): string[] {
   return parts.length ? parts : [''];
 }
 
-type Turn = {
-  role: 'user' | 'assistant';
-  content: string;
-  /** Set on an assistant turn when the question came from an objection with
-   *  a recorded clip. Carried on the turn rather than looked up at render
-   *  time so a later edit to the chip copy cannot orphan a playing video. */
-  objection?: CandorObjection;
-};
-
 export default function CandorClient({
   firstName,
   leadId,
@@ -87,14 +89,40 @@ export default function CandorClient({
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [asked, setAsked] = useState<string[]>([]);
 
-  /** Groups the questions from one visit into a single thread for Marcel. */
-  const sessionId = useRef<string>(
-    typeof crypto !== 'undefined' && 'randomUUID' in crypto
-      ? crypto.randomUUID().slice(0, 8)
-      : Math.random().toString(36).slice(2, 10),
-  );
+  /**
+   * The open conversation's id. Also the session_id on the transcript
+   * webhook, so reopening a saved chat and asking more keeps arriving in GHL
+   * as the same thread rather than a new one.
+   */
+  const [conversationId, setConversationId] = useState(newConversationId);
+  /** Saved chats, newest first. Empty until mounted: localStorage does not
+   *  exist on the server, and reading it during render would mismatch. */
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  /** Title for the conversation, fixed at its first question. A chip uses
+   *  its short label; a typed question uses what they typed. */
+  const pendingTitle = useRef('');
+
+  useEffect(() => {
+    setConversations(loadConversations());
+    setHydrated(true);
+  }, []);
+
+  // Written only after the first read, or the empty initial state would
+  // overwrite everything saved before the page loaded.
+  useEffect(() => {
+    if (hydrated) saveConversations(conversations);
+  }, [conversations, hydrated]);
+
+  // Saved when an answer FINISHES, not per streamed token — the page would
+  // otherwise rewrite storage forty times a second. A tab closed mid-answer
+  // loses that one partial reply, which is the right trade.
+  useEffect(() => {
+    if (!hydrated || busy || turns.length === 0) return;
+    setConversations((prev) => upsertConversation(prev, conversationId, pendingTitle.current, turns));
+  }, [busy, turns, conversationId, hydrated]);
 
   /**
    * How far the on-screen keyboard reaches into the layout viewport.
@@ -176,7 +204,7 @@ export default function CandorClient({
       setError(null);
       setBusy(true);
       setInput('');
-      if (objection) setAsked((prev) => [...prev, objection.id]);
+      if (turns.length === 0) pendingTitle.current = (objection?.label ?? q).slice(0, 80);
       requestAnimationFrame(grow);
 
       // A chip click knows its own objection. Anything TYPED is matched on
@@ -197,7 +225,7 @@ export default function CandorClient({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             question: q,
-            sessionId: sessionId.current,
+            sessionId: conversationId,
             // Strip the objection: the route validates role/content only.
             history: history.map((t) => ({ role: t.role, content: t.content })),
             firstName,
@@ -237,11 +265,101 @@ export default function CandorClient({
         setBusy(false);
       }
     },
-    [busy, firstName, grow, leadId, turns],
+    [busy, conversationId, firstName, grow, leadId, turns],
   );
 
   const started = turns.length > 0;
-  const remaining = CANDOR_OBJECTIONS.filter((o) => !asked.includes(o.id));
+  // Derived from the turns rather than tracked separately, so reopening a
+  // saved chat brings back the right "not asked yet" chips with it.
+  const askedIds = turns.flatMap((t) => (t.role === 'assistant' && t.objection ? [t.objection.id] : []));
+  const remaining = CANDOR_OBJECTIONS.filter((o) => !askedIds.includes(o.id));
+
+  /** Leave the current chat. It is already saved; this just clears the room. */
+  const newChat = useCallback(() => {
+    if (busy) return;
+    setConversationId(newConversationId());
+    pendingTitle.current = '';
+    setTurns([]);
+    setInput('');
+    setError(null);
+    setHistoryOpen(false);
+    lastCount.current = 0;
+    window.scrollTo({ top: 0 });
+  }, [busy]);
+
+  const openConversation = useCallback(
+    (id: string) => {
+      const c = conversations.find((x) => x.id === id);
+      if (!c || busy) return;
+      setConversationId(c.id);
+      pendingTitle.current = c.title;
+      setError(null);
+      setInput('');
+      setHistoryOpen(false);
+      // Reset so the scroll effect treats this as new and brings the last
+      // question into view, instead of leaving the page wherever the
+      // previous chat happened to be scrolled.
+      lastCount.current = 0;
+      setTurns(c.turns);
+    },
+    [busy, conversations],
+  );
+
+  const deleteConversation = useCallback(
+    (id: string) => {
+      setConversations((prev) => prev.filter((c) => c.id !== id));
+      if (id === conversationId) newChat();
+    },
+    [conversationId, newChat],
+  );
+
+  /**
+   * Chats on the left, Candor in the middle, New chat on the right.
+   *
+   * One row does three jobs, which is what pays for it on a phone: the
+   * brand, the way back to saved chats, and the way out of this one. Grid
+   * with equal outer columns so the chip stays centred whether or not the
+   * side buttons are showing. Pinned to the top once a conversation starts,
+   * because "how do I leave this" has to be answerable from anywhere in a
+   * long thread, not only after scrolling back up.
+   */
+  const sideButton =
+    'inline-flex h-10 touch-manipulation items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 text-[13px] font-semibold text-white/75 transition-colors [-webkit-tap-highlight-color:transparent] hover:border-white/20 hover:bg-white/[0.08] hover:text-white disabled:opacity-40';
+  const header = (
+    <div
+      className={
+        started
+          ? 'sticky top-0 z-[90] -mx-4 mb-5 border-b border-white/[0.06] bg-[#020617]/85 px-4 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] backdrop-blur-xl sm:-mx-6 sm:px-6'
+          : 'mb-3 sm:mb-6'
+      }
+    >
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <div className="justify-self-start">
+          {hydrated && conversations.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setHistoryOpen(true)}
+              disabled={busy}
+              aria-label="Your saved chats"
+              className={sideButton}
+            >
+              <History size={15} aria-hidden="true" />
+              Chats
+            </button>
+          )}
+        </div>
+        <CandorChip />
+        <div className="justify-self-end">
+          {started && (
+            <button type="button" onClick={newChat} disabled={busy} className={sideButton}>
+              <SquarePen size={14} aria-hidden="true" />
+              New chat
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 
   const composer = (
     <RimCard innerClassName="p-0 relative" orbs>
@@ -311,7 +429,7 @@ export default function CandorClient({
     // target, the runtimes lined up down the right edge.
     <div
       className={`flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:gap-2 sm:justify-center ${
-        compact ? 'mt-4' : 'mt-3 sm:mt-5'
+        compact ? 'mt-4' : 'mt-2 sm:mt-5'
       }`}
     >
       {items.map((o) => {
@@ -368,7 +486,10 @@ export default function CandorClient({
       {/* Off on a phone, the same call already made for the VSL pages: on a
           narrow screen it is a whole row of chrome above the person you
           came to talk to. FunnelLogo takes no className, hence the wrapper. */}
-      <div className="hidden md:block">
+      {/* Mid-conversation, also off below xl: the header row is pinned to
+          the top then, and at tablet widths the fixed logo would sit on top
+          of its Chats button. The Candor chip carries the brand there. */}
+      <div className={started ? 'hidden xl:block' : 'hidden md:block'}>
         <FunnelLogo />
       </div>
 
@@ -388,10 +509,12 @@ export default function CandorClient({
       </div>
 
       <div
-        className={`mx-auto max-w-3xl px-4 sm:px-6 sm:pt-28 ${
-          started ? 'pb-32 pt-6 sm:pb-16' : 'pb-10 pt-[max(1rem,env(safe-area-inset-top))]'
+        className={`mx-auto max-w-3xl px-4 sm:px-6 ${
+          started ? 'pb-32 pt-0 sm:pb-16 sm:pt-6' : 'pb-10 pt-[max(0.5rem,env(safe-area-inset-top))] sm:pt-28'
         }`}
       >
+        {header}
+
         {/* ── The empty state: her face, then the question ─────────────── */}
         {!started && (
           <motion.div {...rise} className="flex flex-col items-center text-center">
@@ -413,7 +536,7 @@ export default function CandorClient({
               </div>
             </div>
             <h1
-              className="mt-4 text-[1.9rem] font-bold leading-[1.08] tracking-tighter text-white sm:text-5xl"
+              className="mt-3 text-[1.9rem] font-bold leading-[1.08] tracking-tighter text-white sm:mt-4 sm:text-5xl"
               style={OUTFIT}
             >
               {firstName ? `${firstName}, what's ` : "What's "}
@@ -448,7 +571,7 @@ export default function CandorClient({
                     turnRefs.current[i] = el;
                   }}
                   {...rise}
-                  className="flex scroll-mt-4 justify-end sm:scroll-mt-24"
+                  className="flex scroll-mt-20 justify-end sm:scroll-mt-24"
                 >
                   <div className="max-w-[85%] rounded-2xl rounded-br-md border border-blue-400/25 bg-gradient-to-br from-blue-600/25 to-cyan-500/15 px-4 py-3">
                     <p className="whitespace-pre-line text-[15px] leading-relaxed sm:text-sm" style={{ color: '#ffffff' }}>
@@ -598,7 +721,7 @@ export default function CandorClient({
             Pinned to the bottom on a phone once the thread is running, so
             the answer scrolls behind it instead of pushing it off screen. */}
         {!started ? (
-          <motion.div {...rise} transition={{ ...rise.transition, delay: 0.08 }} className="mt-5 sm:mt-8">
+          <motion.div {...rise} transition={{ ...rise.transition, delay: 0.08 }} className="mt-4 sm:mt-8">
             {composer}
             <p className="mt-2 hidden text-center text-[11px] sm:block" style={{ color: FAINT }}>
               Enter to ask · Shift+Enter for a new line
@@ -608,7 +731,7 @@ export default function CandorClient({
                 {error}
               </p>
             )}
-            <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.16em] sm:hidden" style={{ color: FAINT }}>
+            <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.16em] sm:hidden" style={{ color: FAINT }}>
               Or start with the one that&apos;s closest
             </p>
             {chipRow(CANDOR_OBJECTIONS)}
@@ -651,6 +774,16 @@ export default function CandorClient({
       </div>
 
       <VslDisclaimer />
+
+      <ChatHistory
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        conversations={conversations}
+        activeId={conversationId}
+        onOpen={openConversation}
+        onDelete={deleteConversation}
+        onNew={newChat}
+      />
     </main>
   );
 }
