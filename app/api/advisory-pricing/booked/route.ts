@@ -15,6 +15,9 @@ import {
   TAG_ADVISORY_BUYER,
   TAG_ADVISORY_OPT_IN,
   TAG_ADVISORY_QUALIFIED,
+  isVslAngle,
+  TAG_QUALIFIED_VSL,
+  vslTag,
 } from "@/lib/advisory-config";
 import { SITE_URL } from "@/lib/site";
 
@@ -63,6 +66,19 @@ export async function POST(req: NextRequest) {
     // this is the one that goes in an email. '' when there is no usable
     // timestamp, so a template can fall back to the raw value.
     const startTimeDisplay = formatBookingStart(startTime, attendeeTimezone);
+    /**
+     * Which VSL's calendar they booked on, sent by /<angle>/call.
+     *
+     * The qualifier already tagged the contact with it, but that write is a
+     * separate request: if it failed, or the contact was created some other
+     * way, a booked firm would arrive with no VSL tag. Re-applying it here
+     * costs nothing (GHL tags are idempotent) and closes that gap.
+     *
+     * Untrusted, so only one of the four known angles counts.
+     */
+    const rawAngle = typeof body?.angle === "string" ? body.angle.trim().toLowerCase() : "";
+    const angle = isVslAngle(rawAngle) ? rawAngle : null;
+    const angleTag = vslTag(angle);
     const userAgent = req.headers.get("user-agent") || "";
 
     const db = getDb();
@@ -171,6 +187,9 @@ export async function POST(req: NextRequest) {
           // — which the qualifier applies — is on every firm that
           // cleared the bar whether or not they ever booked.
           TAG_ADVISORY_BOOKED,
+          // Booking requires having qualified, so a VSL booking is a
+          // qualified VSL lead by definition.
+          ...(angleTag ? [angleTag, TAG_QUALIFIED_VSL] : []),
         ],
         // Belt and braces. The qualifier already strips this, but a booking
         // cannot coexist with "opted in and done nothing since" under any
@@ -210,6 +229,8 @@ export async function POST(req: NextRequest) {
           tag: TAG_CALL_BOOKED,
           funnel_path: "agency",
           qualified: true,
+          vsl_angle: angle,
+          vsl_tag: angleTag,
           lead_id: leadId,
           firstName: lead?.firstName || "",
           lastName: lead?.lastName || "",

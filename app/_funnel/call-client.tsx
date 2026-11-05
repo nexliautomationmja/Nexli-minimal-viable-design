@@ -32,6 +32,8 @@ export interface AdvisoryCallClientProps {
   leadToken: string;
   /** Call-prep block prefilled into Cal's notes field. */
   notes: string;
+  /** This page's VSL angle — the booking tags the contact with it. */
+  angle: string;
 }
 
 export default function AdvisoryCallClient({
@@ -40,6 +42,7 @@ export default function AdvisoryCallClient({
   phone,
   leadToken,
   notes,
+  angle,
 }: AdvisoryCallClientProps) {
   const onBooked = useCallback(() => {
     // Cal is still showing its own confirmation at this point, so the same
@@ -76,6 +79,7 @@ export default function AdvisoryCallClient({
         phone={phone}
         leadToken={leadToken}
         notes={notes}
+        angle={angle}
         scheduleContentName="Advisory Engine Growth Call"
         // The funnel blue. The embed defaults to #3b82f6, a shade off every
         // other CTA in this funnel.

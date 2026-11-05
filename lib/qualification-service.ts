@@ -31,6 +31,7 @@ import { FUNNEL_PATH_TAG, type FunnelPath } from "@/lib/demo-config";
 import { DEMO_COOKIE, createDemoToken, demoCookieOptions } from "@/lib/demo-session";
 import { trimTo, validateContact, MAX_NAME, MAX_FIRM } from "@/lib/contact-validation";
 import { SITE_URL } from "@/lib/site";
+import { TAG_QUALIFIED_VSL, vslTag } from "@/lib/advisory-config";
 
 export interface QualifierConfig {
   /**
@@ -134,7 +135,8 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
       /^[a-z0-9-]{1,32}$/.test(rawAngle.trim().toLowerCase())
         ? rawAngle.trim().toLowerCase()
         : null;
-    const angleTag = angle ? `vsl ${angle}` : null;
+    // agencyVSL, systemsVSL, … — null for anything but the four known angles.
+    const angleTag = vslTag(angle);
     // Resolved once, here, because the angle is only known after the body
     // is parsed and three places downstream need the same answer.
     const nextPath =
@@ -324,7 +326,14 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
         firmName: lead.firmName,
         websiteUrl: lead.websiteUrl,
         source: cfg.ghlSource,
-        tags: [...cfg.baseTags, pathTag, ...(angleTag ? [angleTag] : [])],
+        tags: [
+          ...cfg.baseTags,
+          pathTag,
+          ...(angleTag ? [angleTag] : []),
+          // Only a VSL lead that cleared the bar. angleTag is null on the
+          // funnels that send no angle, so they never get it.
+          ...(qualified && angleTag ? [TAG_QUALIFIED_VSL] : []),
+        ],
         // ghl-sync removes after adding, so the contact is never momentarily
         // untagged between the two calls.
         removeTags: cfg.removeTags,
@@ -427,6 +436,8 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
           // wants to branch on the argument should read this rather than
           // landing_page, which is only correct on a lead's first visit.
           vsl_angle: angle,
+          // The tag itself (e.g. "systemsVSL"), for branching in the flow.
+          vsl_tag: angleTag,
           funnel_path: path,
           qualified,
           lead_id: leadId,

@@ -116,6 +116,7 @@ export default async function CallStep({ angle }: { angle: VslAngle }) {
         phone={phone}
         leadToken={leadToken}
         notes={buildNotes(lead)}
+        angle={angle}
       />
     </main>
   );

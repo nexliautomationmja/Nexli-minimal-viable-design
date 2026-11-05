@@ -47,6 +47,10 @@ The site writes these onto the contact directly. Do **not** build workflows that
 | `advisory not a fit` | missed the bar |
 | `advisory buyer` | the $297 payment succeeds — and `advisory opt-in` is removed in the same call |
 | `call booked` | booked the growth call |
+| `advisory incomplete` | gave contact details, has not answered the last question — removed when they finish |
+| `advisory booked` | booked the growth call (the tag the reminder workflow triggers on) |
+| `agencyVSL` · `better-clientsVSL` · `systemsVSL` · `acquisitionVSL` | which VSL they came through — applied at the contact step, the finished qualifier **and** the booking, and sent as `vsl_tag` in all three webhooks. GHL shows them lowercased (`systemsvsl`). |
+| `qualified-vsl` | cleared the qualifier from any of the four VSLs (re-applied at booking). Never on `advisory not a fit`. |
 
 > **`advisory opt-in` is the qualifier's base tag now, not `advisory buyer`.** Almost everyone reaching the qualifier has paid nothing. Tagging them as buyers would drop them out of every pre-purchase sequence, since all of those are gated on that tag being absent — and the downsell would never reach the people it exists for.
 
