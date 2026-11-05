@@ -16,8 +16,19 @@
 // monthly has parts, the sales page starts arguing about the parts.
 //
 // There is also a ONE-TIME SETUP FEE covering the build. It is deliberately
-// not a constant here and not a number on any page: it is quoted on the call,
-// because it varies with what a firm already has. Pages must DISCLOSE it —
+// not a constant here and not a number on any page: it is given on the call.
+//
+// IT IS FLAT. The same fee for every firm, because every firm gets the same
+// build — the website, the portal, the funnel and the automations. It is not
+// scoped per firm and there is no smaller version to sell, because the
+// system does not work with a piece missing.
+//
+// This comment used to read "because it varies with what a firm already
+// has". That was removed from the pages on 2026-10-20 and the reason is in
+// components/booking/PricingBlock: it read as a reason the fee might move
+// and invited a firm to negotiate down from a number nobody had said yet.
+// The comment here was missed in that pass, which is how lib/candor-corpus
+// then inherited the old claim from it. Do not reintroduce it. Pages must DISCLOSE it —
 // a $9,997 sticker with an unmentioned setup fee is a bait — they just must
 // not price it.
 //
