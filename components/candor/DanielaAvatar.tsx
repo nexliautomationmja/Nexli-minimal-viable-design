@@ -55,7 +55,7 @@ const SRC = '/daniela-avatar.png';
 // down the left would cost the bubble a tenth of a 390px screen. md is the
 // phone's hero size: 88px plus an eyebrow underneath was a full screen-row
 // above the headline before anyone read a word.
-const PX = { xs: 24, sm: 36, md: 56, lg: 88 } as const;
+const PX = { xs: 24, sm: 36, md: 48, lg: 88 } as const;
 
 export default function DanielaAvatar({
   size = 'sm',
