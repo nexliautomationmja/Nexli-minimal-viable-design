@@ -30,6 +30,9 @@ const DISALLOW = [
   ]),
   // Accelerator funnel inner steps. /accelerator itself stays crawlable —
   // it is the ad destination and a legitimate free-resource page.
+  // Candor is an unlisted link in the booking email sequence, not a search
+  // destination.
+  '/candor',
   '/accelerator/qualify',
   '/accelerator/next',
   '/accelerator/sending',

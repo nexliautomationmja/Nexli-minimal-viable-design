@@ -1,0 +1,28 @@
+Subject: The questions you haven't asked yet
+
+
+Hello, {{inboundWebhookRequest.firstName}}
+
+Most people book a call like ours with two or three doubts they never
+say out loud. Usually some version of: I've been burned by an agency
+before, referrals are working fine, or the year is nearly over so why
+start now.
+
+You shouldn't spend a cent with an agency until those are answered, and
+you shouldn't have to spend the call on them either.
+
+So ask them here instead:
+
+https://www.nexli.net/candor
+
+It's called Candor. Ask it anything — the price, the setup fee, what
+happens if it doesn't work, whether this even fits a firm your size. It
+answers straight, and it will tell you when it doesn't know something
+rather than guess. Nothing you ask comes up on the call unless you
+raise it.
+
+Then we can spend our time on your firm instead of on my company.
+
+See you {{contact.booking_start}}.
+
+— Marcel
