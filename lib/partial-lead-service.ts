@@ -48,6 +48,7 @@ import {
   qualifyPathForAngle,
   safeAngle,
   TAG_ADVISORY_INCOMPLETE,
+  vslTag,
 } from "@/lib/advisory-config";
 
 export interface PartialLeadConfig {
@@ -140,7 +141,8 @@ export async function recordPartialLead(req: NextRequest, cfg: PartialLeadConfig
       /^[a-z0-9-]{1,32}$/.test(rawAngle.trim().toLowerCase())
         ? rawAngle.trim().toLowerCase()
         : null;
-    const angleTag = angle ? `vsl ${angle}` : null;
+    // agencyVSL, systemsVSL, … — null for anything but the four known angles.
+    const angleTag = vslTag(angle);
     const userAgent = req.headers.get("user-agent") || "";
 
     const db = getDb();
@@ -211,6 +213,8 @@ export async function recordPartialLead(req: NextRequest, cfg: PartialLeadConfig
             fbclid: attribution.fbclid || null,
             landing_page: attribution.landing_page || null,
             vsl_angle: angle,
+            // The tag itself (e.g. "systemsVSL"), for branching in the flow.
+            vsl_tag: angleTag,
             submitted_at: new Date().toISOString(),
           }),
         }).catch(() => {});

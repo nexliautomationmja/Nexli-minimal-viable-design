@@ -36,6 +36,11 @@ interface InlineCalEmbedProps {
   leadToken?: string;
   /** Prefilled Cal.com notes. */
   notes?: string;
+  /**
+   * Which VSL the booking came through ('systems', 'acquisition', …), posted
+   * as `angle` so bookedEndpoint can tag the contact. Omitted when unset.
+   */
+  angle?: string;
   /** Meta pixel Schedule event content_name. */
   scheduleContentName?: string;
   /**
@@ -68,6 +73,7 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
   sessionId,
   leadToken,
   notes,
+  angle,
   scheduleContentName = 'Kickoff Call',
   brandColor = '#3b82f6',
   bookedTitle = "You're booked.",
@@ -228,6 +234,7 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
             booking_uid: data.uid ?? data.booking?.uid ?? '',
             start_time: data.date ?? data.booking?.startTime ?? '',
             attendee_timezone: attendeeTimezone,
+            ...(angle ? { angle } : {}),
           }),
         }).catch(() => {});
 

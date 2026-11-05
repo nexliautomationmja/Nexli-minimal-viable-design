@@ -319,6 +319,38 @@ export function safeAngle(value: string | null | undefined): VslAngle {
   return isVslAngle(value) ? value : VSL_ANGLE_AGENCY;
 }
 
+/**
+ * The GoHighLevel tag naming which VSL a lead came through:
+ *
+ *   agencyVSL · better-clientsVSL · systemsVSL · acquisitionVSL
+ *
+ * These are the names the GHL workflows filter on (the Advisory Incomplete
+ * flow branches on them). GHL stores tags lowercased, so they show up there
+ * as agencyvsl, better-clientsvsl and so on — matching is unaffected.
+ *
+ * Applied at all three writes — the contact step, the finished qualifier
+ * and the booking — so the tag is on the contact whichever of those a lead
+ * stops at, and before each webhook fires.
+ *
+ * Only the four known angles produce a tag. The value arrives in a POST
+ * body, and an unchecked string here would mint arbitrary CRM tags on demand.
+ */
+export function vslTag(angle: string | null | undefined): string | null {
+  return isVslAngle(angle) ? `${angle}VSL` : null;
+}
+
+/**
+ * Cleared the qualifier, having come in through one of the four VSLs.
+ *
+ * One tag for every angle, so a GHL flow can target all qualified VSL leads
+ * without listing four tags — pair it with the angle's own tag when the
+ * flow needs to know which one. Applied by the qualifier when the firm
+ * clears the bar, and again at booking (a booking is only possible for a
+ * qualified firm). Never applied to 'not a fit', nor to the Accelerator or
+ * demo funnels, which send no angle.
+ */
+export const TAG_QUALIFIED_VSL = 'qualified-vsl';
+
 export const ADVISORY_CALL_PATH = '/agency/call';
 export const ADVISORY_NEXT_STEPS_PATH = '/agency/next-steps';
 
