@@ -89,6 +89,13 @@ export default function CandorClient({
   const [error, setError] = useState<string | null>(null);
   const [asked, setAsked] = useState<string[]>([]);
 
+  /** Groups the questions from one visit into a single thread for Marcel. */
+  const sessionId = useRef<string>(
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10),
+  );
+
   const area = useRef<HTMLTextAreaElement>(null);
   const bottom = useRef<HTMLDivElement>(null);
 
@@ -132,6 +139,7 @@ export default function CandorClient({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             question: q,
+            sessionId: sessionId.current,
             // Strip the objection: the route validates role/content only.
             history: history.map((t) => ({ role: t.role, content: t.content })),
             firstName,
@@ -452,10 +460,14 @@ export default function CandorClient({
           <motion.div {...rise} transition={{ ...rise.transition, delay: 0.08 }} className="mt-8">
             {composer}
             {chipRow(CANDOR_OBJECTIONS)}
+            {/* The line that was here promised "nothing you ask comes up on
+                the call unless you raise it". That stopped being true the
+                moment the transcript started reaching Marcel, so it had to
+                go rather than be softened. What is left says only what is
+                still true. */}
             <p className="mt-6 text-center text-[11px] leading-relaxed" style={{ color: FAINT }}>
-              Nothing you ask here comes up on the call unless you raise it. Candor is an
-              AI — it answers from what Nexli publishes, and it tells you when it does not
-              know something rather than guessing.
+              Candor is an AI. It answers from what Nexli publishes, and it tells you when
+              it does not know something rather than guessing.
             </p>
           </motion.div>
         ) : (

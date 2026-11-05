@@ -27,6 +27,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { NextRequest, NextResponse } from 'next/server';
 import { CANDOR_CORPUS } from '@/lib/candor-corpus';
+import { matchObjection } from '@/lib/candor-objections';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import {
   currentTaxYear,
@@ -104,6 +105,51 @@ Important hedge: say MOST planning has to be executed inside the tax year, never
 
 type Turn = { role: 'user' | 'assistant'; content: string };
 
+/**
+ * Send the conversation to Marcel.
+ *
+ * WHY A WEBHOOK AND NOT A GHL CONTACT NOTE. syncContactToGhl refuses
+ * without an email, and most people reach Candor from a plain link in the
+ * booking sequence with no session cookie — so the contact-note path would
+ * silently cover only the minority who happen to arrive already identified.
+ * An outbound webhook carries every conversation, named or anonymous, and
+ * a GHL workflow on the other end can attach it to a contact when there is
+ * an email and just notify when there is not.
+ *
+ * FIRES ONCE PER ANSWER, carrying the whole thread each time. There is no
+ * reliable "conversation ended" event in a chat — an unload beacon is the
+ * usual trick and it is exactly the thing that silently stops working — so
+ * the last message to arrive is the complete transcript, and anything
+ * earlier is a prefix of it. Dedupe on session_id downstream.
+ *
+ * Fire and forget: this must never delay or fail an answer.
+ */
+function sendTranscript(payload: Record<string, unknown>): void {
+  const url = process.env.GHL_CANDOR_WEBHOOK_URL;
+  if (!url) {
+    console.warn('[Candor] GHL_CANDOR_WEBHOOK_URL not set — transcript not sent');
+    return;
+  }
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+    // Fire and forget, but NOT silent. The first version swallowed
+    // everything, which meant a rotated webhook URL or a GHL outage would
+    // lose transcripts with nothing anywhere to say so — and the only
+    // symptom would be Marcel slowly noticing he had stopped receiving
+    // them. The request still never blocks or fails the answer.
+    .then((res) => {
+      if (!res.ok) {
+        console.error(`[Candor] transcript webhook returned ${res.status}`);
+      }
+    })
+    .catch((err) => {
+      console.error('[Candor] transcript webhook failed:', err);
+    });
+}
+
 function parseHistory(raw: unknown): Turn[] {
   if (!Array.isArray(raw)) return [];
   return raw
@@ -171,6 +217,8 @@ export async function POST(req: NextRequest) {
       ? body.firstName.trim().slice(0, 60)
       : null;
   const leadId = typeof body?.leadId === 'string' ? body.leadId.slice(0, 64) : null;
+  const sessionId =
+    typeof body?.sessionId === 'string' ? body.sessionId.slice(0, 32) : 'unknown';
 
   // The point of the tool, beyond answering: finding out what they actually
   // object to, in their words, before the call. One line per question, picked
@@ -251,6 +299,32 @@ export async function POST(req: NextRequest) {
               out: final.usage.output_tokens,
             }),
           );
+
+          // The answer as it was actually delivered.
+          const answer = final.content
+            .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text')
+            .map((b) => b.text)
+            .join('\n')
+            .trim();
+
+          const thread = [...history, { role: 'user' as const, content: question }, { role: 'assistant' as const, content: answer }];
+
+          sendTranscript({
+            source: 'candor',
+            stage: 'candor_question',
+            session_id: sessionId,
+            lead_id: leadId,
+            firstName,
+            question_number: history.filter((t) => t.role === 'user').length + 1,
+            question,
+            answer,
+            matched_objection: matchObjection(question)?.id ?? null,
+            // Readable in a GHL notification email without any templating.
+            transcript: thread
+              .map((t) => `${t.role === 'user' ? 'THEM' : 'CANDOR'}: ${t.content}`)
+              .join('\n\n'),
+            asked_at: new Date().toISOString(),
+          });
         } catch (err) {
           console.error('[Candor] stream failed:', err);
           controller.enqueue(
