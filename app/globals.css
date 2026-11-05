@@ -138,9 +138,30 @@ html {
   animation: icon-float 3s ease-in-out infinite;
 }
 
+/* The streaming caret on /candor. A named class, for the same reason
+   .rim-spin and .icon-float are: the reduced-motion rule below can stop it,
+   and an arbitrary-value Tailwind class cannot be targeted. steps(1) rather
+   than a fade — a caret that eases is a glow, not a cursor. */
+@keyframes candor-caret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.candor-caret {
+  animation: candor-caret 1s steps(1) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rim-spin,
-  .icon-float {
+  .icon-float,
+  /* Held solid rather than hidden: it still marks where the text is going. */
+  .candor-caret {
     animation: none;
   }
 }

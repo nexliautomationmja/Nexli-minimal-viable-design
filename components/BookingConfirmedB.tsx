@@ -423,6 +423,44 @@ export default function BookingConfirmedB() {
           intro="Read them, or play them and hear Daniela answer in her own voice. Either way the call can be about whether this fits, not about what it is."
         />
 
+        {/* ── 10b. Anything the eight answers did not cover ──────────────
+            The FAQ above is fixed: eight recorded answers, chosen in advance.
+            Candor takes the question nobody anticipated, which is usually the
+            one actually keeping them from signing. Plain link, no resume
+            token — /candor is ungated and a blank merge field is a dead link.
+        */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <a
+            href="/candor"
+            className="group inline-flex max-w-full flex-col items-center gap-3 rounded-3xl border px-6 py-7 transition-colors hover:border-blue-400/40 sm:px-10"
+            style={{
+              borderColor: 'rgba(255,255,255,0.1)',
+              background: 'rgba(255,255,255,0.03)',
+            }}
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">
+              Ask anything
+            </span>
+            <span className="text-xl font-black tracking-tight text-[var(--text-main)] sm:text-2xl">
+              Still have a question you&apos;d rather not{' '}
+              <span className="text-green-500">ask on the call?</span>
+            </span>
+            <span className="max-w-lg text-sm leading-relaxed text-[var(--text-muted)]">
+              Candor answers it now — the price, the risk, what happens if it does not
+              work. It tells you straight, and it tells you when it does not know.
+            </span>
+            <span className="mt-1 inline-flex items-center gap-2 text-sm font-bold text-blue-400">
+              Open Candor
+              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </span>
+          </a>
+        </motion.section>
+
         {/* ── 11. Close ──────────────────────────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}

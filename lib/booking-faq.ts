@@ -40,12 +40,13 @@ import {
  * yet. It is one build, and almost nobody arrives with any of it in
  * place.
  *
- * It survives HERE only because b-pricing.mp3 was rendered from this
- * exact string and the ElevenLabs key has since been rotated, so the
- * clip cannot be re-rendered. Changing the text alone would have
- * Daniela saying a sentence the page does not show. Fix both together:
- * put a working ELEVENLABS_API_KEY in .env.local, drop the clause, and
- * run the command above.
+ * RESOLVED 2026-11-04, though not the way this note first prescribed.
+ * The clause is now gone from the written answer, and b-pricing is the
+ * one item with no `audio` — because /candor answers the same question
+ * live and two surfaces contradicting each other about money is worse
+ * than one question having no player. The key still returns 401, so
+ * re-rendering remains blocked; see the note on the item itself for how
+ * to restore the clip once that is fixed.
  *
  * Dropping `audio` from an item is safe — it falls back to her written
  * reply with no player, and the layout is identical either way.
@@ -103,9 +104,25 @@ export const BOOKING_B_FAQ: FaqItem[] = [
       'Marcel, the founder. Not a junior, not a pod, not someone you meet once on the kickoff call and never again. As the firm grows that will change, and we will tell you before it does.',
   },
   {
+    // NO AUDIO, DELIBERATELY, AND THE ONLY ITEM WITHOUT IT.
+    //
+    // b-pricing.mp3 was rendered from the old string, which ended "because
+    // it depends on what you already have". That claim was retired on
+    // 2026-10-20 and the written answer below is now corrected: the setup
+    // fee is FLAT, the same for every firm. The clip cannot be re-rendered
+    // — the ElevenLabs key in .env.local returns 401 — so the choice was
+    // between Daniela's voice making a money claim the company no longer
+    // makes, and this question having no player. Silence wins.
+    //
+    // The header above calls this out as the safe move: dropping `audio`
+    // falls back to the written reply and the layout is identical.
+    //
+    // TO RESTORE: put a working ELEVENLABS_API_KEY in .env.local, then
+    //   npx tsx scripts/generate-faq-audio.ts --force --only b-pricing
+    // and add `audio: '/audio/faq/b-pricing.mp3',` back here. The script
+    // renders from the string below, so the two cannot drift again.
     question: 'How is the price built?',
-    audio: '/audio/faq/b-pricing.mp3',
     answer:
-      `${usd(AGENCY_TOTAL_MONTHLY)} a month. One number, one invoice.\n\n${usd(AGENCY_AD_SPEND)} of that is your ad budget, which we place into the campaigns for you, and the rest is the system — the website, the portal, the funnel and the automations behind them, built and run for you.\n\nOn top of that there is a one-time setup fee covering the build — the website, the portal, the funnel and the automations all have to be made before any of this runs, and that is real work before you see a lead. We put a number on it on the call, because it depends on what you already have. What there is not is per-component pricing: we do not sell the pieces separately because they do not work separately. There is an agreement to sign with a six-month initial term — long enough for the campaigns to have actually run — and after that it continues month to month on 30 days notice.`,
+      `${usd(AGENCY_TOTAL_MONTHLY)} a month. One number, one invoice.\n\n${usd(AGENCY_AD_SPEND)} of that is your ad budget, which we place into the campaigns for you, and the rest is the system — the website, the portal, the funnel and the automations behind them, built and run for you.\n\nOn top of that there is a one-time setup fee covering the build — the website, the portal, the funnel and the automations all have to be made before any of this runs, and that is real work before you see a lead. We put a number on it on the call. It is the same fee for every firm — everyone gets the same build, and it does not work with a piece missing. What there is not is per-component pricing: we do not sell the pieces separately because they do not work separately. There is an agreement to sign with a six-month initial term — long enough for the campaigns to have actually run — and after that it continues month to month on 30 days notice.`,
   },
 ];

@@ -1,6 +1,6 @@
 # Booking flow — plain-text emails
 
-The four emails in the appointment-status workflow ("Booked Appointment
+The five emails in the appointment-status workflow ("Booked Appointment
 Flow"). Deliberately plain: no HTML, no logo, no buttons.
 
 A designed marketing email saying "your call is in 30 minutes" reads as
@@ -54,3 +54,19 @@ blank href is a dead email.
 | 2-48h.txt | 48h before | pleasure — $15K to $55K |
 | 3-24h.txt | 24h before | pain — the clients you have now |
 | 4-30min.txt | 30min before | logistics — the Zoom link |
+
+
+## 5-candor.txt
+
+Added 4 November 2026. Send it between the confirmation and the 48-hour
+email — far enough in that they have stopped thinking about the booking,
+early enough that whatever it surfaces can still change how the call is
+run.
+
+Its job is not to sell. It is to get the two or three unspoken doubts
+out of their head and into a box before the call, so the call is not
+spent on them. The questions people actually ask land in the server logs
+as `[Candor]` lines, which is the other half of why this exists.
+
+Same link rule as the rest of this folder: the plain URL, not a resume
+link. /candor is ungated on purpose.

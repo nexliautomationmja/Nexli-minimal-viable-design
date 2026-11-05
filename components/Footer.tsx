@@ -37,6 +37,9 @@ const Footer: React.FC = () => {
     // restructure those steps sat under '/advisory-pricing/' and were
     // covered by the prefix above; exact matches alone would have put the
     // navbar and footer back on nine funnel pages.
+    // Candor, the pre-call AI tool. Its own chrome, same as the funnel pages.
+    pathname === '/candor' ||
+    pathname.startsWith('/candor/') ||
     pathname === '/agency' ||
     pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||
