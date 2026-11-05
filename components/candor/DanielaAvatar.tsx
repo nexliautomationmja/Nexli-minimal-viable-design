@@ -51,20 +51,24 @@ import { motion } from 'framer-motion';
 // pixels nobody sees.
 const SRC = '/daniela-avatar.png';
 
-const PX = { sm: 36, lg: 88 } as const;
+// xs sits inline in an answer's name row on a phone, where a 36px column
+// down the left would cost the bubble a tenth of a 390px screen. md is the
+// phone's hero size: 88px plus an eyebrow underneath was a full screen-row
+// above the headline before anyone read a word.
+const PX = { xs: 24, sm: 36, md: 56, lg: 88 } as const;
 
 export default function DanielaAvatar({
   size = 'sm',
   presence = false,
   className = '',
 }: {
-  size?: 'sm' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   /** The pulsing "available" dot. One instance per page — it is part of the motion budget. */
   presence?: boolean;
   className?: string;
 }) {
   const px = PX[size];
-  const lg = size === 'lg';
+  const lg = size === 'lg' || size === 'md';
 
   return (
     <span className={`relative inline-flex shrink-0 ${className}`} style={{ width: px, height: px }}>
@@ -95,8 +99,10 @@ export default function DanielaAvatar({
 
       {presence && (
         <span
-          className={`absolute rounded-full border-2 bg-green-500 ${lg ? 'h-4 w-4' : 'h-2.5 w-2.5'}`}
-          style={{ right: lg ? 2 : 0, bottom: lg ? 2 : 0, borderColor: '#020617' }}
+          className={`absolute rounded-full border-2 bg-green-500 ${
+            size === 'lg' ? 'h-4 w-4' : size === 'md' ? 'h-3 w-3' : 'h-2.5 w-2.5'
+          }`}
+          style={{ right: size === 'lg' ? 2 : 0, bottom: size === 'lg' ? 2 : 0, borderColor: '#020617' }}
         >
           {/* Same pulse as the avatar stack in components/Hero.tsx. */}
           <motion.span

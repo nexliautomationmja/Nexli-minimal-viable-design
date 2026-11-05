@@ -96,8 +96,34 @@ export default function CandorClient({
       : Math.random().toString(36).slice(2, 10),
   );
 
+  /**
+   * How far the on-screen keyboard reaches into the layout viewport.
+   *
+   * iOS Safari does not shrink the layout viewport when the keyboard opens —
+   * it shrinks the VISUAL viewport — so a `bottom: 0` element stays pinned
+   * to a bottom edge that is now behind the keyboard, and the composer
+   * someone is typing into vanishes. The gap between the two viewports is
+   * the keyboard; lifting the bar by exactly that keeps it on top. Where a
+   * browser resizes the layout viewport instead (some Android builds),
+   * innerHeight shrinks with it, the gap is zero, and this does nothing —
+   * which is correct, because the bar is already above the keyboard there.
+   */
+  const [keyboardInset, setKeyboardInset] = useState(0);
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () =>
+      setKeyboardInset(Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)));
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    update();
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+    };
+  }, []);
+
   const area = useRef<HTMLTextAreaElement>(null);
-  const bottom = useRef<HTMLDivElement>(null);
 
   const grow = useCallback(() => {
     const el = area.current;
@@ -106,9 +132,41 @@ export default function CandorClient({
     el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
   }, []);
 
+  /**
+   * Scroll ONCE per new exchange, to the question, and then leave it alone.
+   *
+   * This used to run on every streamed token with block: 'end', chasing the
+   * newest word down the page. On a phone that meant tapping an objection
+   * with a recorded answer and arriving mid-paragraph with the video already
+   * scrolled off the top — the thing the chip promised, skipped. Bringing the
+   * question to the top instead means the answer reads from its first line,
+   * video first, while the text types out underneath at its own pace.
+   *
+   * Keyed on length, not on `turns`, because `turns` changes with every
+   * chunk; a smooth scroll restarted forty times a second is also what made
+   * the old version judder.
+   */
+  const turnRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const lastCount = useRef(0);
   useEffect(() => {
-    bottom.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [turns]);
+    if (turns.length > lastCount.current && turns.length >= 2) {
+      const el = turnRefs.current[turns.length - 2];
+      if (el) {
+        // offsetTop, NOT scrollIntoView / getBoundingClientRect. The new turn
+        // is mid-entrance when this runs — translated 28px down by `rise` —
+        // and both of those measure the transformed box, so the page landed
+        // aiming where the turn was rather than where it settles, and the
+        // question ended up 12px off the top edge. offsetTop ignores
+        // transforms. The margin is read from the element so the
+        // scroll-mt-* classes stay the single place it is set.
+        let y = 0;
+        for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) y += n.offsetTop;
+        const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+        window.scrollTo({ top: Math.max(0, y - margin), behavior: 'smooth' });
+      }
+    }
+    lastCount.current = turns.length;
+  }, [turns.length]);
 
   const ask = useCallback(
     async (question: string, objection?: CandorObjection) => {
@@ -186,7 +244,7 @@ export default function CandorClient({
   const remaining = CANDOR_OBJECTIONS.filter((o) => !asked.includes(o.id));
 
   const composer = (
-    <RimCard innerClassName="p-0" orbs>
+    <RimCard innerClassName="p-0 relative" orbs>
       <label htmlFor="candor-input" className="sr-only">
         Ask Candor a question
       </label>
@@ -211,18 +269,24 @@ export default function CandorClient({
             void ask(input);
           }
         }}
-        className="block w-full resize-none bg-transparent px-5 pb-2 pt-5 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35"
+        // appearance-none is the fix for the grey box behind the placeholder
+        // on iPhone. Safari paints its NATIVE textarea chrome — background
+        // and inset shadow included — underneath bg-transparent unless the
+        // native appearance is switched off. 16px exactly: anything smaller
+        // and iOS zooms the whole page the moment the field is tapped.
+        //
+        // pr-16 keeps text clear of the send button, which now sits INSIDE
+        // the field. A separate footer row under the textarea cost a phone
+        // ~56px of composer height to hold one button and a keyboard hint
+        // that touch screens cannot use anyway.
+        className="block w-full resize-none appearance-none bg-transparent pb-3.5 pl-5 pr-16 pt-4 text-[16px] leading-relaxed text-white shadow-none outline-none placeholder:text-white/35 sm:pt-5"
       />
-      <div className="flex items-center gap-2 px-3 pb-3 pt-1">
-        <span className="hidden min-w-0 flex-1 truncate pl-2 text-[11px] sm:block" style={{ color: FAINT }}>
-          Enter to ask · Shift+Enter for a new line
-        </span>
-        <button
+      <button
           type="button"
           onClick={() => void ask(input)}
           disabled={busy || !input.trim()}
           aria-label="Ask"
-          className="ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:from-white/10 disabled:to-white/10 disabled:text-white/30 disabled:shadow-none disabled:hover:scale-100"
+          className="absolute bottom-2.5 right-2.5 flex h-10 w-10 shrink-0 touch-manipulation items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-500/30 transition-transform [-webkit-tap-highlight-color:transparent] hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:from-white/10 disabled:to-white/10 disabled:text-white/30 disabled:shadow-none disabled:hover:scale-100"
         >
           {busy ? (
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -230,7 +294,6 @@ export default function CandorClient({
             <ArrowUp size={18} />
           )}
         </button>
-      </div>
     </RimCard>
   );
 
@@ -241,7 +304,16 @@ export default function CandorClient({
    * quiet, so the accented ones actually read as the offer.
    */
   const chipRow = (items: CandorObjection[], compact = false) => (
-    <div className={`flex flex-wrap justify-center gap-2 ${compact ? 'mt-4' : 'mt-5'}`}>
+    // A list on a phone, pills from sm up. Centred pills of five different
+    // widths wrapped into five ragged rows on a 390px screen and ran under
+    // Safari's toolbar. A full-width list is the same content read the way
+    // a phone reads a menu: one row per option, every row a 44px tap
+    // target, the runtimes lined up down the right edge.
+    <div
+      className={`flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:gap-2 sm:justify-center ${
+        compact ? 'mt-4' : 'mt-3 sm:mt-5'
+      }`}
+    >
       {items.map((o) => {
         const video = hasVideo(o);
         return (
@@ -250,7 +322,7 @@ export default function CandorClient({
             type="button"
             onClick={() => void ask(o.prompt, o)}
             disabled={busy}
-            className={`group inline-flex max-w-full items-center gap-2 rounded-2xl border px-3 py-1.5 text-left text-[11px] transition-colors disabled:opacity-40 sm:rounded-full ${
+            className={`group flex min-h-[44px] w-full touch-manipulation items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-left text-[13.5px] transition-colors [-webkit-tap-highlight-color:transparent] disabled:opacity-40 sm:inline-flex sm:min-h-0 sm:w-auto sm:max-w-full sm:gap-2 sm:rounded-full sm:px-3 sm:py-1.5 sm:text-[11px] ${
               video
                 ? 'border-cyan-400/30 bg-cyan-400/[0.07] text-cyan-100/90 hover:border-cyan-300/60 hover:bg-cyan-400/[0.12] hover:text-white'
                 : 'border-white/10 bg-white/[0.03] text-white/55 hover:border-blue-400/40 hover:bg-white/[0.06] hover:text-white'
@@ -259,14 +331,16 @@ export default function CandorClient({
             {video && (
               <span
                 aria-hidden="true"
-                className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-cyan-400/20 text-cyan-300"
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-400/20 text-cyan-300 sm:h-4 sm:w-4"
               >
-                <Play size={8} fill="currentColor" strokeWidth={0} />
+                <Play size={9} fill="currentColor" strokeWidth={0} />
               </span>
             )}
             <span className="min-w-0">{o.label}</span>
             {video && o.duration && (
-              <span className="shrink-0 tabular-nums text-[10px] text-cyan-300/60">{o.duration}</span>
+              <span className="ml-auto shrink-0 tabular-nums text-[11px] text-cyan-300/60 sm:ml-0 sm:text-[10px]">
+                {o.duration}
+              </span>
             )}
           </button>
         );
@@ -275,8 +349,28 @@ export default function CandorClient({
   );
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#020617' }}>
-      <FunnelLogo />
+    // overflow-anchor: none on the WHOLE page. Chrome's scroll anchoring
+    // picks a visible node to hold steady while layout changes, and as an
+    // answer streams it was scrolling the page down after the text — the
+    // token-chasing this page had just stopped doing, back via the browser.
+    //
+    // It has to be the page, not the thread. Excluding only the thread made
+    // Chrome anchor on the next visible thing, the background glow at
+    // top-1/3 of <main>; as the answer lengthened the page, that glow slid
+    // down a third as far and the page followed it. Measured exactly: +96px
+    // of content, +32px of scroll, every time. Nothing above the reading
+    // point changes height on its own here (the video box is a fixed size),
+    // so there is nothing for anchoring to protect.
+    <main
+      className="relative min-h-screen overflow-x-hidden [overflow-anchor:none]"
+      style={{ backgroundColor: '#020617' }}
+    >
+      {/* Off on a phone, the same call already made for the VSL pages: on a
+          narrow screen it is a whole row of chrome above the person you
+          came to talk to. FunnelLogo takes no className, hence the wrapper. */}
+      <div className="hidden md:block">
+        <FunnelLogo />
+      </div>
 
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
@@ -294,19 +388,32 @@ export default function CandorClient({
       </div>
 
       <div
-        className={`mx-auto max-w-3xl px-4 pt-24 sm:px-6 sm:pt-28 ${
-          started ? 'pb-44 sm:pb-16' : 'pb-10'
+        className={`mx-auto max-w-3xl px-4 sm:px-6 sm:pt-28 ${
+          started ? 'pb-32 pt-6 sm:pb-16' : 'pb-10 pt-[max(1rem,env(safe-area-inset-top))]'
         }`}
       >
         {/* ── The empty state: her face, then the question ─────────────── */}
         {!started && (
           <motion.div {...rise} className="flex flex-col items-center text-center">
-            <DanielaAvatar size="lg" presence />
-            <div className="mt-5">
+            {/* Phone: her face and her name share one row. Desktop: the
+                portrait stands alone with the eyebrow beneath. Stacked on a
+                phone, the 88px portrait plus the eyebrow took a fifth of the
+                screen before the headline, and pushed the composer below
+                halfway — the one thing on the page that has to be in reach.
+                Two elements rather than one resized avatar because the size
+                is set in px on the element; only one is ever displayed. */}
+            <div className="flex items-center gap-3 sm:hidden">
+              <DanielaAvatar size="md" presence />
               <Eyebrow>Daniela · COO, Nexli</Eyebrow>
             </div>
+            <div className="hidden flex-col items-center sm:flex">
+              <DanielaAvatar size="lg" presence />
+              <div className="mt-5">
+                <Eyebrow>Daniela · COO, Nexli</Eyebrow>
+              </div>
+            </div>
             <h1
-              className="mt-4 text-4xl font-bold tracking-tighter text-white sm:text-5xl"
+              className="mt-4 text-[1.9rem] font-bold leading-[1.08] tracking-tighter text-white sm:text-5xl"
               style={OUTFIT}
             >
               {firstName ? `${firstName}, what's ` : "What's "}
@@ -315,12 +422,17 @@ export default function CandorClient({
               </span>
             </h1>
             <p
-              className="mx-auto mt-3 max-w-xl text-sm leading-relaxed sm:text-base"
+              className="mx-auto mt-2.5 max-w-xl text-[15px] leading-relaxed sm:mt-3 sm:text-base"
               style={{ color: MUTED }}
             >
-              Your call is booked. Ask me anything before it — the price, the risk,
-              whether this works for a firm like yours. You will get a straight answer,
-              including the ones that don&apos;t flatter us.
+              {/* The middle clause is desktop-only: on a phone it was the line
+                  that took this paragraph to three, and the two that remain
+                  carry the whole promise. */}
+              Your call is booked. Ask me anything before it
+              <span className="hidden sm:inline">
+                {' '}— the price, the risk, whether this works for a firm like yours
+              </span>
+              . You will get a straight answer, including the ones that don&apos;t flatter us.
             </p>
           </motion.div>
         )}
@@ -330,20 +442,45 @@ export default function CandorClient({
           <div className="space-y-6">
             {turns.map((t, i) =>
               t.role === 'user' ? (
-                <motion.div key={i} {...rise} className="flex justify-end">
+                <motion.div
+                  key={i}
+                  ref={(el) => {
+                    turnRefs.current[i] = el;
+                  }}
+                  {...rise}
+                  className="flex scroll-mt-4 justify-end sm:scroll-mt-24"
+                >
                   <div className="max-w-[85%] rounded-2xl rounded-br-md border border-blue-400/25 bg-gradient-to-br from-blue-600/25 to-cyan-500/15 px-4 py-3">
-                    <p className="whitespace-pre-line text-sm leading-relaxed" style={{ color: '#ffffff' }}>
+                    <p className="whitespace-pre-line text-[15px] leading-relaxed sm:text-sm" style={{ color: '#ffffff' }}>
                       {t.content}
                     </p>
                   </div>
                 </motion.div>
               ) : (
-                <motion.div key={i} {...rise} className="flex items-start gap-3">
-                  <DanielaAvatar size="sm" className="mt-0.5" />
+                <motion.div
+                  key={i}
+                  ref={(el) => {
+                    turnRefs.current[i] = el;
+                  }}
+                  {...rise}
+                  className="flex items-start gap-3"
+                >
+                  {/* The avatar column is desktop-only. On a phone it moves
+                      into the name row, so the answer — and the video in it —
+                      gets the full width of the screen instead of losing
+                      48px to a column holding one small circle. */}
+                  <div className="mt-0.5 hidden sm:block">
+                    <DanielaAvatar size="sm" />
+                  </div>
                   <div className="min-w-0 flex-1 space-y-1.5">
-                    <p className="ml-1 text-[10px] font-bold" style={{ color: FAINT }}>
-                      Daniela, COO
-                    </p>
+                    <div className="ml-1 flex items-center gap-2">
+                      <span className="sm:hidden">
+                        <DanielaAvatar size="xs" />
+                      </span>
+                      <p className="text-[11px] font-bold sm:text-[10px]" style={{ color: FAINT }}>
+                        Daniela, COO
+                      </p>
+                    </div>
                     <div className="overflow-hidden rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.04] backdrop-blur-sm">
                       {/* Her recorded answer, when one exists for this
                           objection. It sits ABOVE the written reply rather
@@ -354,11 +491,13 @@ export default function CandorClient({
                           concede the objection out loud, in her face. */}
                       {t.objection && hasVideo(t.objection) && (
                         <div
-                          className="relative flex justify-center overflow-hidden border-b"
+                          // svh, not vh: on iOS 100vh is the height with the
+                          // toolbar HIDDEN, so a vh-sized video overshoots the
+                          // screen the moment Safari's bars are showing.
+                          className="relative flex h-[min(52svh,400px)] justify-center overflow-hidden border-b sm:h-[440px]"
                           style={{
                             borderColor: 'rgba(255,255,255,0.08)',
                             background: '#070c17',
-                            height: 'min(58vh, 440px)',
                           }}
                         >
                           {/* Pillarbox, filled with a blurred copy of the
@@ -418,7 +557,10 @@ export default function CandorClient({
                         {splitParagraphs(t.content).map((para, pi, all) => (
                           <p
                             key={pi}
-                            className={`text-sm leading-[1.7] ${pi ? 'mt-3.5' : ''}`}
+                            // 15px on a phone. 14px is comfortable on a
+                            // monitor at arm's length and small on a phone
+                            // held closer, and these answers are the product.
+                            className={`text-[15px] leading-[1.65] sm:text-sm sm:leading-[1.7] ${pi ? 'mt-3.5' : ''}`}
                             style={{ color: 'rgba(255,255,255,0.88)' }}
                           >
                             {/* renderInline is the guides' helper — it turns
@@ -448,7 +590,6 @@ export default function CandorClient({
             {/* What they have not asked yet. One question becomes four. */}
             {!busy && remaining.length > 0 && chipRow(remaining.slice(0, 3), true)}
 
-            <div ref={bottom} />
           </div>
         )}
 
@@ -457,8 +598,19 @@ export default function CandorClient({
             Pinned to the bottom on a phone once the thread is running, so
             the answer scrolls behind it instead of pushing it off screen. */}
         {!started ? (
-          <motion.div {...rise} transition={{ ...rise.transition, delay: 0.08 }} className="mt-8">
+          <motion.div {...rise} transition={{ ...rise.transition, delay: 0.08 }} className="mt-5 sm:mt-8">
             {composer}
+            <p className="mt-2 hidden text-center text-[11px] sm:block" style={{ color: FAINT }}>
+              Enter to ask · Shift+Enter for a new line
+            </p>
+            {error && (
+              <p role="alert" className="mt-3 text-center text-sm" style={{ color: '#fca5a5' }}>
+                {error}
+              </p>
+            )}
+            <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.16em] sm:hidden" style={{ color: FAINT }}>
+              Or start with the one that&apos;s closest
+            </p>
             {chipRow(CANDOR_OBJECTIONS)}
             {/* The line that was here promised "nothing you ask comes up on
                 the call unless you raise it". That stopped being true the
@@ -471,22 +623,30 @@ export default function CandorClient({
             </p>
           </motion.div>
         ) : (
+          // Background and border are CLASSES now. They were inline, and an
+          // inline style beats a class — so sm:bg-transparent never applied
+          // and desktop carried a dark band behind the composer it was never
+          // meant to have.
+          //
+          // `bottom` is the keyboard inset: see the hook above. The safe-area
+          // padding only does anything because page.tsx sets viewportFit
+          // 'cover'; without it iOS reports the inset as 0.
           <div
-            className="fixed inset-x-0 bottom-0 z-[100] border-t px-4 pt-3 backdrop-blur-xl sm:static sm:mt-8 sm:border-0 sm:bg-transparent sm:px-0 sm:pt-0 sm:backdrop-blur-none"
-            style={{
-              background: 'rgba(2,6,23,0.9)',
-              borderColor: 'rgba(255,255,255,0.08)',
-              paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
-            }}
+            className="fixed inset-x-0 bottom-0 z-[100] border-t border-white/[0.08] bg-[#020617]/90 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3 backdrop-blur-xl sm:static sm:mt-8 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0 sm:backdrop-blur-none"
+            style={{ bottom: keyboardInset }}
           >
-            <div className="mx-auto max-w-3xl sm:max-w-none">{composer}</div>
+            <div className="mx-auto max-w-3xl sm:max-w-none">
+              {composer}
+              {/* Inside the bar, not after it: rendered after, on a phone the
+                  error landed underneath the fixed composer where nobody
+                  could see it. */}
+              {error && (
+                <p role="alert" className="mt-2 text-center text-sm" style={{ color: '#fca5a5' }}>
+                  {error}
+                </p>
+              )}
+            </div>
           </div>
-        )}
-
-        {error && (
-          <p role="alert" className="mt-3 text-center text-sm" style={{ color: '#fca5a5' }}>
-            {error}
-          </p>
         )}
       </div>
 

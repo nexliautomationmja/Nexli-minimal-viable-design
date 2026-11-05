@@ -15,7 +15,7 @@
 // sequence, not a search destination, and four near-identical AI chat pages
 // is not something to invite a crawler into.
 // ---------------------------------------------------------------------------
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { eq } from 'drizzle-orm';
 import { getDb } from '@/lib/db';
 import { leads } from '@/lib/leads-schema';
@@ -28,6 +28,28 @@ export const metadata: Metadata = {
   title: 'Candor | Nexli',
   description: 'Ask anything before your strategy call. Straight answers.',
   robots: 'noindex, nofollow',
+};
+
+/**
+ * Two things a phone needs that a desktop does not.
+ *
+ * viewportFit 'cover' is what makes env(safe-area-inset-bottom) report a
+ * real number on iOS. Without it Safari returns 0, so the padding meant to
+ * lift the pinned composer clear of the home indicator silently did
+ * nothing. NOTE: no page on this site sets it, so the same padding on
+ * VslFunnel's StickyCTA is inert on iPhone too — scoped to /candor here
+ * rather than changed site-wide, because cover also lets content run under
+ * the notch in landscape and every fixed element would need checking.
+ *
+ * themeColor tints Safari's own toolbar to the page, so the top of the
+ * screen is one dark surface instead of a grey browser bar above a navy
+ * page.
+ */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#020617',
 };
 
 export default async function CandorPage() {
