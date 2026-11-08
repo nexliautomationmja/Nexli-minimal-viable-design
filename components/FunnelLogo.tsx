@@ -22,10 +22,17 @@ import React from 'react';
  * in-flow bar at the very top of the page - at top-6 the logo lands on top
  * of it. Same two values VslFunnel's StaticLogo and the UrgencyPill use, so
  * the three stay in line.
+ *
+ * `scrollAway` keeps it absolute at every width, for a page that reads as a
+ * long article on a tablet too: /math in reading mode, where a fixed pill
+ * sat on top of each slide's opening line as you scrolled.
  */
-const FunnelLogo: React.FC<{ belowBanner?: boolean }> = ({ belowBanner = false }) => (
+const FunnelLogo: React.FC<{ belowBanner?: boolean; scrollAway?: boolean }> = ({
+  belowBanner = false,
+  scrollAway = false,
+}) => (
   <div
-    className={`absolute md:fixed left-6 md:left-8 z-[110] ${
+    className={`${scrollAway ? 'absolute' : 'absolute md:fixed'} left-6 md:left-8 z-[110] ${
       belowBanner ? 'top-[4.5rem] md:top-[5.25rem]' : 'top-6 md:top-8'
     }`}
   >

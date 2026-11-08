@@ -29,6 +29,7 @@ import {
 import Columns, { LineKey, SwatchKey } from './Columns';
 import StackedBars from './StackedBars';
 import { FunnelDots, ScenarioToggle } from './ScenarioBits';
+import { FloatingChain, ShimmerBadge, StepTile } from './ChainIcons';
 import {
   Badge,
   Body,
@@ -38,7 +39,6 @@ import {
   GRADIENT_TEXT,
   HEADING,
   Heading,
-  Kicker,
   MUTED,
   PDF_HREF,
   PDF_NAME,
@@ -69,18 +69,31 @@ export function TitleSlide() {
   return (
     <Slide id="top" className="pt-28 sm:pt-32">
       <Reveal>
-        <Kicker>The Digital Rainmaker System · See the math</Kicker>
+        <ShimmerBadge>
+          Digital Rainmaker System<span className="hidden sm:inline"> · See the math</span>
+        </ShimmerBadge>
         <h1
-          className="mt-4 max-w-5xl text-pretty text-[2.4rem] sm:text-6xl lg:text-[clamp(3.6rem,5.6vw,5.6rem)]"
+          className="mt-5 max-w-5xl text-pretty text-[2.4rem] sm:text-6xl lg:text-[clamp(3.6rem,5.6vw,5.6rem)]"
           style={{ ...HEADING, lineHeight: 1.02 }}
         >
           What {usd(AD_SPEND)} a month in ads <span className={GRADIENT_TEXT}>can turn into.</span>
         </h1>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed sm:text-lg lg:text-xl" style={{ color: MUTED }}>
-          Three scenarios from conservative to best case, why the back end is where your firm grows, and
-          when you can expect to break even.
-        </p>
       </Reveal>
+
+      {/* The chain floats under the headline on a phone, as the Rainmaker
+          page's icons do, and beside the paragraph on a desktop, where it
+          costs the slide no height. */}
+      <div className="mt-7 flex flex-col gap-7 lg:mt-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+        <Reveal delay={0.08} className="order-2 lg:order-1">
+          <p className="max-w-2xl text-base leading-relaxed sm:text-lg lg:text-xl" style={{ color: MUTED }}>
+            Three scenarios from conservative to best case, why the back end is where your firm grows, and
+            when you can expect to break even.
+          </p>
+        </Reveal>
+        <div className="order-1 shrink-0 lg:order-2 lg:pr-2">
+          <FloatingChain />
+        </div>
+      </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3 lg:mt-14 lg:gap-5">
         {SCENARIOS.map((s, i) => {
@@ -172,9 +185,9 @@ export function HowSlide() {
                   last ? 'border-cyan-400/60 bg-cyan-400/[0.07] shadow-[0_0_40px_-12px_rgba(34,211,238,0.5)]' : 'border-white/10 bg-white/[0.035]'
                 }`}
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-500 text-xs font-black text-[#020617]">
-                  {st.n}
-                </span>
+                <div className="pr-1.5 pt-1.5">
+                  <StepTile index={i} popKey={`${id}-${st.n}`} />
+                </div>
                 <div className="mt-3 text-sm font-bold text-white">{st.label}</div>
                 <div className="mt-1 text-3xl font-black tracking-tight text-white lg:text-[2.1rem]">
                   <AnimatedNumber value={st.value} format={st.fmt} duration={700} />
@@ -216,13 +229,89 @@ export function HowSlide() {
 
 export function ScenariosSlide() {
   const cols = ['Scenario', 'Ad spend', 'Cost per booked call', 'Booked calls', 'Calls held', 'Close rate', 'Clients', 'New fees a month'];
+  // Below lg the same table turned on its side: the three scenarios are the
+  // columns and the chain runs down the rows. The wide one needs 760px, so on
+  // a phone it scrolled sideways with booked calls, close rate, clients and
+  // new fees (the whole point of the slide) off the screen, and nothing to
+  // say they were there.
+  const rows: { label: string; value: (s: (typeof SCENARIOS)[number]) => React.ReactNode }[] = [
+    { label: 'Ad spend', value: (s) => usd(chain(s).adSpend) },
+    { label: 'Cost per booked call', value: (s) => usd(s.costPerBookedCall) },
+    { label: 'Booked calls', value: (s) => chain(s).bookedCalls },
+    { label: 'Calls held', value: (s) => chain(s).callsHeld },
+    { label: 'Close rate', value: (s) => pct(s.closeRate) },
+    { label: 'Clients', value: (s) => chain(s).clients },
+  ];
   return (
     <Slide id="scenarios">
       <Heading kicker="Three scenarios">
         Same {usd(AD_SPEND)}. <span className={GRADIENT_TEXT}>Three ways it plays out.</span>
       </Heading>
 
-      <Reveal delay={0.12} className="mt-8 lg:mt-10">
+      <Reveal delay={0.12} className="mt-8 lg:hidden">
+        <div className="overflow-hidden rounded-2xl border border-white/10" style={{ background: 'rgba(10,16,32,0.7)' }}>
+          <table className="w-full table-fixed text-left">
+            <colgroup>
+              <col className="w-[31%]" />
+              <col />
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr className="border-b border-white/10 bg-white/[0.03]">
+                <td className="py-3.5 pl-4" />
+                {SCENARIOS.map((s, i) => (
+                  <th
+                    key={s.id}
+                    scope="col"
+                    className={`py-3.5 pl-1 text-right text-[12px] font-bold leading-tight text-white sm:text-sm ${i === SCENARIOS.length - 1 ? 'pr-4' : 'pr-2'}`}
+                  >
+                    {s.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="tabular-nums">
+              {rows.map((r) => (
+                <tr key={r.label} className="border-b border-white/[0.06]">
+                  <th
+                    scope="row"
+                    className="py-3 pl-4 pr-1 text-[10px] font-bold uppercase leading-snug tracking-[0.12em] text-cyan-400/90 sm:text-[11px]"
+                  >
+                    {r.label}
+                  </th>
+                  {SCENARIOS.map((s, i) => (
+                    <td
+                      key={s.id}
+                      className={`py-3 pl-1 text-right text-[15px] text-white/80 sm:text-base ${i === SCENARIOS.length - 1 ? 'pr-4' : 'pr-2'}`}
+                    >
+                      {r.value(s)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+              <tr className="bg-cyan-400/[0.06]">
+                <th
+                  scope="row"
+                  className="py-4 pl-4 pr-1 text-[10px] font-bold uppercase leading-snug tracking-[0.12em] text-cyan-300 sm:text-[11px]"
+                >
+                  New fees a month
+                </th>
+                {SCENARIOS.map((s, i) => (
+                  <td
+                    key={s.id}
+                    className={`py-4 pl-1 text-right text-[15px] font-black text-white sm:text-lg ${i === SCENARIOS.length - 1 ? 'pr-4' : 'pr-2'}`}
+                  >
+                    {usd(chain(s).newFees)}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.12} className="mt-8 hidden lg:mt-10 lg:block">
         <div className="overflow-x-auto rounded-2xl border border-white/10" style={{ background: 'rgba(10,16,32,0.7)' }}>
           <table className="w-full min-w-[760px] text-left">
             <thead>
@@ -301,6 +390,7 @@ export function ReturnSlide() {
                   key: s.id,
                   label: s.label,
                   sublabel: `${c.clients} clients a month`,
+                  sublabelShort: `${c.clients} clients`,
                   value: c.newFees,
                   color: C.planning,
                   capLabel: usd(c.newFees),
