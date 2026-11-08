@@ -21,8 +21,10 @@
 // rim turns, turns rise as they arrive, the caret blinks, Daniela's presence
 // dot pulses, and — added at Marcel's request, matching the portal's Meta
 // chip — the Candor chip's rim turns. Both rims are .rim-spin, so reduced
-// motion stops them. Nothing else moves. The story ring on her portrait is
-// static on purpose — see components/candor/DanielaStory.
+// motion stops them. Also at Marcel's request, her story ring shimmers and
+// its glow breathes until the story is watched, so it reads as something to
+// tap (.story-ring-spin and .story-glow; see components/candor/DanielaAvatar).
+// Nothing else moves.
 //
 // PARAGRAPH COLOURS ARE INLINE, NOT UTILITIES. app/globals.css declares
 // `p { color: var(--text-muted) }` outside any @layer, and in Tailwind v4 an
@@ -46,7 +48,7 @@ import {
   StoryViewer,
   useStorySeen,
 } from '@/components/candor/DanielaStory';
-import CandorChip from '@/components/candor/CandorChip';
+import CandorChip, { CANDOR_GREEN } from '@/components/candor/CandorChip';
 import ChatHistory from '@/components/candor/ChatHistory';
 import {
   type Conversation,
@@ -629,15 +631,15 @@ export default function CandorClient({ leadId }: { leadId: string | null }) {
               <DanielaAvatar size="md" presence story={storySeen ? 'seen' : 'new'} />
               <span className="flex flex-col items-start gap-1.5">
                 <Eyebrow>Daniela · COO, Nexli</Eyebrow>
+                {/* The ring's lime while unwatched, so the ring and the
+                    line saying what it does read as one thing. */}
                 <span
-                  className={`inline-flex items-center gap-1.5 pl-1 text-[12.5px] font-semibold ${
-                    storySeen ? 'text-white/55' : 'text-cyan-300'
-                  }`}
+                  className="inline-flex items-center gap-1.5 pl-1 text-[12.5px] font-semibold"
+                  style={{ color: storySeen ? 'rgba(255,255,255,0.55)' : CANDOR_GREEN }}
                 >
                   <span
-                    className={`flex h-4 w-4 items-center justify-center rounded-full ${
-                      storySeen ? 'bg-white/10' : 'bg-cyan-400/20'
-                    }`}
+                    className="flex h-4 w-4 items-center justify-center rounded-full"
+                    style={{ background: storySeen ? 'rgba(255,255,255,0.1)' : 'rgba(163,230,53,0.2)' }}
                   >
                     <Play size={8} fill="currentColor" strokeWidth={0} />
                   </span>

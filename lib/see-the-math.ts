@@ -20,6 +20,8 @@
 // ---------------------------------------------------------------------------
 import {
   AGENCY_AD_SPEND,
+  AGENCY_ENGAGEMENT_HIGH,
+  AGENCY_ENGAGEMENT_LOW,
   AGENCY_MONTHLY_FEE,
   AGENCY_TOTAL_MONTHLY,
 } from '@/lib/agency-offer';
@@ -96,10 +98,16 @@ export function annualAheadFromMonth(): number {
 /** Booked calls that actually happen. Assumed, and labelled as such. */
 export const SHOW_RATE = 0.7;
 
-/** A tax plan, at the conservative end of $15,000–$50,000. */
+/**
+ * A tax plan, at the conservative end of $15,000–$55,000.
+ *
+ * The range is the site's, from lib/agency-offer, and the same one Daniela
+ * says in her intro on /candor. It said $50,000 here until 2026-11-08, which
+ * put the deck one number away from the video a prospect had just watched.
+ */
 export const PLAN_FEE = 20_000;
-export const PLAN_FEE_LOW = 15_000;
-export const PLAN_FEE_HIGH = 50_000;
+export const PLAN_FEE_LOW = AGENCY_ENGAGEMENT_LOW;
+export const PLAN_FEE_HIGH = AGENCY_ENGAGEMENT_HIGH;
 
 /** Bookkeeping from $1,500 a month plus payroll from about $450: $2,000. */
 export const BACK_END_MONTHLY = 2_000;

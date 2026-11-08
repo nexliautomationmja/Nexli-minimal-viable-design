@@ -58,16 +58,30 @@ const SRC = '/daniela-avatar.png';
 const PX = { xs: 24, sm: 36, md: 48, lg: 88 } as const;
 
 /**
- * The story ring, Instagram's grammar: a gradient ring means there is
- * something new to watch, a grey one means it has been watched. The ring
- * sits OUTSIDE the photo, with a sliver of page colour between, so the face
- * stays the size it was. The gradient is the headline's, blue to violet to
- * cyan, rather than Instagram's orange — it has to read as this page.
- * Static on purpose: the motion budget in app/candor/candor-client is spent.
+ * The story ring, Instagram's grammar: a bright ring means there is
+ * something new to watch, a thin grey one means it has been watched. The
+ * ring sits OUTSIDE the photo, with a sliver of page colour between, so the
+ * face stays the size it was.
+ *
+ * CANDOR'S GREEN, THICK, AND ALIVE. Marcel wants it to read as a story at
+ * a glance, something with activity behind it that you are meant to tap: so
+ * it is the lime of the Candor chip above it (the one other lime thing on
+ * the page), about twice Instagram's weight, with a highlight that travels
+ * round it (.story-ring-spin: the gradient has one bright spot, and the
+ * ring turns) and a lime glow behind it that breathes (.story-glow). Both
+ * are in app/globals.css, which holds them still under reduced motion.
+ * Only while unwatched: a watched ring is a still, grey hairline in the
+ * same box, so nothing shifts when it changes.
  */
-const STORY_RING = { md: { ring: 2, gap: 2 }, lg: { ring: 3, gap: 3 } } as const;
-const STORY_NEW = 'conic-gradient(from 210deg, #3b82f6, #8b5cf6, #22d3ee, #3b82f6)';
+const STORY_RING = {
+  md: { ring: 4, seen: 1.5, gap: 2 },
+  lg: { ring: 6, seen: 2, gap: 3 },
+} as const;
+const STORY_NEW =
+  'conic-gradient(from 0deg, #f7fee7 0deg, #a3e635 55deg, #65a30d 150deg, #a3e635 230deg, #84cc16 300deg, #f7fee7 360deg)';
 const STORY_SEEN = 'rgba(255,255,255,0.22)';
+const GLOW_NEW = 'radial-gradient(circle, rgba(163,230,53,0.34) 0%, transparent 70%)';
+const GLOW = 'radial-gradient(circle, rgba(59,130,246,0.28) 0%, transparent 70%)';
 const PAGE = '#020617';
 
 export default function DanielaAvatar({
@@ -95,8 +109,10 @@ export default function DanielaAvatar({
       {lg && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -inset-4 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.28) 0%, transparent 70%)' }}
+          className={`pointer-events-none absolute -inset-4 rounded-full transition-[background] duration-500 ${
+            ring && story === 'new' ? 'story-glow' : ''
+          }`}
+          style={{ background: ring && story === 'new' ? GLOW_NEW : GLOW }}
         />
       )}
 
@@ -104,13 +120,15 @@ export default function DanielaAvatar({
         <>
           <span
             aria-hidden="true"
-            className="absolute inset-0 rounded-full transition-[background] duration-500"
+            className={`absolute inset-0 rounded-full transition-[background] duration-500 ${
+              story === 'new' ? 'story-ring-spin' : ''
+            }`}
             style={{ background: story === 'new' ? STORY_NEW : STORY_SEEN }}
           />
           <span
             aria-hidden="true"
             className="absolute rounded-full"
-            style={{ inset: ring.ring, background: PAGE }}
+            style={{ inset: story === 'new' ? ring.ring : ring.seen, background: PAGE }}
           />
         </>
       )}

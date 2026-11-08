@@ -17,6 +17,8 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 
 const LIME = '#A3E635';
+/** Candor's green. Daniela's story ring wears it too: see components/candor/DanielaAvatar. */
+export const CANDOR_GREEN = LIME;
 const LIME_CONIC =
   'conic-gradient(from 0deg at 50% 50%, #bef264, #3f6212, #bef264, #3f6212, #bef264)';
 /** Tinted but opaque, the house trick: a translucent fill would let the

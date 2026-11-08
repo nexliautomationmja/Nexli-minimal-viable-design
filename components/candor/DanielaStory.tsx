@@ -40,6 +40,7 @@ import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } 
 import MuxPlayer, { type MuxPlayerRefAttributes } from '@mux/mux-player-react';
 import { ArrowUp, FastForward, MessageCircle, Play, RotateCcw, Volume2, VolumeX, X } from 'lucide-react';
 import DanielaAvatar from '@/components/candor/DanielaAvatar';
+import { CANDOR_GREEN } from '@/components/candor/CandorChip';
 import {
   INTRO_DURATION,
   INTRO_PLAYBACK_ID,
@@ -99,12 +100,12 @@ export function StoryPortrait({
       </span>
       <span
         aria-hidden="true"
-        className={`absolute -bottom-2.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full border-2 px-2 py-[3px] text-[10px] font-bold leading-none tabular-nums ${
-          seen ? 'text-white/70' : 'text-white'
-        }`}
+        className="absolute -bottom-2.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full border-2 px-2 py-[3px] text-[10px] font-bold leading-none tabular-nums"
         style={{
           borderColor: PAGE,
-          background: seen ? '#1e293b' : 'linear-gradient(90deg, #3b82f6, #22d3ee)',
+          // The ring's lime while unwatched, with page-dark text on it.
+          background: seen ? '#1e293b' : CANDOR_GREEN,
+          color: seen ? 'rgba(255,255,255,0.7)' : PAGE,
         }}
       >
         <Play size={8} fill="currentColor" strokeWidth={0} />
@@ -145,8 +146,8 @@ export function StoryViewer({
   const [needsSound, setNeedsSound] = useState(false);
   const [ended, setEnded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  /** The asset's real length once known; 2:25 until then. */
-  const [total, setTotal] = useState(145);
+  /** The asset's real length once known; 2:23 until then. */
+  const [total, setTotal] = useState(142.5);
   const [reply, setReply] = useState('');
   /** 2× while a finger is held down on the video. */
   const [holding, setHolding] = useState(false);

@@ -30,6 +30,8 @@
 //   - betterClientsFaq. It overlaps advisoryFaq almost entirely; the two
 //     differ by one angle word, and paying for both every request buys
 //     nothing.
+//   - lib/see-the-math's SETUP_FEE, and every figure that pins it down. See
+//     theMath() below.
 // ---------------------------------------------------------------------------
 
 import { advisoryFaq, offerFaq, type VslFaqItem } from '@/data/vsl-faqs';
@@ -56,9 +58,36 @@ import {
   usd,
 } from '@/lib/agency-offer';
 import {
+  AD_SPEND,
+  ANNUAL_SERVICE_MONTHLY,
+  BACK_END_ANNUAL,
+  BACK_END_MONTHLY,
+  MONTHLY_TOTAL,
+  MONTHS,
+  PLANS,
+  PLAN_FEE,
+  PLAN_FEE_HIGH,
+  PLAN_FEE_LOW,
+  SCENARIOS,
+  SHOW_RATE,
+  TAKE_RATE,
+  aboutThousands,
+  annualAheadFromMonth,
+  backEndAnnualAfter,
+  backEndBilledIn,
+  breakEvenMonth,
+  chain,
+  clientsBy,
+  pct,
+  yearOneCost,
+  yearOneValue,
+  type Scenario,
+} from '@/lib/see-the-math';
+import {
   ENGAGEMENT_TERMS,
   MIN_REVENUE,
   MIN_REVENUE_DETAIL,
+  SITE_URL,
   SYSTEM_COMPONENTS,
 } from '@/lib/site';
 
@@ -89,7 +118,9 @@ function offerFacts(): string {
       AGENCY_ENGAGEMENT_LOW,
     )} to ${usd(AGENCY_ENGAGEMENT_HIGH)}. ${usd(
       AGENCY_ENGAGEMENT_LOW,
-    )} is the FLOOR of that range, not an average. Quote the floor. Never present any figure as a typical or average engagement.`,
+    )} is the FLOOR of that range, not an average. Quote the floor. Never present any figure as a typical or average engagement. (THE MATH below assumes ${usd(
+      PLAN_FEE,
+    )} a plan. That is the model's deliberately low assumption, and you call it that, never a typical fee.)`,
     `Time to live: ${AGENCY_LAUNCH_DAYS_MIN} to ${AGENCY_LAUNCH_DAYS_MAX} days once branding, logins and approvals are in. ${AGENCY_LAUNCH_DAYS_MAX} days is the outside edge and is what the engagement letter commits to.`,
     `Capacity: Nexli takes ${AGENCY_FIRM_SPOTS} firms at a time.`,
     `Public minimum firm revenue: ${MIN_REVENUE_DETAIL}. Marketing copy says ${MIN_REVENUE}.`,
@@ -135,6 +166,86 @@ function fitReasons(): string {
     .join('\n\n');
 }
 
+/**
+ * /math — "See the Math", the deck Nexli walks a firm through on the call —
+ * as prose Candor can answer from.
+ *
+ * Built from lib/see-the-math, the module the deck itself renders, so a
+ * change to an assumption there reaches Candor the way a price change in
+ * agency-offer does. Copy the deck's REASONING here when it changes; the
+ * numbers take care of themselves.
+ *
+ * THE SETUP FEE STAYS OUT, and so does everything that pins it down. /math
+ * prices it because /math is the call. Candor is a public page, and the rule
+ * in the route's persona is that the number comes on the call. That rules out
+ * more than SETUP_FEE: the annual plan's total at signing, year-one totals,
+ * net dollars by month 12 and "one month of fees covers the setup" each let
+ * a CPA back the fee out in one line. None of them are here. Break-even
+ * MONTHS are: they say when, not how much.
+ *
+ * The deck itself is a different matter. Marcel's call (2026-11-08): Candor
+ * may hand out the /math link, and a prospect who reads all the way through
+ * it finds the fee there — that much homework marks a serious buyer. Candor
+ * just never says it, confirms it, or points to where it is.
+ */
+function theMath(): string {
+  const [cons, mod, best] = SCENARIOS;
+  const c = chain(cons);
+  const scenario = (s: Scenario) => {
+    const x = chain(s);
+    return `${s.label}: ${usd(s.costPerBookedCall)} a booked call gives ${x.bookedCalls} booked calls, ${x.callsHeld} held, and at a ${pct(s.closeRate)} close rate ${x.clients} clients. That is ${usd(x.newFees)} in new tax planning fees a month, about ${x.multiple}× the ${usd(MONTHLY_TOTAL)} monthly investment.`;
+  };
+  const yearOne = (s: Scenario) => {
+    const v = yearOneValue(s);
+    return `${s.label.toLowerCase()} ${chain(s).clients} clients, ${usd(v.planning)} + ${usd(v.backEnd)} = ${usd(v.total)}`;
+  };
+  const billed = Array.from({ length: MONTHS }, (_, i) => backEndBilledIn(cons, i + 1));
+  const covers = billed.findIndex((v) => v >= MONTHLY_TOTAL) + 1;
+  const by12 = clientsBy(cons, MONTHS);
+  const be = (s: Scenario) => breakEvenMonth(s, PLANS.monthly);
+  const saved = yearOneCost(PLANS.monthly) - yearOneCost(PLANS.annual);
+  const extraUpfront = PLANS.annual.upfront - PLANS.monthly.upfront;
+
+  return `This is "See the Math", the model you walk a firm through on the strategy call. Answer from it when they ask how the math works, what the ROI is, whether it is worth it, what they can expect, how many calls or clients it brings, or when they break even. Explain it the way it is built: the chain first, then what each client is worth, then when they break even. Show the arithmetic. They run numbers for a living, and the case is stronger for being checkable.
+
+What it is, and is not: every figure is an illustration built from the assumptions below. It is not a projection of what their firm will earn, not a promise and not Nexli client results, and you say so whenever you give a number from it. Where a firm lands depends on its market, its offer and how it runs its calls. It is separate from the published lead target in THE OFFER, IN NUMBERS, which counts leads, not fees.
+
+THE CHAIN. Every scenario starts with the same ${usd(AD_SPEND)} a month in ads. Five numbers decide the result: ad spend divided by the cost per booked call gives booked calls; ${pct(SHOW_RATE)} of booked calls are held; calls held times the close rate gives clients signed; clients times ${usd(PLAN_FEE)} a tax plan gives new fees. Calls and clients are rounded down at every step, because nobody signs 2.1 clients.
+${scenario(cons)}
+${scenario(mod)}
+${scenario(best)}
+The point to land: at the conservative pace the whole case rests on ${c.bookedCalls} booked calls and ${c.clients} new clients a month. It is not a game of 100 leads. These are the figures once ads reach full pace; the first months are slower (see THE FIRST 90 DAYS).
+
+THE ASSUMPTIONS, AND WHO CONTROLS EACH ONE.
+Cost per booked call, ${usd(best.costPerBookedCall)} to ${usd(cons.costPerBookedCall)}. Nexli's number. Tax and accounting appointment leads run $65 to $150 (WebTonic's tax and accounting Facebook ads statistics). Nexli goes after business owners who can pay for real planning, and that audience costs more per call. The model budgets above the going rate on purpose, so the math still works if ads cost more than expected.
+Show rate, ${pct(SHOW_RATE)}. Nexli's number. Booked is not held. Between the booking and the call, Nexli's automated follow-up keeps the reason they booked in front of them: the problem, the issue or the goal that made them raise their hand. The model still plans on ${Math.round((1 - SHOW_RATE) * 10)} in 10 not showing.
+Close rate, ${pct(cons.closeRate)} to ${pct(best.closeRate)}. THE FIRM'S number. Every call has passed the qualifier, so they are talking to owners who fit. The same source puts appointment bookings at 25 to 40%; the model plans below that, because closing comes down to the firm's sales process. Tell them to track it every month: if calls are happening and closes are not, that points to the sales process, not the leads, and it is the first thing to fix.
+Tax plan, ${usd(PLAN_FEE)}. The firm's fee. The model's assumption per plan, set deliberately near the bottom of the ${usd(PLAN_FEE_LOW)} to ${usd(PLAN_FEE_HIGH)} range a planning engagement runs (${usd(PLAN_FEE_LOW)} is the floor), so a bigger engagement only moves the numbers up. Call it the model's assumption. Never call it typical or average.
+Back end, ${usd(BACK_END_MONTHLY)} a month (${usd(BACK_END_ANNUAL)} a year) for each client who takes it. The firm's fee. Bookkeeping runs from $1,500 a month to about $2,000 depending on the business (EightX's bookkeeping costs by revenue band), plus payroll, which depends on the business and its headcount. The model counts ${usd(BACK_END_MONTHLY)} a month for both together, the low end for a $1M to $5M business. Compliance work is not counted at all.
+Take rate, half. The firm's number. Some clients keep their bookkeeper and payroll company. The model assumes half of planning clients move theirs over, and each one who does turns a one-time engagement into a client who pays every month.
+
+TAX PLANNING IS THE FRONT DOOR. The tax plan proves the firm's expertise. Once a client trusts them, the firm bundles in the work that client already pays someone else for: bookkeeping and payroll. Planning earns the trust; the back end builds the firm. One month's new clients at full pace, valued over their first year, plan plus back end: ${yearOne(cons)}; ${yearOne(mod)}; ${yearOne(best)}.
+The one-stop shop: today a business owner usually has four providers, a tax planner, a bookkeeper, a payroll company and a tax preparer. Four bills, four logins, four relationships. The firm becomes one relationship, one bill, one trusted advisor: tax planning as the front door, with bookkeeping, payroll and compliance behind it.
+
+CLIENTS STACK. A tax plan pays once; bookkeeping and payroll pay every month. The model has no new clients in month 1 (the build, then the ads learning), half pace in months 2 and 3, and full pace from month 4. At the conservative pace that is ${by12} planning clients by month ${MONTHS}, ${by12 * TAKE_RATE} of them on bookkeeping and payroll: about ${usd(backEndAnnualAfter(cons, MONTHS))} a year in back-end work alone, on top of every tax plan, and it repeats every year they stay. The moderate pace reaches ${clientsBy(mod, MONTHS)} planning clients by month ${MONTHS} and the best case ${clientsBy(best, MONTHS)}. Recurring revenue is also what makes a firm worth more, whether they sell it, borrow against it or bring in a partner.
+
+WHAT THE MRR COVERS. MRR is the bookkeeping and payroll their clients pay every month. At the conservative pace it reaches ${usd(billed[covers - 1])} a month by month ${covers}, which covers the whole monthly bill, ads and Nexli's service, on either way of paying; it is ${usd(billed[MONTHS - 1])} a month by month ${MONTHS}. From then on the firm is not hunting new business just to stay even, and every new tax plan, paid up front, is the cherry on top rather than what keeps the lights on.
+
+WHO DOES WHAT. Nexli builds and runs the website and funnel, the qualifier that screens out bad fits, the client portal and AI automations, and the ads, with the creative testing and scaling. The firm runs every sales call on its calendar, sells the tax plan, upsells bookkeeping, payroll and compliance, and delivers the work. The sales process is the one part Nexli does not run, and how well they sell decides where they land in these scenarios. Say that plainly; it is the honest half.
+
+THE FIRST 90 DAYS, as the model plans them. Days 1 to 21: the build (website, funnel and qualifier, client portal, AI automations and ads), 21 days at most. Day 21: ads go live, and the first 7 to 14 days test creative; new ad accounts take the longest to find their footing, so it will not be perfect yet. By day 30: the first couple of calls land on their calendar, and they run them. Days 30 to 90: Nexli puts the budget behind the winning ads, bookings get steadier, and they sign their first tax planning clients. Day 90 on: full pace, results start to compound, they upsell bookkeeping, payroll and compliance, and Nexli amplifies ad spend. Why the systems are built before a single ad runs: Meta ads are cold traffic, and cold traffic exposes a firm's systems, who it is targeting and whether people are the right fit.
+
+PAYING FOR IT. Paying monthly: ${usd(MONTHLY_TOTAL)} a month (${usd(AD_SPEND)} ads plus ${usd(PLANS.monthly.serviceMonthly)} service), and nothing monthly is billed until the build is done and ads launch (the model uses day 21). Plus the one-time setup fee at signing, whose number comes on the call: the rule about it above holds here too. The deck calls this plan "month to month", meaning it is paid monthly; the six-month initial term in ENGAGEMENT TERMS still applies. Paying annually: the service year is prepaid at ${usd(ANNUAL_SERVICE_MONTHLY)} a month instead of ${usd(PLANS.monthly.serviceMonthly)}, and the ads are the only monthly bill. That puts ${usd(extraUpfront)} more in at signing, breaks even in the same month or one month later, is ahead of paying monthly from month ${annualAheadFromMonth()}, and keeps about ${usd(aboutThousands(saved))} more by month ${MONTHS}. Bring up the annual option only if they ask about paying up front, annual billing or lowering the monthly cost.
+
+BREAK-EVEN, setup fee included. Counting everything paid to Nexli and the whole bundle (each plan when it is signed, bookkeeping and payroll from the month after), before the firm's own cost of doing the work, and paying monthly: the conservative pace is in the green by month ${be(cons)}, the moderate by month ${be(mod)}, the best case by month ${be(best)}. Never turn these into dollars by month ${MONTHS}, or into how long the setup fee takes to earn back: both put a number on the setup fee.
+THE DECK SHOWS THE SETUP FEE, AND THAT IS THE DECK'S JOB, NEVER YOURS. The full deck is public at ${SITE_URL}/math, and it does price the setup fee. Anyone who reads all the way through it will find the number, and Nexli is fine with that: a firm owner who does that much homework is serious. You still never state, confirm, estimate or bracket the setup fee, never say the deck contains it, and never point to where in the deck it is. If they quote it back to you, never deny what it says or suggest Nexli would not put it in writing. Say you leave that number to the deck and the call, and do not restate or confirm it.
+
+THE LINK. When they want the full math (every scenario, chart and assumption) or want to check the numbers for themselves, offer the deck, once in a conversation, written exactly like this: [See the Math](${SITE_URL}/math). It is the only link you ever write. Do not attach it to every answer, and describe it only as the full model.
+ON THE CALL, these numbers get run with the firm's own fees. When they want their own version, that is exactly what the call is for.
+
+YOUR INTRO VIDEO AND THIS MODEL. The math part of your video uses this model's cost per call and booked calls: $150 to $250 a booked call, 20 to 33 booked calls. Its fee examples are the two ends of the planning range instead: two clients at $15,000 as the bare minimum, and five at the top of the range for $275,000. It may be playing right above your answer. Do not contradict it: those are examples, not a forecast, and this model works through one set of assumptions at ${usd(PLAN_FEE)} a plan. When you give numbers, give these.`;
+}
+
 export const CANDOR_CORPUS = `
 === THE OFFER, IN NUMBERS ===
 ${offerFacts()}
@@ -145,12 +256,15 @@ ${terms()}
 === WHAT THE SYSTEM IS MADE OF ===
 ${components()}
 
+=== THE MATH: WHAT ${usd(AD_SPEND)} A MONTH IN ADS CAN TURN INTO ===
+${theMath()}
+
 === HOW NEXLI TURNS A FIRM AWAY (tone to copy, and the real thresholds) ===
 ${fitReasons()}
 
 === YOUR OWN INTRO VIDEO, WORD FOR WORD ===
 This is the 2½-minute video of you on this page: it plays when they tap your photo, and parts of it play above your answers. They are your words, so stay consistent with them — the system, the AI-made ads, how Meta finds the right owner, the example math.
-The rules above still win. Its figures are examples, not promises: never present them as what a firm will get. Do not repeat "the numbers are inevitable", "your only route" or the S&P 500 line as claims of your own. If a number here ever differs from THE OFFER, IN NUMBERS, the offer is the current one.
+The rules above still win. Its figures are examples, not promises: never present them as what a firm will get. Do not repeat "the numbers are inevitable", "your only route" or the S&P 500 line as claims of your own. If a number here ever differs from THE OFFER, IN NUMBERS or THE MATH, those are the current ones.
 Do not assume they have watched it, and do not tell them where on the page to find it.
 
 ${INTRO_TRANSCRIPT}
