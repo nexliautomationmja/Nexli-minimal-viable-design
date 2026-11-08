@@ -16,13 +16,13 @@
 // full quotas all make localStorage throw or come back empty, and none of
 // that may break the chat itself — it degrades to "no saved chats".
 //
-// THE OBJECTION IS STORED BY ID, NEVER AS AN OBJECT. CandorObjection carries
+// THE OBJECTION IS STORED BY ID, NEVER AS AN OBJECT. A CandorClip carries
 // RegExp patterns, and JSON.stringify turns a RegExp into {}. Storing the id
 // and looking it up on load also means a re-recorded clip plays in an old
 // conversation, rather than the playback id frozen at the time it was asked.
 // ---------------------------------------------------------------------------
 
-import { CANDOR_OBJECTIONS, type CandorObjection } from '@/lib/candor-objections';
+import { type CandorClip, clipById } from '@/lib/candor-objections';
 
 /** Bump the suffix if the stored shape changes; old data is then ignored. */
 const KEY = 'nexli:candor:conversations:v1';
@@ -33,8 +33,9 @@ const MAX_SAVED = 30;
 export type Turn = {
   role: 'user' | 'assistant';
   content: string;
-  /** Set on an assistant turn when the question matched an objection. */
-  objection?: CandorObjection;
+  /** Set on an assistant turn when the question matched a recorded clip:
+   *  an objection, or a chapter of Daniela's intro. */
+  objection?: CandorClip;
 };
 
 type StoredTurn = { role: 'user' | 'assistant'; content: string; objectionId?: string };
@@ -73,7 +74,7 @@ function hydrate(c: StoredConversation): Conversation {
     turns: c.turns.map((t) => ({
       role: t.role,
       content: t.content,
-      objection: t.objectionId ? CANDOR_OBJECTIONS.find((o) => o.id === t.objectionId) : undefined,
+      objection: t.objectionId ? clipById(t.objectionId) : undefined,
     })),
   };
 }

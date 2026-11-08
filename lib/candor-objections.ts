@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// The six objections, and the recorded answers that go with them.
+// The objections, and the recorded answers that go with them.
 //
 // One list, because the chips, the follow-up row and the video lookup all
 // have to agree. They were an inline array in candor-client until a video
@@ -39,23 +39,34 @@
 // every time it is asked.
 // ---------------------------------------------------------------------------
 
-export interface CandorObjection {
-  /** Stable key. Used for React keys and the asked/unasked set. */
+import { INTRO_CHAPTERS } from '@/lib/candor-intro';
+
+/**
+ * A recorded answer: a clip, and how a typed question is recognised as
+ * belonging to it. Objections are clips with a chip; the chapters of
+ * Daniela's intro (lib/candor-intro) are clips without one.
+ */
+export interface CandorClip {
+  /** Stable key. Used for React keys, saved chats and the asked/unasked set. */
   id: string;
-  /** What the chip says, in the firm owner's voice. */
+  /** Short name. On a chip, it is what the chip says. */
   label: string;
-  /** What is actually sent to the model. */
-  prompt: string;
   /** PLAYBACK id, not asset id. Empty until the clip is recorded. */
   muxPlaybackId: string;
   /** Seconds into the asset for the poster frame. */
   posterTime: number;
+  /**
+   * Seconds into the asset to start playing from. Unset is the beginning.
+   * Set for a chapter of a longer clip, so the answer opens on the part
+   * that answers it.
+   */
+  startTime?: number;
   /** Runtime, shown on the chip. Only used when a video exists. */
   duration?: string;
   /**
-   * How a TYPED question is recognised as this objection.
+   * How a TYPED question is recognised as this clip.
    *
-   * `strong` scores 2, `weak` scores 1, and an objection needs 2 to win —
+   * `strong` scores 2, `weak` scores 1, and a clip needs 2 to win —
    * so one unambiguous phrase is enough, but a vague word like "myself"
    * needs corroboration. Highest score wins; ties go to the earlier entry.
    * This is deliberately keyword matching and not a second model call: it
@@ -64,6 +75,12 @@ export interface CandorObjection {
    * a classifier that can hallucinate a match.
    */
   match: { strong: RegExp[]; weak?: RegExp[] };
+}
+
+/** An objection: a clip with a chip. */
+export interface CandorObjection extends CandorClip {
+  /** What is actually sent to the model when the chip is clicked. */
+  prompt: string;
 }
 
 export const CANDOR_OBJECTIONS: CandorObjection[] = [
@@ -163,7 +180,14 @@ export const CANDOR_OBJECTIONS: CandorObjection[] = [
 ];
 
 /**
- * Which objection a question belongs to, if any.
+ * Every clip a typed question can reach, objections FIRST. Order is the
+ * tie-break, so a question that is both an objection and something the
+ * intro covers gets the objection's own clip.
+ */
+const ALL_CLIPS: CandorClip[] = [...CANDOR_OBJECTIONS, ...INTRO_CHAPTERS];
+
+/**
+ * Which clip a question belongs to, if any.
  *
  * A chip click already knows its objection; this is for everything TYPED.
  * "I tried an agency last year and it was a disaster" has to reach the same
@@ -174,8 +198,14 @@ export const CANDOR_OBJECTIONS: CandorObjection[] = [
  * gets typed is, and those get a written answer with no video, which is
  * correct. A wrong video is worse than no video: it tells a firm owner you
  * were not listening.
+ *
+ * `intro: false` leaves out the intro's chapters — for a question asked from
+ * the story itself, whose asker has just watched them.
  */
-export function matchObjection(text: string): CandorObjection | undefined {
+export function matchObjection(
+  text: string,
+  { intro = true }: { intro?: boolean } = {},
+): CandorClip | undefined {
   const q = text.trim();
   if (q.length < 3) return undefined;
 
@@ -183,9 +213,9 @@ export function matchObjection(text: string): CandorObjection | undefined {
   const exact = CANDOR_OBJECTIONS.find((o) => o.prompt === q);
   if (exact) return exact;
 
-  let best: CandorObjection | undefined;
+  let best: CandorClip | undefined;
   let bestScore = 0;
-  for (const o of CANDOR_OBJECTIONS) {
+  for (const o of intro ? ALL_CLIPS : CANDOR_OBJECTIONS) {
     let score = 0;
     for (const re of o.match.strong) if (re.test(q)) score += 2;
     for (const re of o.match.weak ?? []) if (re.test(q)) score += 1;
@@ -197,6 +227,11 @@ export function matchObjection(text: string): CandorObjection | undefined {
   return bestScore >= 2 ? best : undefined;
 }
 
-export function hasVideo(o: CandorObjection): boolean {
+/** A clip by id, for a saved chat. Undefined if it has since been removed. */
+export function clipById(id: string): CandorClip | undefined {
+  return ALL_CLIPS.find((c) => c.id === id);
+}
+
+export function hasVideo(o: CandorClip): boolean {
   return o.muxPlaybackId.trim().length > 0;
 }

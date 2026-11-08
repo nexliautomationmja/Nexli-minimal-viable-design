@@ -21,7 +21,8 @@
 // rim turns, turns rise as they arrive, the caret blinks, Daniela's presence
 // dot pulses, and — added at Marcel's request, matching the portal's Meta
 // chip — the Candor chip's rim turns. Both rims are .rim-spin, so reduced
-// motion stops them. Nothing else moves.
+// motion stops them. Nothing else moves. The story ring on her portrait is
+// static on purpose — see components/candor/DanielaStory.
 //
 // PARAGRAPH COLOURS ARE INLINE, NOT UTILITIES. app/globals.css declares
 // `p { color: var(--text-muted) }` outside any @layer, and in Tailwind v4 an
@@ -39,6 +40,12 @@ import { Eyebrow, OUTFIT, RimCard } from '@/components/funnel/primitives';
 import VslDisclaimer from '@/components/funnel/VslDisclaimer';
 import FunnelLogo from '@/components/FunnelLogo';
 import DanielaAvatar from '@/components/candor/DanielaAvatar';
+import {
+  type StoryHandle,
+  StoryPortrait,
+  StoryViewer,
+  useStorySeen,
+} from '@/components/candor/DanielaStory';
 import CandorChip from '@/components/candor/CandorChip';
 import ChatHistory from '@/components/candor/ChatHistory';
 import {
@@ -52,10 +59,12 @@ import {
 import { renderInline } from '@/lib/inline-markdown';
 import {
   CANDOR_OBJECTIONS,
+  type CandorClip,
   type CandorObjection,
   hasVideo,
   matchObjection,
 } from '@/lib/candor-objections';
+import { INTRO_DURATION } from '@/lib/candor-intro';
 
 /** The house entrance, from app/accelerator/landing-body.tsx. */
 const rise = {
@@ -78,13 +87,13 @@ function splitParagraphs(text: string): string[] {
   return parts.length ? parts : [''];
 }
 
-export default function CandorClient({
-  firstName,
-  leadId,
-}: {
-  firstName: string | null;
-  leadId: string | null;
-}) {
+/**
+ * No name, deliberately. The only source for one was the funnel cookie,
+ * which names whoever last went through the funnel on this BROWSER — a
+ * shared phone, a forwarded link or Marcel's own test run greeted a
+ * prospect by somebody else's name. A generic greeting is never wrong.
+ */
+export default function CandorClient({ leadId }: { leadId: string | null }) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -101,6 +110,10 @@ export default function CandorClient({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+
+  /** Her intro, as a story on her photo. See components/candor/DanielaStory. */
+  const story = useRef<StoryHandle>(null);
+  const [storySeen, markStorySeen] = useStorySeen();
   /** Title for the conversation, fixed at its first question. A chip uses
    *  its short label; a typed question uses what they typed. */
   const pendingTitle = useRef('');
@@ -123,6 +136,76 @@ export default function CandorClient({
     if (!hydrated || busy || turns.length === 0) return;
     setConversations((prev) => upsertConversation(prev, conversationId, pendingTitle.current, turns));
   }, [busy, turns, conversationId, hydrated]);
+
+  /**
+   * The whole conversation, sent to Marcel ONCE, when they leave.
+   *
+   * "Leave" is the browser's own signal: the page going hidden (tab closed
+   * or switched, app switched, phone locked) or unloading, plus starting or
+   * opening a different chat. It is the only thing the main Candor webhook
+   * receives, so the GHL workflow emails it as-is. See lib/candor-transcript.
+   *
+   * Re-sent only when something new was said since the last send, so
+   * switching apps three times mid-chat is one email, and coming back to ask
+   * one more thing is a second, complete one.
+   *
+   * Reads from a ref because it runs from event listeners and from
+   * newChat/openConversation just BEFORE they swap the chat out.
+   */
+  const live = useRef({ conversationId, turns, busy });
+  useEffect(() => {
+    live.current = { conversationId, turns, busy };
+  }, [conversationId, turns, busy]);
+  /** Turns already sent, per conversation id. */
+  const sentTurns = useRef<Record<string, number>>({});
+
+  const sendConversation = useCallback(() => {
+    const { conversationId: id, turns: all, busy: streaming } = live.current;
+    // An answer still streaming is left off rather than sent half-written;
+    // it goes out complete on the next leave.
+    const complete = (streaming ? all.slice(0, -1) : all)
+      .filter((t) => t.content.trim())
+      .map((t) => ({ role: t.role, content: t.content }));
+    if (!complete.some((t) => t.role === 'user')) return;
+    if ((sentTurns.current[id] ?? 0) >= complete.length) return;
+    sentTurns.current[id] = complete.length;
+
+    // Browsers cap a send made while the page is closing at 64KB. Drop the
+    // oldest exchanges until it fits, and flag it.
+    let kept = complete;
+    let body = JSON.stringify({ sessionId: id, leadId, turns: kept, truncated: false });
+    while (new Blob([body]).size > 60_000 && kept.length > 2) {
+      kept = kept.slice(2);
+      body = JSON.stringify({ sessionId: id, leadId, turns: kept, truncated: true });
+    }
+
+    // sendBeacon is built for exactly this: it is queued by the browser and
+    // survives the page going away. text/plain because a JSON content type
+    // is not one every browser will beacon; the route parses it either way.
+    const sent =
+      typeof navigator.sendBeacon === 'function' &&
+      navigator.sendBeacon('/api/candor/transcript', new Blob([body], { type: 'text/plain' }));
+    if (!sent) {
+      fetch('/api/candor/transcript', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      }).catch(() => {});
+    }
+  }, [leadId]);
+
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') sendConversation();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', sendConversation);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', sendConversation);
+    };
+  }, [sendConversation]);
 
   /**
    * How far the on-screen keyboard reaches into the layout viewport.
@@ -197,7 +280,7 @@ export default function CandorClient({
   }, [turns.length]);
 
   const ask = useCallback(
-    async (question: string, objection?: CandorObjection) => {
+    async (question: string, objection?: CandorObjection, { fromStory = false } = {}) => {
       const q = question.trim();
       if (!q || busy) return;
 
@@ -209,8 +292,10 @@ export default function CandorClient({
 
       // A chip click knows its own objection. Anything TYPED is matched on
       // the way through, so "I tried an agency last year and it was a
-      // disaster" reaches the same clip the chip would.
-      const matched = objection ?? matchObjection(q);
+      // disaster" reaches the same clip the chip would. A question typed
+      // into the story skips the intro's own chapters: they have just
+      // watched it, and replaying it at them is not an answer.
+      const matched: CandorClip | undefined = objection ?? matchObjection(q, { intro: !fromStory });
 
       const history = turns;
       setTurns((prev) => [
@@ -228,7 +313,6 @@ export default function CandorClient({
             sessionId: conversationId,
             // Strip the objection: the route validates role/content only.
             history: history.map((t) => ({ role: t.role, content: t.content })),
-            firstName,
             leadId,
           }),
         });
@@ -265,7 +349,7 @@ export default function CandorClient({
         setBusy(false);
       }
     },
-    [busy, conversationId, firstName, grow, leadId, turns],
+    [busy, conversationId, grow, leadId, turns],
   );
 
   const started = turns.length > 0;
@@ -277,6 +361,8 @@ export default function CandorClient({
   /** Leave the current chat. It is already saved; this just clears the room. */
   const newChat = useCallback(() => {
     if (busy) return;
+    // Leaving this chat is the end of it, as far as Marcel is concerned.
+    sendConversation();
     setConversationId(newConversationId());
     pendingTitle.current = '';
     setTurns([]);
@@ -285,12 +371,16 @@ export default function CandorClient({
     setHistoryOpen(false);
     lastCount.current = 0;
     window.scrollTo({ top: 0 });
-  }, [busy]);
+  }, [busy, sendConversation]);
 
   const openConversation = useCallback(
     (id: string) => {
       const c = conversations.find((x) => x.id === id);
       if (!c || busy) return;
+      sendConversation();
+      // A saved chat was sent when it was first left, so only what gets
+      // added from here should trigger another send — not just opening it.
+      sentTurns.current[c.id] = c.turns.filter((t) => t.content.trim()).length;
       setConversationId(c.id);
       pendingTitle.current = c.title;
       setError(null);
@@ -302,7 +392,7 @@ export default function CandorClient({
       lastCount.current = 0;
       setTurns(c.turns);
     },
-    [busy, conversations],
+    [busy, conversations, sendConversation],
   );
 
   const deleteConversation = useCallback(
@@ -525,13 +615,40 @@ export default function CandorClient({
                 halfway — the one thing on the page that has to be in reach.
                 Two elements rather than one resized avatar because the size
                 is set in px on the element; only one is ever displayed. */}
-            <div className="flex items-center gap-3 sm:hidden">
-              <DanielaAvatar size="md" presence />
-              <Eyebrow>Daniela · COO, Nexli</Eyebrow>
-            </div>
+            {/* Her photo is a story: tap it and her intro plays, full
+                screen. On a phone the WHOLE row is the button, with a line
+                saying so under her name — a ring alone is a signal only
+                Instagram users read, and it fits beside the 56px avatar
+                without adding a row. */}
+            <button
+              type="button"
+              onClick={(e) => story.current?.open(e.currentTarget)}
+              aria-label={`Watch Daniela's intro, ${INTRO_DURATION}`}
+              className="flex touch-manipulation items-center gap-3 rounded-2xl text-left outline-none [-webkit-tap-highlight-color:transparent] focus-visible:ring-2 focus-visible:ring-cyan-300 sm:hidden"
+            >
+              <DanielaAvatar size="md" presence story={storySeen ? 'seen' : 'new'} />
+              <span className="flex flex-col items-start gap-1.5">
+                <Eyebrow>Daniela · COO, Nexli</Eyebrow>
+                <span
+                  className={`inline-flex items-center gap-1.5 pl-1 text-[12.5px] font-semibold ${
+                    storySeen ? 'text-white/55' : 'text-cyan-300'
+                  }`}
+                >
+                  <span
+                    className={`flex h-4 w-4 items-center justify-center rounded-full ${
+                      storySeen ? 'bg-white/10' : 'bg-cyan-400/20'
+                    }`}
+                  >
+                    <Play size={8} fill="currentColor" strokeWidth={0} />
+                  </span>
+                  Watch my intro
+                  <span className="tabular-nums opacity-70">· {INTRO_DURATION}</span>
+                </span>
+              </span>
+            </button>
             <div className="hidden flex-col items-center sm:flex">
-              <DanielaAvatar size="lg" presence />
-              <div className="mt-5">
+              <StoryPortrait seen={storySeen} onOpen={(el) => story.current?.open(el)} />
+              <div className="mt-6">
                 <Eyebrow>Daniela · COO, Nexli</Eyebrow>
               </div>
             </div>
@@ -539,23 +656,16 @@ export default function CandorClient({
               className="mt-3 text-[1.9rem] font-bold leading-[1.08] tracking-tighter text-white sm:mt-4 sm:text-5xl"
               style={OUTFIT}
             >
-              {firstName ? `${firstName}, what's ` : "What's "}
+              What&apos;s{' '}
               <span className="bg-gradient-to-r from-blue-400 via-violet-400 to-cyan-300 bg-clip-text text-transparent">
-                actually stopping you?
+                on your mind?
               </span>
             </h1>
             <p
               className="mx-auto mt-2.5 max-w-xl text-[15px] leading-relaxed sm:mt-3 sm:text-base"
               style={{ color: MUTED }}
             >
-              {/* The middle clause is desktop-only: on a phone it was the line
-                  that took this paragraph to three, and the two that remain
-                  carry the whole promise. */}
-              Your call is booked. Ask me anything before it
-              <span className="hidden sm:inline">
-                {' '}— the price, the risk, whether this works for a firm like yours
-              </span>
-              . You will get a straight answer, including the ones that don&apos;t flatter us.
+              What would you like more clarity on before your meeting?
             </p>
           </motion.div>
         )}
@@ -655,6 +765,9 @@ export default function CandorClient({
                               // time, which on a captioned cut is a poster
                               // of half a sentence.
                               thumbnailTime={t.objection.posterTime}
+                              // A chapter of her intro opens on the part
+                              // that answers the question, not at 0:00.
+                              startTime={t.objection.startTime}
                               metadata={{ video_title: `Candor — ${t.objection.id}` }}
                               accentColor="#22d3ee"
                               style={{
@@ -774,6 +887,13 @@ export default function CandorClient({
       </div>
 
       <VslDisclaimer />
+
+      <StoryViewer
+        ref={story}
+        onOpened={markStorySeen}
+        onAsk={(q) => void ask(q, undefined, { fromStory: true })}
+        disabled={busy}
+      />
 
       <ChatHistory
         open={historyOpen}
