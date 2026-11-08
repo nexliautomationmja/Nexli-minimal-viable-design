@@ -33,6 +33,10 @@ const DISALLOW = [
   // Candor is an unlisted link in the booking email sequence, not a search
   // destination.
   '/candor',
+  // The See the Math sales deck and its PDF: they price the setup fee,
+  // which no public page does. Shown on the call and sent after it.
+  '/math',
+  '/downloads/nexli-see-the-math.pdf',
   '/accelerator/qualify',
   '/accelerator/next',
   '/accelerator/sending',
