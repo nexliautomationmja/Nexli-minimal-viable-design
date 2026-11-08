@@ -36,6 +36,7 @@ import { advisoryFaq, offerFaq, type VslFaqItem } from '@/data/vsl-faqs';
 import { BOOKING_B_FAQ } from '@/lib/booking-faq';
 import { buildLlmsFullTxt } from '@/lib/llms';
 import { reasonFor } from '@/lib/advisory-fit';
+import { INTRO_TRANSCRIPT } from '@/lib/candor-intro';
 import {
   DISQUALIFYING_BUDGETS,
   DISQUALIFYING_REVENUE,
@@ -146,6 +147,13 @@ ${components()}
 
 === HOW NEXLI TURNS A FIRM AWAY (tone to copy, and the real thresholds) ===
 ${fitReasons()}
+
+=== YOUR OWN INTRO VIDEO, WORD FOR WORD ===
+This is the 2½-minute video of you on this page: it plays when they tap your photo, and parts of it play above your answers. They are your words, so stay consistent with them — the system, the AI-made ads, how Meta finds the right owner, the example math.
+The rules above still win. Its figures are examples, not promises: never present them as what a firm will get. Do not repeat "the numbers are inevitable", "your only route" or the S&P 500 line as claims of your own. If a number here ever differs from THE OFFER, IN NUMBERS, the offer is the current one.
+Do not assume they have watched it, and do not tell them where on the page to find it.
+
+${INTRO_TRANSCRIPT}
 
 === PRE-CALL ANSWERS ALREADY WRITTEN AND APPROVED ===
 ${BOOKING_B_FAQ.map((i) => qa(i.question, i.answer)).filter(Boolean).join('\n\n')}

@@ -29,6 +29,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { CANDOR_CORPUS } from '@/lib/candor-corpus';
 import { matchObjection } from '@/lib/candor-objections';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { formatTranscript, sameOrigin, sendTranscript } from '@/lib/candor-transcript';
 import {
   currentTaxYear,
   daysUntilYearEnd,
@@ -83,7 +84,7 @@ Answer the question honestly, then make it easy to bring the rest to the call. Y
  * answer this codebase settled on is the RUNWAY argument, not the deadline
  * one — see the header of components/advisory/DeadlineUrgency.
  */
-function todayBlock(firstName: string | null): string {
+function todayBlock(): string {
   const now = new Date();
   const days = daysUntilYearEnd(now);
   const thisYear = currentTaxYear(now);
@@ -92,7 +93,7 @@ function todayBlock(firstName: string | null): string {
 
   return `=== TODAY ===
 Today is ${now.toISOString().slice(0, 10)}. ${days} days remain in tax year ${thisYear}.
-${firstName ? `The person you are talking to is called ${firstName}. Use their name once, naturally, not in every message.` : 'You do not know their name. Do not ask for it.'}
+You do not know their name. Do not ask for it.
 
 If they raise the end of the year — "it's nearly ${thisYear + 0}", "why not start in January" — this is the honest answer, and it is NOT the old December 31 deadline argument:
 ${
@@ -104,51 +105,6 @@ Important hedge: say MOST planning has to be executed inside the tax year, never
 }
 
 type Turn = { role: 'user' | 'assistant'; content: string };
-
-/**
- * Send the conversation to Marcel.
- *
- * WHY A WEBHOOK AND NOT A GHL CONTACT NOTE. syncContactToGhl refuses
- * without an email, and most people reach Candor from a plain link in the
- * booking sequence with no session cookie — so the contact-note path would
- * silently cover only the minority who happen to arrive already identified.
- * An outbound webhook carries every conversation, named or anonymous, and
- * a GHL workflow on the other end can attach it to a contact when there is
- * an email and just notify when there is not.
- *
- * FIRES ONCE PER ANSWER, carrying the whole thread each time. There is no
- * reliable "conversation ended" event in a chat — an unload beacon is the
- * usual trick and it is exactly the thing that silently stops working — so
- * the last message to arrive is the complete transcript, and anything
- * earlier is a prefix of it. Dedupe on session_id downstream.
- *
- * Fire and forget: this must never delay or fail an answer.
- */
-function sendTranscript(payload: Record<string, unknown>): void {
-  const url = process.env.GHL_CANDOR_WEBHOOK_URL;
-  if (!url) {
-    console.warn('[Candor] GHL_CANDOR_WEBHOOK_URL not set — transcript not sent');
-    return;
-  }
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-    // Fire and forget, but NOT silent. The first version swallowed
-    // everything, which meant a rotated webhook URL or a GHL outage would
-    // lose transcripts with nothing anywhere to say so — and the only
-    // symptom would be Marcel slowly noticing he had stopped receiving
-    // them. The request still never blocks or fails the answer.
-    .then((res) => {
-      if (!res.ok) {
-        console.error(`[Candor] transcript webhook returned ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.error('[Candor] transcript webhook failed:', err);
-    });
-}
 
 function parseHistory(raw: unknown): Turn[] {
   if (!Array.isArray(raw)) return [];
@@ -163,22 +119,6 @@ function parseHistory(raw: unknown): Turn[] {
     )
     .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_CHARS) }))
     .slice(-MAX_TURNS);
-}
-
-/**
- * Not security — a determined caller sets any header they like. It stops the
- * casual case of someone pointing a script at a public endpoint that spends
- * tokens, which is the realistic threat for a route like this.
- */
-function sameOrigin(req: NextRequest): boolean {
-  const origin = req.headers.get('origin');
-  if (!origin) return true; // same-origin fetches may omit it
-  try {
-    const host = new URL(origin).host;
-    return host === new URL(SITE_URL).host || host.startsWith('localhost');
-  } catch {
-    return false;
-  }
 }
 
 export async function POST(req: NextRequest) {
@@ -212,10 +152,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const firstName =
-    typeof body?.firstName === 'string' && body.firstName.trim()
-      ? body.firstName.trim().slice(0, 60)
-      : null;
+  // No firstName. It came from the funnel cookie, which names whoever last
+  // used this browser — not necessarily the person typing — and the model
+  // used it to address them. A wrong name is worse than none.
   const leadId = typeof body?.leadId === 'string' ? body.leadId.slice(0, 64) : null;
   const sessionId =
     typeof body?.sessionId === 'string' ? body.sessionId.slice(0, 32) : 'unknown';
@@ -251,7 +190,7 @@ export async function POST(req: NextRequest) {
           // THE BREAKPOINT. Everything above is byte-stable and cached.
           cache_control: { type: 'ephemeral' },
         },
-        { type: 'text', text: todayBlock(firstName) },
+        { type: 'text', text: todayBlock() },
       ],
       messages: [
         ...history,
@@ -309,20 +248,21 @@ export async function POST(req: NextRequest) {
 
           const thread = [...history, { role: 'user' as const, content: question }, { role: 'assistant' as const, content: answer }];
 
-          sendTranscript({
+          // Per answer, to the OPTIONAL answer webhook — a no-op unless
+          // GHL_CANDOR_ANSWER_WEBHOOK_URL is set. The whole conversation goes
+          // to the main Candor webhook once, from /api/candor/transcript.
+          // See lib/candor-transcript.
+          sendTranscript('answer', {
             source: 'candor',
             stage: 'candor_question',
+            final: false,
             session_id: sessionId,
             lead_id: leadId,
-            firstName,
             question_number: history.filter((t) => t.role === 'user').length + 1,
             question,
             answer,
             matched_objection: matchObjection(question)?.id ?? null,
-            // Readable in a GHL notification email without any templating.
-            transcript: thread
-              .map((t) => `${t.role === 'user' ? 'THEM' : 'CANDOR'}: ${t.content}`)
-              .join('\n\n'),
+            transcript: formatTranscript(thread),
             asked_at: new Date().toISOString(),
           });
         } catch (err) {
