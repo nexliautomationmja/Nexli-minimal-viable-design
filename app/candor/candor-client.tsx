@@ -768,6 +768,10 @@ export default function CandorClient({ leadId }: { leadId: string | null }) {
                               // A chapter of her intro opens on the part
                               // that answers the question, not at 0:00.
                               startTime={t.objection.startTime}
+                              // Every clip has its captions burned in. If
+                              // Mux ever adds a text track, do not draw a
+                              // second set on top.
+                              defaultHiddenCaptions
                               metadata={{ video_title: `Candor — ${t.objection.id}` }}
                               accentColor="#22d3ee"
                               style={{

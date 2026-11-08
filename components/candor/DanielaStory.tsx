@@ -25,13 +25,20 @@
 // to the math" is a reasonable thing to want — and the keyboard works:
 // Space pauses, M mutes, the arrows jump 5 seconds, Escape closes.
 //
+// 2× IS TIKTOK'S. Press and hold the video and she talks at double speed
+// until you let go; swipe down (holding or not) and it stays at 2× until
+// you swipe down again or tap the "2×" pill. Pitch is preserved — every
+// browser keeps it by default — so faster is faster, not a cartoon. The
+// gestures are invisible, so there is also a 1×/2× button in the header
+// (and the S key), and a one-time hint the first time the story plays.
+//
 // PARAGRAPH COLOURS ARE INLINE for the reason given in candor-client: the
 // unlayered `p` rule in globals.css beats a Tailwind colour class.
 // ---------------------------------------------------------------------------
 
 import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import MuxPlayer, { type MuxPlayerRefAttributes } from '@mux/mux-player-react';
-import { ArrowUp, MessageCircle, Play, RotateCcw, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowUp, FastForward, MessageCircle, Play, RotateCcw, Volume2, VolumeX, X } from 'lucide-react';
 import DanielaAvatar from '@/components/candor/DanielaAvatar';
 import {
   INTRO_DURATION,
@@ -41,6 +48,13 @@ import {
 } from '@/lib/candor-intro';
 
 const PAGE = '#020617';
+
+/** How long a press has to last before it is a hold, not a tap. */
+const HOLD_MS = 260;
+/** How far down a finger has to travel to count as a swipe. */
+const SWIPE_PX = 56;
+/** Shown once per browser, the first time the story plays. */
+const HINT_KEY = 'nexli:candor:story-2x-hint';
 
 /** "Watched", per browser. A convenience: it only decides the ring's colour. */
 export function useStorySeen(): [boolean, () => void] {
@@ -134,6 +148,12 @@ export function StoryViewer({
   /** The asset's real length once known; 2:25 until then. */
   const [total, setTotal] = useState(145);
   const [reply, setReply] = useState('');
+  /** 2× while a finger is held down on the video. */
+  const [holding, setHolding] = useState(false);
+  /** 2× kept on after a swipe down, the S key or the header button. */
+  const [locked, setLocked] = useState(false);
+  const [hint, setHint] = useState(false);
+  const fast = holding || locked;
 
   const player = useRef<MuxPlayerRefAttributes>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -182,6 +202,12 @@ export function StoryViewer({
         }
         // Synchronously, inside the tap. See the header.
         start();
+        try {
+          if (!window.localStorage.getItem(HINT_KEY)) {
+            window.localStorage.setItem(HINT_KEY, '1');
+            setHint(true);
+          }
+        } catch {}
       },
     }),
     [onOpened, start],
@@ -189,6 +215,8 @@ export function StoryViewer({
 
   const close = useCallback(() => {
     setOpen(false);
+    setHolding(false);
+    setHint(false);
     player.current?.pause();
     trigger.current?.focus({ preventScroll: true });
   }, []);
@@ -225,6 +253,77 @@ export function StoryViewer({
     if (!p.muted) setNeedsSound(false);
     if (p.paused && !p.ended) start();
   }, [start]);
+
+  // The rate follows the gesture. Re-applied on `playing` too: loading a
+  // source resets a media element to its default rate, and the first play
+  // is what loads this one (preload none).
+  const applyRate = useCallback(() => {
+    const p = player.current;
+    if (p) p.playbackRate = fast ? 2 : 1;
+  }, [fast]);
+  useEffect(applyRate, [applyRate]);
+
+  useEffect(() => {
+    if (!hint) return;
+    const id = window.setTimeout(() => setHint(false), 5000);
+    return () => window.clearTimeout(id);
+  }, [hint]);
+
+  const toggleLock = useCallback(() => {
+    setLocked((l) => !l);
+    setHint(false);
+  }, []);
+
+  /**
+   * One press on the video, three meanings: a tap pauses, a hold is 2× for
+   * as long as it lasts, a swipe down keeps 2× on (or turns it off). The
+   * press is tracked here and the click that follows a hold or a swipe is
+   * swallowed, so letting go of a hold does not also pause the video.
+   */
+  const press = useRef<{ x: number; y: number; timer: number; held: boolean; swiped: boolean } | null>(null);
+  const swallowClick = useRef(false);
+
+  const onPressStart = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (e.button !== 0) return;
+    swallowClick.current = false;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const timer = window.setTimeout(() => {
+      const s = press.current;
+      if (!s || s.swiped) return;
+      s.held = true;
+      setHolding(true);
+      setHint(false);
+      const p = player.current;
+      if (p?.paused && !p.ended) start();
+    }, HOLD_MS);
+    press.current = { x: e.clientX, y: e.clientY, timer, held: false, swiped: false };
+  };
+
+  const onPressMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+    const s = press.current;
+    if (!s || s.swiped) return;
+    const dx = e.clientX - s.x;
+    const dy = e.clientY - s.y;
+    if (dy > SWIPE_PX && dy > Math.abs(dx) * 1.5) {
+      s.swiped = true;
+      window.clearTimeout(s.timer);
+      toggleLock();
+      // A tick on Android. iOS has no vibration API; the pill says it.
+      navigator.vibrate?.(12);
+    } else if (!s.held && Math.hypot(dx, dy) > 12) {
+      // Moving before the hold kicks in: a swipe in progress, not a hold.
+      window.clearTimeout(s.timer);
+    }
+  };
+
+  const onPressEnd = () => {
+    const s = press.current;
+    if (!s) return;
+    window.clearTimeout(s.timer);
+    if (s.held || s.swiped) swallowClick.current = true;
+    press.current = null;
+    setHolding(false);
+  };
 
   // The progress line runs on animation frames, not timeupdate, which only
   // fires about four times a second and makes the line step.
@@ -279,6 +378,8 @@ export function StoryViewer({
         toggle();
       } else if (e.key === 'm') {
         unmute();
+      } else if (e.key === 's') {
+        toggleLock();
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         seekBy(5);
@@ -292,7 +393,7 @@ export function StoryViewer({
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prev;
     };
-  }, [open, close, toggle, unmute, seekBy]);
+  }, [open, close, toggle, unmute, seekBy, toggleLock]);
 
   /** Drag along the line to scrub. */
   const scrubTo = (clientX: number) => {
@@ -369,13 +470,19 @@ export function StoryViewer({
             preload="none"
             thumbnailTime={0}
             nohotkeys
+            // The captions are burned into the picture. If Mux ever gets a
+            // text track for this asset, it must not draw a second set.
+            defaultHiddenCaptions
             metadata={{ video_title: 'Candor — intro story' }}
             accentColor="#22d3ee"
             onPlay={() => {
               setPlaying(true);
               setEnded(false);
             }}
-            onPlaying={() => setBuffering(false)}
+            onPlaying={() => {
+              setBuffering(false);
+              applyRate();
+            }}
             onWaiting={() => setBuffering(true)}
             onPause={() => {
               setPlaying(false);
@@ -404,12 +511,26 @@ export function StoryViewer({
             }}
           />
 
-          {/* Tap anywhere on the video to pause or carry on. */}
+          {/* Tap to pause, hold for 2×, swipe down to keep 2×. touch-none
+              so the browser does not claim the swipe as a scroll; no
+              callout or selection so iOS does not answer a hold with a
+              magnifier. Keyboard Enter/Space still arrive as a click. */}
           <button
             type="button"
-            onClick={toggle}
+            onClick={() => {
+              if (swallowClick.current) {
+                swallowClick.current = false;
+                return;
+              }
+              toggle();
+            }}
+            onPointerDown={onPressStart}
+            onPointerMove={onPressMove}
+            onPointerUp={onPressEnd}
+            onPointerCancel={onPressEnd}
+            onContextMenu={(e) => e.preventDefault()}
             aria-label={playing ? 'Pause' : 'Play'}
-            className="absolute inset-0 cursor-pointer outline-none [-webkit-tap-highlight-color:transparent]"
+            className="absolute inset-0 cursor-pointer touch-none select-none outline-none [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none]"
           />
 
           {/* Top: the line, then who this is. */}
@@ -458,6 +579,17 @@ export function StoryViewer({
               <div className="ml-auto flex items-center">
                 <button
                   type="button"
+                  onClick={toggleLock}
+                  aria-pressed={locked}
+                  aria-label="Double speed"
+                  className={`flex h-10 min-w-10 items-center justify-center rounded-full px-1.5 text-[13px] font-bold tabular-nums transition-colors [-webkit-tap-highlight-color:transparent] ${
+                    locked ? 'text-cyan-300 hover:bg-white/10' : 'text-white/90 hover:bg-white/10'
+                  }`}
+                >
+                  {locked ? '2×' : '1×'}
+                </button>
+                <button
+                  type="button"
                   onClick={unmute}
                   aria-label={muted ? 'Turn sound on' : 'Mute'}
                   className="flex h-10 w-10 items-center justify-center rounded-full text-white/90 transition-colors [-webkit-tap-highlight-color:transparent] hover:bg-white/10"
@@ -486,6 +618,47 @@ export function StoryViewer({
                 </button>
               </div>
             )}
+
+            {/* TikTok's "2×" badge. While a finger is down it says how to
+                keep it; once kept, it is the way back to 1×. */}
+            {open && fast && !ended && (
+              <div className="mt-2 flex justify-center">
+                {locked && !holding ? (
+                  <button
+                    type="button"
+                    onClick={toggleLock}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-black/55 px-3.5 py-2 text-[13px] font-semibold text-white backdrop-blur-md"
+                  >
+                    <FastForward size={14} fill="currentColor" strokeWidth={0} className="text-cyan-300" />
+                    2× <span className="font-normal text-white/65">· tap for 1×</span>
+                  </button>
+                ) : (
+                  <span
+                    role="status"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-black/55 px-3.5 py-2 text-[13px] font-semibold text-white backdrop-blur-md"
+                  >
+                    <FastForward size={14} fill="currentColor" strokeWidth={0} className="text-cyan-300" />
+                    2×{' '}
+                    <span className="font-normal text-white/65">
+                      {locked ? '· locked' : '· swipe down to keep it'}
+                    </span>
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* The first time only: the gestures exist. */}
+          <div
+            aria-hidden={!hint}
+            className={`pointer-events-none absolute inset-x-0 bottom-4 flex justify-center px-4 transition-opacity duration-500 ${
+              hint && !fast && !ended ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3.5 py-2 text-[12.5px] font-medium text-white/90 backdrop-blur-md">
+              <FastForward size={13} fill="currentColor" strokeWidth={0} className="text-cyan-300" />
+              Hold for 2× · swipe down to keep it
+            </span>
           </div>
 
           {/* Paused, or still loading. */}
