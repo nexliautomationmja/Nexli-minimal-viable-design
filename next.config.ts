@@ -72,6 +72,13 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      // The See the Math PDF is a static file, so it cannot carry a robots
+      // meta tag the way /math does. robots.txt stops crawling; this stops
+      // indexing if someone links to it from somewhere crawlable.
+      {
+        source: "/downloads/nexli-see-the-math.pdf",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
       {
         source: "/(.*)",
         headers: [

@@ -40,6 +40,10 @@ export default function ConditionalNavbar() {
     // Candor, the pre-call AI tool. Its own chrome, same as the funnel pages.
     pathname === '/candor' ||
     pathname.startsWith('/candor/') ||
+    // /math, the See the Math sales-call deck. Full-screen slides with
+    // their own chrome; the site nav would sit on top of every one of them.
+    pathname === '/math' ||
+    pathname.startsWith('/math/') ||
     pathname === '/agency' ||
     pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||
