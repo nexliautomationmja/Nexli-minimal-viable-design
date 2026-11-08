@@ -39,7 +39,7 @@
 // every time it is asked.
 // ---------------------------------------------------------------------------
 
-import { INTRO_CHAPTERS } from '@/lib/candor-intro';
+import { INTRO_CHAPTERS, INTRO_MATH, INTRO_PLAYBACK_ID } from '@/lib/candor-intro';
 
 /**
  * A recorded answer: a clip, and how a typed question is recognised as
@@ -84,6 +84,9 @@ export interface CandorObjection extends CandorClip {
 }
 
 export const CANDOR_OBJECTIONS: CandorObjection[] = [
+  // First: the question the whole case rests on. Not a clip of its own but a
+  // chapter of her intro — see INTRO_MATH in lib/candor-intro.
+  INTRO_MATH,
   {
     id: 'burned',
     label: "I've been burned by an agency before",
@@ -179,12 +182,21 @@ export const CANDOR_OBJECTIONS: CandorObjection[] = [
   },
 ];
 
+/** Cut from Daniela's intro, rather than recorded as an answer. */
+const fromIntro = (c: CandorClip) => c.muxPlaybackId === INTRO_PLAYBACK_ID;
+
 /**
- * Every clip a typed question can reach, objections FIRST. Order is the
- * tie-break, so a question that is both an objection and something the
- * intro covers gets the objection's own clip.
+ * Every clip a typed question can reach, in tie-break order: the recorded
+ * objections FIRST, then the intro's chapters. So a question that is both an
+ * objection and something the intro covers gets the objection's own clip.
+ *
+ * The math chip is a chapter, and is matched as one, in its place in the
+ * intro — not first, where it sits among the chips.
  */
-const ALL_CLIPS: CandorClip[] = [...CANDOR_OBJECTIONS, ...INTRO_CHAPTERS];
+const ALL_CLIPS: CandorClip[] = [
+  ...CANDOR_OBJECTIONS.filter((o) => !fromIntro(o)),
+  ...INTRO_CHAPTERS,
+];
 
 /**
  * Which clip a question belongs to, if any.
@@ -199,8 +211,9 @@ const ALL_CLIPS: CandorClip[] = [...CANDOR_OBJECTIONS, ...INTRO_CHAPTERS];
  * correct. A wrong video is worse than no video: it tells a firm owner you
  * were not listening.
  *
- * `intro: false` leaves out the intro's chapters — for a question asked from
- * the story itself, whose asker has just watched them.
+ * `intro: false` leaves out everything cut from the intro, the math chip
+ * included — for a question asked from the story itself, whose asker has
+ * just watched it.
  */
 export function matchObjection(
   text: string,
@@ -209,16 +222,35 @@ export function matchObjection(
   const q = text.trim();
   if (q.length < 3) return undefined;
 
+  const pool = intro ? ALL_CLIPS : ALL_CLIPS.filter((c) => !fromIntro(c));
+
   // An exact chip prompt always wins, before any scoring.
-  const exact = CANDOR_OBJECTIONS.find((o) => o.prompt === q);
+  const exact = CANDOR_OBJECTIONS.find((o) => o.prompt === q && pool.includes(o));
   if (exact) return exact;
 
   let best: CandorClip | undefined;
   let bestScore = 0;
-  for (const o of intro ? ALL_CLIPS : CANDOR_OBJECTIONS) {
+  for (const o of pool) {
     let score = 0;
-    for (const re of o.match.strong) if (re.test(q)) score += 2;
-    for (const re of o.match.weak ?? []) if (re.test(q)) score += 1;
+    const spans: [number, number][] = [];
+    for (const re of o.match.strong) {
+      const m = re.exec(q);
+      if (!m) continue;
+      score += 2;
+      spans.push([m.index, m.index + m[0].length]);
+    }
+    // A weak word inside a strong phrase is the same words counted twice:
+    // "is it worth it" would score 3 on "worth", outscore a referrals
+    // question's 2 and break the tie-break above.
+    for (const re of o.match.weak ?? []) {
+      const all = new RegExp(re.source, re.flags.includes('g') ? re.flags : `${re.flags}g`);
+      for (const m of q.matchAll(all)) {
+        const [a, b] = [m.index, m.index + m[0].length];
+        if (spans.some(([s, e]) => a >= s && b <= e)) continue;
+        score += 1;
+        break;
+      }
+    }
     if (score > bestScore) {
       bestScore = score;
       best = o;

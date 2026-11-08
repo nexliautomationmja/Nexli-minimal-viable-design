@@ -157,9 +157,37 @@ html {
   animation: candor-caret 1s steps(1) infinite;
 }
 
+/* Daniela's story ring on /candor, while there is something new to watch:
+   a highlight travels round the lime ring and the glow behind it breathes,
+   so the photo reads as live, something to tap. Named classes, for the same
+   reason as the ones above. The ring turns on the `shimmer` keyframes;
+   only the glow needs its own. */
+.story-ring-spin {
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes story-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.story-glow {
+  animation: story-glow 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rim-spin,
   .icon-float,
+  /* Held still, still lime: the colour alone says there is a story. */
+  .story-ring-spin,
+  .story-glow,
   /* Held solid rather than hidden: it still marks where the text is going. */
   .candor-caret {
     animation: none;
