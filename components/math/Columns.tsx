@@ -19,6 +19,8 @@ export interface Column {
   /** Under the axis. */
   label: string;
   sublabel?: string;
+  /** Used instead of sublabel where the column is too narrow for it (a phone). */
+  sublabelShort?: string;
   value: number;
   color: string;
   /** Drawn at reduced opacity, e.g. the months before the bundle pays. */
@@ -77,7 +79,39 @@ export default function Columns({
   const slot = data.length ? plotW / data.length : 0;
   const barW = Math.max(6, Math.min(maxBar, slot * 0.56));
   const cx = (i: number) => M.left + slot * i + slot / 2;
-  const showSub = slot > 72;
+
+  // Text is measured by estimate (Outfit runs about 0.56em a character, 0.62
+  // bold), which is all these labels need to decide whether they fit.
+  const textW = (s: string, size: number, bold = false) => s.length * size * (bold ? 0.62 : 0.56);
+  const subFor = (d: Column) => {
+    for (const s of [d.sublabel, d.sublabelShort]) if (s && textW(s, 12) <= slot - 8) return s;
+    return undefined;
+  };
+  const capSize = slot > 90 ? 17 : 14;
+
+  /**
+   * Where a column's value label goes. Centred over its column, unless that
+   * would run off the right edge, in which case it ends at the column's right
+   * edge. Then lifted clear of every column it spans: on a phone, twelve
+   * months are about 21px apart, so "$96,000" over month 6 also spans months
+   * 5 and 7 and was drawn into the taller month 7.
+   */
+  const capPlace = (d: Column, i: number) => {
+    const w = textW(d.capLabel ?? '', capSize, true);
+    let anchor: 'middle' | 'end' = 'middle';
+    let x = cx(i);
+    if (x + w / 2 > width - 2) {
+      anchor = 'end';
+      x = Math.min(cx(i) + barW / 2, width - 2);
+    }
+    const left = anchor === 'end' ? x - w : x - w / 2;
+    const right = anchor === 'end' ? x : x + w / 2;
+    let peak = d.value;
+    data.forEach((o, j) => {
+      if (cx(j) + barW / 2 > left && cx(j) - barW / 2 < right) peak = Math.max(peak, o.value);
+    });
+    return { anchor, x, top: y(peak) };
+  };
 
   return (
     <div ref={seenRef} className="relative">
@@ -104,6 +138,8 @@ export default function Columns({
               const top = y(d.value);
               const x = cx(i) - barW / 2;
               const lifted = hover === i;
+              const cap = d.capLabel ? capPlace(d, i) : null;
+              const sub = subFor(d);
               return (
                 <g key={d.key}>
                   {d.value > 0 && (
@@ -119,20 +155,20 @@ export default function Columns({
                       }}
                     />
                   )}
-                  {d.capLabel && (
+                  {cap && (
                     <g style={{ opacity: seen ? 1 : 0, transition: `opacity 0.4s ease ${0.5 + i * 0.06}s` }}>
                       <text
-                        x={cx(i)}
-                        y={top - (d.capSub ? 24 : 10)}
-                        textAnchor="middle"
-                        fontSize={slot > 90 ? 17 : 14}
+                        x={cap.x}
+                        y={cap.top - (d.capSub ? 24 : 10)}
+                        textAnchor={cap.anchor}
+                        fontSize={capSize}
                         fontWeight={800}
                         fill="#fff"
                       >
                         {d.capLabel}
                       </text>
                       {d.capSub && (
-                        <text x={cx(i)} y={top - 8} textAnchor="middle" fontSize={12} fill={MUTED}>
+                        <text x={cap.x} y={cap.top - 8} textAnchor={cap.anchor} fontSize={12} fill={MUTED}>
                           {d.capSub}
                         </text>
                       )}
@@ -141,9 +177,9 @@ export default function Columns({
                   <text x={cx(i)} y={base + 20} textAnchor="middle" fontSize={slot > 90 ? 14 : 12} fontWeight={slot > 90 ? 700 : 500} fill={slot > 90 ? '#fff' : C.axis}>
                     {d.label}
                   </text>
-                  {d.sublabel && showSub && (
+                  {sub && (
                     <text x={cx(i)} y={base + 38} textAnchor="middle" fontSize={12} fill={FAINT}>
-                      {d.sublabel}
+                      {sub}
                     </text>
                   )}
                 </g>

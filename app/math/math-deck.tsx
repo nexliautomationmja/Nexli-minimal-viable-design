@@ -13,7 +13,10 @@
 //
 // Reading afterwards (a phone, or a short window): no snapping, no captured
 // keys. Slides take their natural height and it reads like an article,
-// which is what a firm owner opening the link a week later needs.
+// which is what a firm owner opening the link a week later needs. A bar
+// along the bottom says which slide you are on and steps or jumps between
+// them (components/math/ReadingNav): twenty phone screens with no way to
+// find "when do I break even" was the phone's biggest problem.
 //
 // WHY THE DECK HAS ITS OWN SCROLL CONTAINER. globals.css gives both html and
 // body `overflow-x: hidden`, which makes body a scroll container. Snap areas
@@ -49,6 +52,7 @@ import {
   TimelineSlide,
   WhoSlide,
 } from '@/components/math/slides-b';
+import ReadingNav, { READING_NAV_SPACE } from '@/components/math/ReadingNav';
 import { DECK_QUERY, PDF_HREF, PDF_NAME } from '@/components/math/ui';
 
 /** Order matters: it is the deck. `id` must match the slide's own id. */
@@ -98,6 +102,12 @@ const slideEls = (root: HTMLElement | null) =>
 export default function MathDeck() {
   const [current, setCurrent] = useState(0);
   const [deckMode, setDeckMode] = useState(false);
+  // Which mode is not known until the first effect; nothing mode-specific
+  // renders before then, or the reading bar would flash on a desktop.
+  const [ready, setReady] = useState(false);
+  // Reading mode: is there anywhere to step back or forward to?
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
   // Any desktop width, short or not: the fullscreen control lives here, and
   // fullscreen is exactly what turns a short laptop window into a deck.
   const [wide, setWide] = useState(false);
@@ -127,6 +137,7 @@ export default function MathDeck() {
     const sync = () => {
       setDeckMode(mq.matches);
       setWide(wq.matches);
+      setReady(true);
     };
     sync();
     mq.addEventListener('change', sync);
@@ -157,6 +168,58 @@ export default function MathDeck() {
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
+
+  // Reading mode: whether ↑ and ↓ have anywhere to go. Off the slides'
+  // real positions, once a frame at most.
+  useEffect(() => {
+    if (!ready || deckMode) return;
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const doc = document.documentElement;
+      setAtStart(window.scrollY < 8);
+      setAtEnd(
+        window.innerHeight + window.scrollY >= doc.scrollHeight - 4 ||
+          !slideEls(scroller.current).some((el) => el.getBoundingClientRect().top > 8),
+      );
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    measure();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [ready, deckMode]);
+
+  /**
+   * Reading mode's ↑ and ↓. Slides are taller than a phone, so these go by
+   * where the slides are on screen: ↓ to the next slide that starts below
+   * the top, ↑ to the start of the slide you are in, or the one before if
+   * you are already at its start. A second tap during the scroll counts on
+   * from where the first is heading, as the keys do.
+   */
+  const step = useCallback(
+    (dir: 1 | -1) => {
+      if (performance.now() < navigatingUntil.current) return goTo(target.current + dir);
+      const tops = slideEls(scroller.current).map((el) => el.getBoundingClientRect().top);
+      if (dir > 0) {
+        const i = tops.findIndex((t) => t > 8);
+        goTo(i === -1 ? tops.length - 1 : i);
+      } else {
+        let i = 0;
+        tops.forEach((t, k) => {
+          if (t < -8) i = k;
+        });
+        goTo(i);
+      }
+    },
+    [goTo],
+  );
 
   // A link to a slide opens on that slide.
   useEffect(() => {
@@ -229,7 +292,11 @@ export default function MathDeck() {
       <main
         ref={scroller}
         className="deck-scroller relative overflow-x-hidden text-white"
-        style={{ backgroundColor: '#020617', ...OUTFIT }}
+        style={{
+          backgroundColor: '#020617',
+          ...OUTFIT,
+          ...(ready && !deckMode ? { paddingBottom: READING_NAV_SPACE } : null),
+        }}
       >
         {/* Candor's three glows, fixed so every slide sits under them. */}
         <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -255,9 +322,14 @@ export default function MathDeck() {
           />
         </div>
 
-        <FunnelLogo />
+        {/* Pinned while presenting; in reading mode they scroll away with the
+            first slide instead of sitting on every slide's opening line (a
+            tablet, a phone on its side). The PDF is in the bar's list there. */}
+        <FunnelLogo scrollAway={!deckMode} />
 
-        <div className="absolute right-5 top-6 z-[110] flex items-center gap-2 md:fixed md:right-8 md:top-8">
+        <div
+          className={`${deckMode ? 'fixed' : 'absolute'} right-5 top-6 z-[110] flex items-center gap-2 md:right-8 md:top-8`}
+        >
           <a
             href={PDF_HREF}
             download={PDF_NAME}
@@ -312,6 +384,17 @@ export default function MathDeck() {
               <span className="text-white/85">{pad(current + 1)}</span> / {pad(SLIDES.length)}
             </div>
           </>
+        )}
+
+        {ready && !deckMode && (
+          <ReadingNav
+            slides={SLIDES}
+            current={current}
+            atStart={atStart}
+            atEnd={atEnd}
+            onStep={step}
+            onGo={(i) => goTo(i)}
+          />
         )}
       </main>
     </MotionConfig>
