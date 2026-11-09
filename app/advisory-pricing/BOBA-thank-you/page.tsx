@@ -12,6 +12,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { eq } from 'drizzle-orm';
 import FunnelLogo from '@/components/FunnelLogo';
+import FunnelLegalFooter from '@/components/legal/FunnelLegalFooter';
 import { getDb } from '@/lib/db';
 import { leads } from '@/lib/leads-schema';
 import {
@@ -141,6 +142,10 @@ export default async function AdvisoryThankYouPage({
         amount={amount}
         currency={currency}
       />
+      {/* Terms, refund and delivery policy, card marks and contact
+          details: this page follows a card purchase and the site footer is
+          hidden here. */}
+      <FunnelLegalFooter />
     </main>
   );
 }

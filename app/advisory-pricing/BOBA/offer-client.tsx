@@ -16,9 +16,12 @@
 // ---------------------------------------------------------------------------
 
 import React, { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 import MuxPlayer from '@mux/mux-player-react';
 import { BadgePercent } from 'lucide-react';
 import FunnelCta from '@/components/funnel/FunnelCta';
+import CardLogos from '@/components/legal/CardLogos';
+import FunnelLegalFooter from '@/components/legal/FunnelLegalFooter';
 import { DeadlinePill } from '@/components/advisory/DeadlineUrgency';
 import { AmbientGlow, OUTFIT, RimCard } from '@/components/funnel/primitives';
 import { generateEventId, trackMetaEvent } from '@/lib/meta-events';
@@ -239,8 +242,28 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
                   You save {ADVISORY_SAVINGS_DISPLAY}
                 </p>
                 <div className="mt-6 flex md:justify-end">{cta('Get the guide', 'md')}</div>
-                <p className="mt-3 text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  Secure checkout by Stripe · {ADVISORY_REFUND_DAYS}-day refund, no questions
+                {/* Card marks, the refund promise and the policies, right at
+                    the button: the card processor requires all three to be
+                    visible before purchase. No processor named, so the line
+                    stays true whichever one is taking the card. */}
+                <CardLogos size="sm" className="mt-3 justify-center md:justify-end" />
+                <p className="mt-2.5 text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  Secure card checkout · {ADVISORY_REFUND_DAYS}-day refund, no questions
+                </p>
+                <p className="mt-1.5 text-[11px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  By purchasing you agree to our{' '}
+                  <Link href="/terms" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white">
+                    Terms
+                  </Link>
+                  ,{' '}
+                  <Link href="/refund-policy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white">
+                    Refund Policy
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/delivery-policy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white">
+                    Delivery Policy
+                  </Link>
+                  .
                 </p>
                 <div className="mt-4 flex md:justify-end">
                   <DeadlinePill />
@@ -250,7 +273,9 @@ export default function AdvisoryOfferClient({ firstName, cancelled, notAFit = nu
           </RimCard>
         </section>
 
-
+        {/* Inside <main> so its mobile bottom padding clears the sticky CTA
+            below for the footer too. */}
+        <FunnelLegalFooter />
       </main>
 
       {/* ── H. Sticky mobile CTA ───────────────────────────────────────── */}

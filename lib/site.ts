@@ -44,14 +44,39 @@ export const FOUNDER = {
 /** TODO: set when known, ISO date e.g. '2024-01-15'. */
 export const FOUNDING_DATE: string | null = null;
 
-/** TODO: set when a public business address exists. */
+/**
+ * The registered business address. This is what the card processor's
+ * underwriters match against the merchant application, so it has to read
+ * the same everywhere it appears: Contact, Terms, Privacy, the footers and
+ * the Organization JSON-LD all pull it from here.
+ */
 export const ADDRESS: {
   streetAddress?: string;
   addressLocality: string;
   addressRegion: string;
   postalCode?: string;
   addressCountry: string;
-} | null = null;
+} | null = {
+  streetAddress: '480 N Orlando Ave STE 236',
+  addressLocality: 'Winter Park',
+  addressRegion: 'FL',
+  postalCode: '32789',
+  addressCountry: 'US',
+};
+
+/** The address as two display lines: street, then city/state/zip. */
+export const ADDRESS_LINES: [string, string] = [
+  '480 N Orlando Ave STE 236',
+  'Winter Park, FL 32789',
+];
+
+/**
+ * The customer service line. NOT the SMS number in the Terms' A2P section
+ * (+1 321-241-2945): that one sends and receives texts and is registered
+ * with the carriers. Do not swap one for the other.
+ */
+export const PHONE_DISPLAY = '(321) 272-7741';
+export const PHONE_E164 = '+13212727741';
 
 export const TAGLINE = 'Growth systems for established CPA firms.';
 

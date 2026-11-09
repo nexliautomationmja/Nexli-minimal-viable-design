@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 
 import React from 'react';
-import Link from 'next/link';
+import PolicyLinks from '../legal/PolicyLinks';
 
 const MUTED = 'var(--text-muted)';
 
@@ -51,17 +51,10 @@ const VslDisclaimer: React.FC = () => (
         and META are trademarks of Meta Platforms, Inc.
       </p>
 
-      <div
-        className="flex items-center gap-5 pt-1 text-[10px] font-black uppercase tracking-[0.2em]"
-        style={{ color: MUTED }}
-      >
-        <Link href="/privacy" className="transition-colors hover:text-blue-500">
-          Privacy
-        </Link>
-        <Link href="/terms" className="transition-colors hover:text-blue-500">
-          Terms
-        </Link>
-      </div>
+      {/* The full policy set and the business details, shared with the
+          site footer and the funnel footer (components/legal). Opens in a
+          new tab so reading a policy does not lose the video. */}
+      <PolicyLinks newTab color={MUTED} className="pt-1" />
 
       {/* Matches the site Footer's wording exactly rather than inventing a
           second copyright line. */}

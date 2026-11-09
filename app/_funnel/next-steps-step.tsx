@@ -20,6 +20,7 @@ import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { ArrowRight, BookOpen, Mail } from 'lucide-react';
 import FunnelLogo from '@/components/FunnelLogo';
+import FunnelLegalFooter from '@/components/legal/FunnelLegalFooter';
 import DeliveryBlock from '@/components/advisory/DeliveryBlock';
 import { requireAdvisoryBuyer } from '@/lib/advisory-session';
 import { reasonFor } from '@/lib/advisory-fit';
@@ -165,6 +166,10 @@ export default async function NextStepsStep({ angle }: { angle: VslAngle }) {
           </p>
         </section>
       </div>
+      {/* Terms, refund and delivery policy, card marks and contact
+          details: this page follows a card purchase and the site footer is
+          hidden here. */}
+      <FunnelLegalFooter />
     </main>
   );
 }
