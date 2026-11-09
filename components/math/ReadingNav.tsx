@@ -25,7 +25,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronUp, Download, List, X } from 'lucide-react';
-import { PDF_HREF, PDF_NAME } from './ui';
+import { PDF_NAME } from './pdf';
+import { usePdfHref } from './pdf-link';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -48,6 +49,8 @@ export default function ReadingNav({
   onGo: (i: number) => void;
 }) {
   const [open, setOpen] = useState(false);
+  // On a phone, the phone PDF (components/math/pdf).
+  const pdfHref = usePdfHref();
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const currentItem = useRef<HTMLButtonElement>(null);
@@ -233,7 +236,7 @@ export default function ReadingNav({
 
               <div className="shrink-0 border-t border-white/[0.08] px-4 pb-4 pt-3">
                 <a
-                  href={PDF_HREF}
+                  href={pdfHref}
                   download={PDF_NAME}
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.05] text-sm font-semibold text-white/90 [-webkit-tap-highlight-color:transparent] active:bg-white/[0.1]"
                 >

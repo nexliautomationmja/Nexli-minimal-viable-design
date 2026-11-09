@@ -55,8 +55,8 @@ export const HEADING: React.CSSProperties = {
   color: '#fff',
 };
 
-export const PDF_HREF = '/downloads/nexli-see-the-math.pdf';
-export const PDF_NAME = 'Nexli-See-The-Math.pdf';
+// The PDFs live in ./pdf (a plain module the server can import too).
+export { PDF_HREF, PDF_NAME } from './pdf';
 
 /**
  * Presenting mode: a desktop window tall enough to show a slide at a time.
