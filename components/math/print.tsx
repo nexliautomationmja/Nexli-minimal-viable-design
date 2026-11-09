@@ -9,8 +9,8 @@
 //   everything is drawn in its final state: no reveals, no bars growing, no
 //   two-step chart story (Reveal and useSeen in ./ui, CoverChart)
 //   nothing to click: the scenario toggles and the download buttons go, and
-//   where a toggle hid a choice, the page shows all of it instead (the
-//   year-two slide lists all three scenarios)
+//   where a toggle hid a choice, the PDF shows all of it instead (the
+//   year-two slide gets a page per scenario, in app/math/print)
 //   "How this is figured" on break-even is printed open
 // ---------------------------------------------------------------------------
 import { createContext, useContext } from 'react';

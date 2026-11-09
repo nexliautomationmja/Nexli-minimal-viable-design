@@ -17,7 +17,20 @@ import FunnelLogo from '@/components/FunnelLogo';
 import { OUTFIT } from '@/components/funnel/primitives';
 import { PrintContext } from '@/components/math/print';
 import { SLIDES } from '@/components/math/slides';
+import { YearTwoSlide } from '@/components/math/slides-b';
 import { FAINT } from '@/components/math/ui';
+import { SCENARIOS } from '@/lib/see-the-math';
+
+/**
+ * The PDF's pages: the deck's slides in order, except that "Going into year
+ * two" gets a page per scenario. In the deck a toggle switches between
+ * them; on paper Marcel wanted all three in full (2026-11-09).
+ */
+const PAGES = SLIDES.flatMap(({ id, C }) =>
+  id === 'year-two'
+    ? SCENARIOS.map((s) => ({ key: `${id}-${s.id}`, node: <YearTwoSlide scenario={s.id} /> }))
+    : [{ key: id, node: <C /> }],
+);
 
 // Three print-only overrides, each for a reason found the hard way:
 //  - overflow visible on html and body. globals.css gives both overflow-x:
@@ -32,6 +45,9 @@ import { FAINT } from '@/components/math/ui';
 //  - the turning rainbow rims (RimCard, the shimmer badge) as a still
 //    gradient. Their oversized spinning layer left seams across the card on
 //    paper, and with blur off their glowing "orbs" printed as hard circles.
+//  - the year-two slide's striped amber "system" slice as solid amber.
+//    Preview dropped Chrome's repeating-stripe pattern entirely, leaving the
+//    slice transparent over the green.
 const PRINT_CSS = `
 @page { size: 1280px 720px; margin: 0; }
 html, body { background: #020617 !important; margin: 0; overflow: visible !important; }
@@ -44,6 +60,7 @@ html, body { background: #020617 !important; margin: 0; overflow: visible !impor
   box-shadow: none !important; text-shadow: none !important; filter: none !important;
   backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
 }
+.print-page .system-hatch { background: #F59E0B !important; }
 .print-page .rim-spin { display: none !important; }
 .print-page :is(div, span):has(> .rim-spin) { background: linear-gradient(135deg, #3B82F6, #8B5CF6 40%, #06B6D4 70%, #F59E0B); }
 .print-page div:has(> .rim-spin) [aria-hidden="true"].rounded-full { display: none !important; }
@@ -56,8 +73,8 @@ export default function MathPrint() {
       <MotionConfig reducedMotion="always">
         <style>{PRINT_CSS}</style>
         <main className="text-white" style={{ backgroundColor: '#020617', ...OUTFIT }}>
-          {SLIDES.map(({ id, C }, i) => (
-            <div key={id} className="print-page" style={{ backgroundColor: '#020617' }}>
+          {PAGES.map(({ key, node }, i) => (
+            <div key={key} className="print-page" style={{ backgroundColor: '#020617' }}>
               {/* The deck's three glows, per page. */}
               <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
                 <div
@@ -82,7 +99,7 @@ export default function MathPrint() {
                 See the math
               </div>
 
-              <C />
+              {node}
 
               <div
                 className="absolute inset-x-8 bottom-6 z-[110] grid grid-cols-3 text-[11px] font-medium"
@@ -90,7 +107,7 @@ export default function MathPrint() {
               >
                 <span>www.nexli.net</span>
                 <span className="text-center tabular-nums">
-                  {i + 1} / {SLIDES.length}
+                  {i + 1} / {PAGES.length}
                 </span>
                 <span className="text-right">© 2026 Nexli Automation</span>
               </div>
