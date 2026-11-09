@@ -38,15 +38,16 @@ export const BOOKING_CONFIRMED_B_PATH = '/booking-confirmed-b';
  * two components at once, and the two drifted. There is one page left now,
  * but the Mux id caveats below are the real reason this stays here.
  *
- * PLAYBACK id, not the asset id. This cut's asset is
- * DK6eZgzxK7WLvaY9coo101dFfXYzzlc33dFrgAjWQAs4, which does NOT resolve —
- * https://stream.mux.com/<id>.m3u8 returns 200 for a playback id and 400
- * for an asset id. Both were checked that way before this swap.
+ * PLAYBACK id, not the asset id: https://stream.mux.com/<id>.m3u8 returns
+ * 200 for a playback id and 400 for an asset id. The current cut (Marcel,
+ * 2026-11-09) was checked that way before this swap.
  *
- * Previous cut: 1YNqqVjhqvAdjOCpFnyCXSewrZt2Iu3HcnvzbcYZ9Gs. Still in Mux,
- * so reverting is this line and nothing else.
+ * Previous cuts, both still in Mux, so reverting is this line and nothing
+ * else:
+ *   brQvpc77PpgGE2004Uu7c7njC5n9rwo01GPWHG02KY6S74  (until 2026-11-09)
+ *   1YNqqVjhqvAdjOCpFnyCXSewrZt2Iu3HcnvzbcYZ9Gs     (before that)
  */
-export const BOOKING_WELCOME_VIDEO_ID = 'brQvpc77PpgGE2004Uu7c7njC5n9rwo01GPWHG02KY6S74';
+export const BOOKING_WELCOME_VIDEO_ID = 'ReRcdF6QfmeNu0200UtGT00g3aV4s4ciDkF2XUOBUWK6yM';
 export const BOOKING_WELCOME_VIDEO_TITLE = 'Booking Confirmed - Thank You';
 
 /**
@@ -59,7 +60,9 @@ export const BOOKING_WELCOME_VIDEO_TITLE = 'Booking Confirmed - Thank You';
  * were showing before anyone pressed play.
  *
  * 0 is the clean open: no caption, no motion blur. The captions in this cut
- * start at about 0.75s, so anything past that puts text in the poster.
+ * start before 1s (frame 1 already reads "YOU'RE BOOKED THAT'S"), so
+ * anything past 0 risks putting text in the poster. Re-checked for the
+ * 2026-11-09 cut.
  *
  * To preview another frame before changing this:
  *   https://image.mux.com/<playback id>/thumbnail.jpg?time=<seconds>
