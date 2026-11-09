@@ -89,7 +89,10 @@ export default function DeliveryPolicyPage() {
         <ul className="list-disc pl-6 space-y-3">
           <li>
             <Strong>When work starts:</Strong> at a kickoff call, once the agreement is signed and the{' '}
-            {usd(AGENCY_SETUP_FEE)} setup fee is paid ({usd(AGENCY_ANNUAL_UPFRONT)} on the annual plan).
+            {usd(AGENCY_SETUP_FEE)} setup fee ({usd(AGENCY_ANNUAL_UPFRONT)} on the annual plan) has arrived in
+            our account. Those two payments are made by ACH bank transfer or wire transfer only, not by card.
+            A wire usually arrives the same or next business day; an ACH transfer usually takes one to three
+            business days.
           </li>
           <li>
             <Strong>How long the build takes:</Strong> about {AGENCY_LAUNCH_DAYS} days from kickoff. In that

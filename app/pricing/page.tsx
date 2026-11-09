@@ -72,6 +72,7 @@ const PRODUCTS: Product[] = [
     priceNote: `Includes the ${usd(AGENCY_AD_SPEND)} monthly ad budget, which we place into your campaigns. Plus a one-time ${usd(AGENCY_SETUP_FEE)} setup fee at signing. Or pay annually: both plans are set out below.`,
     points: [
       'Sold under a signed agreement, billed by invoice',
+      `Setup fee (${usd(AGENCY_SETUP_FEE)}) and annual payment (${usd(AGENCY_ANNUAL_UPFRONT)}): ACH or wire only. Monthly charges: credit or debit card`,
       `Built in about ${AGENCY_LAUNCH_DAYS} days from kickoff; monthly billing starts at launch`,
       `Monthly plan: ${AGENCY_INITIAL_TERM_MONTHS}-month minimum from launch, then month to month with ${AGENCY_CANCEL_NOTICE_DAYS} days’ notice`,
       `Annual plan: ${AGENCY_ANNUAL_TERM_MONTHS} months from launch, no automatic renewal`,
@@ -221,8 +222,11 @@ export default function PricingPage() {
         <h2 className="text-xl font-bold text-[var(--text-main)]">Payment</h2>
         <CardLogos />
         <p className="text-base">
-          We accept Visa, Mastercard, American Express and Discover. Card payments are processed securely by
-          our payment processor; Nexli never sees or stores your full card number.
+          We accept Visa, Mastercard, American Express and Discover, credit or debit, for the monthly plan,
+          the monthly advertising budget and the {ADVISORY_PRODUCT_NAME}. The {usd(AGENCY_SETUP_FEE)} setup
+          fee and the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan payment are paid by ACH bank transfer or wire
+          transfer only, not by card. Card payments are processed securely by our payment processor; Nexli
+          never sees or stores your full card number.
         </p>
         <p className="text-base">
           Before you buy, please read our{' '}

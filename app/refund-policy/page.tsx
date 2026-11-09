@@ -142,7 +142,9 @@ export default function RefundPolicyPage() {
         <p>
           If you were charged twice, charged the wrong amount, or charged for something you did not buy, we
           refund the difference in full whenever you raise it. Email <Email /> or call <Tel /> with the date
-          and amount of the charge.
+          and amount of the charge. The refund goes back the way you paid: to your card for card payments, or
+          to your bank account for payments made by ACH or wire transfer (the {usd(AGENCY_SETUP_FEE)} setup
+          fee and the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan payment).
         </p>
       </LegalSection>
 
