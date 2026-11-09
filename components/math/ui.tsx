@@ -17,7 +17,9 @@
 // ---------------------------------------------------------------------------
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { ExternalLink } from 'lucide-react';
 import { OUTFIT } from '@/components/funnel/primitives';
+import { usePrint } from './print';
 
 export const MUTED = 'rgba(255,255,255,0.62)';
 export const FAINT = 'rgba(255,255,255,0.4)';
@@ -154,6 +156,8 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  // On paper it is simply there.
+  if (usePrint()) return <div className={className}>{children}</div>;
   return (
     <motion.div
       {...rise}
@@ -267,6 +271,21 @@ export function Badge({ who }: { who: Who }) {
   );
 }
 
+/** A cited source: opens in a new tab, marked as external. */
+export function Src({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 font-semibold text-cyan-300 underline decoration-cyan-400/40 underline-offset-4 hover:decoration-cyan-300"
+    >
+      {children}
+      <ExternalLink className="h-3 w-3" aria-hidden="true" />
+    </a>
+  );
+}
+
 /** A highlighted callout, the PDF's cyan-ruled box. */
 export function Callout({
   label,
@@ -313,7 +332,9 @@ export function useWidth<T extends HTMLElement>(): [React.RefObject<T | null>, n
 /** Fires once, the first time the element is mostly on screen. */
 export function useSeen<T extends Element>(amount = 0.35): [React.RefObject<T | null>, boolean] {
   const ref = useRef<T>(null);
-  const [seen, setSeen] = useState(false);
+  // Print mode starts seen: every chart drawn in full, wherever it sits.
+  const print = usePrint();
+  const [seen, setSeen] = useState(print);
   useEffect(() => {
     const el = ref.current;
     if (!el || seen) return;

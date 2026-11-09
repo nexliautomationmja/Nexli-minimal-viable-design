@@ -33,46 +33,9 @@ import { MotionConfig } from 'framer-motion';
 import { Download, Maximize2, Minimize2 } from 'lucide-react';
 import FunnelLogo from '@/components/FunnelLogo';
 import { OUTFIT } from '@/components/funnel/primitives';
-import {
-  FrontDoorSlide,
-  HowSlide,
-  OneStopSlide,
-  ReturnSlide,
-  ScenariosSlide,
-  SourcesSlide,
-  TitleSlide,
-  ValueSourcesSlide,
-} from '@/components/math/slides-a';
-import {
-  BreakEvenSlide,
-  BundleSlide,
-  CloseSlide,
-  InvestSlide,
-  StackSlide,
-  TimelineSlide,
-  WhoSlide,
-} from '@/components/math/slides-b';
 import ReadingNav, { READING_NAV_SPACE } from '@/components/math/ReadingNav';
+import { SLIDES } from '@/components/math/slides';
 import { DECK_QUERY, PDF_HREF, PDF_NAME } from '@/components/math/ui';
-
-/** Order matters: it is the deck. `id` must match the slide's own id. */
-const SLIDES = [
-  { id: 'top', title: 'What $5,000 can turn into', C: TitleSlide },
-  { id: 'how', title: 'How the math works', C: HowSlide },
-  { id: 'scenarios', title: 'Three scenarios', C: ScenariosSlide },
-  { id: 'return', title: 'New fees each month', C: ReturnSlide },
-  { id: 'sources', title: 'Getting them on your calendar', C: SourcesSlide },
-  { id: 'sources-value', title: 'What a client is worth', C: ValueSourcesSlide },
-  { id: 'front-door', title: 'Tax planning is the front door', C: FrontDoorSlide },
-  { id: 'one-stop-shop', title: 'The one-stop shop', C: OneStopSlide },
-  { id: 'stack', title: 'Clients stack', C: StackSlide },
-  { id: 'who-does-what', title: 'Who does what', C: WhoSlide },
-  { id: 'first-90-days', title: 'The first 90 days', C: TimelineSlide },
-  { id: 'invest', title: 'What you invest', C: InvestSlide },
-  { id: 'bundle', title: 'What the MRR covers', C: BundleSlide },
-  { id: 'break-even', title: 'When you break even', C: BreakEvenSlide },
-  { id: 'next', title: 'Next step', C: CloseSlide },
-] as const;
 
 const DECK_CSS = `
 .deck-hint { display: none; }

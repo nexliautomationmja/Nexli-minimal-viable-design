@@ -78,10 +78,16 @@ const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   const reduceMotion = useReducedMotion();
   const target = animateOnView && !inView ? 0 : value;
   const v = useAnimatedValue(target, duration);
+  // useReducedMotion reads the media query on the client's FIRST render, but
+  // the server has no media query, so honouring it before hydration made the
+  // server's "$0" and the client's "$40,000" disagree: a hydration error on
+  // /math for anyone with reduced motion on. Wait until mounted.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Counting up is decorative; the figure is the content. Under reduced
   // motion show it immediately rather than tweening to it.
-  const shown = reduceMotion ? value : v;
+  const shown = mounted && reduceMotion ? value : v;
   const final = format(value);
 
   // A tweening text node gets announced mid-count by some screen readers, and

@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { SCENARIOS, type ScenarioId } from '@/lib/see-the-math';
+import { usePrint } from './print';
 import { MUTED } from './ui';
 
 /**
@@ -20,6 +21,8 @@ export function ScenarioToggle({
   /** Unique per toggle, so two toggles' pills do not fly between slides. */
   layoutId: string;
 }) {
+  // Nothing to click on paper.
+  if (usePrint()) return null;
   return (
     <div
       role="group"

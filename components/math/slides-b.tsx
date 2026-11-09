@@ -1,9 +1,13 @@
 'use client';
 
-// Slides 8–14 of /math: the stacking back end, who does what, the first 90
-// days, what you invest, the bundle as a baseline, break-even and the close.
+// The second half of /math: who does what, the first 90 days, what you
+// invest, your clients paying for the system, break-even and the close. Also
+// the stacking back end, which is hidden from the deck (see SLIDES in
+// app/math/math-deck).
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import AnimatedNumber from '@/components/AnimatedNumber';
 import {
   Bot,
   Briefcase,
@@ -18,10 +22,16 @@ import {
 import { RimCard } from '@/components/funnel/primitives';
 import {
   AD_SPEND,
-  ANNUAL_MONTHLY_EQUIVALENT,
+  BACK_END_ANNUAL,
   MONTHLY_TOTAL,
   MONTHS,
   PLANS,
+  PLAN_FEE,
+  PLAN_FEE_HIGH,
+  PLAN_FEE_LOW,
+  RETENTION,
+  RETENTION_BENCHMARK,
+  RETENTION_SOURCE,
   SCENARIOS,
   SETUP_FEE,
   TAKE_RATE,
@@ -32,7 +42,10 @@ import {
   breakEvenMonth,
   chain,
   clientsBy,
+  clientsSignedIn,
   netSeries,
+  pct,
+  recurringBook,
   scenarioById,
   usd,
   usdCompact,
@@ -41,6 +54,10 @@ import {
   type ScenarioId,
 } from '@/lib/see-the-math';
 import BreakEvenChart from './BreakEvenChart';
+import CoverChart from './CoverChart';
+import { ScenarioToggle } from './ScenarioBits';
+import { usePrint } from './print';
+import { SITE_URL } from '@/lib/site';
 import Columns, { LineKey } from './Columns';
 import {
   Badge,
@@ -57,6 +74,8 @@ import {
   Panel,
   Reveal,
   Slide,
+  Src,
+  useSeen,
   type Who,
 } from './ui';
 
@@ -64,7 +83,9 @@ const CONS = SCENARIOS[0];
 const BEST = SCENARIOS[2];
 const months = Array.from({ length: MONTHS }, (_, i) => i + 1);
 
-// ── 8. Every month's clients stack ────────────────────────────────────────
+// ── Every month's clients stack (HIDDEN) ──────────────────────────────────
+// Not in the deck since 2026-11-09: see SLIDES in app/math/math-deck to put
+// it back.
 
 export function StackSlide() {
   const pace = chain(CONS).clients;
@@ -322,71 +343,52 @@ export function InvestSlide() {
   );
 }
 
-// ── 12. The bundle becomes your baseline ──────────────────────────────────
+// ── Your clients cover our monthly fee ────────────────────────────────────
 
 export function BundleSlide() {
   const billed = months.map((m) => backEndBilledIn(CONS, m));
+  const plans = months.map((m) => clientsSignedIn(CONS, m) * PLAN_FEE);
   const covers = billed.findIndex((v) => v >= MONTHLY_TOTAL) + 1;
+  const firstPlan = plans.findIndex((v) => v > 0) + 1;
   return (
     <Slide id="bundle">
-      {/* The picture this slide paints: once the MRR pays the bill, the firm
-          is not hunting new business just to stay even. Upselling the bundle
-          keeps the baseline covered; new tax plans become the extra. */}
+      {/* The full picture, in Marcel's framing (2026-11-09): tax planning
+          pays for the system first; bookkeeping and payroll, built up month
+          by month, then cover it on their own; from there every tax plan,
+          paid up front, is the bonus. The chart (CoverChart) shows both
+          against the monthly bill, monthly plan only. "What you invest" and
+          break-even still compare the two ways of paying. */}
       <Heading
-        kicker="Monthly recurring revenue"
-        sub={`MRR is your monthly recurring revenue: the bookkeeping and payroll your clients pay you every month. By month ${covers} it covers your whole monthly bill, ads and our service, on either plan. From then on you're not hunting for new business just to stay even.`}
+        kicker="The full picture"
+        sub={`Tax planning pays for it first. Bookkeeping and payroll build up month by month until, by month ${covers}, they cover the whole bill on their own: our fee and your ads, ${usd(MONTHLY_TOTAL)} a month. After that, every tax plan is the bonus.`}
       >
-        What the MRR <span className={GRADIENT_TEXT}>covers.</span>
+        Your new bookkeeping and payroll clients <span className={GRADIENT_TEXT}>cover our monthly fee for you.</span>
       </Heading>
 
       <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1.75fr_1fr]">
         <Reveal delay={0.12}>
-          <Panel title="Your MRR from bookkeeping and payroll, conservative pace, half your clients">
-            <div className="mb-2 flex flex-wrap gap-x-6 gap-y-2">
-              <LineKey color={C.invest} dash="7 6" label="Month to month" sub={`${usd(MONTHLY_TOTAL)} a month`} />
-              <LineKey color="rgba(255,255,255,0.75)" dash="2 5" label="Paid annually" sub={`${usd(ANNUAL_MONTHLY_EQUIVALENT)} a month`} />
-            </div>
-            <Columns
-              caption="Monthly recurring revenue from bookkeeping and payroll, conservative pace"
-              xTitle="Month"
-              height={300}
-              maxBar={30}
-              yMax={20_000}
-              ticks={[0, 5_000, 10_000, 15_000, 20_000]}
-              tickFormat={usdCompact}
-              refLines={[
-                { value: MONTHLY_TOTAL, color: C.invest },
-                { value: ANNUAL_MONTHLY_EQUIVALENT, color: 'rgba(255,255,255,0.75)', dash: '2 5' },
-              ]}
-              data={months.map((m, i) => ({
-                key: String(m),
-                label: String(m),
-                value: billed[i],
-                color: C.backEnd,
-                dim: m < covers,
-                capLabel: m === covers || m === MONTHS ? usd(billed[i]) : undefined,
-                tip: { value: `${usd(billed[i])} MRR`, label: `Month ${m}` },
-              }))}
+          <Panel title="What comes in each month, conservative pace">
+            <CoverChart
+              bill={MONTHLY_TOTAL}
+              data={months.map((m, i) => ({ month: m, backEnd: billed[i], planning: plans[i] }))}
             />
           </Panel>
         </Reveal>
 
         <Reveal delay={0.22}>
-          <Callout label="New business is the cherry on top" tone="emerald" className="h-full">
-            <div className="mb-4 mt-2">
-              <div className="text-5xl font-black tracking-tight text-white">{usd(billed[covers - 1])}</div>
-              <div className="mt-1 text-sm" style={{ color: MUTED }}>
-                MRR by month {covers}, against a {usd(MONTHLY_TOTAL)} monthly bill
-              </div>
-            </div>
-            <p style={{ color: 'rgba(255,255,255,0.9)' }}>
-              Keep upselling bookkeeping and payroll and your baseline stays covered, and keeps growing:{' '}
-              <strong className="text-white">{usd(billed[MONTHS - 1])} a month by month 12</strong>.
-            </p>
-            <p className="mt-3" style={{ color: 'rgba(255,255,255,0.9)' }}>
-              So every new tax plan you sign, with its fee paid up front, isn&apos;t keeping the lights on.{' '}
-              <strong className="font-bold text-white">It&apos;s the cherry on top.</strong>
-            </p>
+          <Callout label="Tax planning becomes the cherry on top" tone="emerald" className="h-full">
+            <ol className="mt-3 space-y-4">
+              <Beat n={1} color={C.planning} title="First, tax planning pays for it.">
+                From month {firstPlan}, your new plans bring in {usd(plans[firstPlan - 1])} a month, then{' '}
+                {usd(plans[MONTHS - 1])}, against a {usd(MONTHLY_TOTAL)} bill.
+              </Beat>
+              <Beat n={2} color={C.backEnd} title={`By month ${covers}, bookkeeping and payroll cover it alone.`}>
+                {usd(billed[covers - 1])} a month, and still growing: {usd(billed[MONTHS - 1])} a month by month 12.
+              </Beat>
+              <Beat n={3} color={C.planning} title="From then on, every tax plan is the bonus.">
+                Paid up front, on top of a bill that&apos;s already covered, and it keeps compounding.
+              </Beat>
+            </ol>
           </Callout>
         </Reveal>
       </div>
@@ -394,9 +396,231 @@ export function BundleSlide() {
   );
 }
 
+// ── Going into year two ───────────────────────────────────────────────────
+
+/**
+ * The payoff after twelve months, Marcel's ask (2026-11-09): tax planning
+ * clients renew every year, bookkeeping and payroll keep paying, RETENTION
+ * of each stay, and the system's year comes off. What is left is how far in
+ * the green the firm starts year two, before it signs anyone new. Figures
+ * from recurringBook in lib/see-the-math; the retention research is there.
+ */
+export function YearTwoSlide() {
+  // Conservative first, as every scenario picker in the deck opens; the
+  // headline, rows, bar and total all follow the pick. On paper there is no
+  // pick, so all three are listed beside it instead.
+  const print = usePrint();
+  const [id, setId] = useState<ScenarioId>('conservative');
+  const s = scenarioById(id);
+  const b = recurringBook(s);
+  const kept = pct(RETENTION);
+  return (
+    <Slide id="year-two">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <Heading
+          kicker="After 12 months"
+          sub={`Tax planning clients renew every year, and bookkeeping and payroll keep paying every month. Even if only ${kept} stay, this is the recurring revenue you start year two with, before you sign anyone new.`}
+        >
+          Going into year two, you&apos;re{' '}
+          <span className={GRADIENT_TEXT}>about {usd(aboutThousands(b.inTheGreen))} a year in the green.</span>
+        </Heading>
+        <Reveal delay={0.1} className="shrink-0">
+          <ScenarioToggle value={id} onChange={setId} layoutId="year-two-toggle" />
+        </Reveal>
+      </div>
+
+      <div className="mt-7 grid gap-5 lg:mt-9 lg:grid-cols-[1.55fr_1fr]">
+        <Reveal delay={0.12}>
+          <Panel
+            title={`Your recurring book after 12 months, ${s.label.toLowerCase()} pace, ${kept} staying`}
+            className="h-full"
+          >
+            <dl className="space-y-3">
+              <BookRow
+                swatch={C.planning}
+                label="Tax planning renewals"
+                note={`${b.keptPlanning} of ${b.planningClients} clients × ${usd(PLAN_FEE)}`}
+                value={<AnimatedNumber value={b.planning} format={usd} duration={600} />}
+              />
+              <BookRow
+                swatch={C.backEnd}
+                label="Bookkeeping and payroll"
+                note={`${b.keptBackEnd} of ${b.backEndClients} clients × ${usd(BACK_END_ANNUAL)} a year`}
+                value={<AnimatedNumber value={b.backEnd} format={usd} duration={600} />}
+              />
+              <div className="flex items-baseline justify-between gap-4 border-t border-white/10 pt-3">
+                <dt className="text-[15px] font-bold text-white">Recurring revenue a year</dt>
+                <dd className="text-xl font-black tabular-nums text-white">
+                  <AnimatedNumber value={b.total} format={usd} duration={600} />
+                </dd>
+              </div>
+              <BookRow
+                swatch={SYSTEM_HATCH}
+                label="The system for a year"
+                note={`${usd(MONTHLY_TOTAL)} a month × 12, ads and our fee`}
+                value={usd(-b.systemYear)}
+              />
+            </dl>
+
+            <BookTrack planning={b.planning} backEnd={b.backEnd} system={b.systemYear} />
+
+            <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 rounded-xl border border-emerald-400/30 bg-emerald-400/[0.07] px-4 py-3">
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-300">In the green</span>
+              <span className="text-2xl font-black tabular-nums text-white sm:text-3xl">
+                <AnimatedNumber value={b.inTheGreen} format={usd} animateOnView duration={1100} />
+                <span className="ml-1.5 text-sm font-semibold" style={{ color: MUTED }}>
+                  a year
+                </span>
+              </span>
+            </div>
+          </Panel>
+        </Reveal>
+
+        <Reveal delay={0.22}>
+          {print && (
+            <Panel title="In the green going into year two" className="mb-4">
+              <dl className="space-y-2.5">
+                {SCENARIOS.map((sc) => (
+                  <div key={sc.id} className="flex items-baseline justify-between gap-4">
+                    <dt className={`text-[15px] ${sc.id === id ? 'font-bold text-white' : 'font-semibold text-white/80'}`}>
+                      {sc.label}
+                    </dt>
+                    <dd className="text-[15px] font-bold tabular-nums text-white">
+                      about {usd(aboutThousands(recurringBook(sc).inTheGreen))}
+                      <span className="ml-1 text-xs font-medium" style={{ color: MUTED }}>
+                        a year
+                      </span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </Panel>
+          )}
+          <Callout label="Why it's still conservative" className={print ? '' : 'h-full'}>
+            <ul className="mt-2 space-y-3">
+              <li>
+                {kept} is the low end of the {pct(RETENTION_BENCHMARK.low)}–{pct(RETENTION_BENCHMARK.high)}{' '}
+                <Src href={RETENTION_SOURCE}>full-service firms average</Src>. Top firms keep{' '}
+                {pct(RETENTION_BENCHMARK.topLow)}–{pct(RETENTION_BENCHMARK.topHigh)}.
+              </li>
+              <li>Only your year-one clients. Everyone you sign in year two is on top.</li>
+              <li>
+                Tax plans at {usd(PLAN_FEE)}, the low end of {usd(PLAN_FEE_LOW)}–{usd(PLAN_FEE_HIGH)}, and compliance work
+                isn&apos;t counted.
+              </li>
+            </ul>
+          </Callout>
+        </Reveal>
+      </div>
+    </Slide>
+  );
+}
+
+/** The system's slice: the amber of "your investment" elsewhere, hatched, as money going out. */
+const SYSTEM_HATCH = `repeating-linear-gradient(135deg, ${C.invest} 0 5px, rgba(245,158,11,0.45) 5px 10px)`;
+
+function BookRow({ swatch, label, note, value }: { swatch: string; label: string; note: string; value: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4">
+      <dt className="min-w-0">
+        <span className="flex items-center gap-2 text-[15px] font-semibold text-white/90">
+          <span aria-hidden="true" className="h-3 w-3 shrink-0 rounded-[3px]" style={{ background: swatch }} />
+          {label}
+        </span>
+        <span className="mt-0.5 block pl-5 text-[13px]" style={{ color: MUTED }}>
+          {note}
+        </span>
+      </dt>
+      <dd className="shrink-0 text-[17px] font-bold tabular-nums text-white">{value}</dd>
+    </div>
+  );
+}
+
+/**
+ * The book as one bar: tax planning and bookkeeping fill it, the system's
+ * year is carved off the end, and the rest is bracketed as the green. Grows
+ * in once on first sight; transforms only, so reduced motion simply draws it.
+ */
+function BookTrack({ planning, backEnd, system }: { planning: number; backEnd: number; system: number }) {
+  const [ref, seen] = useSeen<HTMLDivElement>(0.5);
+  const total = planning + backEnd;
+  const p = (v: number) => (v / total) * 100;
+  const green = p(total - system);
+  const grow = (delay: number) => ({
+    initial: { scaleX: 0 },
+    animate: { scaleX: seen ? 1 : 0 },
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const, delay },
+  });
+  return (
+    <div ref={ref} className="mt-6" aria-hidden="true">
+      <div className="relative h-9 w-full overflow-hidden rounded-lg bg-white/[0.04]">
+        <motion.div
+          className="absolute inset-y-0 left-0 origin-left transition-[width] duration-500 ease-out"
+          style={{ width: `calc(${p(planning)}% - 1px)`, background: C.planning }}
+          {...grow(0)}
+        />
+        <motion.div
+          className="absolute inset-y-0 origin-left transition-[left,width] duration-500 ease-out"
+          style={{ left: `calc(${p(planning)}% + 1px)`, width: `calc(${p(backEnd)}% - 1px)`, background: C.backEnd }}
+          {...grow(0.45)}
+        />
+        <motion.div
+          className="absolute inset-y-0 right-0 origin-right border-l-2 border-[#0d1526] transition-[width] duration-500 ease-out"
+          style={{ width: `${100 - green}%`, background: SYSTEM_HATCH }}
+          {...grow(1.05)}
+        />
+      </div>
+      <div className="relative mt-1.5 h-12 text-[12px] font-bold">
+        <motion.div
+          className="absolute top-0 flex flex-col items-center transition-[left,width] duration-500 ease-out"
+          style={{ left: 0, width: `${green}%` }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: seen ? 1 : 0 }}
+          transition={{ duration: 0.5, delay: 1.5 }}
+        >
+          <span className="h-2 w-full rounded-b-sm border-x-2 border-b-2 border-emerald-400" />
+          <span className="mt-1 text-white/85">In the green</span>
+        </motion.div>
+        <motion.div
+          className="absolute top-0 flex flex-col items-center transition-[left,width] duration-500 ease-out"
+          style={{ left: `${green}%`, width: `${100 - green}%` }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: seen ? 1 : 0 }}
+          transition={{ duration: 0.5, delay: 1.5 }}
+        >
+          <span className="ml-0.5 h-2 w-[calc(100%-2px)] rounded-b-sm border-x-2 border-b-2 border-amber-400" />
+          <span className="mt-1 whitespace-nowrap text-white/70">The system</span>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/** One step of the cherry-on-top story, numbered in its series colour. */
+function Beat({ n, color, title, children }: { n: number; color: string; title: string; children: React.ReactNode }) {
+  return (
+    <li className="flex gap-3">
+      <span
+        aria-hidden="true"
+        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black text-[#020617]"
+        style={{ background: color }}
+      >
+        {n}
+      </span>
+      <div>
+        <div className="text-[15px] font-bold leading-snug text-white">{title}</div>
+        <div className="mt-1 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          {children}
+        </div>
+      </div>
+    </li>
+  );
+}
+
 // ── 13. When you break even ───────────────────────────────────────────────
 
 export function BreakEvenSlide() {
+  const print = usePrint();
   const [id, setId] = useState<ScenarioId>('conservative');
   const scenario = scenarioById(id);
   const consBe = breakEvenMonth(CONS, PLANS.monthly);
@@ -423,7 +647,7 @@ export function BreakEvenSlide() {
 
         <Reveal delay={0.2} className="flex flex-col gap-3">
           <div className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: FAINT }}>
-            Pick a scenario
+            {print ? 'By scenario' : 'Pick a scenario'}
           </div>
           {SCENARIOS.map((s) => {
             const on = s.id === id;
@@ -471,7 +695,7 @@ export function BreakEvenSlide() {
       </div>
 
       <Reveal delay={0.3}>
-        <details className="group mt-5 rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3">
+        <details open={print || undefined} className="group mt-5 rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3">
           <summary className="cursor-pointer list-none text-sm font-semibold text-white/75 hover:text-white">
             <span className="mr-1.5 inline-block transition-transform group-open:rotate-90">›</span>
             How this is figured
@@ -493,6 +717,7 @@ export function BreakEvenSlide() {
 // ── 14. The close ─────────────────────────────────────────────────────────
 
 export function CloseSlide() {
+  const print = usePrint();
   const c = chain(CONS);
   const be = breakEvenMonth(CONS, PLANS.monthly);
   // The whole conservative case in four numbers: what a firm owner should
@@ -529,19 +754,21 @@ export function CloseSlide() {
             ))}
           </dl>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            {/* The one action on the close: the prospect leaves with the
-                document. No booking button by design; they are already on
-                the call, or have just had it. */}
-            <a
-              href={PDF_HREF}
-              download={PDF_NAME}
-              className="inline-flex h-12 items-center gap-2 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 px-6 text-[15px] font-bold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-[1.03] active:scale-[0.98]"
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Download the PDF
-            </a>
-          </div>
+          {/* The one action on the close: the prospect leaves with the
+              document. No booking button by design; they are already on the
+              call, or have just had it. Not in the PDF, which is the document. */}
+          {!print && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={PDF_HREF}
+                download={PDF_NAME}
+                className="inline-flex h-12 items-center gap-2 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 px-6 text-[15px] font-bold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-[1.03] active:scale-[0.98]"
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Download the PDF
+              </a>
+            </div>
+          )}
         </RimCard>
       </Reveal>
 
@@ -561,10 +788,11 @@ export function CloseSlide() {
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs" style={{ color: FAINT }}>
             <span>© 2026 Nexli Automation LLC.</span>
-            <Link href="/privacy" className="hover:text-white/80">
+            {/* Absolute in the PDF, or they point at wherever it was built. */}
+            <Link href={print ? `${SITE_URL}/privacy` : '/privacy'} className="hover:text-white/80">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-white/80">
+            <Link href={print ? `${SITE_URL}/terms` : '/terms'} className="hover:text-white/80">
               Terms
             </Link>
           </div>
