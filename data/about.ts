@@ -16,7 +16,7 @@ export const aboutIntro: string =
 export const aboutFacts: AboutFact[] = [
   { label: 'Legal name', value: 'Nexli Automation LLC' },
   { label: 'Founded', value: 'TODO: year' },
-  { label: 'Headquarters', value: 'TODO: City, State' },
+  { label: 'Headquarters', value: 'Winter Park, FL' },
   { label: 'Founder', value: 'Marcel Allen' },
   { label: 'Email', value: 'mail@nexli.net' },
   { label: 'Serves', value: 'Established CPA and accounting firms with $500K+ in annual revenue (about $40K-$50K a month)' },

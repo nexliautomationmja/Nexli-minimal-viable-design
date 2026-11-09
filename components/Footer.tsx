@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
 import SocialDock from './SocialDock';
+import CardLogos from './legal/CardLogos';
+import PolicyLinks from './legal/PolicyLinks';
 
-// Routes where the footer should be completely hidden (dedicated funnels)
+// Routes where the footer should be completely hidden (dedicated funnels).
 const HIDDEN_FOOTER_ROUTES = ['/vslfunnel', '/profit-calculator'];
 
 const Footer: React.FC = () => {
@@ -124,18 +126,6 @@ const Footer: React.FC = () => {
             >
               About
             </Link>
-            <Link
-              href="/privacy"
-              className="hover:text-blue-500 transition-colors uppercase tracking-[0.2em]"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="/terms"
-              className="hover:text-blue-500 transition-colors uppercase tracking-[0.2em]"
-            >
-              Terms and Conditions
-            </Link>
             <a
               href="https://portal.nexli.net/portal"
               target="_blank"
@@ -152,6 +142,15 @@ const Footer: React.FC = () => {
           <div className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
             © 2026 Nexli Automation LLC. High-End Automation for Elite Advisors.
           </div>
+        </div>
+
+        {/* Policies, business details and card marks: what a card processor's
+            underwriter looks for at the foot of every page. Privacy and Terms
+            moved down here from the row above so all the policies sit
+            together. */}
+        <div className="mt-12 pt-8 border-t border-[var(--glass-border)] flex flex-col md:flex-row justify-between items-center gap-6">
+          <PolicyLinks align="start" />
+          <CardLogos className="justify-center md:justify-end flex-shrink-0" />
         </div>
       </div>
     </footer>
