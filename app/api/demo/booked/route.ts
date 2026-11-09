@@ -99,6 +99,8 @@ export async function POST(req: NextRequest) {
 
     if (lead?.email) {
       await syncContactToGhl({
+        // {{contact.candor_url}} in the booking-flow Candor email and SMS.
+        candorUrl: true,
         email: lead.email,
         firstName: lead.firstName,
         lastName: lead.lastName,

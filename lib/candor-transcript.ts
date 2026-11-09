@@ -28,6 +28,45 @@ import { SITE_URL } from '@/lib/site';
 
 export type TranscriptTurn = { role: 'user' | 'assistant'; content: string };
 
+/**
+ * The GHL contact the Candor link was sent to — `?c={{contact.id}}` on the
+ * booking-flow SMS and email. Without it a conversation opened on a phone
+ * arrives anonymous: phones that tap a text link carry no funnel cookie, so
+ * lead_id is null.
+ *
+ * Strict on purpose. GHL ids are alphanumeric, ~20 characters. Anything else
+ * — including a literal "{{contact.id}}" GHL failed to render — is dropped,
+ * and the page works exactly as it did without one.
+ */
+export function parseContactId(raw: unknown): string | null {
+  return typeof raw === 'string' && /^[A-Za-z0-9]{10,40}$/.test(raw) ? raw : null;
+}
+
+/**
+ * The finished Candor link for a booking-flow email or SMS. Written to the
+ * contact's candor_url custom field by lib/ghl-sync (candorUrl: true) and
+ * used as {{contact.candor_url}}.
+ *
+ * Built here rather than as `/candor?c={{contact.id}}` in the template: GHL's
+ * editor flags a merge tag inside a URL as a custom-variable error. Without
+ * a valid contact id it is the plain link, which still works.
+ */
+export function candorLink(contactId: string | null | undefined): string {
+  const id = parseContactId(contactId);
+  return id ? `${SITE_URL}/candor?c=${id}` : `${SITE_URL}/candor`;
+}
+
+/**
+ * One click from the transcript email to the contact record. Null without a
+ * GHL_LOCATION_ID. Uses the stock app.gohighlevel.com host; a white-label
+ * login domain would need swapping here.
+ */
+export function ghlContactUrl(contactId: string | null): string | null {
+  const location = process.env.GHL_LOCATION_ID;
+  if (!contactId || !location) return null;
+  return `https://app.gohighlevel.com/v2/location/${encodeURIComponent(location)}/contacts/detail/${contactId}`;
+}
+
 /** Readable in a GHL notification email without any templating. */
 export function formatTranscript(turns: TranscriptTurn[]): string {
   return turns

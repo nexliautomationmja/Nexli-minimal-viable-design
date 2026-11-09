@@ -162,6 +162,8 @@ export async function POST(req: NextRequest) {
     if (lead?.email) {
       await syncContactToGhl({
         resumeUrl,
+        // {{contact.candor_url}} in the booking-flow Candor email and SMS.
+        candorUrl: true,
         // Onto the contact, not just into the webhook payload, so a
         // tag-triggered reminder flow can wait until a fixed period
         // BEFORE the call rather than after the booking.

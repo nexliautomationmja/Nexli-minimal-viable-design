@@ -1,0 +1,90 @@
+Booked Appointment Flow - the Candor SMS
+=========================================
+
+Sent with 5-candor.txt, in the same workflow step. The email makes the
+case; the text is the one most people actually open, on the phone they
+will tap the link from.
+
+Its job is not to sell. It is to get the doubt they would not say on the
+call - the thing that would stop them hiring any agency - out of their
+head and into Candor before the call, where Marcel reads it.
+
+ASCII only. Type apostrophes and hyphens directly rather than pasting
+from a doc: a smart quote or an em dash drops the message out of GSM-7
+encoding and segments go from 153 characters to 67, so the same text
+silently costs three times as much to send.
+
+
+--------------------------------------------------------------------
+THE TEXT
+--------------------------------------------------------------------
+
+Hi {{contact.first_name}}, it's Marcel at Nexli. Before you hire any agency, us included, every doubt you have should be answered. Especially the ones you'd rather not say on the call - price, getting burned before, timing:
+
+{{contact.candor_url}}
+
+Reply STOP to opt out.
+
+
+~289 characters with an 11-letter first name, once candor_url renders
+(~51 characters: https://www.nexli.net/candor?c=<20-char contact id>).
+2 segments (306 is the cap). A first name over ~27 letters tips it to
+3. If you edit the copy, recount against the rendered link, not the tag.
+
+
+--------------------------------------------------------------------
+WHY IT IS WORDED THIS WAY
+--------------------------------------------------------------------
+
+"us included" - the line is about agencies in general, which only works
+if Nexli is not exempting itself. It is what makes the ask read as
+candid rather than as a pitch.
+
+"the ones you'd rather not say on the call" - the same promise the page
+makes ("Type the thing you would not say on the call..."). The doubts
+named after it are the page's own buttons, so they recognise theirs and
+tap it instead of typing.
+
+What it does NOT say, on purpose:
+  - No privacy promise. Marcel gets every conversation. The page dropped
+    "nothing you ask comes up on the call" for that reason.
+  - No "Daniela will answer you". Candor is an AI and the page says so;
+    the text must not imply a person is on the other end.
+
+
+--------------------------------------------------------------------
+SETUP IN GHL
+--------------------------------------------------------------------
+
+When:     same step as 5-candor.txt - between the confirmation and the
+          48-hour email. If the call is under ~48h away, send it right
+          after the confirmation rather than skipping it; that is when
+          the doubts are loudest.
+
+Consent:  gate the step on marketing_sms_opt_in = true
+          (docs/advisory-funnel-launch.md - TCPA, not preference). This
+          one persuades, so it is not covered by the transactional
+          reminder consent.
+
+The link: {{contact.candor_url}} is a contact custom field ("Candor
+          URL", key candor_url). Create it once in GHL: Settings > Custom
+          Fields > Contact > Single line. The site writes it when they
+          book - /candor?c=<their GHL contact id> - which is what puts a
+          name on the conversation: phones that tap a text link carry no
+          funnel cookie, so without it the transcript arrives anonymous.
+          A contact field, not a webhook value, so it shows up in the
+          variable picker under Contact whatever starts the workflow.
+          Do NOT write /candor?c={{contact.id}} by hand - GHL's editor
+          rejects a merge tag inside a URL ("issues in your custom
+          variables").
+
+Name:     {{contact.first_name}}, not {{inboundWebhookRequest.firstName}} -
+          also a contact field, so it never renders blank.
+
+Then, in the Candor transcript email workflow (GHL_CANDOR_WEBHOOK_URL),
+add above the transcript:
+
+    Contact: {{inboundWebhookRequest.contact_url}}
+
+That is a one-click link to the contact record, built by the site from
+the id. It is blank when the conversation came from a link without ?c=.

@@ -176,6 +176,21 @@ export async function upsertContact(input: UpsertContactInput): Promise<GhlResul
   return { ok: true, data: { id, isNew: !!res.data?.new } };
 }
 
+/**
+ * Set custom fields on an existing contact by id. For values that can only
+ * be built once the id is known — the upsert has to return it first.
+ */
+export async function updateContactCustomFields(
+  contactId: string,
+  customFields: GhlCustomField[],
+): Promise<GhlResult> {
+  if (!customFields.length) return { ok: true };
+  return ghlFetch(`/contacts/${encodeURIComponent(contactId)}`, {
+    method: 'PUT',
+    body: { customFields },
+  });
+}
+
 /** Add tags to an existing contact without touching its other fields. */
 export async function addContactTags(contactId: string, tags: string[]): Promise<GhlResult> {
   if (!tags.length) return { ok: true };

@@ -17,6 +17,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import {
   formatTranscript,
+  ghlContactUrl,
+  parseContactId,
   sameOrigin,
   sendTranscript,
   type TranscriptTurn,
@@ -64,6 +66,9 @@ export async function POST(req: NextRequest) {
   if (!sessionId || questionCount === 0) return done();
 
   const leadId = typeof body?.leadId === 'string' ? body.leadId.slice(0, 64) : null;
+  // From ?c= on the SMS/email link. What puts a name on a conversation that
+  // started on a phone, where there is no funnel cookie and lead_id is null.
+  const contactId = parseContactId(body?.contactId);
 
   // Awaited, not fired and forgotten: there is nothing else to do here, and
   // an un-awaited request can be frozen once the 204 goes out.
@@ -74,6 +79,10 @@ export async function POST(req: NextRequest) {
     final: true,
     session_id: sessionId,
     lead_id: leadId,
+    contact_id: contactId,
+    // Put {{inboundWebhookRequest.contact_url}} in the GHL email: one click
+    // to the prospect's record. Null when there is no contact id.
+    contact_url: ghlContactUrl(contactId),
     question_count: questionCount,
     // True when the page had to drop the oldest turns to fit the browser's
     // 64KB limit on a send made while the page is closing.

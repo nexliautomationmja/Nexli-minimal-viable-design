@@ -94,8 +94,18 @@ function splitParagraphs(text: string): string[] {
  * which names whoever last went through the funnel on this BROWSER — a
  * shared phone, a forwarded link or Marcel's own test run greeted a
  * prospect by somebody else's name. A generic greeting is never wrong.
+ *
+ * contactId is the GHL contact the link was sent to (?c= on the SMS and
+ * email links). Like leadId it is never shown — it only rides along so the
+ * transcript reaches Marcel with a name on it. See app/candor/page.tsx.
  */
-export default function CandorClient({ leadId }: { leadId: string | null }) {
+export default function CandorClient({
+  leadId,
+  contactId,
+}: {
+  leadId: string | null;
+  contactId: string | null;
+}) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -175,10 +185,10 @@ export default function CandorClient({ leadId }: { leadId: string | null }) {
     // Browsers cap a send made while the page is closing at 64KB. Drop the
     // oldest exchanges until it fits, and flag it.
     let kept = complete;
-    let body = JSON.stringify({ sessionId: id, leadId, turns: kept, truncated: false });
+    let body = JSON.stringify({ sessionId: id, leadId, contactId, turns: kept, truncated: false });
     while (new Blob([body]).size > 60_000 && kept.length > 2) {
       kept = kept.slice(2);
-      body = JSON.stringify({ sessionId: id, leadId, turns: kept, truncated: true });
+      body = JSON.stringify({ sessionId: id, leadId, contactId, turns: kept, truncated: true });
     }
 
     // sendBeacon is built for exactly this: it is queued by the browser and
@@ -195,7 +205,7 @@ export default function CandorClient({ leadId }: { leadId: string | null }) {
         body,
       }).catch(() => {});
     }
-  }, [leadId]);
+  }, [leadId, contactId]);
 
   useEffect(() => {
     const onVisibility = () => {
@@ -316,6 +326,7 @@ export default function CandorClient({ leadId }: { leadId: string | null }) {
             // Strip the objection: the route validates role/content only.
             history: history.map((t) => ({ role: t.role, content: t.content })),
             leadId,
+            contactId,
           }),
         });
 
@@ -351,7 +362,7 @@ export default function CandorClient({ leadId }: { leadId: string | null }) {
         setBusy(false);
       }
     },
-    [busy, conversationId, grow, leadId, turns],
+    [busy, conversationId, contactId, grow, leadId, turns],
   );
 
   const started = turns.length > 0;

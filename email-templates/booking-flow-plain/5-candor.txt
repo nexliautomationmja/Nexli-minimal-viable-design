@@ -1,27 +1,24 @@
-Subject: The questions you haven't asked yet
+Subject: Before you hire any agency, us included
 
 
-Hello, {{inboundWebhookRequest.firstName}}
+Hello, {{contact.first_name}}
 
-Most people book a call like ours with two or three doubts they never
-say out loud. Usually some version of: I've been burned by an agency
-before, referrals are working fine, or the year is nearly over so why
-start now.
+Before you hire any agency, us included, every doubt you have should
+be answered. Especially the ones you'd rather not say on the call.
 
-You shouldn't spend a cent with an agency until those are answered, and
-you shouldn't have to spend the call on them either.
+Most people book a call like ours with two or three of those. Usually
+some version of: the price, an agency that burned them before, or
+whether now is really the right time.
 
-So ask them here instead:
+Ask them here first:
 
-https://www.nexli.net/candor
+{{contact.candor_url}}
 
-It's called Candor. Ask it anything — the price, the setup fee, what
-happens if it doesn't work, whether this even fits a firm your size. It
-answers straight, and it will tell you when it doesn't know something
-rather than guess. Nothing you ask comes up on the call unless you
-raise it.
+It's called Candor. Type the thing you wouldn't say out loud, or tap the
+one that's closest. It answers straight, and it tells you when it
+doesn't know something rather than guess.
 
-Then we can spend our time on your firm instead of on my company.
+Then we can spend the call on your firm instead of on my company.
 
 See you {{contact.booking_start}}.
 

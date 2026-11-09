@@ -46,11 +46,13 @@ bare link opens on any device. The resume URL would also greet them by
 name, but it depends on the GHL contact sync having written it, and a
 blank href is a dead email.
 
-## The four
+## The five, and the text
 
 | File | When | Job |
 |---|---|---|
 | 1-confirmation.txt | immediately | you are booked, here is the page |
+| 5-candor.txt | between confirmation and 48h | the doubts they won't say out loud → Candor |
+| sms-candor.txt | same step as 5-candor | the same ask, as a text (SMS) |
 | 2-48h.txt | 48h before | pleasure — $15K to $55K |
 | 3-24h.txt | 24h before | pain — the clients you have now |
 | 4-30min.txt | 30min before | logistics — the Zoom link |
@@ -70,3 +72,43 @@ as `[Candor]` lines, which is the other half of why this exists.
 
 Same link rule as the rest of this folder: the plain URL, not a resume
 link. /candor is ungated on purpose.
+
+### {{contact.candor_url}} — the Candor link
+
+Added 9 November 2026. The one exception to "plain URL". Phones that tap
+an email or text link carry no funnel cookie, so a Candor conversation
+started from one reached Marcel with no name on it. The link now carries
+the GHL contact id (`/candor?c=<id>`), which the page passes through to
+the transcript webhook as `contact_id`, plus `contact_url`, a one-click
+link to the contact record.
+
+The SITE builds the link and writes it to the contact's `candor_url`
+custom field when they book (lib/ghl-sync, `candorUrl: true`, from
+app/api/advisory-pricing/booked and app/api/demo/booked). A contact
+field rather than a webhook value, so it is in the variable picker under
+Contact whatever starts the workflow, like `{{contact.booking_start}}`.
+
+The field has to exist in GHL first: Settings > Custom Fields > Contact,
+Single line, named "Candor URL" (key `contact.candor_url`). Add its id to
+`GHL_CUSTOM_FIELD_IDS` as `"candor_url"` alongside the others.
+
+Do not hand-write `/candor?c={{contact.id}}` in the template: GHL's
+editor flags a merge tag inside a URL as an issue with your custom
+variables. The id is never shown to the visitor and never used to greet
+them.
+
+Only bookings made after the change is deployed have `candor_url`. For a
+contact already in the flow it is blank, so a send to them goes out
+without a link.
+
+The Candor email and SMS use `{{contact.first_name}}` rather than
+`{{inboundWebhookRequest.firstName}}` — a contact field renders whatever
+triggered the flow.
+
+In the Candor transcript email workflow, add
+`Contact: {{inboundWebhookRequest.contact_url}}` above the transcript.
+
+### sms-candor.txt
+
+Same step as 5-candor, gated on `marketing_sms_opt_in = true`. Full setup
+notes and the character count are in the file.

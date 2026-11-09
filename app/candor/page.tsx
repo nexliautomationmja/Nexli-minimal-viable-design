@@ -16,6 +16,7 @@
 // ---------------------------------------------------------------------------
 import type { Metadata, Viewport } from 'next';
 import { readDemoLead } from '@/lib/demo-session';
+import { parseContactId } from '@/lib/candor-transcript';
 import CandorClient from './candor-client';
 
 export const dynamic = 'force-dynamic';
@@ -48,7 +49,11 @@ export const viewport: Viewport = {
   themeColor: '#020617',
 };
 
-export default async function CandorPage() {
+export default async function CandorPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   // The cookie's lead id rides along to the transcript webhook as a hint,
   // never shown to the visitor. The page no longer greets anyone by name:
   // the cookie names whoever last went through the funnel on this browser,
@@ -60,5 +65,10 @@ export default async function CandorPage() {
     console.error('[Candor] cookie read failed:', err);
   }
 
-  return <CandorClient leadId={leadId} />;
+  // ?c= is the GHL contact id the booking-flow SMS and email put on the
+  // link, so the transcript Marcel gets says whose doubts he is reading.
+  // Same rule as the lead id: carried, never displayed, never used to greet.
+  const contactId = parseContactId((await searchParams).c);
+
+  return <CandorClient leadId={leadId} contactId={contactId} />;
 }
