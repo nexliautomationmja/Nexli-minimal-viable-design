@@ -116,7 +116,7 @@ const Hero: React.FC = () => {
 
           TWO, NOT THREE. "Built In 10-14 Days" was removed - it is a delivery
           promise made before anyone has told us what they already have, and
-          lib/agency-offer puts the outer edge at AGENCY_LAUNCH_DAYS_MAX = 21
+          lib/agency-offer puts the outer edge at AGENCY_LAUNCH_DAYS = 21
           anyway, which is also what the engagement letter says. A range on
           the homepage that the signed document contradicts is the one kind
           of mismatch that can actually be held against the firm.

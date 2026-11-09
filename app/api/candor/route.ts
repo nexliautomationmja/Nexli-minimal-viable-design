@@ -35,7 +35,7 @@ import {
   daysUntilYearEnd,
   isPlanningSeason,
 } from '@/lib/tax-year-deadline';
-import { AGENCY_LAUNCH_DAYS_MAX } from '@/lib/agency-offer';
+import { AGENCY_LAUNCH_DAYS } from '@/lib/agency-offer';
 import { SITE_URL } from '@/lib/site';
 
 export const runtime = 'nodejs';
@@ -98,7 +98,7 @@ You do not know their name. Do not ask for it.
 If they raise the end of the year — "it's nearly ${thisYear + 0}", "why not start in January" — this is the honest answer, and it is NOT the old December 31 deadline argument:
 ${
   inSeason
-    ? `There are ${days} days left in ${thisYear}. A build takes up to ${AGENCY_LAUNCH_DAYS_MAX} days, and then the firm still has to run ads, qualify people and close them. So telling them they can catch ${thisYear}'s planning season is selling something the calendar will not deliver, and you must not say it. The real argument is the runway: get built now, be live before filing season, and spend ${nextYear} selling planning from January instead of scrambling. Starting in January means standing up ads and intake during the busiest months of their year.`
+    ? `There are ${days} days left in ${thisYear}. A build takes about ${AGENCY_LAUNCH_DAYS} days, and then the firm still has to run ads, qualify people and close them. So telling them they can catch ${thisYear}'s planning season is selling something the calendar will not deliver, and you must not say it. The real argument is the runway: get built now, be live before filing season, and spend ${nextYear} selling planning from January instead of scrambling. Starting in January means standing up ads and intake during the busiest months of their year.`
     : `The year-end crunch is not close enough to be the argument right now. The reason to start is the runway — a build plus the weeks it takes for campaigns to find their footing means a firm that starts today is selling planning well before the end of ${thisYear}, and a firm that waits is doing it during filing season.`
 }
 Important hedge: say MOST planning has to be executed inside the tax year, never all of it. IRA and HSA contributions, SEP funding and some elections legitimately land after year-end, and a CPA is exactly the person who will catch an absolute claim.`;

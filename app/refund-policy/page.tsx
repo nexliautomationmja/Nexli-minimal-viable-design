@@ -18,12 +18,22 @@ import {
   ADVISORY_PRODUCT_NAME,
   ADVISORY_REFUND_DAYS,
 } from '@/lib/advisory-config';
-import { AGENCY_TOTAL_MONTHLY, usd } from '@/lib/agency-offer';
+import {
+  AGENCY_AD_SPEND,
+  AGENCY_ANNUAL_SERVICE_FEE,
+  AGENCY_ANNUAL_TERM_MONTHS,
+  AGENCY_ANNUAL_UPFRONT,
+  AGENCY_CANCEL_NOTICE_DAYS,
+  AGENCY_INITIAL_TERM_MONTHS,
+  AGENCY_SETUP_FEE,
+  AGENCY_TOTAL_MONTHLY,
+  usd,
+} from '@/lib/agency-offer';
 import { EMAIL, PHONE_DISPLAY, PHONE_E164 } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Refund Policy | Nexli Automation',
-  description: `Nexli refund and cancellation policy: a ${ADVISORY_REFUND_DAYS}-day full refund on the ${ADVISORY_PRODUCT_NAME}, and how Digital Rainmaker System fees and cancellations work.`,
+  description: `Nexli refund and cancellation policy: a ${ADVISORY_REFUND_DAYS}-day full refund on the ${ADVISORY_PRODUCT_NAME}, and the non-refundable fees, terms and cancellation rules of the Digital Rainmaker System.`,
   alternates: { canonical: '/refund-policy' },
 };
 
@@ -71,29 +81,55 @@ export default function RefundPolicyPage() {
       </LegalSection>
 
       <LegalSection title="2. Digital Rainmaker System" variant="card">
+        <p className="text-[var(--text-main)] font-medium">
+          No refunds. Every fee for the Digital Rainmaker System is non-refundable, except for billing errors
+          (section 3).
+        </p>
         <p>
-          The Digital Rainmaker System is a done-for-you service sold under a signed agreement, at{' '}
-          {usd(AGENCY_TOTAL_MONTHLY)} a month plus a one-time setup fee quoted in writing before you sign.
-          Because the work starts as soon as you sign, its fees are refundable only as set out here.
+          It is a done-for-you service sold under a signed agreement, paid monthly or annually, and both start
+          with a one-time {usd(AGENCY_SETUP_FEE)} setup fee. The fees pay for work we schedule and carry out
+          for you, which is why they are not refundable. You read and sign these terms before you pay anything.
         </p>
         <ul className="list-disc pl-6 space-y-3">
           <li>
-            <Strong>Setup fee:</Strong> covers the design and build of your website, client portal, funnel
-            and automations. It is non-refundable once project work has begun.
+            <Strong>Setup fee ({usd(AGENCY_SETUP_FEE)}, due at signing):</Strong> pays for the build of your
+            website, client portal, sales funnel, automations, text-messaging registration, ad account and
+            invoicing. Non-refundable.
           </li>
           <li>
-            <Strong>Monthly fee:</Strong> non-refundable once charged. It includes the advertising budget,
-            which we place into your campaigns during that month.
+            <Strong>Monthly plan ({usd(AGENCY_TOTAL_MONTHLY)} a month, from launch):</Strong> includes the{' '}
+            {usd(AGENCY_AD_SPEND)} advertising budget, which we place into your campaigns that month. Each
+            monthly fee is non-refundable once charged.
           </li>
           <li>
-            <Strong>Six-month initial term:</Strong> the engagement has a minimum initial term of six months
-            from your first payment. You may give notice at any time during it, but cancellation takes effect
-            at the end of the six months, and the monthly fees due within that period remain payable.
+            <Strong>{AGENCY_INITIAL_TERM_MONTHS}-month minimum on the monthly plan:</Strong> the minimum term
+            is {AGENCY_INITIAL_TERM_MONTHS} months from launch. You may give notice at any time during it, but
+            cancellation takes effect at the end of the {AGENCY_INITIAL_TERM_MONTHS} months, and the monthly
+            fees due within that period remain payable.
           </li>
           <li>
-            <Strong>After the initial term:</Strong> the engagement continues month to month and you may
-            cancel with 30 days&apos; written notice to <Email />. Cancellation takes effect at the end of the
-            notice period. We do not issue partial-month refunds.
+            <Strong>After the minimum term:</Strong> the monthly plan continues month to month and you may
+            cancel with {AGENCY_CANCEL_NOTICE_DAYS} days&apos; written notice to <Email />. Cancellation takes
+            effect at the end of the notice period. We do not issue partial-month refunds.
+          </li>
+          <li>
+            <Strong>Annual plan ({usd(AGENCY_ANNUAL_UPFRONT)}, due at signing):</Strong> the{' '}
+            {usd(AGENCY_SETUP_FEE)} setup fee plus {usd(AGENCY_ANNUAL_SERVICE_FEE)} for{' '}
+            {AGENCY_ANNUAL_TERM_MONTHS} months of service, paid in advance, with the {usd(AGENCY_AD_SPEND)}{' '}
+            advertising budget billed monthly from launch. None of the {usd(AGENCY_ANNUAL_UPFRONT)} is
+            refundable, in whole or in part, and each month&apos;s advertising budget is non-refundable once
+            charged.
+          </li>
+          <li>
+            <Strong>Cancelling the annual plan:</Strong> you may give notice at any time. Service continues to
+            the end of the {AGENCY_ANNUAL_TERM_MONTHS} months from launch, the monthly advertising budget
+            remains payable through the end of that term, and nothing already paid is refunded. The annual plan
+            does <Strong>not</Strong> renew automatically: nothing is charged after the{' '}
+            {AGENCY_ANNUAL_TERM_MONTHS} months unless you agree in writing to continue.
+          </li>
+          <li>
+            <Strong>One system, one fee:</Strong> parts of the system cannot be removed, paused or refunded
+            separately, and fees are not reduced if you choose not to use part of it.
           </li>
           <li>
             <Strong>No performance guarantee:</Strong> we do not guarantee results, and fees are not refunded

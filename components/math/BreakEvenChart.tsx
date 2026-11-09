@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 // Where the firm stands, month 0 to 12, after everything paid to Nexli.
 //
-// Two lines on ONE axis — month to month (solid) and paid annually
+// Two lines on ONE axis — paid monthly (solid) and paid annually
 // (dashed, the second channel besides colour). Below zero is shaded as
 // "earning back the investment", above as "in the green". A crosshair snaps
 // to the nearest month and reads out both plans; the scenario table beside
@@ -207,7 +207,7 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
               {hover === 0 ? 'At signing' : `Month ${hover}`}
             </div>
             {[
-              { label: 'Month to month', v: monthly[hover], color: C.monthly, dash: undefined },
+              { label: 'Paid monthly', v: monthly[hover], color: C.monthly, dash: undefined },
               { label: 'Paid annually', v: annual[hover], color: C.annual, dash: '4 3' },
             ].map((r) => (
               <div key={r.label} className="flex items-center gap-2.5 py-0.5">
@@ -234,7 +234,7 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
         <thead>
           <tr>
             <th scope="col">Month</th>
-            <th scope="col">Month to month</th>
+            <th scope="col">Paid monthly</th>
             <th scope="col">Paid annually</th>
           </tr>
         </thead>

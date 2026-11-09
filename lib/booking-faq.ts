@@ -12,8 +12,6 @@ import {
   AGENCY_AD_SPEND,
   AGENCY_DAYS,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_LAUNCH_DAYS_MAX,
-  AGENCY_LAUNCH_DAYS_MIN,
   AGENCY_LEADS,
   AGENCY_TOTAL_MONTHLY,
   usd,
@@ -74,16 +72,21 @@ export const BOOKING_B_FAQ: FaqItem[] = [
       'We do, in house. No white-label, no subcontractor, no media buyer you never meet. We build the campaigns, write and produce the creative, and manage the Facebook ad account day to day.\n\nThe ad budget is part of your monthly and runs through us. That is deliberate: it means the spend reaches the campaigns on the day it is supposed to, rather than pausing because a card on file expired. The weekly update shows exactly what went out and what it brought back.',
   },
   {
+    // NO AUDIO: b-timeline.mp3 was rendered from the old answer, "10 to 14
+    // days", retired on 2026-11-09 for one number, about 21. Same reason and
+    // same restore steps as the pricing item at the end of this list.
     question: 'How soon can this be up and running?',
-    audio: '/audio/faq/b-timeline.mp3',
     answer:
-      `Most firms are live in ${AGENCY_LAUNCH_DAYS_MIN} to ${AGENCY_LAUNCH_DAYS} days. Around ${AGENCY_LAUNCH_DAYS_MAX} days is the realistic worst case, and the variable is almost never us — it is how fast branding, logins and approvals come back. Send everything in the first few days and you are at the short end of that range.`,
+      `About ${AGENCY_LAUNCH_DAYS} days from kickoff, for the whole system: the website, the portal, the funnel, the automations, the texting registration, your ad account and invoicing. Launch is the day your ads go live, and nothing monthly is billed before it.\n\nThe variable is almost never us. It is how fast branding, logins and approvals come back, plus the carriers' and the ad platform's own reviews, which nobody controls. Send everything in the first few days and you keep it on schedule.`,
   },
   {
+    // NO AUDIO: b-what-you-own.mp3 says the portal and automations "stop
+    // working when the engagement does". Marcel, 2026-11-09: the firm owns
+    // all of it and pays its own hosting (components/TermsAndConditions,
+    // section 6). Re-render it the way the pricing item below describes.
     question: 'What do I actually own at the end of it?',
-    audio: '/audio/faq/b-what-you-own.mp3',
     answer:
-      'The website is yours. It is on your domain, and if we part ways you keep it.\n\nThe rest is not. The automations, the client portal and the review engine are built and run by us on our infrastructure, and they stop working when the engagement does. We would rather say that now than have you find out later.\n\nThe honest version: the website on its own will not bring anyone in, and it will not onboard anybody onto tax planning. The part that does that is the part you are paying us to run.',
+      'All of it. The website, the client portal, the funnel and the automations we build are yours, along with your domain, your content, your ad account and your client data. You pay your hosting provider directly, so none of it sits on our bill.\n\nWhat the monthly pays for is us: keeping the whole system maintained, changing the funnels, ads and automations as they need it, and running the campaigns. If we part ways, that work stops, and so does the ad budget we place for you. The system stays yours.\n\nThe honest version: a system nobody is tuning goes stale. The part that keeps it bringing in tax-planning clients is the part you are paying us to do.',
   },
   {
     question: "How secure is this for my clients' data? What about compliance?",
@@ -123,6 +126,6 @@ export const BOOKING_B_FAQ: FaqItem[] = [
     // renders from the string below, so the two cannot drift again.
     question: 'How is the price built?',
     answer:
-      `${usd(AGENCY_TOTAL_MONTHLY)} a month. One number, one invoice.\n\n${usd(AGENCY_AD_SPEND)} of that is your ad budget, which we place into the campaigns for you, and the rest is the system — the website, the portal, the funnel and the automations behind them, built and run for you.\n\nOn top of that there is a one-time setup fee covering the build — the website, the portal, the funnel and the automations all have to be made before any of this runs, and that is real work before you see a lead. We put a number on it on the call. It is the same fee for every firm — everyone gets the same build, and it does not work with a piece missing. What there is not is per-component pricing: we do not sell the pieces separately because they do not work separately. There is an agreement to sign with a six-month initial term — long enough for the campaigns to have actually run — and after that it continues month to month on 30 days notice.`,
+      `${usd(AGENCY_TOTAL_MONTHLY)} a month. One number, one invoice.\n\n${usd(AGENCY_AD_SPEND)} of that is your ad budget, which we place into the campaigns for you, and the rest is the system — the website, the portal, the funnel and the automations behind them, built and run for you.\n\nOn top of that there is a one-time setup fee covering the build — the website, the portal, the funnel and the automations all have to be made before any of this runs, and that is real work before you see a lead. We put a number on it on the call. It is the same fee for every firm — everyone gets the same build, and it does not work with a piece missing. What there is not is per-component pricing: we do not sell the pieces separately because they do not work separately. There is an agreement to sign with a six-month initial term from launch — long enough for the campaigns to have actually run — and after that it continues month to month on 30 days notice.`,
   },
 ];

@@ -8,6 +8,11 @@
 // that is the one delivery path common to all of them (buyers who missed the
 // qualifier bar land on /next-steps, which has no download button), so the
 // policy promises the email and nothing more specific.
+//
+// The Rainmaker build list is Marcel's (2026-11-09): about 21 days from
+// kickoff for the website, the portal, the automations, A2P, the ad account
+// and invoicing. It restates the Terms (section 3 and 6) and must not
+// promise more than they do.
 // ---------------------------------------------------------------------------
 
 import type { Metadata } from 'next';
@@ -15,18 +20,35 @@ import Link from 'next/link';
 import { Truck } from 'lucide-react';
 import LegalPage, { LegalSection, Strong, legalLinkClass } from '@/components/legal/LegalPage';
 import { ADVISORY_PRODUCT_NAME } from '@/lib/advisory-config';
-import { AGENCY_LAUNCH_DAYS, AGENCY_LAUNCH_DAYS_MAX, AGENCY_LAUNCH_DAYS_MIN } from '@/lib/agency-offer';
+import {
+  AGENCY_AD_SPEND,
+  AGENCY_ANNUAL_UPFRONT,
+  AGENCY_LAUNCH_DAYS,
+  AGENCY_SETUP_FEE,
+  usd,
+} from '@/lib/agency-offer';
 import { EMAIL, PHONE_DISPLAY, PHONE_E164 } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Delivery Policy | Nexli Automation',
-  description: `How and when Nexli delivers what you buy: the ${ADVISORY_PRODUCT_NAME} by email immediately after purchase, and the Digital Rainmaker System live in ${AGENCY_LAUNCH_DAYS_MIN} to ${AGENCY_LAUNCH_DAYS} days.`,
+  description: `How and when Nexli delivers what you buy: the ${ADVISORY_PRODUCT_NAME} by email immediately after purchase, and the Digital Rainmaker System built in about ${AGENCY_LAUNCH_DAYS} days from kickoff.`,
   alternates: { canonical: '/delivery-policy' },
 };
 
 const Email = () => (
   <a href={`mailto:${EMAIL}`} className={legalLinkClass}>{EMAIL}</a>
 );
+
+/** What the build delivers, in Marcel's words: everything the system needs to run. */
+const BUILD = [
+  'Your website',
+  'Your branded client portal, with invoicing connected',
+  'The sales funnel and the qualifier in front of your calendar',
+  'AI automations for intake, follow-up, reminders and Google review requests',
+  'A2P 10DLC registration, so the system can text your prospects and clients',
+  'Your advertising account, set up and ready to run',
+  'The other tools the system needs, connected to each other',
+];
 
 export default function DeliveryPolicyPage() {
   return (
@@ -66,26 +88,45 @@ export default function DeliveryPolicyPage() {
       <LegalSection title="2. Digital Rainmaker System (service)" variant="card">
         <ul className="list-disc pl-6 space-y-3">
           <li>
-            <Strong>When work starts:</Strong> at a kickoff call, once the agreement is signed and the setup
-            fee is paid.
+            <Strong>When work starts:</Strong> at a kickoff call, once the agreement is signed and the{' '}
+            {usd(AGENCY_SETUP_FEE)} setup fee is paid ({usd(AGENCY_ANNUAL_UPFRONT)} on the annual plan).
           </li>
           <li>
-            <Strong>Build and launch:</Strong> most firms are live within {AGENCY_LAUNCH_DAYS_MIN} to{' '}
-            {AGENCY_LAUNCH_DAYS} days of kickoff, and {AGENCY_LAUNCH_DAYS_MAX} days is the outside edge. The
-            timeline depends on how quickly you send the assets, account access and approvals we ask for.
+            <Strong>How long the build takes:</Strong> about {AGENCY_LAUNCH_DAYS} days from kickoff. In that
+            time we build and set up:
+            <ul className="list-[circle] pl-6 mt-2 space-y-1">
+              {BUILD.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+            </ul>
           </li>
           <li>
-            <Strong>What goes live:</Strong> your website, branded client portal, sales funnel, automations,
-            Google review engine and ad campaigns.
+            <Strong>What sets the pace:</Strong> the {AGENCY_LAUNCH_DAYS} days assume you send the assets,
+            account access and approvals we ask for when we ask for them. Two steps also need approval from
+            third parties we do not control: the carriers&apos; review of the A2P 10DLC registration, and the
+            ad platform&apos;s review of your advertising account. A delay on either moves launch by the same
+            amount.
           </li>
           <li>
-            <Strong>Every month after launch:</Strong> ad campaign management (including placing the ad budget
-            included in your monthly fee), hosting, ongoing optimization, and a weekly report on where the
-            budget went.
+            <Strong>Launch:</Strong> the day the build is complete and your ads go live. Monthly billing
+            starts at launch, and so does your term.
           </li>
           <li>
-            <Strong>When it ends:</Strong> on termination we provide an export of your website content and
-            client data within 30 days, as set out in our{' '}
+            <Strong>Every month after launch:</Strong> we maintain your website, portal and automations; make
+            changes to the funnels, ads and automations as they are needed; run your ad campaigns, including
+            placing the {usd(AGENCY_AD_SPEND)} advertising budget included in your monthly fee; and send a
+            weekly written update on where the budget went and what it produced.
+          </li>
+          <li>
+            <Strong>Hosting:</Strong> not part of our fees. You pay your hosting provider directly.
+          </li>
+          <li>
+            <Strong>What you own:</Strong> the website, the client portal, the funnel and the automations we
+            build are yours, along with your content, domain, advertising account and client data.
+          </li>
+          <li>
+            <Strong>When it ends:</Strong> our upkeep and management stop. You keep everything we built; we
+            hand over any account access we hold for you and remove our own, as set out in our{' '}
             <Link href="/terms" className={legalLinkClass}>Terms and Conditions</Link>.
           </li>
         </ul>
@@ -94,7 +135,8 @@ export default function DeliveryPolicyPage() {
       <LegalSection title="3. Questions">
         <p>
           Anything not covered here, contact us through our <Link href="/contact" className={legalLinkClass}>Contact</Link>{' '}
-          page. Refunds are covered by our <Link href="/refund-policy" className={legalLinkClass}>Refund Policy</Link>.
+          page. Prices and plans are on our <Link href="/pricing" className={legalLinkClass}>Pricing</Link> page,
+          and refunds are covered by our <Link href="/refund-policy" className={legalLinkClass}>Refund Policy</Link>.
         </p>
       </LegalSection>
     </LegalPage>

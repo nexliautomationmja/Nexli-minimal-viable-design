@@ -10,9 +10,11 @@
 // noindex: it is for underwriters and anyone who asks, not a search landing
 // page competing with the funnels. Linked from every footer.
 //
-// The setup fee is DISCLOSED, never priced — see the rule in
-// lib/agency-offer.ts. Every number comes from the constants the sales pages
-// use.
+// The setup fee and the annual plan ARE priced here (Marcel, 2026-11-09):
+// the underwriters match the $32,000 and $74,000 charges they will process
+// against this page. The sales pages still say "quoted on the call" — see
+// the rule in lib/agency-offer.ts. Every number comes from those constants,
+// and this page must say what /terms and /refund-policy say.
 // ---------------------------------------------------------------------------
 
 import type { Metadata } from 'next';
@@ -29,9 +31,14 @@ import {
 } from '@/lib/advisory-config';
 import {
   AGENCY_AD_SPEND,
+  AGENCY_ANNUAL_SERVICE_FEE,
+  AGENCY_ANNUAL_TERM_MONTHS,
+  AGENCY_ANNUAL_UPFRONT,
+  AGENCY_CANCEL_NOTICE_DAYS,
+  AGENCY_INITIAL_TERM_MONTHS,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_LAUNCH_DAYS_MAX,
-  AGENCY_LAUNCH_DAYS_MIN,
+  AGENCY_MONTHLY_FEE,
+  AGENCY_SETUP_FEE,
   AGENCY_TOTAL_MONTHLY,
   usd,
 } from '@/lib/agency-offer';
@@ -62,12 +69,14 @@ const PRODUCTS: Product[] = [
     summary: `We build and run the system that brings established CPA firms (${MIN_REVENUE} in annual revenue) high-value advisory clients: a premium website, a branded client portal, a sales funnel, AI automations, a Google review engine, and the paid ad campaigns that drive it.`,
     price: usd(AGENCY_TOTAL_MONTHLY),
     per: '/ month',
-    priceNote: `Includes the ${usd(AGENCY_AD_SPEND)} monthly ad budget, which we place into your campaigns. Plus a one-time setup fee, quoted in writing before you sign.`,
+    priceNote: `Includes the ${usd(AGENCY_AD_SPEND)} monthly ad budget, which we place into your campaigns. Plus a one-time ${usd(AGENCY_SETUP_FEE)} setup fee at signing. Or pay annually: both plans are set out below.`,
     points: [
       'Sold under a signed agreement, billed by invoice',
-      'Six-month minimum initial term, then month to month with 30 days’ notice',
-      `Live within ${AGENCY_LAUNCH_DAYS_MIN} to ${AGENCY_LAUNCH_DAYS} days of kickoff, ${AGENCY_LAUNCH_DAYS_MAX} days at most`,
-      'Setup fee non-refundable once work begins; monthly fees non-refundable once charged',
+      `Built in about ${AGENCY_LAUNCH_DAYS} days from kickoff; monthly billing starts at launch`,
+      `Monthly plan: ${AGENCY_INITIAL_TERM_MONTHS}-month minimum from launch, then month to month with ${AGENCY_CANCEL_NOTICE_DAYS} days’ notice`,
+      `Annual plan: ${AGENCY_ANNUAL_TERM_MONTHS} months from launch, no automatic renewal`,
+      'You own what we build; you pay your hosting provider directly',
+      'All fees non-refundable',
     ],
     cta: { label: 'Book a call', href: ADVISORY_PATH },
   },
@@ -86,6 +95,52 @@ const PRODUCTS: Product[] = [
       'Offered after a 2-minute fit check',
     ],
     cta: { label: 'Take the fit check', href: ADVISORY_QUALIFY_PATH },
+  },
+];
+
+/**
+ * The two ways to pay for the Digital Rainmaker System, side by side. Each
+ * ends on the minimum commitment: everything a client is bound to pay before
+ * they can leave, which is the first figure an underwriter works out.
+ */
+const PLANS: { name: string; rows: [string, string][] }[] = [
+  {
+    name: 'Monthly plan',
+    rows: [
+      ['Due at signing', `${usd(AGENCY_SETUP_FEE)} setup fee`],
+      [
+        'Billed monthly, from launch',
+        `${usd(AGENCY_TOTAL_MONTHLY)}: the ${usd(AGENCY_AD_SPEND)} ad budget plus ${usd(AGENCY_MONTHLY_FEE)} for our upkeep and management of the system`,
+      ],
+      [
+        'Term',
+        `${AGENCY_INITIAL_TERM_MONTHS} months minimum from launch, then month to month; cancel with ${AGENCY_CANCEL_NOTICE_DAYS} days’ written notice`,
+      ],
+      [
+        'Minimum commitment',
+        `${usd(AGENCY_SETUP_FEE + AGENCY_INITIAL_TERM_MONTHS * AGENCY_TOTAL_MONTHLY)} (${usd(AGENCY_SETUP_FEE)} + ${AGENCY_INITIAL_TERM_MONTHS} × ${usd(AGENCY_TOTAL_MONTHLY)})`,
+      ],
+      ['Refunds', 'None, except billing errors'],
+    ],
+  },
+  {
+    name: 'Annual plan',
+    rows: [
+      [
+        'Due at signing',
+        `${usd(AGENCY_ANNUAL_UPFRONT)}: the ${usd(AGENCY_SETUP_FEE)} setup fee plus ${usd(AGENCY_ANNUAL_SERVICE_FEE)} for ${AGENCY_ANNUAL_TERM_MONTHS} months of upkeep and management, paid in advance`,
+      ],
+      ['Billed monthly, from launch', `${usd(AGENCY_AD_SPEND)} ad budget`],
+      [
+        'Term',
+        `${AGENCY_ANNUAL_TERM_MONTHS} months from launch. Cancel any time and service runs to the end of the term. Does not renew automatically.`,
+      ],
+      [
+        'Minimum commitment',
+        `${usd(AGENCY_ANNUAL_UPFRONT + AGENCY_ANNUAL_TERM_MONTHS * AGENCY_AD_SPEND)} (${usd(AGENCY_ANNUAL_UPFRONT)} + ${AGENCY_ANNUAL_TERM_MONTHS} × ${usd(AGENCY_AD_SPEND)})`,
+      ],
+      ['Refunds', 'None, except billing errors'],
+    ],
   },
 ];
 
@@ -131,6 +186,36 @@ export default function PricingPage() {
           </li>
         ))}
       </ul>
+
+      <section className="rounded-3xl border border-[var(--glass-border)] p-6 sm:p-8 space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold text-[var(--text-main)]">Digital Rainmaker System: two ways to pay</h2>
+          <p className="text-base">
+            Both plans start with the same build, about {AGENCY_LAUNCH_DAYS} days from kickoff. Launch is the day
+            your ads go live, and it is when monthly billing and your term begin.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {PLANS.map((plan) => (
+            <div key={plan.name} className="rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] p-5 sm:p-6">
+              <h3 className="text-lg font-bold text-[var(--text-main)] mb-3">{plan.name}</h3>
+              <dl className="divide-y divide-[var(--glass-border)]">
+                {plan.rows.map(([k, v]) => (
+                  <div key={k} className="py-3">
+                    <dt className="text-xs font-bold uppercase tracking-widest text-blue-500">{k}</dt>
+                    <dd className="mt-1 text-base text-[var(--text-main)]">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))}
+        </div>
+        <p className="text-base">
+          Hosting is not included on either plan; you pay your hosting provider directly. Parts of the system
+          cannot be removed or priced separately. You own the website, portal, funnel and automations we build.
+          The full terms are in our <Link href="/terms" className={legalLinkClass}>Terms and Conditions</Link>.
+        </p>
+      </section>
 
       <section className="rounded-3xl border border-[var(--glass-border)] p-6 sm:p-8 space-y-4">
         <h2 className="text-xl font-bold text-[var(--text-main)]">Payment</h2>
