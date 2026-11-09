@@ -79,6 +79,11 @@ const nextConfig: NextConfig = {
         source: "/downloads/nexli-see-the-math.pdf",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
+      // Its phone version (scripts/build-math-pdf.mjs), the same way.
+      {
+        source: "/downloads/nexli-see-the-math-phone.pdf",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
       {
         source: "/(.*)",
         headers: [

@@ -37,6 +37,7 @@ const DISALLOW = [
   // which no public page does. Shown on the call and sent after it.
   '/math',
   '/downloads/nexli-see-the-math.pdf',
+  '/downloads/nexli-see-the-math-phone.pdf',
   '/accelerator/qualify',
   '/accelerator/next',
   '/accelerator/sending',

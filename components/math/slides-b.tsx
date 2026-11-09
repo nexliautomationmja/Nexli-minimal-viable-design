@@ -56,6 +56,7 @@ import {
 import BreakEvenChart from './BreakEvenChart';
 import CoverChart from './CoverChart';
 import { ScenarioToggle } from './ScenarioBits';
+import { usePdfHref } from './pdf-link';
 import { usePrint } from './print';
 import { SITE_URL } from '@/lib/site';
 import Columns, { LineKey } from './Columns';
@@ -69,7 +70,6 @@ import {
   HEADING,
   Heading,
   MUTED,
-  PDF_HREF,
   PDF_NAME,
   Panel,
   Reveal,
@@ -712,6 +712,7 @@ export function BreakEvenSlide() {
 
 export function CloseSlide() {
   const print = usePrint();
+  const pdfHref = usePdfHref();
   const c = chain(CONS);
   const be = breakEvenMonth(CONS, PLANS.monthly);
   // The whole conservative case in four numbers: what a firm owner should
@@ -754,7 +755,7 @@ export function CloseSlide() {
           {!print && (
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href={PDF_HREF}
+                href={pdfHref}
                 download={PDF_NAME}
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 px-6 text-[15px] font-bold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-[1.03] active:scale-[0.98]"
               >

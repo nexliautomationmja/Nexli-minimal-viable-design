@@ -35,7 +35,9 @@ import FunnelLogo from '@/components/FunnelLogo';
 import { OUTFIT } from '@/components/funnel/primitives';
 import ReadingNav, { READING_NAV_SPACE } from '@/components/math/ReadingNav';
 import { SLIDES } from '@/components/math/slides';
-import { DECK_QUERY, PDF_HREF, PDF_NAME } from '@/components/math/ui';
+import { PDF_NAME } from '@/components/math/pdf';
+import { usePdfHref } from '@/components/math/pdf-link';
+import { DECK_QUERY } from '@/components/math/ui';
 
 const DECK_CSS = `
 .deck-hint { display: none; }
@@ -65,6 +67,8 @@ const slideEls = (root: HTMLElement | null) =>
 export default function MathDeck() {
   const [current, setCurrent] = useState(0);
   const [deckMode, setDeckMode] = useState(false);
+  // The phone PDF on a phone, the slides anywhere else (components/math/pdf).
+  const pdfHref = usePdfHref();
   // Which mode is not known until the first effect; nothing mode-specific
   // renders before then, or the reading bar would flash on a desktop.
   const [ready, setReady] = useState(false);
@@ -294,7 +298,7 @@ export default function MathDeck() {
           className={`${deckMode ? 'fixed' : 'absolute'} right-5 top-6 z-[110] flex items-center gap-2 md:right-8 md:top-8`}
         >
           <a
-            href={PDF_HREF}
+            href={pdfHref}
             download={PDF_NAME}
             className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3.5 text-[13px] font-semibold text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:text-white sm:px-4"
           >

@@ -21,6 +21,7 @@
 // ---------------------------------------------------------------------------
 import React from 'react';
 import { motion } from 'framer-motion';
+import { usePrint } from './print';
 import {
   CalendarCheck,
   ChevronRight,
@@ -71,6 +72,8 @@ function Tile({ step, className, iconClassName }: { step: (typeof CHAIN)[number]
  * with replaceState for the same reason).
  */
 export function FloatingChain() {
+  // On paper they are simply there: no fade-in to be caught half-way.
+  const print = usePrint();
   const go = (e: React.MouseEvent) => {
     const how = document.getElementById('how');
     if (!how) return;
@@ -92,7 +95,7 @@ export function FloatingChain() {
             <motion.span
               aria-hidden="true"
               className="mt-[15px] sm:mt-5"
-              initial={{ opacity: 0 }}
+              initial={print ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.45 + i * 0.15, duration: 0.4 }}
             >
@@ -101,7 +104,7 @@ export function FloatingChain() {
           )}
           <div className="flex flex-col items-center gap-1.5">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={print ? false : { opacity: 0, y: 20 }}
               animate={{
                 opacity: 1,
                 y: [0, -6, 0],
@@ -139,11 +142,12 @@ export function FloatingChain() {
  */
 export function StepTile({ index, popKey }: { index: number; popKey: string }) {
   const step = CHAIN[index];
+  const print = usePrint();
   return (
     <motion.div
       key={popKey}
       className="relative inline-flex"
-      initial={{ scale: 0.55, rotate: -14, opacity: 0.4 }}
+      initial={print ? false : { scale: 0.55, rotate: -14, opacity: 0.4 }}
       animate={{ scale: 1, rotate: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 420, damping: 15, delay: index * 0.06 }}
       whileHover={{ scale: 1.08, rotate: index % 2 === 0 ? 4 : -4 }}

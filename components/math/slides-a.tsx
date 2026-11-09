@@ -32,6 +32,7 @@ import Columns, { LineKey, SwatchKey } from './Columns';
 import StackedBars from './StackedBars';
 import { FunnelDots, ScenarioToggle } from './ScenarioBits';
 import { FloatingChain, ShimmerBadge, StepTile } from './ChainIcons';
+import { usePdfHref } from './pdf-link';
 import { usePrint } from './print';
 import {
   Badge,
@@ -43,7 +44,6 @@ import {
   HEADING,
   Heading,
   MUTED,
-  PDF_HREF,
   PDF_NAME,
   Panel,
   Reveal,
@@ -55,9 +55,10 @@ import {
 const count = (n: number) => String(Math.round(n));
 
 export function DownloadPdf({ className = '' }: { className?: string }) {
+  const href = usePdfHref();
   return (
     <a
-      href={PDF_HREF}
+      href={href}
       download={PDF_NAME}
       className={`inline-flex h-11 items-center gap-2 rounded-full border border-white/12 bg-white/[0.05] px-5 text-sm font-semibold text-white/85 transition-colors hover:border-white/25 hover:bg-white/[0.09] hover:text-white ${className}`}
     >
@@ -157,6 +158,7 @@ export function TitleSlide() {
 // ── 2. How the math works ─────────────────────────────────────────────────
 
 export function HowSlide() {
+  const print = usePrint();
   const [id, setId] = useState<ScenarioId>('conservative');
   const s = scenarioById(id);
   const c = chain(s);
@@ -178,9 +180,12 @@ export function HowSlide() {
         >
           Five numbers <span className={GRADIENT_TEXT}>decide the result.</span>
         </Heading>
-        <Reveal delay={0.1} className="shrink-0">
-          <ScenarioToggle value={id} onChange={setId} layoutId="how-toggle" />
-        </Reveal>
+        {/* Not even its wrapper on paper: it left an empty gap on the phone PDF. */}
+        {!print && (
+          <Reveal delay={0.1} className="shrink-0">
+            <ScenarioToggle value={id} onChange={setId} layoutId="how-toggle" />
+          </Reveal>
+        )}
       </div>
 
       <Reveal delay={0.15} className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:mt-10 lg:grid-cols-5 lg:gap-0">
