@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { socialMeta } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import PortfolioFirmContent from '../../../components/PortfolioFirmContent';
 import { PORTFOLIO_META, PORTFOLIO_SLUGS } from '../../../lib/portfolio-meta';
@@ -23,6 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: meta.title,
     description: meta.description,
     alternates: { canonical: `/portfolio/${slug}` },
+    // Its own og:url and the Nexli share image. Without this the page
+    // inherited the homepage's og tags while rendering a fictional
+    // firm's website, which reads to a crawler as Nexli's own site.
+    ...socialMeta({ title: meta.title, description: meta.description, path: `/portfolio/${slug}` }),
   };
 }
 

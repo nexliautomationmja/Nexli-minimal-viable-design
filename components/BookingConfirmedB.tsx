@@ -44,9 +44,10 @@ import { BOOKING_B_FAQ } from '@/lib/booking-faq';
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent } from '@/lib/meta-events';
 import {
-  AGENCY_DAYS,
+  AGENCY_ENGAGEMENT_HIGH,
+  AGENCY_ENGAGEMENT_LOW,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_LEADS,
+  usd,
 } from '@/lib/agency-offer';
 import {
   BOOKING_WELCOME_VIDEO_ID,
@@ -86,9 +87,11 @@ const TIMELINE = [
   },
   {
     Icon: CalendarCheck,
-    when: `Days ${AGENCY_LAUNCH_DAYS}–${AGENCY_DAYS}`,
+    when: `From day ${AGENCY_LAUNCH_DAYS}`,
     title: 'Campaigns run, your calendar fills',
-    body: `${AGENCY_LEADS} qualified advisory leads inside ${AGENCY_DAYS} days of launch is what the system is built to produce. We report on it every week, so you see the pace rather than waiting to find out.`,
+    // No lead count: that offer is retired (see lib/agency-offer.ts). What
+    // the page says is what each client is worth.
+    body: `The ads go live and tax-planning prospects start booking onto your calendar — each one an engagement worth ${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)}. We report every week, so you see the pace rather than waiting to find out.`,
   },
   {
     Icon: ShieldCheck,

@@ -10,9 +10,9 @@
 import type { FaqItem } from '@/components/booking/DanielaFaq';
 import {
   AGENCY_AD_SPEND,
-  AGENCY_DAYS,
+  AGENCY_ENGAGEMENT_HIGH,
+  AGENCY_ENGAGEMENT_LOW,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_LEADS,
   AGENCY_TOTAL_MONTHLY,
   usd,
 } from '@/lib/agency-offer';
@@ -60,10 +60,15 @@ import {
  */
 export const BOOKING_B_FAQ: FaqItem[] = [
   {
+    // NO AUDIO: b-how-it-works.mp3 was rendered from the old answer, which
+    // ended "The target is 50 qualified advisory leads inside 90 days of
+    // launch" — an offer retired on 2026-11-09 (see lib/agency-offer.ts).
+    // Re-render it from the answer below the way the pricing item at the end
+    // of this list describes, then put this line back:
+    //   audio: '/audio/faq/b-how-it-works.mp3',
     question: 'How exactly does the system get me higher-value clients?',
-    audio: '/audio/faq/b-how-it-works.mp3',
     answer:
-      `We build the front end a high earner judges you by — the website, the booking flow, the portal they log into — and then run Meta campaigns at business owners and high-income individuals who are actively looking for tax help. The ads do not sell your firm; they offer a conversation about what someone is overpaying. Intake, follow-up and reminders are automated, so the ones who respond land on your calendar already knowing what the meeting is about. The target is ${AGENCY_LEADS} qualified advisory leads inside ${AGENCY_DAYS} days of launch.`,
+      `We build the front end a high earner judges you by — the website, the booking flow, the portal they log into — and then run Meta campaigns at business owners and high-income individuals who are actively looking for tax help. The ads do not sell your firm; they offer a conversation about what someone is overpaying. Intake, follow-up and reminders are automated, so the ones who respond land on your calendar already knowing what the meeting is about. Every one of them is a tax-planning client worth ${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)} an engagement.`,
   },
   {
     question: 'Who runs the ads — you or a white-label agency?',

@@ -4,6 +4,8 @@
  * across sources by these facts, so keep them identical everywhere.
  */
 
+import { CLIENT_VALUE_LINE } from './agency-offer';
+
 export const SITE_URL = 'https://www.nexli.net';
 export const SITE_NAME = 'Nexli Automation';
 export const SHORT_NAME = 'Nexli';
@@ -15,21 +17,67 @@ export const ORG_ID = `${SITE_URL}/#organization`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 export const PERSON_ID = `${SITE_URL}/about#marcel-allen`;
 
+/** 800×800 icon. The Organization JSON-LD states these dimensions. */
 export const LOGO_URL = `${SITE_URL}/logos/nexli-icon-gradient.png`;
+export const LOGO_SIZE = 800;
+/** 1200×630 share card: og:image, twitter:image and Organization.image. */
 export const OG_IMAGE_URL = `${SITE_URL}/og-image.png`;
 
-export const SOCIAL = {
+/**
+ * Nexli's own social profiles. AI search engines (ChatGPT, Claude,
+ * Perplexity) only show a profile next to the company when they can tie it
+ * to the site, and this list is how: it feeds the Organization `sameAs`,
+ * llms.txt, the About page and the footer icons (with rel="me").
+ *
+ * Typed as nullable so a profile can be taken off everywhere at once by
+ * setting it to null. A null entry is skipped, never linked as a guess.
+ */
+export const SOCIAL: {
+  instagram: string | null;
+  facebook: string | null;
+  x: string | null;
+  linkedin: string | null;
+  youtube: string | null;
+} = {
   instagram: 'https://www.instagram.com/nexliautomation',
   facebook: 'https://www.facebook.com/p/Nexli-Automation-61587654965905/',
   x: 'https://x.com/nexliautomation',
-} as const;
+  linkedin: 'https://www.linkedin.com/company/nexli-automation',
+  youtube: 'https://www.youtube.com/channel/UCiOd0nPjegR_OTHgL_jSN5Q',
+};
+
+const SOCIAL_NAMES: Record<keyof typeof SOCIAL, string> = {
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  x: 'X',
+  linkedin: 'LinkedIn',
+  youtube: 'YouTube',
+};
+
+/** Every profile that has a URL, in display order. */
+export const SOCIAL_PROFILES: { key: keyof typeof SOCIAL; name: string; url: string }[] = (
+  Object.keys(SOCIAL) as (keyof typeof SOCIAL)[]
+).flatMap((key) => {
+  const url = SOCIAL[key];
+  return url ? [{ key, name: SOCIAL_NAMES[key], url }] : [];
+});
 
 /**
- * Profiles that establish Nexli as a verifiable entity.
- * TODO: add LinkedIn company page, Google Business Profile, Crunchbase,
- * Clutch, and DesignRush listing URLs as they are created.
+ * Profiles that establish Nexli as a verifiable entity (Organization
+ * `sameAs`). Add Google Business Profile, Crunchbase, Clutch and similar
+ * listing URLs here as they are created — see docs/ai-search-checklist.md.
  */
-export const SAME_AS: string[] = [SOCIAL.instagram, SOCIAL.facebook, SOCIAL.x];
+export const SAME_AS: string[] = SOCIAL_PROFILES.map((p) => p.url);
+
+/**
+ * Two other companies share almost the same name, and search engines
+ * return them for "Nexli": Nexl (nexl.cloud, a law-firm CRM) and Nexli
+ * (nexli.io, a productivity app). This sentence goes into the
+ * Organization's disambiguatingDescription and llms.txt so an AI engine
+ * does not merge them.
+ */
+export const DISAMBIGUATION =
+  'Nexli Automation (nexli.net) is a CPA firm growth agency based in Winter Park, Florida. It is not affiliated with Nexl (nexl.cloud), a law-firm CRM, or with Nexli (nexli.io), a productivity app.';
 
 export const FOUNDER = {
   id: PERSON_ID,
@@ -80,8 +128,13 @@ export const PHONE_E164 = '+13212727741';
 
 export const TAGLINE = 'Growth systems for established CPA firms.';
 
-export const ORG_DESCRIPTION =
-  'Nexli Automation is a CPA firm growth agency. It builds the Digital Rainmaker System, a premium website, AI automation layer, secure client document portal, and Google review engine, then runs paid ads to it so established CPA firms doing $500K+ per year (about $40K-$50K a month) land high-value tax advisory clients.';
+/**
+ * THE description AI engines quote: Organization JSON-LD, llms.txt, the
+ * About page and /about's meta description. It ends on the value line —
+ * what each client is worth — because that is what the founder wants
+ * repeated, and it is the claim that replaced the retired lead target.
+ */
+export const ORG_DESCRIPTION = `Nexli Automation is a CPA firm growth agency. It builds the Digital Rainmaker System, a premium website, AI automation layer, secure client document portal, and Google review engine, then runs paid ads to it, bringing established CPA firms doing $500K+ per year (about $40K-$50K a month) ${CLIENT_VALUE_LINE}.`;
 
 /**
  * Public-facing minimum annual revenue. Intentionally stays at $500K+ in marketing copy.
@@ -97,6 +150,10 @@ export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';
  * promise left here outlives one left in a component.
  */
 export const ENGAGEMENT_TERMS = [
+  {
+    name: 'What each client is worth',
+    description: `Nexli brings firms ${CLIENT_VALUE_LINE}. It does not promise a number of clients; it reports what the campaigns produced every week.`,
+  },
   {
     name: 'Six-month initial term',
     description:

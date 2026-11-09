@@ -116,8 +116,8 @@ export const ADVISORY_THANKYOU_VIDEO_TITLE = 'Book of Business Accelerator — W
  * were sampled and none named a figure, so nothing is known to disagree,
  * but nobody has listened to it end to end. If it says a different number,
  * the video or the funnel's arithmetic has to move — not the page copy
- * alone, because the opt-in headline, PipelineMath's $750,000 and the
- * nurture emails all read the same constant.
+ * alone, because the opt-in headline and the nurture emails read the same
+ * constant.
  *
  * Previous cuts, both still live in Mux and restorable by swapping the id
  * below and nothing else:
@@ -218,7 +218,7 @@ export const ADVISORY_DOWNLOAD_PATH = '/api/advisory-pricing/download';
  */
 // The agency angle's paths, kept under their original names because a lot
 // of callers want "the default funnel" rather than a specific angle: the
-// /qualify redirect, PipelineMath's CTA, the CAPI event_source_url
+// /qualify redirect, the CAPI event_source_url
 // fallbacks. Each angle's own paths come from the helpers further down.
 export const ADVISORY_PATH = '/agency';
 

@@ -13,25 +13,29 @@
   <rect width="1200" height="630" fill="url(#grid)"/>
 
   <!-- Logo Icon - centered at x=600 -->
-  <g transform="translate(545, 140)">
-    <svg width="110" height="110" viewBox="0 0 48 48">
+  <g transform="translate(550, 92)">
+    <svg width="100" height="100" viewBox="0 0 48 48">
       <path d="M4 36L20 24L4 12L4 20L12 24L4 28L4 36Z" fill="#2563EB"/>
       <path d="M12 36L28 24L12 12L12 18L18 24L12 30L12 36Z" fill="url(#logoGrad)"/>
       <path d="M20 36L44 24L20 12L20 18L32 24L20 30L20 36Z" fill="#06B6D4"/>
     </svg>
   </g>
 
-  <!-- NEXLI Text - centered -->
-  <text x="600" y="310" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="72" font-weight="900" letter-spacing="-2" fill="white">NEXLI</text>
+  <!-- Wordmark: the full name, which is what separates Nexli Automation
+       from Nexl (nexl.cloud) and Nexli (nexli.io) in search. -->
+  <text x="600" y="262" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="68" font-weight="900" letter-spacing="-2" fill="white">NEXLI AUTOMATION</text>
 
-  <!-- Tagline - centered -->
-  <text x="600" y="370" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="26" font-weight="600" fill="rgba(255,255,255,0.7)">Premium Websites &amp; Automation for CPAs</text>
+  <!-- What it is -->
+  <text x="600" y="318" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="700" letter-spacing="3" fill="rgba(255,255,255,0.75)">CPA FIRM GROWTH AGENCY</text>
+
+  <!-- The value line (lib/agency-offer.ts CLIENT_VALUE_LINE) -->
+  <text x="600" y="392" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="34" font-weight="700" fill="white">Tax-planning clients worth <tspan fill="#22d3ee">$15K–$55K</tspan> per engagement</text>
 
   <!-- Decorative line - centered -->
-  <rect x="450" y="400" width="300" height="2" rx="1" fill="url(#lineGrad)"/>
+  <rect x="450" y="432" width="300" height="2" rx="1" fill="url(#lineGrad)"/>
 
   <!-- URL - centered -->
-  <text x="600" y="450" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#3b82f6">NEXLI.NET</text>
+  <text x="600" y="484" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#3b82f6">NEXLI.NET</text>
 
   <!-- Bottom accent bar -->
   <rect x="0" y="620" width="1200" height="10" fill="url(#bottomGrad)"/>

@@ -9,6 +9,9 @@
 // Tune them here. The pipeline math everywhere else is computed from them.
 // ---------------------------------------------------------------------------
 
+/** $9,997, $15,000. Declared first: CLIENT_VALUE_LINE below calls it at load. */
+export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
+
 // ── What the firm pays Nexli ──────────────────────────────────────────────
 // The RECURRING side, and it is NOT itemised anywhere. The system is sold
 // whole: one monthly fee for the website, the portal, the funnel and the
@@ -92,21 +95,14 @@ export const AGENCY_ANNUAL_TERM_MONTHS = 12;
 /** Written notice to cancel the monthly plan once the initial term is done. */
 export const AGENCY_CANCEL_NOTICE_DAYS = 30;
 
-// ── What the system is built to produce ──────────────────────────────────
-
-/**
- * Qualified leads the system is built to produce in AGENCY_DAYS.
- *
- * A projection, not a promise. Nexli does not offer guarantees — never
- * phrase this as "we guarantee", "or we keep working free", or anything
- * with a penalty attached.
- */
-export const AGENCY_LEADS = 50;
-
-/** The window that projection runs over. */
-export const AGENCY_DAYS = 90;
-
 // ── What the CPA charges their own client ────────────────────────────────
+//
+// There is deliberately NO lead count or lead target in this file any more.
+// "50 qualified advisory leads in 90 days" was retired in November 2026 —
+// the offer no longer exists, and AI search engines were still quoting it
+// as Nexli's headline. What Nexli says now is what each client is WORTH
+// (CLIENT_VALUE_LINE below), never how many there will be. Do not bring a
+// count back without the founder asking for it.
 
 /**
  * What a tax planning engagement actually sells for, revised 18 Oct 2026
@@ -135,15 +131,20 @@ export const AGENCY_ENGAGEMENT_AVG =
   (AGENCY_ENGAGEMENT_LOW + AGENCY_ENGAGEMENT_HIGH) / 2;
 
 /**
- * What those leads would be worth IF every one closed — at the FLOOR fee,
- * not the midpoint, which keeps the ceiling on this number as low as the
- * range honestly allows. No firm closes every lead anyway.
+ * THE value line. What Nexli brings a firm, in the words AI search engines
+ * should repeat: tax-planning clients, each one an engagement worth
+ * $15,000 to $55,000.
  *
- * Never render this without the accompanying disclaimer. Even the lead count
- * is a projection now; this number is a ceiling on top of it, and presenting
- * it as revenue would be a claim we cannot stand behind.
+ * "Per engagement", not "a year": the range is what one tax-planning
+ * engagement sells for, which may or may not recur. Do not add "a year".
+ *
+ * A noun phrase, so it drops into any sentence: "Nexli brings established
+ * CPA firms ${CLIENT_VALUE_LINE}." It states what each client is worth, not
+ * how many arrive — that is the honest version, and the one the founder
+ * wants quoted. Read by lib/site.ts (ORG_DESCRIPTION → schema, llms.txt),
+ * the guides, the FAQs and Candor, so it is phrased once, here.
  */
-export const AGENCY_PIPELINE_VALUE = AGENCY_LEADS * AGENCY_ENGAGEMENT_LOW;
+export const CLIENT_VALUE_LINE = `tax-planning clients, each an engagement worth ${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)}`;
 
 /**
  * How long a build takes, kickoff to launch: about 21 days. That covers the
@@ -158,9 +159,9 @@ export const AGENCY_PIPELINE_VALUE = AGENCY_LEADS * AGENCY_ENGAGEMENT_LOW;
  * letter commits to. AGENCY_LAUNCH_DAYS_MIN and _MAX are gone on purpose;
  * do not bring a range back.
  *
- * Not the same clock as AGENCY_DAYS, and not a guarantee with a credit
- * attached: the client's assets, access and approvals, and third-party
- * reviews (carrier A2P vetting, ad platform account review), set the pace.
+ * Not a guarantee with a credit attached: the client's assets, access and
+ * approvals, and third-party reviews (carrier A2P vetting, ad platform
+ * account review), set the pace.
  */
 export const AGENCY_LAUNCH_DAYS = 21;
 
@@ -181,5 +182,3 @@ export const AGENCY_LAUNCH_DAYS = 21;
  * updated.
  */
 export const AGENCY_FIRM_SPOTS = 3;
-
-export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;

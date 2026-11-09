@@ -20,6 +20,7 @@
 // one of the four angles that is indexed. Everything after it is noindex.
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
+import { socialMeta } from '@/lib/seo';
 import { VSL_ANGLE_AGENCY, qualifyPathForAngle } from '@/lib/advisory-config';
 import AgencyVslClient from './agency-client';
 
@@ -32,12 +33,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   robots: { index: true, follow: true },
   alternates: { canonical: '/agency' },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: '/agency',
-    type: 'website',
-  },
+  ...socialMeta({ title: TITLE, description: DESCRIPTION, path: '/agency' }),
 };
 
 export default function AgencyVslPage() {

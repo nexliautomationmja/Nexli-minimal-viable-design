@@ -2,9 +2,16 @@
 
 import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
+import { useIsFirmSite } from '../lib/use-is-firm-site';
 
 export default function ConditionalNavbar() {
   const pathname = usePathname();
+  const isFirmSite = useIsFirmSite();
+
+  // A client firm's website. On the firm's own domain the pathname is "/",
+  // so the '/sites' check further down never fired there and Nexli's navbar
+  // rendered on top of the firm's site. See lib/use-is-firm-site.ts.
+  if (isFirmSite) return null;
 
   // Don't show navbar on funnel pages (covers all /vslfunnel* variants
   // and the whole /demo-opt-in -> /demo demo funnel)

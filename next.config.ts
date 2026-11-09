@@ -68,6 +68,16 @@ const nextConfig: NextConfig = {
       { source: "/foundation/start", destination: "/agency", permanent: true },
       { source: "/foundation/preview/:token*", destination: "/agency", permanent: true },
       { source: "/foundation/thank-you", destination: "/agency", permanent: true },
+      // URLs from the site nexli.net ran before the CPA agency: an "AI Voice
+      // Agents for Small Business" product. Search engines still hold
+      // /privacy-policy under that old title and the old 321-241-2945 number
+      // (Brave, which Claude searches, did as of 2026-11-09). A 404 drops it
+      // slowly; a permanent redirect tells the engine where the page went,
+      // so the stale description is replaced on the next crawl.
+      { source: "/privacy-policy", destination: "/privacy", permanent: true },
+      { source: "/terms-of-service", destination: "/terms", permanent: true },
+      { source: "/terms-and-conditions", destination: "/terms", permanent: true },
+      { source: "/contact-us", destination: "/contact", permanent: true },
     ];
   },
   async headers() {

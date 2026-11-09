@@ -10,8 +10,7 @@
 // The public page runs the original cut, whose audio says $8,000. This page
 // runs the re-record whose audio says $15,000, which is AGENCY_ENGAGEMENT_AVG
 // and the number the rest of the funnel is built on: the opt-in headline,
-// PipelineMath's $750,000, the nurture emails' $800/$15,000 grid and the call
-// page all use it. The subheadline below reads the same constant, so the
+// the nurture emails' $800/$15,000 grid and the call page all use it. The subheadline below reads the same constant, so the
 // video, the page copy and the funnel's maths cannot drift apart.
 //
 // THIS PAGE ARGUES THE AGENCY OBJECTION, not the volume one. It carried the

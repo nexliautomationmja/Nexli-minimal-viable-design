@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { socialMeta } from '@/lib/seo';
 import Link from 'next/link';
 import { guides } from '../../data/guides';
 import { formatGuideDate } from '../../components/guides/GuideArticle';
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: '/guides' },
-  openGraph: { title: TITLE, description: DESCRIPTION, type: 'website' },
+  ...socialMeta({ title: TITLE, description: DESCRIPTION, path: '/guides' }),
 };
 
 export default function GuidesIndexPage() {

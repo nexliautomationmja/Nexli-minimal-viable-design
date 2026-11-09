@@ -10,6 +10,7 @@
 // in app/better-clients/page.tsx for why.
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
+import { socialMeta } from '@/lib/seo';
 import { VSL_ANGLE_SYSTEMS, qualifyPathForAngle } from '@/lib/advisory-config';
 import SystemsVslClient from './systems-client';
 
@@ -21,12 +22,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   robots: { index: false, follow: true },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: '/systems',
-    type: 'website',
-  },
+  ...socialMeta({ title: TITLE, description: DESCRIPTION, path: '/systems' }),
 };
 
 export default function SystemsVslPage() {

@@ -14,7 +14,7 @@ const guide: Guide = {
     'This guide covers who the advisory client is, the five parts of the system, how to package the offer, how to convert existing compliance clients, and a 90-day launch sequence.',
   ],
   publishedAt: '2026-09-08',
-  updatedAt: '2026-09-08',
+  updatedAt: '2026-11-09',
   author: 'marcel-allen',
   category: 'Growth',
   stats: [
@@ -156,8 +156,8 @@ const guide: Guide = {
       heading: 'How Nexli does this',
       body: [
         'Nexli Automation is a CPA firm growth agency. It builds the system described above, called the Digital Rainmaker System, and then runs paid ads to it. The build includes a premium website structured around the firm\'s advisory offer, an AI automation layer for missed-call text-back, 24/7 intake, automated booking, and nurture sequences, a secure client document portal, and a Google review engine that adds 3-5 extra Google reviews per month. The build takes about 21 days.',
-        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), on a six-month initial term that then continues month to month, with a one-time setup fee for the build. It does not offer performance guarantees. What it publishes are targets: at least 50 qualified advisory leads within 90 days of campaign launch, and a build that takes about 21 days, reported on weekly.',
-        'If that fits your firm, [watch the short presentation and apply for a strategy call](/vslfunnel-advisory). For a full breakdown of the components, read [What Is the Digital Rainmaker System?](/guides/what-is-the-digital-rainmaker-system).',
+        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), on a six-month initial term that then continues month to month, with a one-time setup fee for the build. The system brings those firms tax-planning clients, each an engagement worth $15,000 to $55,000, with a build that takes about 21 days and a written report every week.',
+        'If that fits your firm, [watch the short presentation and apply for a strategy call](/agency). For a full breakdown of the components, read [What Is the Digital Rainmaker System?](/guides/what-is-the-digital-rainmaker-system).',
       ],
     },
   ],
@@ -165,7 +165,7 @@ const guide: Guide = {
     {
       question: 'How long does it take a CPA firm to start getting advisory clients from an inbound system?',
       answer:
-        'Firms that already have compliance clients who fit an advisory profile usually close the first planning engagements within the first 30 to 45 days, from their own list. New inbound consultations from search and paid ads typically start within 60 to 90 days of the website and intake being live. Nexli targets 50 qualified advisory leads within 90 days of campaign launch.',
+        'Firms that already have compliance clients who fit an advisory profile usually close the first planning engagements within the first 30 to 45 days, from their own list. New inbound consultations from search and paid ads typically start within 60 to 90 days of the website and intake being live. Each new tax-planning client Nexli brings in is an engagement worth $15,000 to $55,000.',
     },
     {
       question: 'Do CPA firms need to run ads to get advisory clients?',

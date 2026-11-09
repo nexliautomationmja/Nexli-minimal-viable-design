@@ -7,6 +7,7 @@ import { useTheme } from './ThemeProvider';
 import SocialDock from './SocialDock';
 import CardLogos from './legal/CardLogos';
 import PolicyLinks from './legal/PolicyLinks';
+import { useIsFirmSite } from '../lib/use-is-firm-site';
 
 // Routes where the footer should be completely hidden (dedicated funnels).
 const HIDDEN_FOOTER_ROUTES = ['/vslfunnel', '/profit-calculator'];
@@ -14,11 +15,17 @@ const HIDDEN_FOOTER_ROUTES = ['/vslfunnel', '/profit-calculator'];
 const Footer: React.FC = () => {
   const { theme } = useTheme();
   const pathname = usePathname();
+  // A client firm's website, on nexli.net/sites/... OR the firm's own
+  // domain. The pathname check below only caught the first: on the firm's
+  // domain the pathname is "/", so this footer — Nexli's address, phone,
+  // policies and card marks — was rendering under the firm's site.
+  const isFirmSite = useIsFirmSite();
 
   // Hide footer on dedicated funnel pages to remove exit paths
   // '/foundation/start' and '/foundation/preview' used to be listed here;
   // both pages are gone and /foundation now redirects to /demo-opt-in.
   if (
+    isFirmSite ||
     HIDDEN_FOOTER_ROUTES.includes(pathname) ||
     pathname.startsWith('/sites') ||
     pathname === '/demo-opt-in' ||
@@ -92,9 +99,8 @@ const Footer: React.FC = () => {
             )}
             <span className="text-3xl font-black tracking-tighter text-[var(--text-main)]" style={{ fontFamily: "'Syne', sans-serif" }}>NEXLI</span>
           </Link>
-          <SocialDock
-            instagramUrl="https://www.instagram.com/nexliautomation"
-          />
+          {/* Every profile in lib/site.ts SOCIAL, linked rel="me". */}
+          <SocialDock />
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-4 text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
             <Link
               href="/rainmaker"
