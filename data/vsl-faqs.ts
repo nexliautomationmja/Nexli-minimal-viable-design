@@ -32,7 +32,7 @@ const whoRunsAds: VslFaqItem = {
 
 const howLong: VslFaqItem = {
   q: 'How long until we are live, and what do we need to do?',
-  a: 'Most firms go live in 10 to 14 days once we have your branding, logins, approvals and onboarding details. 21 days is the outside edge, and it is what the engagement letter commits to. The variable is how fast those come back from you. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
+  a: 'The build takes about 21 days from kickoff, and that is what the engagement letter commits to. The variable is how fast your branding, logins, approvals and onboarding details come back from you. Your side is a short onboarding: answer our questions, send assets, approve the work. After launch, the system handles intake, follow-up, document collection, and review requests on its own, and your time goes to the consultations that land on your calendar.',
 };
 
 const existingWebsite: VslFaqItem = {
@@ -42,7 +42,7 @@ const existingWebsite: VslFaqItem = {
 
 const canWeCancel: VslFaqItem = {
   q: 'Can we cancel?',
-  a: 'The initial term is six months, which is how long it takes for the campaigns to have genuinely run. After that it continues month to month and you can end it on 30 days notice. You stay because the system is producing, not because a contract says so.',
+  a: 'The initial term is six months from launch, which is how long it takes for the campaigns to have genuinely run. After that it continues month to month and you can end it on 30 days notice. You stay because the system is producing, not because a contract says so.',
 };
 
 const salesPitch: VslFaqItem = {
@@ -141,7 +141,7 @@ export const offerFaq: VslFaqItem[] = [
   whoRunsAds,
   {
     q: 'How long until the first appointments show up?',
-    a: 'The build takes most firms about 2 weeks, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and the target is 50 qualified leads within 90 days of campaign launch.',
+    a: 'The build takes about 21 days, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and the target is 50 qualified leads within 90 days of campaign launch.',
   },
   {
     q: 'What if we cannot handle the volume?',

@@ -9,8 +9,8 @@ const guide: Guide = {
   question: 'What is the Digital Rainmaker System?',
   tldr: [
     'The Digital Rainmaker System is a done-for-you client acquisition system that Nexli Automation builds for established CPA and accounting firms, combining a premium website, an AI automation layer, a secure client portal, and a Google review engine, then running paid ads to it.',
-    'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and most firms go live within 2 weeks.',
-    'Nexli does not offer performance guarantees. It publishes what it targets — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and reports against both weekly.',
+    'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and the build takes about 21 days from kickoff.',
+    'Nexli does not offer performance guarantees. It publishes what it targets — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in about 21 days — and reports against both weekly.',
     'Pricing is $9,997 a month all in, covering the complete system and the $5,000 ad budget together. Six-month initial term, then month to month, plus a one-time setup fee for the build.',
   ],
   publishedAt: '2026-09-08',
@@ -95,7 +95,7 @@ const guide: Guide = {
       body: [
         'Nexli calls the client dashboard and portal "the centerpiece" of the system, and it is the part that keeps working after a prospect becomes a client. It replaces the usual stack of disconnected tools, which Nexli lists as QuickBooks for invoicing, Dropbox for documents, email for engagement letters, DocuSign for signatures, and a separate app for messaging. Details are on the [Client Dashboard page](/client-dashboard).',
         'Clients get a branded portal on the firm\'s own domain and log in through a secure magic link sent by email or SMS, with no passwords or account setup. Inside it they can see and pay invoices, sign engagement letters electronically, upload W-2s, 1099s, and statements, and message the firm directly. Standard documents like engagement letters are sent from templates and signed in the portal, and files are shared back to the client the same way rather than as email attachments.',
-        'On the firm side, the dashboard shows who has signed, who has paid, who has uploaded, and who has gone quiet, organized by client. Everything is encrypted with AES-256. Nexli deploys each dashboard as a standalone instance for the firm, typically live within 5 to 7 business days of onboarding.',
+        'On the firm side, the dashboard shows who has signed, who has paid, who has uploaded, and who has gone quiet, organized by client. Everything is encrypted with AES-256. Nexli deploys each dashboard as a standalone instance for the firm, as part of the build, and the firm owns it.',
         'The problem it solves is the operational drag that grows with every new client: chasing documents, chasing signatures, chasing payments, and losing track of which client is at which stage. That is the drag that makes a firm reluctant to take on more clients in the first place, which is why it is bundled into an acquisition system.',
       ],
     },
@@ -134,13 +134,13 @@ const guide: Guide = {
       id: 'timeline-and-pricing',
       heading: 'Timeline and pricing model',
       body: [
-        'Most firms go live within **2 weeks**. Nexli handles design, development, integrations, and automations, and the client dashboard portion is typically live within 5 to 7 business days of onboarding. The firm\'s job is to supply assets, access, approvals, and onboarding information.',
+        'The build takes about **21 days** from kickoff. Nexli handles design, development, integrations, automations, A2P 10DLC texting registration, the ad account and invoicing. The firm\'s job is to supply assets, access, approvals, and onboarding information.',
         'Nexli does not offer performance guarantees, and says so plainly. What it publishes instead are the targets it reports against every week.',
       ],
       bullets: [
         '**Target 1: 50 qualified leads in 90 days.** The system is built to produce at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who fits the firm\'s advisory criteria and books a consultation. Nexli is clear that this is opportunity value on the calendar, not closed revenue; the firm\'s close rate determines what it banks.',
-        '**Target 2: live in 10 to 14 days.** Most firms are live within 10 to 14 days of kickoff. 21 days is the outside edge, matching the engagement letter, and the variable is how quickly assets, access and approvals come back from the firm.',
-        '**Pricing:** $9,997 a month all in. That covers the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns, and reports where it went each week. Billed monthly on a six-month initial term that then continues month to month, plus a one-time setup fee for the build. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
+        '**Target 2: live in about 21 days.** The build takes about 21 days from kickoff, matching the engagement letter, and the variable is how quickly assets, access and approvals come back from the firm.',
+        '**Pricing:** $9,997 a month all in. That covers the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns, and reports where it went each week. Billed monthly from launch on a six-month initial term that then continues month to month, plus a one-time setup fee for the build. The firm owns what Nexli builds and pays its own hosting. Firms apply and book a strategy call through the [advisory application page](/vslfunnel-advisory); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
       ],
     },
     {
@@ -185,7 +185,7 @@ const guide: Guide = {
     },
     {
       question: 'Does the Digital Rainmaker System come with a guarantee?',
-      answer: 'No. Nexli does not offer performance guarantees and says so plainly. It publishes the targets it works to — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in 10 to 14 days — and sends a written update every week showing the pace against them. After the six-month initial term the engagement continues month to month, so a firm that is not seeing results can leave.',
+      answer: 'No. Nexli does not offer performance guarantees and says so plainly. It publishes the targets it works to — at least 50 qualified advisory leads within 90 days of campaign launch, and the build live in about 21 days — and sends a written update every week showing the pace against them. After the six-month initial term the engagement continues month to month, so a firm that is not seeing results can leave.',
     },
     {
       question: 'Who qualifies for the Digital Rainmaker System?',
@@ -193,11 +193,11 @@ const guide: Guide = {
     },
     {
       question: 'How much does the Digital Rainmaker System cost?',
-      answer: 'Nexli does not publish pricing. The engagement is billed monthly on a six-month initial term, with a one-time setup fee for the build, and the price is set after a strategy call that reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/vslfunnel-advisory.',
+      answer: '$9,997 a month all in, covering the complete system and the $5,000 ad budget together, on a six-month initial term that then continues month to month, published at nexli.net/pricing. There is also a one-time setup fee for the build, quoted on a strategy call that reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/vslfunnel-advisory.',
     },
     {
       question: 'How long does it take to launch?',
-      answer: 'Most firms go live within 10 to 14 days. The client dashboard and portal are typically live within 5 to 7 business days of onboarding. The clock depends on how quickly the firm supplies assets, access, approvals and onboarding information; 21 days is the outside edge, matching the engagement letter, when those come back slowly.',
+      answer: 'About 21 days from kickoff for the whole system: website, portal, automations, texting registration, ad account and invoicing. That matches the engagement letter. The clock depends on how quickly the firm supplies assets, access, approvals and onboarding information, and on the carriers\' and ad platforms\' own reviews.',
     },
     {
       question: 'Can I keep my existing website?',

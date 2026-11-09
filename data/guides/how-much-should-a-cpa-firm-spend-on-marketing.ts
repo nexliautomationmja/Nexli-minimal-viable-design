@@ -134,7 +134,7 @@ const guide: Guide = {
           ['Google Ads conversion rate, business services', '4.85% (finance & insurance: 2.64%; all industries: 8.18%)', 'LocaliQ Search Advertising Benchmarks 2026'],
           ['SEO retainer, agency', '$3,209 a month average; $501 to $1,000 most common band', 'Ahrefs SEO pricing survey (439 providers)'],
           ['SEO retainer, freelancer', '$1,349 a month average', 'Ahrefs SEO pricing survey (439 providers)'],
-          ['Managed acquisition system (site + intake + reviews + ads)', 'Not published; scoped per firm. Six-month initial term, then month to month', 'Nexli Automation'],
+          ['Managed acquisition system (site + intake + reviews + ads)', '$9,997/mo all in (incl. ad spend), plus a one-time setup fee. Six-month initial term, then month to month', 'Nexli Automation'],
         ],
       },
     },

@@ -7,7 +7,7 @@
 // to say "most planning has to be executed before December 31", which is
 // true and was the right line in September. It stopped being the right line
 // once there were about sixty days left: a build is up to
-// AGENCY_LAUNCH_DAYS_MAX days, and then the firm still has to run ads,
+// AGENCY_LAUNCH_DAYS days, and then the firm still has to run ads,
 // qualify people and close them. Telling a firm in November that they can
 // catch this tax year is selling them something the calendar will not
 // deliver.

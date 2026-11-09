@@ -20,8 +20,8 @@ export const aboutFacts: AboutFact[] = [
   { label: 'Founder', value: 'Marcel Allen' },
   { label: 'Email', value: 'mail@nexli.net' },
   { label: 'Serves', value: 'Established CPA and accounting firms with $500K+ in annual revenue (about $40K-$50K a month)' },
-  { label: 'Contract terms', value: 'Six-month initial term, then month to month' },
-  { label: 'Launch time', value: 'Most firms live in 10 to 14 days; 21 days at the outside, which is what the engagement letter commits to' },
+  { label: 'Contract terms', value: 'Six-month initial term from launch, then month to month' },
+  { label: 'Launch time', value: 'About 21 days from kickoff, which is what the engagement letter commits to' },
 ];
 
 export const founderBio: string[] = [
@@ -51,20 +51,20 @@ export const aboutSections: AboutSection[] = [
     heading: 'Who we work with',
     body: [
       'Nexli works exclusively with established CPA and accounting firms doing $500K or more in annual revenue. The firms we work best with already have a stable client base, deliver good work, and want more advisory clients without adding headcount to get them.',
-      'We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is not published. Firms apply for a strategy call, and we take on the ones where the system fits.',
+      'We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is $9,997 a month, covering the complete system and the ad budget together, plus a one-time setup fee for the build quoted on the call. Firms apply for a strategy call, and we take on the ones where the system fits.',
     ],
   },
   {
     id: 'how-we-work',
     heading: 'How we work',
     body: [
-      'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. Most firms go live within 2 weeks.',
-      'The initial term is six months — long enough for the campaigns to have actually run — and after that it continues month to month. There is a one-time setup fee for the build, quoted on the call.',
+      'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. The build takes about 21 days.',
+      'The initial term is six months from launch — long enough for the campaigns to have actually run — and after that it continues month to month. There is a one-time setup fee for the build, quoted on the call. The firm owns what we build, the website, the portal and the automations, and pays its own hosting; the monthly fee pays for us to maintain and run it.',
       'We do not offer performance guarantees. What we publish are the targets we work to, and a written update every week showing the pace against them.',
     ],
     bullets: [
       'Target: at least 50 qualified advisory leads within 90 days of campaign launch.',
-      'Target: the whole system live in 10 to 14 days of kickoff.',
+      'Build time: the whole system live about 21 days after kickoff.',
       'Reported: a written update every week on what was done in the ad account and what it produced.',
     ],
   },

@@ -8,36 +8,36 @@
 // input here, re-export the PDF too, or the leave-behind disagrees with the
 // page that was just presented.
 //
-// THE SETUP FEE IS PRICED HERE, AND ONLY HERE. lib/agency-offer says the
-// one-time setup fee is "given on the call" and never a number on a page.
-// /math is the call: Marcel screen-shares it, it is unlisted, noindexed and
-// disallowed in robots.ts, and it shows exactly what the PDF he emails
-// afterwards already says. So the figure lives in this file, not in
-// agency-offer, where every public page would be one import away from it.
-//
-// The monthly figures are NOT redefined: they come from lib/agency-offer, so
-// a price change there reaches this page too.
+// THE SETUP FEE AND THE ANNUAL PLAN come from lib/agency-offer, like every
+// other price here. They used to be defined in this file only, back when
+// /math was the one place that priced them. Since 2026-11-09 the policy
+// pages (/pricing, /terms, /refund-policy, /delivery-policy) price them too,
+// for the card processor's underwriters, and a second copy here would be the
+// first thing to drift. The sales pages still say "quoted on the call"; see
+// the note in lib/agency-offer for which pages may import the figure.
 // ---------------------------------------------------------------------------
 import {
   AGENCY_AD_SPEND,
+  AGENCY_ANNUAL_SERVICE_FEE,
   AGENCY_ENGAGEMENT_HIGH,
   AGENCY_ENGAGEMENT_LOW,
   AGENCY_MONTHLY_FEE,
+  AGENCY_SETUP_FEE,
   AGENCY_TOTAL_MONTHLY,
 } from '@/lib/agency-offer';
 
 // ── What the firm pays ─────────────────────────────────────────────────────
 
-/** One-time, due at signing. See the note at the top of this file. */
-export const SETUP_FEE = 32_000;
+/** One-time, due at signing. */
+export const SETUP_FEE = AGENCY_SETUP_FEE;
 
-/** Nexli's service fee when the service year is prepaid. */
-export const ANNUAL_SERVICE_MONTHLY = 3_500;
+/** Nexli's service fee when the service year is prepaid: $42,000 / 12. */
+export const ANNUAL_SERVICE_MONTHLY = AGENCY_ANNUAL_SERVICE_FEE / 12;
 
 /** Ads every month, either plan. */
 export const AD_SPEND = AGENCY_AD_SPEND;
 
-/** Month to month: ads + service, $9,997. */
+/** Paid monthly: ads + service, $9,997. */
 export const MONTHLY_TOTAL = AGENCY_TOTAL_MONTHLY;
 
 /** Paid annually, as a monthly figure: ads + prepaid service, $8,500. */
@@ -59,7 +59,7 @@ export interface Plan {
 export const PLANS: Record<PlanId, Plan> = {
   monthly: {
     id: 'monthly',
-    label: 'Month to month',
+    label: 'Paid monthly',
     upfront: SETUP_FEE,
     perMonth: MONTHLY_TOTAL,
     serviceMonthly: AGENCY_MONTHLY_FEE,
@@ -82,7 +82,7 @@ export function yearOneCost(plan: Plan): number {
 
 /**
  * The first month in which paying annually has cost less in total than
- * paying month to month. It costs $42,000 more at signing and $4,997 less a
+ * paying monthly. It costs $42,000 more at signing and $4,997 less a
  * month after, so it crosses during month 9.
  */
 export function annualAheadFromMonth(): number {

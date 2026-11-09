@@ -100,7 +100,7 @@ export const ENGAGEMENT_TERMS = [
   {
     name: 'Six-month initial term',
     description:
-      'The engagement runs on a signed agreement with a six-month minimum initial term. After that it continues month to month and can be cancelled with 30 days notice.',
+      'The engagement runs on a signed agreement with a six-month minimum initial term, counted from launch. After that it continues month to month and can be cancelled with 30 days notice.',
   },
   {
     name: 'One flat monthly fee, plus setup',
@@ -108,9 +108,14 @@ export const ENGAGEMENT_TERMS = [
       'One flat monthly fee for the complete system, with no per-component pricing, plus a one-time setup fee covering the build. The setup fee is quoted on the call.',
   },
   {
-    name: 'Typically live in 10 to 14 days',
+    name: 'Live in about 21 days',
     description:
-      'Most firms are live within 10 to 14 days of kickoff. The variable is how quickly assets, access and approvals come back; 21 days is the outside edge, which is what the engagement letter commits to.',
+      'The build takes about 21 days from kickoff, which is what the engagement letter commits to. The variable is how quickly assets, access and approvals come back.',
+  },
+  {
+    name: 'The firm owns what is built',
+    description:
+      'The firm owns the website, client portal, funnel and automations Nexli builds, and pays its own hosting. The monthly fee pays for Nexli to maintain and run the system.',
   },
   {
     name: 'One monthly price, ad spend included',

@@ -3,8 +3,32 @@ import Link from 'next/link';
 import { FileText } from 'lucide-react';
 import LegalPage, { LegalSection, Strong, legalLinkClass } from './legal/LegalPage';
 import { ADVISORY_PRICE_DISPLAY, ADVISORY_REFUND_DAYS } from '../lib/advisory-config';
-import { AGENCY_LAUNCH_DAYS, AGENCY_LAUNCH_DAYS_MAX, AGENCY_LAUNCH_DAYS_MIN } from '../lib/agency-offer';
+import {
+    AGENCY_AD_SPEND,
+    AGENCY_ANNUAL_SERVICE_FEE,
+    AGENCY_ANNUAL_TERM_MONTHS,
+    AGENCY_ANNUAL_UPFRONT,
+    AGENCY_CANCEL_NOTICE_DAYS,
+    AGENCY_INITIAL_TERM_MONTHS,
+    AGENCY_LAUNCH_DAYS,
+    AGENCY_MONTHLY_FEE,
+    AGENCY_SETUP_FEE,
+    AGENCY_TOTAL_MONTHLY,
+    usd,
+} from '../lib/agency-offer';
 import { ADDRESS_LINES, EMAIL, LEGAL_NAME, PHONE_DISPLAY, PHONE_E164 } from '../lib/site';
+
+// ---------------------------------------------------------------------------
+// The Terms. /refund-policy, /delivery-policy and /pricing restate parts of
+// it and must never say more or less than it does; every figure comes from
+// lib/agency-offer so they cannot quote different numbers.
+//
+// The Digital Rainmaker System terms, as Marcel set them on 2026-11-09:
+// $32,000 setup at signing; monthly plan $9,997 from launch with a six-month
+// minimum counted from launch; annual plan $74,000 at signing plus the ad
+// budget monthly, twelve months from launch, no automatic renewal; nothing
+// refundable; the client owns what is built and pays its own hosting.
+// ---------------------------------------------------------------------------
 
 const TermsAndConditions: React.FC = () => (
     <LegalPage
@@ -15,33 +39,42 @@ const TermsAndConditions: React.FC = () => (
     >
         <LegalSection title="1. Scope of Service">
             <p>
-                Nexli Automation LLC (&quot;Nexli&quot;) provides high-end website design, strategic client nurturing, and AI automation services specifically for CPAs and accounting firms. By accessing our services, you agree to these terms.
+                Nexli Automation LLC (&quot;Nexli&quot;) builds and runs the Digital Rainmaker System for CPA and accounting firms: a website, a branded client portal, a sales funnel, AI automations, and the paid advertising that drives them. Nexli also sells a digital guide, the Book of Business Accelerator. By using this website or buying from Nexli, you agree to these terms. A Digital Rainmaker System engagement is also made under a written agreement signed by both parties; these terms describe the same commitments, and if the two ever differ, the signed agreement governs.
             </p>
         </LegalSection>
 
-        <LegalSection title="2. Fees and Payment Model" variant="feature">
-            <p className="text-[var(--text-main)] font-medium">
-                We operate on a transparent performance-based and retainer model:
-            </p>
+        <LegalSection title="2. Fees and Payment" variant="feature">
             {/* Was a bare "All sales are final." above both products, which
                 contradicted the 30-day refund on the guide in this same
                 section. A card processor's underwriter reads that as two
                 refund policies. It now covers only what it means to. */}
             <p className="text-[var(--text-main)] font-medium">
-                Fees for the Digital Rainmaker System are non-refundable except as set out below. The Book of Business Accelerator carries a {ADVISORY_REFUND_DAYS}-day refund, described under Digital Products.
+                The Digital Rainmaker System is sold under a signed agreement, billed by invoice, and paid in one of two ways: monthly or annually. All prices are in US dollars. Its fees are non-refundable, except for billing errors (section 4). The Book of Business Accelerator carries a {ADVISORY_REFUND_DAYS}-day refund, described under Digital Products.
             </p>
             <ul className="list-disc pl-6 space-y-3">
                 <li>
-                    <Strong>Fees:</Strong> The Digital Rainmaker System is billed as a one-time setup fee plus a recurring monthly fee. The setup fee covers the design and build of the website, client portal, funnel and automations, is quoted to the client in writing before signature, and is non-refundable once project work has commenced. The monthly fee includes the advertising budget, which Nexli collects and places into the client&apos;s campaigns on the client&apos;s behalf; it is not billed separately and the client does not pay the advertising platforms directly. Monthly fees are non-refundable once charged.
+                    <Strong>Setup Fee:</Strong> A one-time fee of {usd(AGENCY_SETUP_FEE)}, due at signing on either plan. It pays for the build: the website, client portal, sales funnel, AI automations, A2P 10DLC registration for business text messaging, the advertising account, invoicing, and the other tools the system needs. Work begins once it is paid. The setup fee is the same for every client and is non-refundable.
                 </li>
                 <li>
-                    <Strong>What the Fee Covers:</Strong> The build and ongoing operation of the client&apos;s website, client portal, funnel and automations, together with the management of the client&apos;s advertising campaigns, hosting, and continuous optimisation. Billing begins on signature; the build period forms part of the initial term.
+                    <Strong>Monthly Plan:</Strong> {usd(AGENCY_TOTAL_MONTHLY)} a month, billed from launch, meaning the day the build is complete and the ads go live. Of that, {usd(AGENCY_AD_SPEND)} is the advertising budget, which Nexli collects and places into the client&apos;s campaigns; the client does not pay the advertising platforms for it separately. The other {usd(AGENCY_MONTHLY_FEE)} pays for Nexli&apos;s upkeep and management of the whole system: maintaining the website, portal and automations, making changes to the funnels, ads and automations throughout the term, and running the ad campaigns. Monthly fees are non-refundable once charged.
                 </li>
                 <li>
-                    <Strong>Initial Term:</Strong> The Digital Rainmaker System engagement has a minimum initial term of six (6) months, beginning on the date of the first payment. The client may give notice of cancellation at any point during the initial term, but cancellation does not take effect before the end of that six-month period, and the monthly fees falling due within it remain payable.
+                    <Strong>Annual Plan:</Strong> {usd(AGENCY_ANNUAL_UPFRONT)}, due at signing: the {usd(AGENCY_SETUP_FEE)} setup fee plus {usd(AGENCY_ANNUAL_SERVICE_FEE)} for twelve months of Nexli&apos;s upkeep and management, paid in advance. The {usd(AGENCY_AD_SPEND)} advertising budget is still billed each month from launch. The {usd(AGENCY_ANNUAL_UPFRONT)} is non-refundable, in whole and in part, and each month&apos;s advertising budget is non-refundable once charged.
                 </li>
                 <li>
-                    <Strong>After the Initial Term:</Strong> Once the six-month initial term has been completed, the engagement continues on a month-to-month basis with no further minimum commitment. From that point the client may cancel future monthly billing at any time with 30 days&apos; written notice to <strong>{EMAIL}</strong>. Cancellation takes effect at the end of the notice period and no partial-month refunds are issued.
+                    <Strong>One System, One Fee:</Strong> The fees are for the complete system. Parts of it cannot be removed, paused or priced separately, and fees are not reduced if the client chooses not to use part of it.
+                </li>
+                <li>
+                    <Strong>Hosting:</Strong> Nexli&apos;s fees do not include hosting. The client pays the hosting provider directly.
+                </li>
+                <li>
+                    <Strong>Monthly Plan Term:</Strong> A minimum initial term of {AGENCY_INITIAL_TERM_MONTHS} months, beginning at launch: {AGENCY_INITIAL_TERM_MONTHS} monthly payments. The client may give notice of cancellation at any point during the initial term, but cancellation does not take effect before the end of it, and the monthly fees falling due within it remain payable.
+                </li>
+                <li>
+                    <Strong>After the Initial Term:</Strong> The monthly plan continues month to month with no further minimum commitment. The client may cancel at any time with {AGENCY_CANCEL_NOTICE_DAYS} days&apos; written notice to <strong>{EMAIL}</strong>. Cancellation takes effect at the end of the notice period, and no partial-month refunds are issued.
+                </li>
+                <li>
+                    <Strong>Annual Plan Term:</Strong> {AGENCY_ANNUAL_TERM_MONTHS} months, beginning at launch. The client may give notice of cancellation at any time; service continues to the end of the {AGENCY_ANNUAL_TERM_MONTHS} months, the monthly advertising budget remains payable through the end of the term, and nothing already paid is refunded. The annual plan does not renew automatically: nothing is charged after the {AGENCY_ANNUAL_TERM_MONTHS} months unless the client agrees in writing, before the term ends, to continue on the monthly or the annual plan.
                 </li>
             </ul>
             <h3 className="text-xl font-bold text-[var(--text-main)] pt-4">Digital Products</h3>
@@ -52,7 +85,7 @@ const TermsAndConditions: React.FC = () => (
 
         <LegalSection title="3. Delivery Policy" id="delivery">
             <p>
-                Nexli does not sell or ship physical goods. The Book of Business Accelerator is delivered by email to the address supplied at checkout, immediately after payment, and usually arrives within a few minutes; if it has not arrived within an hour, contact us and we will resend it within one business day. For the Digital Rainmaker System, work begins at a kickoff call once the agreement is signed and the setup fee is paid, and most firms are live within {AGENCY_LAUNCH_DAYS_MIN} to {AGENCY_LAUNCH_DAYS} days of kickoff, {AGENCY_LAUNCH_DAYS_MAX} days at the outside, depending on how quickly the client supplies the assets, access and approvals requested. Ongoing services are delivered throughout each billing month. The full policy is on our{' '}
+                Nexli does not sell or ship physical goods. The Book of Business Accelerator is delivered by email to the address supplied at checkout, immediately after payment, and usually arrives within a few minutes; if it has not arrived within an hour, contact us and we will resend it within one business day. For the Digital Rainmaker System, work begins at a kickoff call once the agreement is signed and the setup fee (or, on the annual plan, the {usd(AGENCY_ANNUAL_UPFRONT)}) is paid, and the build takes about {AGENCY_LAUNCH_DAYS} days from kickoff. That timeline depends on the client supplying the assets, access and approvals requested, and on reviews Nexli does not control, such as the carriers&apos; review of the A2P 10DLC registration and the ad platforms&apos; review of the advertising account. Launch is the day the ads go live; monthly billing and the term begin then. Upkeep and campaign management are delivered throughout each month after launch. The full policy is on our{' '}
                 <Link href="/delivery-policy" className={legalLinkClass}>Delivery Policy</Link> page.
             </p>
         </LegalSection>
@@ -60,7 +93,7 @@ const TermsAndConditions: React.FC = () => (
         <LegalSection title="4. Refunds and Cancellations" id="refunds">
             <p>
                 Refunds and cancellations are governed by section 2 above and set out in full, with how to request one, on our{' '}
-                <Link href="/refund-policy" className={legalLinkClass}>Refund Policy</Link> page. In short: the Book of Business Accelerator may be refunded in full within {ADVISORY_REFUND_DAYS} days of purchase for any reason; Digital Rainmaker System fees are non-refundable once work has commenced or the monthly fee has been charged, subject to the initial term and notice provisions above. Duplicate or mistaken charges are always refunded in full.
+                <Link href="/refund-policy" className={legalLinkClass}>Refund Policy</Link> page. In short: the Book of Business Accelerator may be refunded in full within {ADVISORY_REFUND_DAYS} days of purchase for any reason. Digital Rainmaker System fees are non-refundable: the {usd(AGENCY_SETUP_FEE)} setup fee, the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan, and monthly fees and advertising budget once charged. Cancellation follows the terms in section 2. Duplicate or mistaken charges are always refunded in full.
             </p>
         </LegalSection>
 
@@ -83,13 +116,18 @@ const TermsAndConditions: React.FC = () => (
             </p>
         </LegalSection>
 
-        <LegalSection title="6. Intellectual Property">
+        <LegalSection title="6. Ownership and Intellectual Property">
+            {/* Was a licence: "Nexli owns the client portal software, the
+                website framework... grants the client a licence for the
+                duration of the active subscription", and the site could be
+                taken offline 30 days after termination. Marcel, 2026-11-09:
+                the client owns the website, the build and the portal, and
+                pays its own hosting; the monthly is upkeep, not rent. */}
             <p>
-                Upon full payment of the setup fee, Nexli grants the client a license to use the custom-built web assets and automation workflows. Nexli retains title to all underlying proprietary AI frameworks and code libraries used in the assembly of the final product.
+                The client owns what Nexli builds for them: the website, the client portal, the sales funnel and the automations, together with the client&apos;s content, brand assets (logos, colors, photography and copy), domain name, advertising account, and all client data. The setup fee pays for building them. The monthly fee, or the annual plan&apos;s year of service, pays for Nexli&apos;s upkeep and management of them, not for the right to use them.
             </p>
-            <h3 className="text-xl font-bold text-[var(--text-main)] pt-4">Hosted Services and License</h3>
             <p>
-                For the hosted elements of the engagement, the client owns all content, brand assets (logos, colors, photography, and copy the client supplies), the client&apos;s domain name, and all client data stored in the portal. Nexli owns the client portal software, the website framework, templates, and all underlying code, and grants the client a non-exclusive, non-transferable license to use them for the duration of the active subscription term. Upon termination, Nexli will provide the client with an export of the client&apos;s website content and client data within 30 days of the termination date. The website and portal may be taken offline 30 days after termination. Nexli may reference the client&apos;s website in its portfolio unless the client opts out in writing.
+                When the engagement ends, Nexli&apos;s upkeep and management stop. The client keeps everything that was built; Nexli hands over any account access it holds for the client and removes its own. Nexli keeps its general know-how, methods and templates that are not specific to the client, and may reuse them in other work. Nexli may reference the client&apos;s website in its portfolio unless the client opts out in writing.
             </p>
         </LegalSection>
 
@@ -122,6 +160,7 @@ const TermsAndConditions: React.FC = () => (
                 Related: <Link href="/privacy" className={legalLinkClass}>Privacy Policy</Link> ·{' '}
                 <Link href="/refund-policy" className={legalLinkClass}>Refund Policy</Link> ·{' '}
                 <Link href="/delivery-policy" className={legalLinkClass}>Delivery Policy</Link> ·{' '}
+                <Link href="/pricing" className={legalLinkClass}>Pricing</Link> ·{' '}
                 <Link href="/contact" className={legalLinkClass}>Contact</Link>
             </p>
         </section>

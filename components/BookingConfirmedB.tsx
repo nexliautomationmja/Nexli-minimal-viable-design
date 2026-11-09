@@ -46,8 +46,6 @@ import { trackMetaEvent } from '@/lib/meta-events';
 import {
   AGENCY_DAYS,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_LAUNCH_DAYS_MAX,
-  AGENCY_LAUNCH_DAYS_MIN,
   AGENCY_LEADS,
 } from '@/lib/agency-offer';
 import {
@@ -72,7 +70,7 @@ const TIMELINE = [
     Icon: FileSignature,
     when: 'Day 0',
     title: 'You sign. That is the whole commitment.',
-    body: 'You sign the agreement, settle the one-time setup fee for the build, and the first month starts the day we do.',
+    body: 'You sign the agreement and settle the one-time setup fee for the build. Nothing monthly is billed until you launch.',
   },
   {
     Icon: Sparkles,
@@ -82,9 +80,9 @@ const TIMELINE = [
   },
   {
     Icon: Rocket,
-    when: `Days ${AGENCY_LAUNCH_DAYS_MIN}–${AGENCY_LAUNCH_DAYS}`,
+    when: `By day ${AGENCY_LAUNCH_DAYS}`,
     title: 'Everything is live',
-    body: `Website, client portal, funnel and the automations behind them. Around ${AGENCY_LAUNCH_DAYS_MAX} days is the realistic worst case, and the variable is how fast your assets come back — not us.`,
+    body: `Website, client portal, funnel, automations, texting registration, your ad account and invoicing, all of it yours. The build takes about ${AGENCY_LAUNCH_DAYS} days, and the variable is how fast your assets come back, not us. Monthly billing starts at launch.`,
   },
   {
     Icon: CalendarCheck,
@@ -96,7 +94,7 @@ const TIMELINE = [
     Icon: ShieldCheck,
     when: 'Ongoing',
     title: 'Six months, then month to month',
-    body: 'The initial term is six months — long enough for the campaigns to have actually run. After that it continues month to month and you can end it on 30 days notice.',
+    body: 'The initial term is six months from launch — long enough for the campaigns to have actually run. After that it continues month to month and you can end it on 30 days notice.',
   },
 ];
 

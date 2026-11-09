@@ -217,7 +217,7 @@ export function TimelineSlide() {
       title: 'In the green',
       who: null,
       green: true,
-      body: `Paying month to month, you've earned back everything you put in, setup included: month ${beCons} at the conservative pace, month ${beBest} at the best-case pace.`,
+      body: `Paying monthly, you've earned back everything you put in, setup included: month ${beCons} at the conservative pace, month ${beBest} at the best-case pace.`,
     },
   ];
 
@@ -332,9 +332,13 @@ export function InvestSlide() {
       </div>
 
       <Reveal delay={0.28}>
+        {/* The terms sentence matches /terms and /refund-policy (Marcel,
+            2026-11-09). The PDF is the pricing document a prospect keeps,
+            and "Month to month" on its own read as "no minimum term". */}
         <Body className="mt-6 max-w-4xl">
-          Nothing monthly is billed until your build is done and ads launch, about day 21. On the annual plan, your ads
-          are the only monthly bill. Paying annually puts{' '}
+          Nothing monthly is billed until your build is done and ads launch, about day 21. Paid monthly has a six-month
+          minimum from launch; paid annually covers twelve months from launch and does not renew automatically. On the
+          annual plan, your ads are the only monthly bill. Paying annually puts{' '}
           {usd(extraUpfront)} more in at signing, so you break even in the same month or one month later. From month{' '}
           {annualAheadFromMonth()} on you&apos;re ahead, and by month 12 you&apos;ve kept about {usd(aboutThousands(saved))} more.
         </Body>
@@ -632,7 +636,7 @@ export function BreakEvenSlide() {
             className="h-full"
           >
             <div className="mb-3 flex flex-wrap gap-x-6 gap-y-2">
-              <LineKey color={C.monthly} label="Month to month" />
+              <LineKey color={C.monthly} label="Paid monthly" />
               <LineKey color={C.annual} dash="7 6" label="Paid annually" />
             </div>
             <BreakEvenChart scenario={scenario} height={290} />
@@ -697,7 +701,7 @@ export function BreakEvenSlide() {
           <p className="mt-2 text-[13px] leading-relaxed" style={{ color: MUTED }}>
             Every number counts the bundle: the tax plan when a client signs, plus $2,000 a month in bookkeeping and payroll
             from the next month for half your planning clients. Compliance work isn&apos;t counted. No new clients in month
-            1, half your pace in months 2 and 3, full pace from month 4. Month to month: {usd(SETUP_FEE)} at signing, then{' '}
+            1, half your pace in months 2 and 3, full pace from month 4. Paid monthly: {usd(SETUP_FEE)} at signing, then{' '}
             {usd(MONTHLY_TOTAL)} a month from launch (about day 21). Paid annually: {usd(PLANS.annual.upfront)} at signing (
             {usd(SETUP_FEE)} setup plus {usd(PLANS.annual.upfront - SETUP_FEE)} for the annual plan), then {usd(AD_SPEND)} a
             month in ads from launch. Net is after everything paid to Nexli, before your cost of doing the work.
