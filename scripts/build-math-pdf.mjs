@@ -5,7 +5,8 @@
 //
 // base-url defaults to http://localhost:3000; the dev server or `next start`
 // must be running there. It opens /math/print (app/math/print), which lays
-// every slide in components/math/slides on its own 16:9 page, and prints it.
+// every slide in components/math/slides on its own 16:9 page ("Going into
+// year two" once per scenario), and prints it.
 // Rebuild after any change to a slide or to lib/see-the-math, so the PDF
 // prospects download keeps matching the deck they were shown.
 //
@@ -46,7 +47,7 @@ try {
   // width (816px) and printed the phone layout, one column, overflowing.
   const pdf = await page.pdf({ width: '1280px', height: '720px', printBackground: true });
   fs.writeFileSync(out, pdf);
-  console.log(`Wrote ${path.relative(root, out)}: ${pages} slides, ${(pdf.length / 1024).toFixed(0)} KB`);
+  console.log(`Wrote ${path.relative(root, out)}: ${pages} pages, ${(pdf.length / 1024).toFixed(0)} KB`);
   if (errors.length) {
     console.error('Page errors:\n' + errors.join('\n'));
     process.exitCode = 1;

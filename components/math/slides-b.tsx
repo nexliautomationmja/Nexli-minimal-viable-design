@@ -405,17 +405,18 @@ export function BundleSlide() {
  * the green the firm starts year two, before it signs anyone new. Figures
  * from recurringBook in lib/see-the-math; the retention research is there.
  */
-export function YearTwoSlide() {
+export function YearTwoSlide({ scenario }: { scenario?: ScenarioId } = {}) {
   // Conservative first, as every scenario picker in the deck opens; the
   // headline, rows, bar and total all follow the pick. On paper there is no
-  // pick, so all three are listed beside it instead.
+  // pick, so the PDF prints this slide once per scenario (app/math/print),
+  // each labelled with its scenario where the toggle would be.
   const print = usePrint();
-  const [id, setId] = useState<ScenarioId>('conservative');
+  const [id, setId] = useState<ScenarioId>(scenario ?? 'conservative');
   const s = scenarioById(id);
   const b = recurringBook(s);
   const kept = pct(RETENTION);
   return (
-    <Slide id="year-two">
+    <Slide id={scenario && scenario !== 'conservative' ? `year-two-${scenario}` : 'year-two'}>
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <Heading
           kicker="After 12 months"
@@ -425,7 +426,15 @@ export function YearTwoSlide() {
           <span className={GRADIENT_TEXT}>about {usd(aboutThousands(b.inTheGreen))} a year in the green.</span>
         </Heading>
         <Reveal delay={0.1} className="shrink-0">
-          <ScenarioToggle value={id} onChange={setId} layoutId="year-two-toggle" />
+          {print ? (
+            // Solid, not the toggle's gradient: Preview drew a seam through a
+            // gradient this small.
+            <span className="inline-flex rounded-full bg-blue-500 px-5 py-2 text-sm font-semibold text-white">
+              {s.label} scenario
+            </span>
+          ) : (
+            <ScenarioToggle value={id} onChange={setId} layoutId="year-two-toggle" />
+          )}
         </Reveal>
       </div>
 
@@ -477,26 +486,7 @@ export function YearTwoSlide() {
         </Reveal>
 
         <Reveal delay={0.22}>
-          {print && (
-            <Panel title="In the green going into year two" className="mb-4">
-              <dl className="space-y-2.5">
-                {SCENARIOS.map((sc) => (
-                  <div key={sc.id} className="flex items-baseline justify-between gap-4">
-                    <dt className={`text-[15px] ${sc.id === id ? 'font-bold text-white' : 'font-semibold text-white/80'}`}>
-                      {sc.label}
-                    </dt>
-                    <dd className="text-[15px] font-bold tabular-nums text-white">
-                      about {usd(aboutThousands(recurringBook(sc).inTheGreen))}
-                      <span className="ml-1 text-xs font-medium" style={{ color: MUTED }}>
-                        a year
-                      </span>
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </Panel>
-          )}
-          <Callout label="Why it's still conservative" className={print ? '' : 'h-full'}>
+          <Callout label="Why it's still conservative" className="h-full">
             <ul className="mt-2 space-y-3">
               <li>
                 {kept} is the low end of the {pct(RETENTION_BENCHMARK.low)}–{pct(RETENTION_BENCHMARK.high)}{' '}
@@ -524,7 +514,11 @@ function BookRow({ swatch, label, note, value }: { swatch: string; label: string
     <div className="flex items-baseline justify-between gap-4">
       <dt className="min-w-0">
         <span className="flex items-center gap-2 text-[15px] font-semibold text-white/90">
-          <span aria-hidden="true" className="h-3 w-3 shrink-0 rounded-[3px]" style={{ background: swatch }} />
+          <span
+            aria-hidden="true"
+            className={`h-3 w-3 shrink-0 rounded-[3px] ${swatch === SYSTEM_HATCH ? 'system-hatch' : ''}`}
+            style={{ background: swatch }}
+          />
           {label}
         </span>
         <span className="mt-0.5 block pl-5 text-[13px]" style={{ color: MUTED }}>
@@ -565,7 +559,7 @@ function BookTrack({ planning, backEnd, system }: { planning: number; backEnd: n
           {...grow(0.45)}
         />
         <motion.div
-          className="absolute inset-y-0 right-0 origin-right border-l-2 border-[#0d1526] transition-[width] duration-500 ease-out"
+          className="system-hatch absolute inset-y-0 right-0 origin-right border-l-2 border-[#0d1526] transition-[width] duration-500 ease-out"
           style={{ width: `${100 - green}%`, background: SYSTEM_HATCH }}
           {...grow(1.05)}
         />
