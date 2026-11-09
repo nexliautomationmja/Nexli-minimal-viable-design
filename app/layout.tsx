@@ -17,7 +17,12 @@ const DEFAULT_DESCRIPTION =
   'Nexli is a CPA firm growth agency. We build the Digital Rainmaker System and run ads to it so established CPA firms land high-value tax advisory clients.';
 
 const gscToken = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
-const bingToken = process.env.NEXT_PUBLIC_BING_VERIFICATION;
+// Bing Webmaster Tools ownership token for www.nexli.net (added 2026-11-09).
+// Public by design: it is printed in the page source for Bing to read. The
+// env var still wins if it is ever set; the default is here so verification
+// does not depend on a Vercel setting. Do not remove it: Bing re-checks the
+// tag, and the property drops out of Webmaster Tools if it disappears.
+const bingToken = process.env.NEXT_PUBLIC_BING_VERIFICATION || 'B3E4428DBCFB8811B1CEFA37463A2C89';
 
 export const metadata: Metadata = {
   title: {
