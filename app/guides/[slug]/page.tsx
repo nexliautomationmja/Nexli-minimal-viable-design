@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { socialMeta } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import { getGuideBySlug, guides } from '../../../data/guides';
 import { getAuthor } from '../../../data/authors';
@@ -26,15 +27,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description: guide.description,
     alternates: { canonical: `/guides/${guide.slug}` },
-    openGraph: {
+    ...socialMeta({
       type: 'article',
       title,
       description: guide.description,
+      path: `/guides/${guide.slug}`,
       publishedTime: guide.publishedAt,
       modifiedTime: guide.updatedAt,
       authors: [author.name],
       section: guide.category,
-    },
+    }),
   };
 }
 

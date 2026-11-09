@@ -14,7 +14,7 @@ const guide: Guide = {
     'This guide covers each lever, a self-assessment to pick the first one, a 12-month plan by quarter, and the mistakes that stall firms between $500K and $5M.',
   ],
   publishedAt: '2026-09-08',
-  updatedAt: '2026-09-08',
+  updatedAt: '2026-11-09',
   author: 'marcel-allen',
   category: 'Growth',
   stats: [
@@ -240,8 +240,8 @@ const guide: Guide = {
       body: [
         'Nexli works on levers three and four for established CPA and accounting firms doing $500K or more in annual revenue (about $40K-$50K a month). We build the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website built around one advisory offer, an AI automation layer for intake (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that produces three to five extra reviews a month. Then we run paid ads to it.',
         'The firm keeps pricing, positioning, and the client relationship. We supply the infrastructure that larger firms build in-house. The build takes about 21 days. The initial term is six months, after which it continues month to month.',
-        'No guarantees. What we publish are the targets: 50 qualified advisory leads within 90 days of campaign launch, and the build live in about 21 days. You get a written update every week showing the pace against both.',
-        'If you want to see whether your firm fits, [apply for a strategy call](/vslfunnel-advisory). If you are comparing options, [Best CPA Firm Marketing Agencies](/guides/best-cpa-firm-marketing-agencies) lays out how this differs from a generalist agency.',
+        'What each client is worth: a tax-planning engagement of $15,000 to $55,000. We do not promise a number of them. The build takes about 21 days, and you get a written update every week showing what the campaigns produced.',
+        'If you want to see whether your firm fits, [apply for a strategy call](/agency). If you are comparing options, [Best CPA Firm Marketing Agencies](/guides/best-cpa-firm-marketing-agencies) lays out how this differs from a generalist agency.',
       ],
     },
   ],

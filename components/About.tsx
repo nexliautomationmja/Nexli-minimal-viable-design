@@ -3,7 +3,15 @@ import { aboutFacts, aboutIntro, aboutSections, founderBio } from '../data/about
 import { getAuthor } from '../data/authors';
 import { guides } from '../data/guides';
 import { PORTFOLIO_META } from '../lib/portfolio-meta';
-import { EMAIL, ENGAGEMENT_TERMS, SOCIAL, SYSTEM_COMPONENTS } from '../lib/site';
+import {
+  ADDRESS_LINES,
+  EMAIL,
+  ENGAGEMENT_TERMS,
+  PHONE_DISPLAY,
+  PHONE_E164,
+  SOCIAL_PROFILES,
+  SYSTEM_COMPONENTS,
+} from '../lib/site';
 import { renderInline } from '../lib/inline-markdown';
 
 const cardClass = 'rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] p-6';
@@ -168,26 +176,27 @@ export default function About() {
               </a>
             </li>
             <li>
-              Instagram:{' '}
-              <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer me" className="text-blue-500 underline underline-offset-4">
-                @nexliautomation
+              Phone:{' '}
+              <a href={`tel:${PHONE_E164}`} className="text-blue-500 underline underline-offset-4">
+                {PHONE_DISPLAY}
               </a>
             </li>
             <li>
-              Facebook:{' '}
-              <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer me" className="text-blue-500 underline underline-offset-4">
-                Nexli Automation
-              </a>
+              Address: {ADDRESS_LINES.join(', ')}
             </li>
-            <li>
-              X:{' '}
-              <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" className="text-blue-500 underline underline-offset-4">
-                @nexliautomation
-              </a>
-            </li>
+            {/* Every profile with a URL in lib/site.ts SOCIAL, linked rel="me"
+                so engines can confirm the profile belongs to this site. */}
+            {SOCIAL_PROFILES.map((p) => (
+              <li key={p.key}>
+                {p.name}:{' '}
+                <a href={p.url} target="_blank" rel="noopener noreferrer me" className="text-blue-500 underline underline-offset-4">
+                  {p.key === 'instagram' || p.key === 'x' ? '@nexliautomation' : 'Nexli Automation'}
+                </a>
+              </li>
+            ))}
             <li>
               Strategy call:{' '}
-              <Link href="/advisory-pricing" className="text-blue-500 underline underline-offset-4">
+              <Link href="/agency" className="text-blue-500 underline underline-offset-4">
                 watch the presentation and apply
               </Link>
             </li>

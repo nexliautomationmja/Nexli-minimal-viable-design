@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { socialMeta } from '@/lib/seo';
 import About from '../../components/About';
 import JsonLd from '../../components/JsonLd';
 import { aboutPageSchema, breadcrumbSchema, personSchema } from '../../lib/schema';
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: ORG_DESCRIPTION,
   alternates: { canonical: '/about' },
-  openGraph: { title: TITLE, description: ORG_DESCRIPTION, type: 'website' },
+  ...socialMeta({ title: TITLE, description: ORG_DESCRIPTION, path: '/about' }),
 };
 
 export default function AboutPage() {

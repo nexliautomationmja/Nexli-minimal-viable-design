@@ -8,16 +8,23 @@
  * $9,997/mo plus a one-time setup fee, covering the system and the $5,000 ad budget,
  * six-month initial term, no guarantees offered.
  */
+import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW, usd } from '../lib/agency-offer';
+
 export interface VslFaqItem {
   q: string;
   a: string;
 }
 
+/** "$15,000 to $55,000", from the one place the range is set. */
+const CLIENT_VALUE = `${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)}`;
+
 const MINIMUM = '$500K+ per year (about $40K-$50K a month)';
 
+// No lead count anywhere in these answers: the "50 in 90 days" target was
+// retired (see lib/agency-offer.ts). Say what each client is worth instead.
 const whatCounts: VslFaqItem = {
-  q: 'What counts as a "qualified advisory opportunity"?',
-  a: 'A US-based business owner or high-income individual who matches the advisory criteria we set with you and has asked your firm to contact them. That is what the 50-in-90-days target counts: qualified leads, not closed revenue. Your close rate determines what you bank. We report the pace against it every week, so you are never guessing where you stand.',
+  q: 'What kind of client does the system bring in?',
+  a: `A US-based business owner or high-income individual who matches the advisory criteria we set with you and has asked your firm to contact them about tax planning. Each one is a tax-planning engagement worth ${CLIENT_VALUE} to your firm. Your close rate determines what you bank, and we report every week, so you are never guessing where you stand.`,
 };
 
 const whatItCosts: VslFaqItem = {
@@ -135,13 +142,13 @@ export const offerFaq: VslFaqItem[] = [
   },
   {
     q: 'Do you guarantee results?',
-    a: 'No, and we would be careful of anyone who does. What we publish is the target: at least 50 qualified advisory leads within 90 days of campaign launch. Qualified means a US-based business owner or high-income individual who matches the criteria you set with us and has asked your firm to contact them — a lead, not closed revenue. You get a written update every week showing the pace against that number, and after the six-month initial term the engagement continues month to month, so you are not tied to it indefinitely.',
+    a: `No, and we would be careful of anyone who does. We do not promise a number of clients. What we can tell you is what each one is worth: the system brings you tax-planning clients, each an engagement worth ${CLIENT_VALUE}. You get a written update every week showing exactly what the campaigns produced, and after the six-month initial term the engagement continues month to month, so you are not tied to it indefinitely.`,
   },
   whatItCosts,
   whoRunsAds,
   {
     q: 'How long until the first appointments show up?',
-    a: 'The build takes about 21 days, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and the target is 50 qualified leads within 90 days of campaign launch.',
+    a: `The build takes about 21 days, then campaigns go live. Booked appointments typically start within the first few weeks of launch, and each one is a tax-planning prospect worth ${CLIENT_VALUE} an engagement.`,
   },
   {
     q: 'What if we cannot handle the volume?',

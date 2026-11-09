@@ -46,13 +46,12 @@ import {
 } from '@/lib/qualification-steps';
 import {
   AGENCY_AD_SPEND,
-  AGENCY_DAYS,
   AGENCY_ENGAGEMENT_HIGH,
   AGENCY_ENGAGEMENT_LOW,
   AGENCY_FIRM_SPOTS,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_LEADS,
   AGENCY_MONTHLY_FEE,
+  CLIENT_VALUE_LINE,
   AGENCY_TOTAL_MONTHLY,
   usd,
 } from '@/lib/agency-offer';
@@ -115,7 +114,7 @@ function offerFacts(): string {
       AGENCY_MONTHLY_FEE,
     )} for the system and ${usd(AGENCY_AD_SPEND)} of ad budget, which Nexli places into the campaigns.`,
     `There is ALSO a one-time setup fee covering the build. It is FLAT — the same for every firm — and it is NOT scoped per firm. Every firm gets the same thing: the website, the portal, the funnel and the automations. There is no smaller version to buy, because the system does not work with a piece missing. It is real work and all of it happens before the firm sees a single lead, which is why it is a fee at all. The build is the same whatever a firm walks in with, and in practice almost nobody arrives with any of it already in place — so do not offer to fold an existing site into the build or imply the scope flexes. The number is given on the call. Never state or estimate that number, and never say the fee varies, depends on what a firm already has, or is scoped to their situation — it does not.`,
-    `Target: at least ${AGENCY_LEADS} qualified advisory leads within ${AGENCY_DAYS} days of campaign launch. This is a target and a projection, never a guarantee, and it counts leads, not closed revenue.`,
+    `There is NO lead target and no lead count. Nexli does not promise a number of leads or clients, and you must never quote one. An old "50 qualified advisory leads in 90 days" target was retired; if a prospect mentions it, say it is no longer part of the offer. What Nexli says instead is what each client is worth: it brings established CPA firms ${CLIENT_VALUE_LINE}.`,
     `What a CPA firm typically charges its own client for a planning engagement: ${usd(
       AGENCY_ENGAGEMENT_LOW,
     )} to ${usd(AGENCY_ENGAGEMENT_HIGH)}. ${usd(
@@ -211,7 +210,7 @@ function theMath(): string {
 
   return `This is "See the Math", the model you walk a firm through on the strategy call. Answer from it when they ask how the math works, what the ROI is, whether it is worth it, what they can expect, how many calls or clients it brings, or when they break even. Explain it the way it is built: the chain first, then what each client is worth, then when they break even. Show the arithmetic. They run numbers for a living, and the case is stronger for being checkable.
 
-What it is, and is not: every figure is an illustration built from the assumptions below. It is not a projection of what their firm will earn, not a promise and not Nexli client results, and you say so whenever you give a number from it. Where a firm lands depends on its market, its offer and how it runs its calls. It is separate from the published lead target in THE OFFER, IN NUMBERS, which counts leads, not fees.
+What it is, and is not: every figure is an illustration built from the assumptions below. It is not a projection of what their firm will earn, not a promise and not Nexli client results, and you say so whenever you give a number from it. Where a firm lands depends on its market, its offer and how it runs its calls. Nexli publishes no lead target or client count, so never present this model as one.
 
 THE CHAIN. Every scenario starts with the same ${usd(AD_SPEND)} a month in ads. Five numbers decide the result: ad spend divided by the cost per booked call gives booked calls; ${pct(SHOW_RATE)} of booked calls are held; calls held times the close rate gives clients signed; clients times ${usd(PLAN_FEE)} a tax plan gives new fees. Calls and clients are rounded down at every step, because nobody signs 2.1 clients.
 ${scenario(cons)}

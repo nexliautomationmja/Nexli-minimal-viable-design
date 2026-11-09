@@ -7,14 +7,16 @@ import QualificationProvider from '../components/QualificationProvider';
 import ConditionalNavbar from '../components/ConditionalNavbar';
 import Footer from '../components/Footer';
 import AttributionCapture from '../components/AttributionCapture';
-import JsonLd from '../components/JsonLd';
-import { organizationSchema, websiteSchema } from '../lib/schema';
+import NexliEntitySchema from '../components/NexliEntitySchema';
 import { SITE_NAME, SITE_URL, TWITTER_HANDLE } from '../lib/site';
+import { CLIENT_VALUE_LINE } from '../lib/agency-offer';
+import { OG_IMAGE } from '../lib/seo';
 import './globals.css';
 
-const DEFAULT_TITLE = 'CPA Firm Growth Agency | Digital Rainmaker System | Nexli';
-const DEFAULT_DESCRIPTION =
-  'Nexli is a CPA firm growth agency. We build the Digital Rainmaker System and run ads to it so established CPA firms land high-value tax advisory clients.';
+// Brand first: "Nexli" alone collides with Nexl (nexl.cloud) and Nexli
+// (nexli.io) in search, and the full name is what tells them apart.
+const DEFAULT_TITLE = 'Nexli Automation | CPA Firm Growth Agency for Tax Planning Clients';
+const DEFAULT_DESCRIPTION = `Nexli Automation is a CPA firm growth agency. We build the Digital Rainmaker System and run ads to it, bringing established CPA firms ${CLIENT_VALUE_LINE}.`;
 
 const gscToken = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
 // Bing Webmaster Tools ownership token for www.nexli.net (added 2026-11-09).
@@ -40,12 +42,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  // No og:url here on purpose. A root og:url is inherited by every page
+  // that sets no openGraph of its own, which made /portfolio samples of
+  // fictional firms claim to be the homepage. The homepage sets its own via
+  // socialMeta (lib/seo.ts); pages without one fall back to their canonical.
   openGraph: {
     type: 'website',
-    url: `${SITE_URL}/`,
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: [{ url: '/og-image.png' }],
+    images: [OG_IMAGE],
     siteName: SITE_NAME,
     locale: 'en_US',
   },
@@ -53,7 +58,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: ['/og-image.png'],
+    images: [OG_IMAGE.url],
     site: TWITTER_HANDLE,
   },
   icons: {
@@ -84,8 +89,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
-        {/* Site-wide entity schema only. Page-specific schema (Service, Article, FAQPage) lives on each page. */}
-        <JsonLd data={[organizationSchema(), websiteSchema()]} />
+        {/* Site-wide entity schema only. Page-specific schema (Service, Article, FAQPage) lives on each page.
+            Omitted on client firm websites, which this app serves under their
+            own domains and which must not claim to be Nexli. */}
+        <NexliEntitySchema />
       </head>
       <body>
         {/* Meta Pixel */}

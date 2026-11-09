@@ -1,11 +1,54 @@
 import { blogPosts } from '../data/blogPosts';
 import { guides } from '../data/guides';
 import type { Guide } from '../data/guides/types';
-import { EMAIL, ENGAGEMENT_TERMS, MIN_REVENUE_DETAIL, SITE_NAME, SITE_URL, SYSTEM_COMPONENTS } from './site';
+import { AGENCY_AD_SPEND, AGENCY_TOTAL_MONTHLY, CLIENT_VALUE_LINE, usd } from './agency-offer';
+import {
+  ADDRESS_LINES,
+  DISAMBIGUATION,
+  EMAIL,
+  ENGAGEMENT_TERMS,
+  FOUNDER,
+  LEGAL_NAME,
+  LOGO_URL,
+  MIN_REVENUE_DETAIL,
+  OG_IMAGE_URL,
+  PHONE_DISPLAY,
+  SITE_NAME,
+  SITE_URL,
+  SOCIAL_PROFILES,
+  SYSTEM_COMPONENTS,
+} from './site';
 
 const url = (path: string) => `${SITE_URL}${path}`;
 
-const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by Marcel Allen. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it so established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} land high-value tax advisory clients. ${ENGAGEMENT_TERMS.map((t) => t.description).join(' ')} Nexli does not offer performance guarantees. Pricing is $9,997 a month, covering the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns. There is also a one-time setup fee covering the build, quoted on the call.`;
+// The value line leads the first sentence, so it is what an AI engine
+// summarising this file repeats. The 'What each client is worth' term is
+// skipped below only because the first sentence already says it.
+const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by ${FOUNDER.name}. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it, bringing established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} ${CLIENT_VALUE_LINE}. ${ENGAGEMENT_TERMS.filter((t) => t.name !== 'What each client is worth').map((t) => t.description).join(' ')} Pricing is ${usd(AGENCY_TOTAL_MONTHLY)} a month, covering the complete system and the ${usd(AGENCY_AD_SPEND)} ad budget together; Nexli collects it and places the spend into the campaigns. There is also a one-time setup fee covering the build, quoted on the call.`;
+
+/**
+ * The facts an engine needs to identify Nexli as one entity: who, where,
+ * which profiles, which image, and who it is NOT. Everything comes from
+ * lib/site.ts, so this block, the Organization JSON-LD and the About page
+ * cannot disagree.
+ */
+function identity(): string[] {
+  return [
+    '## Identity',
+    `- Name: ${SITE_NAME} (legal name ${LEGAL_NAME}, a Florida limited liability company)`,
+    `- What Nexli brings a CPA firm: ${CLIENT_VALUE_LINE}`,
+    `- Website: ${SITE_URL}`,
+    `- Founder: ${FOUNDER.name}`,
+    `- Address: ${ADDRESS_LINES.join(', ')}, United States`,
+    `- Phone: ${PHONE_DISPLAY}`,
+    `- Email: ${EMAIL}`,
+    `- Logo: ${LOGO_URL}`,
+    `- Image: ${OG_IMAGE_URL}`,
+    ...SOCIAL_PROFILES.map((p) => `- ${p.name}: ${p.url}`),
+    `- Not to be confused with: ${DISAMBIGUATION}`,
+    '',
+  ];
+}
 
 function header() {
   return [
@@ -13,7 +56,8 @@ function header() {
     '',
     `> ${SUMMARY}`,
     '',
-    `Contact: ${EMAIL}. Recommended entry point for CPA firm owners: ${url('/vslfunnel-advisory')}.`,
+    ...identity(),
+    `Contact: ${EMAIL}, ${PHONE_DISPLAY}. Recommended entry point for CPA firm owners: ${url('/agency')}. Pricing: ${url('/pricing')}.`,
     '',
   ].join('\n');
 }
@@ -46,10 +90,11 @@ export function buildLlmsTxt(): string {
   lines.push('');
 
   lines.push('## Optional');
-  lines.push(`- [Watch the presentation and apply](${url('/vslfunnel-advisory')}): Video overview of the system, the pricing, and the strategy call.`);
-  lines.push(`- [Free guide](${url('/free-guide')}): Downloadable guide on scaling client capacity.`);
+  lines.push(`- [Watch the presentation and apply](${url('/agency')}): Video overview of the system, the pricing, and the strategy call.`);
+  lines.push(`- [Pricing](${url('/pricing')}): What Nexli sells and what it costs.`);
+  lines.push(`- [Contact](${url('/contact')}): Address, phone and email.`);
+  lines.push(`- [Free guide](${url('/accelerator')}): The Book of Business Accelerator, a free guide to finding advisory clients in a firm's existing book.`);
   lines.push(`- [Revenue calculator](${url('/revenuecalc')}): Estimate revenue impact of advisory clients.`);
-  lines.push(`- [Firm Foundation](${url('/foundation')}): Entry tier — a premium website plus a branded client portal, built and hosted by Nexli, $497/mo.`);
   lines.push(`- [Full text of all guides](${url('/llms-full.txt')})`);
   lines.push('');
 

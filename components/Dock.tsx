@@ -46,13 +46,21 @@ interface DockIconProps {
   className?: string;
   href?: string;
   onClick?: () => void;
+  /** Accessible name. The icons have no text, so without it a screen reader
+   *  (and a crawler) gets an unlabelled link. */
+  label?: string;
+  /** Adds rel="me": this link is one of Nexli's own profiles, which is how
+   *  search engines tie a social account to the site. */
+  me?: boolean;
 }
 
 export const DockIcon: React.FC<DockIconProps> = ({
   children,
   className = '',
   href,
-  onClick
+  onClick,
+  label,
+  me = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const context = useContext(DockContext);
@@ -94,7 +102,14 @@ export const DockIcon: React.FC<DockIconProps> = ({
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}>
+      <a
+        href={href}
+        target="_blank"
+        rel={me ? 'me noopener noreferrer' : 'noopener noreferrer'}
+        aria-label={label}
+        title={label}
+        onClick={onClick}
+      >
         {content}
       </a>
     );
@@ -102,7 +117,7 @@ export const DockIcon: React.FC<DockIconProps> = ({
 
   if (onClick) {
     return (
-      <button onClick={onClick} className="bg-transparent border-none p-0 cursor-pointer">
+      <button onClick={onClick} aria-label={label} title={label} className="bg-transparent border-none p-0 cursor-pointer">
         {content}
       </button>
     );

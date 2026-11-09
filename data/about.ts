@@ -1,3 +1,8 @@
+import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW, AGENCY_TOTAL_MONTHLY, usd } from '../lib/agency-offer';
+import { ADDRESS_LINES, PHONE_DISPLAY, SOCIAL_PROFILES } from '../lib/site';
+
+const CLIENT_VALUE = `${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)}`;
+
 export interface AboutSection {
   id: string;
   heading: string;
@@ -51,7 +56,7 @@ export const aboutSections: AboutSection[] = [
     heading: 'Who we work with',
     body: [
       'Nexli works exclusively with established CPA and accounting firms doing $500K or more in annual revenue. The firms we work best with already have a stable client base, deliver good work, and want more advisory clients without adding headcount to get them.',
-      'We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is $9,997 a month, covering the complete system and the ad budget together, plus a one-time setup fee for the build quoted on the call. Firms apply for a strategy call, and we take on the ones where the system fits.',
+      `We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is ${usd(AGENCY_TOTAL_MONTHLY)} a month, covering the complete system and the ad budget together, plus a one-time setup fee for the build quoted on the call ([pricing](/pricing)). Firms apply for a strategy call, and we take on the ones where the system fits.`,
     ],
   },
   {
@@ -60,10 +65,10 @@ export const aboutSections: AboutSection[] = [
     body: [
       'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. The build takes about 21 days.',
       'The initial term is six months from launch — long enough for the campaigns to have actually run — and after that it continues month to month. There is a one-time setup fee for the build, quoted on the call. The firm owns what we build, the website, the portal and the automations, and pays its own hosting; the monthly fee pays for us to maintain and run it.',
-      'We do not offer performance guarantees. What we publish are the targets we work to, and a written update every week showing the pace against them.',
+      `We do not offer performance guarantees or promise a number of clients. What we tell a firm is what each client is worth: the system brings in tax-planning clients, each an engagement worth ${CLIENT_VALUE}. Every week the firm gets a written update showing what the campaigns produced.`,
     ],
     bullets: [
-      'Target: at least 50 qualified advisory leads within 90 days of campaign launch.',
+      `What each client is worth: a tax-planning engagement of ${CLIENT_VALUE}.`,
       'Build time: the whole system live about 21 days after kickoff.',
       'Reported: a written update every week on what was done in the ad account and what it produced.',
     ],
@@ -97,15 +102,17 @@ export const aboutSections: AboutSection[] = [
     id: 'contact',
     heading: 'Contact',
     body: [
-      'Email mail@nexli.net for anything that is not an application. Firms that want to work with Nexli should [apply for a strategy call](/vslfunnel-advisory).',
-      'Nexli Automation is on Instagram and Facebook as Nexli Automation, and on X as @nexliautomation.',
+      'Email mail@nexli.net for anything that is not an application. Firms that want to work with Nexli should [apply for a strategy call](/agency).',
+      `Nexli Automation is on ${SOCIAL_PROFILES.map((p) => p.name).join(', ').replace(/, ([^,]*)$/, ' and $1')}.`,
     ],
+    // Socials come from lib/site.ts SOCIAL, so a profile added there (the
+    // LinkedIn and YouTube URLs are still to be supplied) appears here too.
     bullets: [
       'Website: https://www.nexli.net',
       'Email: mail@nexli.net',
-      'Instagram: https://www.instagram.com/nexliautomation',
-      'Facebook: https://www.facebook.com/p/Nexli-Automation-61587654965905/',
-      'X: @nexliautomation',
+      `Phone: ${PHONE_DISPLAY}`,
+      `Address: ${ADDRESS_LINES.join(', ')}`,
+      ...SOCIAL_PROFILES.map((p) => `${p.name}: ${p.url}`),
     ],
   },
 ];

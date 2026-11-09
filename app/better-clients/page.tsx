@@ -19,6 +19,7 @@
 // once, so when a fourth angle is added, add it to both.
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
+import { socialMeta } from '@/lib/seo';
 import { VSL_ANGLE_BETTER_CLIENTS, qualifyPathForAngle } from '@/lib/advisory-config';
 import BetterClientsVslClient from './better-clients-client';
 
@@ -30,12 +31,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   robots: { index: false, follow: true },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: '/better-clients',
-    type: 'website',
-  },
+  ...socialMeta({ title: TITLE, description: DESCRIPTION, path: '/better-clients' }),
 };
 
 export default function BetterClientsVslPage() {
