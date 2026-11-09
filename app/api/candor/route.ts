@@ -29,7 +29,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { CANDOR_CORPUS } from '@/lib/candor-corpus';
 import { matchObjection } from '@/lib/candor-objections';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
-import { formatTranscript, sameOrigin, sendTranscript } from '@/lib/candor-transcript';
+import {
+  formatTranscript,
+  ghlContactUrl,
+  parseContactId,
+  sameOrigin,
+  sendTranscript,
+} from '@/lib/candor-transcript';
 import {
   currentTaxYear,
   daysUntilYearEnd,
@@ -156,6 +162,10 @@ export async function POST(req: NextRequest) {
   // used this browser — not necessarily the person typing — and the model
   // used it to address them. A wrong name is worse than none.
   const leadId = typeof body?.leadId === 'string' ? body.leadId.slice(0, 64) : null;
+  // The GHL contact from ?c= on the SMS/email link. Logged and forwarded,
+  // never given to the model — it is an id, not a name, and the rule above
+  // about not addressing anyone stands.
+  const contactId = parseContactId(body?.contactId);
   const sessionId =
     typeof body?.sessionId === 'string' ? body.sessionId.slice(0, 32) : 'unknown';
 
@@ -164,7 +174,7 @@ export async function POST(req: NextRequest) {
   // up by the platform logs.
   console.log(
     '[Candor]',
-    JSON.stringify({ at: new Date().toISOString(), leadId, question }),
+    JSON.stringify({ at: new Date().toISOString(), leadId, contactId, question }),
   );
 
   const history = parseHistory(body?.history);
@@ -258,6 +268,8 @@ export async function POST(req: NextRequest) {
             final: false,
             session_id: sessionId,
             lead_id: leadId,
+            contact_id: contactId,
+            contact_url: ghlContactUrl(contactId),
             question_number: history.filter((t) => t.role === 'user').length + 1,
             question,
             answer,

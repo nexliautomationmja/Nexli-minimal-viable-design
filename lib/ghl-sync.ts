@@ -16,8 +16,10 @@ import {
   removeContactTags,
   buildCustomFields,
   isGhlConfigured,
+  updateContactCustomFields,
   upsertContact,
 } from './ghl';
+import { candorLink } from './candor-transcript';
 import { qualificationLabel, type QualificationAnswers } from './qualification-steps';
 import type { FunnelPath } from './demo-config';
 
@@ -48,6 +50,14 @@ export interface SyncContactInput {
    * contact to count back from.
    */
   bookingStart?: string | null;
+  /**
+   * Write the contact's own Candor link to the candor_url custom field —
+   * /candor?c=<this contact's id> — for the booking-flow email and SMS to
+   * use as {{contact.candor_url}}. A contact field, not a webhook value, so
+   * it works whatever starts the workflow (appointment status, tag or
+   * webhook), the way {{contact.booking_start}} already does.
+   */
+  candorUrl?: boolean;
   /** Extra lines appended to the note, e.g. "Booked the growth call". */
   noteHeading?: string;
   extraNoteLines?: string[];
@@ -143,6 +153,16 @@ export async function syncContactToGhl(input: SyncContactInput): Promise<SyncRes
     return { ok: false, error: upserted.error };
   }
   const contactId = upserted.data.id;
+
+  // Needs the id, so it cannot ride on the upsert. Before the tags below,
+  // so it is on the contact as early as possible for a tag-started flow.
+  if (input.candorUrl) {
+    const set = await updateContactCustomFields(
+      contactId,
+      buildCustomFields({ candor_url: candorLink(contactId) }),
+    );
+    if (!set.ok) console.error(`[GHL] candor_url not written for ${contactId}: ${set.error}`);
+  }
 
   // Tags and the note are independent of the upsert succeeding at field level.
   await addContactTags(contactId, input.tags);
