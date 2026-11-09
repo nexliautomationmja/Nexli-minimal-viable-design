@@ -1,10 +1,12 @@
 'use client';
 
-// Slides 1–7 of /math: the title, how the math works, the three scenarios,
-// the return, the sources, the front door and the one-stop shop. Copy is the
-// PDF's (Nexli-See-The-Math.pdf); every figure comes from lib/see-the-math.
+// The first half of /math: the title, how the math works, the three
+// scenarios, the return, the front door and the one-stop shop. Also the two
+// "where these numbers come from" slides, which are hidden from the deck
+// (see SLIDES in app/math/math-deck). Copy is the PDF's
+// (Nexli-See-The-Math.pdf); every figure comes from lib/see-the-math.
 import React, { useState } from 'react';
-import { ArrowRight, Download, ExternalLink } from 'lucide-react';
+import { ArrowRight, Download } from 'lucide-react';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import { RimCard } from '@/components/funnel/primitives';
 import {
@@ -30,6 +32,7 @@ import Columns, { LineKey, SwatchKey } from './Columns';
 import StackedBars from './StackedBars';
 import { FunnelDots, ScenarioToggle } from './ScenarioBits';
 import { FloatingChain, ShimmerBadge, StepTile } from './ChainIcons';
+import { usePrint } from './print';
 import {
   Badge,
   Body,
@@ -45,6 +48,7 @@ import {
   Panel,
   Reveal,
   Slide,
+  Src,
   type Who,
 } from './ui';
 
@@ -66,6 +70,7 @@ export function DownloadPdf({ className = '' }: { className?: string }) {
 // ── 1. Title ───────────────────────────────────────────────────────────────
 
 export function TitleSlide() {
+  const print = usePrint();
   return (
     <Slide id="top" className="pt-28 sm:pt-32">
       <Reveal>
@@ -131,17 +136,20 @@ export function TitleSlide() {
         })}
       </div>
 
-      <Reveal delay={0.4} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 lg:mt-10">
-        <DownloadPdf />
-        {/* Shown only in presenting mode, where the keys are live (math-deck). */}
-        <span className="deck-hint items-center gap-2 text-sm" style={{ color: FAINT }}>
-          Press
-          <kbd className="rounded-md border border-white/15 bg-white/[0.06] px-1.5 py-0.5 text-xs text-white/70">→</kbd>
-          or
-          <kbd className="rounded-md border border-white/15 bg-white/[0.06] px-1.5 py-0.5 text-xs text-white/70">space</kbd>
-          to walk through the math
-        </span>
-      </Reveal>
+      {/* The download and the key hint: neither means anything in the PDF. */}
+      {!print && (
+        <Reveal delay={0.4} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 lg:mt-10">
+          <DownloadPdf />
+          {/* Shown only in presenting mode, where the keys are live (math-deck). */}
+          <span className="deck-hint items-center gap-2 text-sm" style={{ color: FAINT }}>
+            Press
+            <kbd className="rounded-md border border-white/15 bg-white/[0.06] px-1.5 py-0.5 text-xs text-white/70">→</kbd>
+            or
+            <kbd className="rounded-md border border-white/15 bg-white/[0.06] px-1.5 py-0.5 text-xs text-white/70">space</kbd>
+            to walk through the math
+          </span>
+        </Reveal>
+      )}
     </Slide>
   );
 }
@@ -432,24 +440,13 @@ export function ReturnSlide() {
   );
 }
 
-// ── 5. Where the numbers come from ────────────────────────────────────────
+// ── Where the numbers come from (HIDDEN) ──────────────────────────────────
+// SourcesSlide and ValueSourcesSlide are not in the deck since 2026-11-09:
+// see SLIDES in app/math/math-deck to put them back.
 
 const WEBTONIC = 'https://www.webtonic.io/blog/tax-accounting-facebook-ads-statistics';
 const EIGHTX = 'https://eightx.co/blog/average-bookkeeping-cost-by-revenue-band';
 
-function Src({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 font-semibold text-cyan-300 underline decoration-cyan-400/40 underline-offset-4 hover:decoration-cyan-300"
-    >
-      {children}
-      <ExternalLink className="h-3 w-3" aria-hidden="true" />
-    </a>
-  );
-}
 
 /**
  * One assumption: the number, who moves it, and why it is set where it is.

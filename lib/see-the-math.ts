@@ -242,6 +242,54 @@ export function breakEvenMonth(s: Scenario, plan: Plan): number | null {
   return m === -1 ? null : m;
 }
 
+// ── Going into year two ────────────────────────────────────────────────────
+
+/**
+ * Share of clients still with the firm a year on: tax planning renewals and
+ * bookkeeping and payroll alike. An ASSUMPTION, and labelled as one.
+ *
+ * Researched 2026-11-09. There is no rigorous study of year-over-year tax
+ * planning retention; the published figures are vendors' and consultancies',
+ * none sourced. The most specific (SmartFirm, "CPA Client Retention Rate
+ * Benchmarks") puts full-service firms — tax planning plus bookkeeping and
+ * payroll, which is what this system makes a firm — at 78–85% on average and
+ * 93–96% at the top; advisory firms at 75–85% and 90–95%. Others call 90% a
+ * healthy target. 80% is the bottom of the full-service average, on the same
+ * rule as every other input here: plan below the going rate.
+ */
+export const RETENTION = 0.8;
+export const RETENTION_BENCHMARK = { low: 0.78, high: 0.85, topLow: 0.93, topHigh: 0.96 } as const;
+export const RETENTION_SOURCE = 'https://smartfirm.io/faq/good-client-retention-rate-accounting-firm/';
+
+/**
+ * The book of business a firm starts year two with: its year-one clients
+ * only, before anyone new signs. Tax planning clients renew at the plan fee,
+ * bookkeeping and payroll keep paying, RETENTION of each stay (rounded down,
+ * as clients are everywhere else), and the system's year on the monthly plan
+ * comes off. The setup fee is not in it: that is paid once, at signing.
+ */
+export function recurringBook(s: Scenario) {
+  const planningClients = clientsBy(s, MONTHS);
+  const backEndClients = planningClients * TAKE_RATE;
+  const keptPlanning = down(planningClients * RETENTION);
+  const keptBackEnd = down(backEndClients * RETENTION);
+  const planning = keptPlanning * PLAN_FEE;
+  const backEnd = keptBackEnd * BACK_END_ANNUAL;
+  const total = planning + backEnd;
+  const systemYear = MONTHLY_TOTAL * 12;
+  return {
+    planningClients,
+    backEndClients,
+    keptPlanning,
+    keptBackEnd,
+    planning,
+    backEnd,
+    total,
+    systemYear,
+    inTheGreen: total - systemYear,
+  };
+}
+
 // ── Formatting ─────────────────────────────────────────────────────────────
 
 /** $40,000, and −$41,997 with a real minus sign rather than "$-41,997". */
