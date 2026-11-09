@@ -62,6 +62,9 @@ const TermsAndConditions: React.FC = () => (
                     <Strong>Annual Plan:</Strong> {usd(AGENCY_ANNUAL_UPFRONT)}, due at signing: the {usd(AGENCY_SETUP_FEE)} setup fee plus {usd(AGENCY_ANNUAL_SERVICE_FEE)} for twelve months of Nexli&apos;s upkeep and management, paid in advance. The {usd(AGENCY_AD_SPEND)} advertising budget is still billed each month from launch. The {usd(AGENCY_ANNUAL_UPFRONT)} is non-refundable, in whole and in part, and each month&apos;s advertising budget is non-refundable once charged.
                 </li>
                 <li>
+                    <Strong>How Each Charge Is Paid:</Strong> The {usd(AGENCY_SETUP_FEE)} setup fee and the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan payment are paid by ACH bank transfer or wire transfer only; they cannot be paid by credit or debit card. Every other charge, meaning the {usd(AGENCY_TOTAL_MONTHLY)} monthly plan fee and, on the annual plan, the {usd(AGENCY_AD_SPEND)} monthly advertising budget, is paid by credit or debit card. Work begins once the setup payment has arrived in Nexli&apos;s account.
+                </li>
+                <li>
                     <Strong>One System, One Fee:</Strong> The fees are for the complete system. Parts of it cannot be removed, paused or priced separately, and fees are not reduced if the client chooses not to use part of it.
                 </li>
                 <li>

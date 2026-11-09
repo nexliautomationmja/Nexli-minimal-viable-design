@@ -72,7 +72,15 @@ export const AGENCY_AD_SPEND = 5_000;
 export const AGENCY_TOTAL_MONTHLY = AGENCY_MONTHLY_FEE + AGENCY_AD_SPEND;
 
 /** One-time, due at signing, non-refundable. See the note at the top for
- *  which pages may show it. */
+ *  which pages may show it.
+ *
+ *  HOW EACH CHARGE IS PAID (Marcel, 2026-11-09). This fee and
+ *  AGENCY_ANNUAL_UPFRONT are paid by ACH bank transfer or wire ONLY, never
+ *  by card. Every other charge (the monthly plan, the annual plan's monthly
+ *  ad budget, the $97 guide) is paid by credit or debit card. The card
+ *  processor's underwriters match what they process against the policy
+ *  pages, so /terms, /pricing, /refund-policy, /delivery-policy and /privacy
+ *  all say exactly this. Change it here and on all five, or not at all. */
 export const AGENCY_SETUP_FEE = 32_000;
 
 /**
