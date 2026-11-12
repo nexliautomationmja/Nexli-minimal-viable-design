@@ -61,8 +61,8 @@ export interface QualifyFlowProps {
   footnote?: string;
   /**
    * Which questions to ask. Defaults to the demo funnel's six. The advisory
-   * funnel passes ADVISORY_QUALIFICATION_STEPS, whose last two steps collect
-   * contact details and the budget answer.
+   * funnel passes ADVISORY_QUALIFICATION_STEPS, whose last step collects
+   * contact details.
    */
   steps?: QualificationStepDef[];
   /** Meta content_name, so the two funnels stay separable in reporting. */
@@ -71,10 +71,12 @@ export interface QualifyFlowProps {
    * Route that banks the contact details as soon as the contact step is
    * submitted, before the remaining questions.
    *
-   * Only set it for a step list whose contact step is NOT last. The
-   * advisory funnel's is fifth of six, so without this a firm that typed
-   * their details and closed the tab on the budget question left no trace
-   * anywhere — the single POST below never fired.
+   * Only set it for a step list whose contact step is NOT last. It was
+   * built for the advisory funnel when contact was fifth of six, so a firm
+   * that typed its details and closed the tab on the budget question still
+   * left a trace. That question was removed on 2026-11-11 and contact is
+   * now last, so no funnel sets this today; setting it on a contact-last
+   * list would mark every lead incomplete a moment before it finishes.
    *
    * Unset (the demo funnel) and nothing extra happens.
    */

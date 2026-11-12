@@ -1,6 +1,13 @@
 // ---------------------------------------------------------------------------
 // Partial lead capture — the contact step, banked before the last question.
 //
+// DORMANT SINCE 2026-11-11. The budget question was removed, so the contact
+// step is now the advisory qualifier's last step and submitting it IS the
+// full submit. Nothing calls /api/advisory-pricing/partial any more (see
+// app/_funnel/qualify-step). It is kept for visitors on the old page bundle
+// and in case a step ever goes back after the contact form. What follows
+// describes the six-step flow it was built for.
+//
 // WHY THIS EXISTS. The advisory qualifier is six steps and the contact form
 // is step FIVE:
 //

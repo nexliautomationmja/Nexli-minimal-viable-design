@@ -2,7 +2,9 @@
 // Advisory funnel qualifier — and, since the opt-in page is gone, the lead
 // capture too. This is the first point at which we know who anyone is.
 //
-// Four questions, then contact details, then the budget question. The fork:
+// Four questions, then contact details (no budget question since
+// 2026-11-11; recordQualification still gates on one if an old page sends
+// it). The fork:
 //
 //   qualified -> 'agency'    -> /advisory-pricing/call   (book the call)
 //   otherwise -> 'not-a-fit' -> /advisory-pricing/BOBA  ($97 downsell)
