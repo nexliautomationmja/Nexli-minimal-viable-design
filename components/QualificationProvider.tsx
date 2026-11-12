@@ -176,10 +176,11 @@ const OPTION_BUTTON_CLASS =
 // ---------------------------------------------------------------------------
 // Contact step — the only step that cannot advance on a single click.
 //
-// It sits mid-qualifier rather than in front of it: by the time a visitor
-// reaches this they have answered three questions, and it comes BEFORE the
-// budget question so a firm that fails on budget has still identified itself.
-// That is who the downsell is for.
+// It comes after the questions rather than in front of them: by the time a
+// visitor reaches this they have answered several, so it is no longer the
+// first thing asked of a cold visitor. On the advisory and Accelerator
+// funnels it is the last step (the advisory funnel's budget question after
+// it was removed on 2026-11-11).
 // ---------------------------------------------------------------------------
 const EMPTY_CONTACT: ContactInput = {
   firstName: '',
@@ -368,7 +369,7 @@ export interface QualificationStepsCardProps {
   /**
    * Which questions to ask. Defaults to the original six, so every existing
    * caller is unchanged; the advisory funnel passes its own list, which ends
-   * with a contact step and a budget question.
+   * with a contact step.
    */
   steps?: QualificationStepDef[];
   /** Call mode: fires on qualified / not-qualified exactly as the booking funnel always has. */
@@ -382,7 +383,8 @@ export interface QualificationStepsCardProps {
   /**
    * Fires the moment the contact step is submitted, before the remaining
    * questions. Only meaningful for a step list that has a contact step
-   * which is not last — the advisory funnel's is fifth of six.
+   * which is not last. No funnel has one today: the advisory funnel's
+   * contact step became last when its budget question was removed.
    *
    * It exists so the details can be banked before someone abandons. The
    * handler must not block or throw: this fires while the next question is

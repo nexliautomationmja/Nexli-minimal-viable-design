@@ -9,8 +9,12 @@
 //
 // Open to anyone: there is no opt-in in front of this funnel, so this page
 // is where a visitor first identifies themselves. Four questions, then
-// contact details, then the budget question — and that is the fork. Clear
-// the bar and the next page is the calendar; miss it and it is the $97.
+// contact details, and submitting those is the fork. Clear the bar and the
+// next page is the calendar; miss it and it is the $97.
+//
+// There is no budget question (removed 2026-11-11). The VSL in front of this
+// page already shows the price, the setup fee and the term, so asking where
+// $9,997 sits for them was friction that repeated the pitch.
 //
 // Mode "foundation" on the card underneath, so nobody is disqualified
 // client-side and every answer is collected: we want the full set in
@@ -99,7 +103,7 @@ export default async function QualifyStep({
             style={{ color: 'rgba(255,255,255,0.65)' }}
           >
             We only run the done-for-you system for firms it actually works for. These
-            six answers tell us whether yours is one of them — and if it is not, we
+            answers tell us whether yours is one of them — and if it is not, we
             will say so rather than sell you a call.
           </p>
         </div>
@@ -107,10 +111,12 @@ export default async function QualifyStep({
         <QualifyFlow
           steps={ADVISORY_QUALIFICATION_STEPS}
           endpoint="/api/advisory-pricing/qualify"
-          // The contact step is fifth of six, so without this a firm that
-          // gives us their details and never answers the budget question
-          // leaves no trace at all.
-          partialEndpoint="/api/advisory-pricing/partial"
+          // NO partialEndpoint since 2026-11-11, and do not add one back while
+          // contact is the last step. It banks contact details "before the
+          // remaining questions"; with none remaining it would fire the
+          // incomplete webhook for every lead a moment before they finish,
+          // tag them 'advisory incomplete' and start the "one question left"
+          // emails. Submitting the contact step is now the finish.
           contentName="Advisory Qualifier"
           angle={angle}
           qualifiedPath={callPathForAngle(angle)}

@@ -1,8 +1,14 @@
 // ---------------------------------------------------------------------------
 // Banks the contact step before the last question is answered.
 //
-// Called by QualifyFlow the moment someone submits their details at step 5
-// of 6. Everything that makes this necessary is in lib/partial-lead-service.
+// NO LONGER CALLED by the qualifier as of 2026-11-11: the budget question
+// was removed, contact became the last step, and app/_funnel/qualify-step
+// stopped passing partialEndpoint. Kept so a visitor still on the old page
+// bundle at deploy time is not met with a 404. Everything about why it
+// existed is in lib/partial-lead-service.
+//
+// It was called by QualifyFlow the moment someone submitted their details
+// at step 5 of 6.
 //
 // Fire and forget from the browser: the visitor is already on the budget
 // question. This route never blocks a step and never shows an error.

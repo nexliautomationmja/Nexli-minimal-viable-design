@@ -9,9 +9,10 @@
 //                                Value. Still used by the demo funnel and by
 //                                the site-wide qualification modal. Frozen.
 //
-//   ADVISORY_QUALIFICATION_STEPS the advisory funnel's. Four questions, then
-//                                contact details, then the budget question
-//                                that routes to the calendar or the downsell.
+//   ADVISORY_QUALIFICATION_STEPS the four VSL funnels'. Four questions, then
+//                                contact details, and the answers route to
+//                                the calendar or the downsell. (It ended on a
+//                                budget question until 2026-11-11.)
 //
 // They are separate rather than one filtered list because the demo funnel's
 // payload, GHL note and progress bar are all shaped by its six, and nothing
@@ -141,11 +142,17 @@ export const taxSavingsTagMap: Record<string, string> = {
   'under-10k': 'taxplan_compliance',
 };
 
-// ── Budget: the advisory funnel's last question and its real gate ────────
-// Phrased around the all-in number because that is what they actually pay:
-// AGENCY_TOTAL_MONTHLY. Labels stay in sync with
-// lib/agency-offer.ts by hand — they are prose, not computed, because a
-// templated sentence here reads worse than a written one.
+// ── Budget: RETIRED as a question on 2026-11-11 ──────────────────────────
+// It was the advisory funnel's last step: "Where does that sit for your firm
+// right now?" under the $9,997 price. Marcel took it out because it was
+// friction the VSL had already done the work of: every VSL page shows the
+// price, the setup fee and the term before anyone reaches the qualifier.
+//
+// The options, the bar and the column all stay. Leads captured before the
+// change carry a budget answer, lib/advisory-fit still explains a turn-away
+// from it, and a visitor mid-flow on the old bundle at deploy time still
+// sends one. normalizeQualificationAnswers keeps accepting it, and
+// recordQualification still gates on it when present.
 
 export const budgetOptions: QualificationOption[] = [
   { value: 'ready', label: "That works — we're ready to invest at that level" },
@@ -245,13 +252,18 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
 export const QUALIFICATION_STEP_COUNT = QUALIFICATION_STEPS.length;
 
 /**
- * The advisory funnel's qualifier.
+ * The advisory funnel's qualifier, shared by the four VSL angles.
  *
- * Four questions, then contact, then budget. The order is the point: two or
- * three easy answers build enough momentum that the contact step is no
- * longer the first thing asked of a cold visitor, and the contact step sits
- * BEFORE the budget question so a firm that fails on budget has still
- * identified itself — that is who the $297 downsell exists for.
+ * Four questions, then contact, and contact is LAST. The order is the
+ * point: easy answers first build enough momentum that the contact step is
+ * not the first thing asked of a cold visitor, and submitting it is the
+ * finish, so there is no step left to abandon after giving details.
+ *
+ * No budget question since 2026-11-11 (see budgetOptions above). With
+ * contact last, the qualifier page must NOT pass a partialEndpoint: that
+ * banks contact details "before the remaining questions", and with none
+ * remaining it would tag every lead as incomplete a moment before they
+ * finish.
  *
  * problemDuration and taxSavings are deliberately absent. They were
  * collected and never used for anything: no routing, no tag, no copy.
@@ -304,14 +316,6 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     foundationHint: 'So we read your answers before the call rather than on it — and so you can pick up where you left off if this tab closes.',
     options: null,
   },
-  {
-    key: 'budget',
-    type: 'choice',
-    question: 'Where does that sit for your firm right now?',
-    hint: 'The complete system is $9,997 a month. That covers the campaigns and the $5,000 ad budget together — one invoice, six-month initial term. There is also a one-time setup fee for the build, quoted on the call.',
-    foundationHint: 'The complete system is $9,997 a month — the build, the campaigns and the $5,000 ad budget together — plus a one-time setup fee quoted on the call.',
-    options: budgetOptions,
-  },
 ];
 
 export const ADVISORY_QUALIFICATION_STEP_COUNT = ADVISORY_QUALIFICATION_STEPS.length;
@@ -353,6 +357,9 @@ const ACCELERATOR_OVERRIDES: Partial<
 };
 
 export const ACCELERATOR_QUALIFICATION_STEPS: QualificationStepDef[] =
+  // The advisory list has had no budget step since 2026-11-11, so this filter
+  // is a no-op today. Kept so the Accelerator can never ask about money if a
+  // budget step ever comes back to the advisory funnel.
   ADVISORY_QUALIFICATION_STEPS.filter((step) => step.key !== 'budget').map((step) => {
     const override = ACCELERATOR_OVERRIDES[step.key];
     return override ? { ...step, ...override } : step;
@@ -388,8 +395,12 @@ export function normalizeQualificationAnswers(input: unknown): QualificationAnsw
 /** Human-readable label for an answer value, or the raw value when unknown. */
 export function qualificationLabel(key: QualificationStepKey, value: string | null): string | null {
   if (value == null) return null;
-  const step =
-    QUALIFICATION_STEPS.find((s) => s.key === key) ??
-    ADVISORY_QUALIFICATION_STEPS.find((s) => s.key === key);
-  return step?.options?.find((o) => o.value === value)?.label ?? value;
+  // Budget is in no step list any more, but older leads still carry an
+  // answer to it, and that should print as its label rather than 'under'.
+  const options =
+    key === 'budget'
+      ? budgetOptions
+      : (QUALIFICATION_STEPS.find((s) => s.key === key) ??
+          ADVISORY_QUALIFICATION_STEPS.find((s) => s.key === key))?.options;
+  return options?.find((o) => o.value === value)?.label ?? value;
 }

@@ -45,11 +45,7 @@ import {
 } from '@/lib/advisory-config';
 import { INTRO_TRANSCRIPT } from '@/lib/candor-intro';
 import { PDF_SHARE_PATH } from '@/components/math/pdf';
-import {
-  DISQUALIFYING_BUDGETS,
-  DISQUALIFYING_REVENUE,
-  DISQUALIFYING_ROLE,
-} from '@/lib/qualification-steps';
+import { DISQUALIFYING_REVENUE, DISQUALIFYING_ROLE } from '@/lib/qualification-steps';
 import {
   AGENCY_AD_SPEND,
   AGENCY_ENGAGEMENT_HIGH,
@@ -136,7 +132,7 @@ function offerFacts(): string {
     `Pausing: it is one system, and parts of it cannot be removed or paused (the Terms). What flexes is the pace: it is set on the call to the firm's capacity for planning work, and campaigns can be throttled up or down as they go.`,
     `Ownership: the firm owns the website, client portal, funnel and automations Nexli builds, along with its content, domain, client data and its ad account (with the account's history, audiences and data), and it pays its own hosting. The ONE exception is the ad creative: the videos and images Nexli makes for the campaigns stay Nexli's, along with the tools Nexli makes them with. Never say the firm owns "everything" or "all of it" without that exception. Whether a firm may keep running Nexli's creative after it leaves is not written down: say that is a question for the call.`,
     `Public minimum firm revenue: ${MIN_REVENUE_DETAIL}. Marketing copy says ${MIN_REVENUE}.`,
-    `The booking gate is stricter than the public minimum: the qualifier turns away firms under $750K a year, firms where the person is not a decision maker, and firms that say the monthly is not where they are. Do not conflate the public ${MIN_REVENUE} figure with the $750K gate.`,
+    `The booking gate is stricter than the public minimum: the qualifier turns away firms outside the US, firms under $750K a year, and firms where the person is not a decision maker. It does not ask about budget: the price is on the video page before the qualifier, so never say anyone is turned away for saying the monthly is too much. Do not conflate the public ${MIN_REVENUE} figure with the $750K gate.`,
   ].join('\n');
 }
 
@@ -155,19 +151,15 @@ function components(): string {
  * gives the specific reason rather than a generic "you don't qualify", on the
  * stated grounds that the generic version "is what turns a gate into an
  * insult". Candor is asked questions by people who may not qualify, and these
- * five answers are the model for how to tell them.
+ * four answers are the model for how to tell them.
  */
 function fitReasons(): string {
   const cases = [
     { usBased: false, decisionRole: null, annualRevenue: null },
     { usBased: true, decisionRole: DISQUALIFYING_ROLE, annualRevenue: null },
     { usBased: true, decisionRole: null, annualRevenue: DISQUALIFYING_REVENUE },
-    {
-      usBased: true,
-      decisionRole: null,
-      annualRevenue: null,
-      budget: DISQUALIFYING_BUDGETS[0],
-    },
+    // No budget case: the qualifier stopped asking on 2026-11-11, so nobody
+    // is turned away on budget any more and Candor must not describe it.
     { usBased: true, decisionRole: null, annualRevenue: null },
   ];
   return cases
