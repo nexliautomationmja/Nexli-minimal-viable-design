@@ -1,25 +1,30 @@
-Subject: Before you hire any agency, us included
+Subject: Don't hire a marketing agency before doing this
 
 
 Hello, {{contact.first_name}}
 
-Before you hire any agency, us included, every doubt you have should
-be answered. Especially the ones you'd rather not say on the call.
+We're on {{contact.booking_start}}. Before then, do one thing.
 
-Most people book a call like ours with two or three of those. Usually
-some version of: the price, an agency that burned them before, or
-whether now is really the right time.
+Every firm owner should get a straight answer to these five questions
+before hiring any marketing agency, us included:
 
-Ask them here first:
+1. What does it cost every month, and what does that cover?
+2. How long am I locked in?
+3. If I leave, who owns the website and everything you built?
+4. What happens if it doesn't work?
+5. I've been burned before. Why would this be any different?
+
+If an agency gets vague on any of them, that's your answer.
+
+Put all five to us before the call:
 
 {{contact.candor_url}}
 
-It's called Candor. Type the thing you wouldn't say out loud, or tap the
-one that's closest. It answers straight, and it tells you when it
-doesn't know something rather than guess.
+It's called Candor. It answers from what we publish, plainly, and tells
+you when it doesn't know something rather than guess. Ask it the one
+you'd rather not ask me out loud, too.
 
-Then we can spend the call on your firm instead of on my company.
-
-See you {{contact.booking_start}}.
+Then you walk into our call already knowing whether we're worth your
+time, and we can spend it on your firm instead of on my company.
 
 — Marcel

@@ -440,8 +440,21 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
               }}
               streamType="on-demand"
               accentColor="#3b82f6"
+              // The captions are burned into every VSL. Mux's player turns
+              // a caption track ON by default the moment an asset has one
+              // (it sets media-chrome's `defaultsubtitles` unless told
+              // otherwise), which would stack a second set of captions over
+              // the first. None of the four VSLs carries a track today
+              // (checked: no TYPE=SUBTITLES in any manifest), but switching
+              // on Mux's auto-generated captions would add one silently.
+              // So: never on by default, and no CC button to turn them on.
+              defaultHiddenCaptions
               className="w-full block"
-              style={{ aspectRatio: '16/9' }}
+              style={{
+                aspectRatio: '16/9',
+                ['--captions-button' as string]: 'none',
+                ['--captions-menu-button' as string]: 'none',
+              }}
               onPlay={handlePlay}
               onPause={handlePause}
               onTimeUpdate={handleTimeUpdate}
