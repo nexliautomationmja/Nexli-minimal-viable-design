@@ -129,8 +129,16 @@ const TermsAndConditions: React.FC = () => (
             <p>
                 The client owns what Nexli builds for them: the website, the client portal, the sales funnel and the automations, together with the client&apos;s content, brand assets (logos, colors, photography and copy), domain name, advertising account, and all client data. The setup fee pays for building them. The monthly fee, or the annual plan&apos;s year of service, pays for Nexli&apos;s upkeep and management of them, not for the right to use them.
             </p>
+            {/* Marcel, 2026-11-09: Nexli keeps the ad creative. It makes a
+                great deal of it inside each ad account, and sorting it out
+                to hand over per client is not workable. Everything else
+                stays the client's. Keep in step with /delivery-policy,
+                /pricing, lib/booking-faq and ENGAGEMENT_TERMS in lib/site. */}
             <p>
-                When the engagement ends, Nexli&apos;s upkeep and management stop. The client keeps everything that was built; Nexli hands over any account access it holds for the client and removes its own. Nexli keeps its general know-how, methods and templates that are not specific to the client, and may reuse them in other work. Nexli may reference the client&apos;s website in its portfolio unless the client opts out in writing.
+                <Strong>Ad Creative:</Strong> The ad creative Nexli produces for the client&apos;s campaigns (the videos and images) remains Nexli&apos;s property, along with the tools Nexli uses to make it. The client keeps its advertising account, including its history, audiences and data.
+            </p>
+            <p>
+                When the engagement ends, Nexli&apos;s upkeep and management stop. The client keeps everything that was built except the ad creative; Nexli hands over any account access it holds for the client and removes its own. Nexli keeps its general know-how, methods and templates that are not specific to the client, and may reuse them in other work. Nexli may reference the client&apos;s website in its portfolio unless the client opts out in writing.
             </p>
         </LegalSection>
 

@@ -76,7 +76,7 @@ const PRODUCTS: Product[] = [
       `Built in about ${AGENCY_LAUNCH_DAYS} days from kickoff; monthly billing starts at launch`,
       `Monthly plan: ${AGENCY_INITIAL_TERM_MONTHS}-month minimum from launch, then month to month with ${AGENCY_CANCEL_NOTICE_DAYS} days’ notice`,
       `Annual plan: ${AGENCY_ANNUAL_TERM_MONTHS} months from launch, no automatic renewal`,
-      'You own what we build; you pay your hosting provider directly',
+      'You own the website, portal, funnel and automations we build; you pay your hosting provider directly',
       'All fees non-refundable',
     ],
     cta: { label: 'Book a call', href: ADVISORY_PATH },

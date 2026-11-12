@@ -125,10 +125,11 @@ export default function DeliveryPolicyPage() {
           </li>
           <li>
             <Strong>What you own:</Strong> the website, the client portal, the funnel and the automations we
-            build are yours, along with your content, domain, advertising account and client data.
+            build are yours, along with your content, domain, advertising account and client data. The ad
+            creative we make for your campaigns (the videos and images) stays ours.
           </li>
           <li>
-            <Strong>When it ends:</Strong> our upkeep and management stop. You keep everything we built; we
+            <Strong>When it ends:</Strong> our upkeep and management stop. You keep everything we built except the ad creative; we
             hand over any account access we hold for you and remove our own, as set out in our{' '}
             <Link href="/terms" className={legalLinkClass}>Terms and Conditions</Link>.
           </li>
