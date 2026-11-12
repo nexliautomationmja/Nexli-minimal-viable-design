@@ -172,7 +172,7 @@ export const ENGAGEMENT_TERMS = [
   {
     name: 'The firm owns what is built',
     description:
-      'The firm owns the website, client portal, funnel and automations Nexli builds, and pays its own hosting. The monthly fee pays for Nexli to maintain and run the system.',
+      'The firm owns the website, client portal, funnel and automations Nexli builds, and pays its own hosting. Nexli keeps the ad creative it makes. The monthly fee pays for Nexli to maintain and run the system.',
   },
   {
     name: 'One monthly price, ad spend included',

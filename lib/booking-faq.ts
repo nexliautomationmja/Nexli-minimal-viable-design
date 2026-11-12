@@ -89,9 +89,11 @@ export const BOOKING_B_FAQ: FaqItem[] = [
     // working when the engagement does". Marcel, 2026-11-09: the firm owns
     // all of it and pays its own hosting (components/TermsAndConditions,
     // section 6). Re-render it the way the pricing item below describes.
+    // Marcel, 2026-11-09 (later): the one exception is the ad creative,
+    // which Nexli keeps. Never "all of it" again.
     question: 'What do I actually own at the end of it?',
     answer:
-      'All of it. The website, the client portal, the funnel and the automations we build are yours, along with your domain, your content, your ad account and your client data. You pay your hosting provider directly, so none of it sits on our bill.\n\nWhat the monthly pays for is us: keeping the whole system maintained, changing the funnels, ads and automations as they need it, and running the campaigns. If we part ways, that work stops, and so does the ad budget we place for you. The system stays yours.\n\nThe honest version: a system nobody is tuning goes stale. The part that keeps it bringing in tax-planning clients is the part you are paying us to do.',
+      'Everything but the ad creative. The website, the client portal, the funnel and the automations we build are yours, along with your domain, your content, your ad account and your client data. You pay your hosting provider directly, so none of it sits on our bill. The ad creative we make for your campaigns, the videos and images, stays ours.\n\nWhat the monthly pays for is us: keeping the whole system maintained, changing the funnels, ads and automations as they need it, and running the campaigns. If we part ways, that work stops, and so does the ad budget we place for you. The system stays yours.\n\nThe honest version: a system nobody is tuning goes stale. The part that keeps it bringing in tax-planning clients is the part you are paying us to do.',
   },
   {
     question: "How secure is this for my clients' data? What about compliance?",
