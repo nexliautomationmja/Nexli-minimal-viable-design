@@ -51,7 +51,7 @@ blank href is a dead email.
 | File | When | Job |
 |---|---|---|
 | 1-confirmation.txt | immediately | you are booked, here is the page |
-| 5-candor.txt | between confirmation and 48h | the doubts they won't say out loud → Candor |
+| 5-candor.txt | between confirmation and 48h | five questions to ask any agency, asked of us first → Candor |
 | sms-candor.txt | same step as 5-candor | the same ask, as a text (SMS) |
 | 2-48h.txt | 48h before | pleasure — $15K to $55K |
 | 3-24h.txt | 24h before | pain — the clients you have now |
