@@ -53,6 +53,9 @@ const Footer: React.FC = () => {
     // their own chrome; the site nav would sit on top of every one of them.
     pathname === '/math' ||
     pathname.startsWith('/math/') ||
+    // /ai-avatars, the AI avatar pitch deck. Same as the navbar's list.
+    pathname === '/ai-avatars' ||
+    pathname.startsWith('/ai-avatars/') ||
     pathname === '/agency' ||
     pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||
@@ -125,6 +128,12 @@ const Footer: React.FC = () => {
               className="hover:text-blue-500 transition-colors uppercase tracking-[0.2em]"
             >
               Portfolio
+            </Link>
+            <Link
+              href="/ai-avatars"
+              className="hover:text-blue-500 transition-colors uppercase tracking-[0.2em]"
+            >
+              AI Avatars
             </Link>
             <Link
               href="/about"

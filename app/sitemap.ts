@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { blogPosts } from '../data/blogPosts';
 import { guides } from '../data/guides';
 import { PORTFOLIO_SLUGS } from '../lib/portfolio-meta';
+import { NAMED_AVATARS } from '../lib/ai-avatars';
 import { SITE_URL } from '../lib/site';
 
 type Entry = MetadataRoute.Sitemap[number];
@@ -35,6 +36,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Freq }[]
   { path: '/client-dashboard', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/smart-reviews', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/portfolio', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/ai-avatars', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/blog', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/revenuecalc', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' },
@@ -73,5 +75,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  return [...staticEntries, ...guideEntries, ...blogEntries, ...portfolioEntries];
+  // Named avatars only: an unnamed slot has no page (it 404s).
+  const avatarEntries: Entry[] = NAMED_AVATARS.map((a) => ({
+    url: `${SITE_URL}/ai-avatars/${a.slug}`,
+    lastModified: BUILD_TIME,
+    changeFrequency: 'monthly',
+    priority: 0.4,
+  }));
+
+  return [...staticEntries, ...guideEntries, ...blogEntries, ...portfolioEntries, ...avatarEntries];
 }
