@@ -20,8 +20,8 @@
 // firms that all look the same get treated the same and priced the same. A
 // firm's own avatar sets it apart and makes it a brand.
 //
-// THE ROSTER (Marcel, 2026-11-13): fifteen women besides Daniela, each with
-// a short intro video on Mux. No men yet. Listed alphabetically, which is
+// THE ROSTER (Marcel, 2026-11-13): sixteen women besides Daniela, each
+// with a short intro video on Mux. No men yet. Listed alphabetically, which is
 // the order the library shows them in.
 //
 // ADDING ONE. Add an entry here (the slug is the URL, /ai-avatars/<slug>),
@@ -79,6 +79,7 @@ export const AI_AVATARS: AiAvatar[] = [
   woman('Madeline', 'wd1yUP9D003wyJQTUwJzzmSY1u1a802GdOYyUJeCPq00S00'),
   woman('Natalya', 'z00BOr02EoFa02knfil301jxLn8ID61sWc001E7WHQKhel4s'),
   woman('Olivia', 'b3md2n01hefpGcUNdEjKdcgt01lBVLDJnQ00o4QIxGUNwg'),
+  woman('Peyton', '1luaf45hNFa02Nrk6ocHzZvcKvAJoFDs7tmZHP00Hjg18'),
   woman('Rene', 'yllxGWf6AVrx4nAEg76i1RVmRb5FI3GgKhi3nmSCqIE'),
   woman('Sofia', 'zi14WHwTKvzsX9HCDiW6O3UU2IVSs02F3VEV2mJpVH01Y'),
   woman('Vivian', '6Hdih9wWtXjCu3BtvtuJxvbf2W3sPzVZA4OgFlRbjw8'),

@@ -4,6 +4,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // An AI avatar with no portrait.webp yet falls back to a still from its
+  // Mux video (muxPoster in lib/ai-avatars), rendered with next/image.
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "image.mux.com" }],
+  },
   // The Book of Business Accelerator PDF lives outside public/ on purpose —
   // it is the whole $297 product and anything in public/ is a guessable URL.
   // Files outside public/ are not bundled into the serverless function by
