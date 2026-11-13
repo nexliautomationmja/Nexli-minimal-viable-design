@@ -26,6 +26,8 @@ export interface AvatarPlayerProps {
   mode: 'preview' | 'full';
   /** Our own still (portrait.webp), so the frame before play matches the card. */
   poster?: string | null;
+  /** With no poster: the second of the video Mux shows before play. */
+  thumbnailTime?: number;
   autoPlay?: boolean;
   /** Fires on the first frame, so a preview can fade in over its card. */
   onPlaying?: () => void;
@@ -38,6 +40,7 @@ export default function AvatarPlayer({
   name,
   mode,
   poster,
+  thumbnailTime,
   autoPlay = false,
   onPlaying,
   className,
@@ -50,6 +53,7 @@ export default function AvatarPlayer({
       metadata={{ video_title: `AI avatar: ${name}` }}
       streamType="on-demand"
       poster={poster ?? undefined}
+      thumbnailTime={thumbnailTime}
       playsInline
       defaultHiddenCaptions
       accentColor="#22d3ee"

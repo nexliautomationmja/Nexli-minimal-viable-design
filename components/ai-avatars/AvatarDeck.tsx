@@ -133,7 +133,7 @@ const GRADIENT_WRAP = GRADIENT_TEXT.replace('lg:whitespace-nowrap', '').trim();
 
 /** Daniela explaining the page. Click to play, with sound: it is the pitch,
  *  not a background loop. */
-function ExplainerCard({ playbackId }: { playbackId: string }) {
+function ExplainerCard({ video }: { video: NonNullable<typeof DANIELA_PAGE_VIDEO> }) {
   return (
     <div className="relative">
       <div
@@ -142,12 +142,17 @@ function ExplainerCard({ playbackId }: { playbackId: string }) {
         style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.22) 0%, transparent 70%)' }}
       />
       <div className="relative aspect-[9/16] overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
-        <AvatarPlayer mode="full" playbackId={playbackId} name="Daniela, AI avatars explained" />
+        <AvatarPlayer
+          mode="full"
+          playbackId={video.playbackId}
+          thumbnailTime={video.posterTime}
+          name="Daniela, AI avatars explained"
+        />
         <AiBadge className="pointer-events-none absolute left-3 top-3" />
       </div>
       <p className="mt-3 text-center text-sm leading-snug" style={{ color: MUTED }}>
         <span className="font-bold text-white">Daniela</span>, Nexli&apos;s own AI avatar, on why your firm needs one
-        of its own.
+        of its own. <span className="whitespace-nowrap text-white/45">{video.seconds} sec</span>
       </p>
     </div>
   );
@@ -160,7 +165,7 @@ function CoverSlide({
 }: {
   daniela: CardAvatar;
   library: CardAvatar[];
-  explainer: string | null;
+  explainer: typeof DANIELA_PAGE_VIDEO;
 }) {
   const faces = library.filter((a) => a.portrait).slice(0, 5);
   return (
@@ -213,7 +218,7 @@ function CoverSlide({
 
         <Reveal delay={0.12} className="mx-auto w-full max-w-[19rem] lg:max-w-none">
           {explainer ? (
-            <ExplainerCard playbackId={explainer} />
+            <ExplainerCard video={explainer} />
           ) : (
             <div className="relative">
               <div

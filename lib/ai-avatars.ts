@@ -90,11 +90,20 @@ export const EXAMPLE_AVATAR_SLUG = 'olivia';
 
 /**
  * Daniela explaining this page: the video at the top of /ai-avatars, in
- * place of her portrait card. Mux PLAYBACK id; null until Marcel sends it
- * (2026-11-13: rendering). While it is null the cover shows her portrait,
- * so setting it here is the only change the video needs.
+ * place of her portrait card (Marcel, 2026-11-13). Set it to null and the
+ * cover shows her portrait instead.
+ *
+ * playbackId  Mux PLAYBACK id, checked against stream.mux.com: 1080x1920.
+ * posterTime  The frame shown before she plays. 2s is the first one with
+ *             her smiling under the "Ad agencies don't want you to see this"
+ *             banner; frame 0 is caption-free but catches her mid-word.
+ * seconds     Its length, for the caption under it. Change it with the video.
  */
-export const DANIELA_PAGE_VIDEO: string | null = null;
+export const DANIELA_PAGE_VIDEO: { playbackId: string; posterTime: number; seconds: number } | null = {
+  playbackId: 'nfNwjRt3xxrkH172O9dSvyu4zm4rtl02mrAerFByRGhI',
+  posterTime: 2,
+  seconds: 45,
+};
 
 /** Every avatar that has a page of its own: Daniela and the library. */
 export const NAMED_AVATARS: AiAvatar[] = [NEXLI_AVATAR, ...AI_AVATARS];
