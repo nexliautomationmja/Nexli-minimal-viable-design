@@ -3,8 +3,8 @@
 // placeholder), used by the deck and by each avatar's page.
 //
 // Every face says "AI-generated" — the people on these pages are not real
-// and the pages must never let anyone think otherwise. An unnamed slot (no
-// name yet, see lib/ai-avatars) renders the "In production" placeholder.
+// and the pages must never let anyone think otherwise. An avatar whose
+// images have not landed yet renders the "In production" placeholder.
 //
 // No 'use client' and no hooks, so a server page can render these too.
 // ---------------------------------------------------------------------------

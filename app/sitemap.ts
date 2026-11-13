@@ -75,7 +75,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  // Named avatars only: an unnamed slot has no page (it 404s).
+  // Every avatar in the library has a page, Daniela too.
   const avatarEntries: Entry[] = NAMED_AVATARS.map((a) => ({
     url: `${SITE_URL}/ai-avatars/${a.slug}`,
     lastModified: BUILD_TIME,

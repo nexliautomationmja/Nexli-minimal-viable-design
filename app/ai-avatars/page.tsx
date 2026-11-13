@@ -24,7 +24,7 @@ export const dynamic = 'force-static';
 
 const TITLE = 'AI Avatars: Branding for CPA Firms | Nexli Automation';
 const DESCRIPTION =
-  'Every great brand has a face. Nexli gives your CPA firm its own AI-generated avatar for your ads, matched to your market and your ideal client, so your firm builds a recognizable face without you on camera.';
+  'Most agencies run the same ads for every client, so firms end up looking the same and getting priced the same. Nexli gives your CPA firm its own AI-generated avatar that no other client’s ads use, so your firm stands out as a brand, without you on camera.';
 
 export const metadata: Metadata = {
   title: TITLE,
