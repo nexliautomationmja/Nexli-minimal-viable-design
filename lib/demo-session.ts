@@ -82,6 +82,49 @@ export async function verifyDemoToken(token: string | undefined | null): Promise
   return safeEqual(expected, signature) ? leadId : null;
 }
 
+// ---------------------------------------------------------------------------
+// The rebook pass (Marcel, 2026-11-16).
+//
+// A firm that already qualified, retargeted back to /math, /candor or
+// /ai-avatars on a browser we do not recognise, types the email it
+// qualified with on /book and goes straight to the calendar.
+//
+// That email is the only proof, and anyone can type anyone's email, so it
+// earns a NARROWER pass than the cookie above: /book shows the calendar
+// with the email filled in and nothing else (no name, no phone, no
+// qualifier answers), and the booked route accepts it as identity for the
+// one booking. It never mints DEMO_COOKIE, which would open /agency/call
+// fully filled in.
+//
+// Same HMAC, different signed payload ('rebook:' prefix), so neither token
+// passes as the other. Two hours: long enough to pick a time, short enough
+// that a shared browser does not keep it.
+// ---------------------------------------------------------------------------
+export const REBOOK_COOKIE = 'nexli_rebook';
+const REBOOK_MAX_AGE_SECONDS = 2 * 60 * 60;
+
+export async function createRebookToken(leadId: string): Promise<string> {
+  const payload = `${leadId}.${Date.now()}`;
+  return `${payload}.${await sign(`rebook:${payload}`)}`;
+}
+
+export async function verifyRebookToken(token: string | undefined | null): Promise<string | null> {
+  if (!token) return null;
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  const [leadId, issuedAt, signature] = parts;
+  if (!UUID_RE.test(leadId)) return null;
+  const issued = Number(issuedAt);
+  if (!Number.isFinite(issued)) return null;
+  if (Date.now() - issued > REBOOK_MAX_AGE_SECONDS * 1000) return null;
+  const expected = await sign(`rebook:${leadId}.${issuedAt}`);
+  return safeEqual(expected, signature) ? leadId : null;
+}
+
+export function rebookCookieOptions() {
+  return { ...demoCookieOptions(), maxAge: REBOOK_MAX_AGE_SECONDS };
+}
+
 /** Cookie options shared by the route handlers that set it. */
 export function demoCookieOptions() {
   return {

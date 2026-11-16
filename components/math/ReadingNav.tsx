@@ -32,6 +32,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 /** What the bar takes from the bottom of the page, so nothing ends under it. */
 export const READING_NAV_SPACE = 'calc(76px + env(safe-area-inset-bottom, 0px))';
+/** The same, with the booking row on top of it (components/booking/BookAgainCta). */
+export const READING_NAV_CTA_SPACE = 'calc(126px + env(safe-area-inset-bottom, 0px))';
 
 export default function ReadingNav({
   slides,
@@ -40,6 +42,7 @@ export default function ReadingNav({
   atEnd,
   onStep,
   onGo,
+  cta,
 }: {
   slides: readonly { id: string; title: string }[];
   current: number;
@@ -47,6 +50,9 @@ export default function ReadingNav({
   atEnd: boolean;
   onStep: (dir: 1 | -1) => void;
   onGo: (i: number) => void;
+  /** A row above the slide controls, in the same bar: the booking button
+   *  (Marcel, 2026-11-16). One frosted bar rather than two stacked. */
+  cta?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   // On a phone, the phone PDF (components/math/pdf).
@@ -114,6 +120,7 @@ export default function ReadingNav({
         className="fixed inset-x-0 bottom-0 z-[115] border-t border-white/10 bg-[#020617]/85 backdrop-blur-xl"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
+        {cta}
         <nav aria-label="Slides" className="mx-auto flex max-w-xl items-center gap-2 px-3 py-2.5">
           <button
             type="button"

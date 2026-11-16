@@ -5,7 +5,7 @@ import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
 import { sendCAPIEvent } from "@/lib/meta-capi";
-import { createDemoToken, verifyDemoToken } from "@/lib/demo-session";
+import { createDemoToken, verifyDemoToken, verifyRebookToken } from "@/lib/demo-session";
 import { syncContactToGhl } from "@/lib/ghl-sync";
 import { BOOKING_CONFIRMED_B_PATH, TAG_CALL_BOOKED } from "@/lib/demo-config";
 import {
@@ -47,9 +47,12 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const leadId = await verifyDemoToken(
-      typeof body?.lead_token === "string" ? body.lead_token : null,
-    );
+    // The session cookie, or the two-hour rebook pass /book issues to a
+    // qualified firm that typed its email on a browser we did not know
+    // (lib/demo-session). Either only names the lead; the funnelPath check
+    // below is still the entitlement.
+    const token = typeof body?.lead_token === "string" ? body.lead_token : null;
+    const leadId = (await verifyDemoToken(token)) ?? (await verifyRebookToken(token));
     if (!leadId) {
       return NextResponse.json({ error: "Invalid session." }, { status: 403 });
     }
@@ -83,6 +86,15 @@ export async function POST(req: NextRequest) {
 
     const db = getDb();
     let lead: typeof leads.$inferSelect | null = null;
+    /**
+     * Booked before (Marcel, 2026-11-16): a no-show or a reschedule, usually
+     * from /book after retargeting. Read before bookedCallAt is overwritten.
+     * Cal gets a NEW booking, not a moved one (no booking uid is stored
+     * here), so an earlier booking may still be on the calendar; the GHL
+     * note says so. Workflow 3 runs off this webhook, not the tag, so the
+     * confirmation and reminders go out again for the new time.
+     */
+    let rebooked = false;
     if (db) {
       try {
         [lead] = await db.select().from(leads).where(eq(leads.id, leadId)).limit(1);
@@ -100,6 +112,7 @@ export async function POST(req: NextRequest) {
       if (lead?.funnelPath !== "agency") {
         return NextResponse.json({ error: "Not eligible to book." }, { status: 403 });
       }
+      rebooked = Boolean(lead.bookedCallAt);
       try {
         await db
           .update(leads)
@@ -210,12 +223,15 @@ export async function POST(req: NextRequest) {
         },
         leadScore: lead.leadScore,
         funnelPath: "agency",
-        noteHeading: lead.advisoryPurchasedAt
-          ? "Booked the growth call (Accelerator buyer)"
-          : "Booked the growth call",
+        noteHeading: `${rebooked ? "Rebooked" : "Booked"} the growth call${
+          lead.advisoryPurchasedAt ? " (Accelerator buyer)" : ""
+        }`,
         extraNoteLines: [
           `Booking uid: ${bookingUid || "n/a"}`,
           `Call start: ${startTimeDisplay || startTime || "n/a"}`,
+          ...(rebooked
+            ? ["An earlier booking may still be on the calendar. Cancel it if it was not a no-show."]
+            : []),
         ],
       });
     }
@@ -231,6 +247,8 @@ export async function POST(req: NextRequest) {
           tag: TAG_CALL_BOOKED,
           funnel_path: "agency",
           qualified: true,
+          // True when this firm had booked before: a no-show or a reschedule.
+          rebooked,
           vsl_angle: angle,
           vsl_tag: angleTag,
           lead_id: leadId,

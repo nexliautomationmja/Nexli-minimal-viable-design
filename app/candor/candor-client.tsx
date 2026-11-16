@@ -50,6 +50,8 @@ import {
 } from '@/components/candor/DanielaStory';
 import CandorChip, { CANDOR_GREEN } from '@/components/candor/CandorChip';
 import ChatHistory from '@/components/candor/ChatHistory';
+import BookAgainCta, { BOOK_BAR_SPACE, useBookingState } from '@/components/booking/BookAgainCta';
+import RebookCallButton from '@/components/booking/RebookCallButton';
 import {
   type Conversation,
   type Turn,
@@ -232,6 +234,12 @@ export default function CandorClient({
    * which is correct, because the bar is already above the keyboard there.
    */
   const [keyboardInset, setKeyboardInset] = useState(0);
+  // The booking row in the phone composer bar steps aside while someone is
+  // typing: on Android the keyboard does not show up in keyboardInset.
+  const [typing, setTyping] = useState(false);
+  // Book again (Marcel, 2026-11-16): null until known; the page then leaves
+  // room for the bar along the bottom.
+  const bookingState = useBookingState();
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
@@ -452,7 +460,12 @@ export default function CandorClient({
           )}
         </div>
         <CandorChip />
-        <div className="justify-self-end">
+        {/* Rebook call (Marcel, 2026-11-16), for firms retargeted back
+            here. Before the first question it has this slot to itself. Mid-
+            chat New chat needs it, so on a phone it gives way: the sticky
+            row above the composer is the way to book there. */}
+        <div className="flex items-center gap-2 justify-self-end">
+          <RebookCallButton size="sm" className={started ? 'max-md:hidden' : ''} />
           {started && (
             <button type="button" onClick={newChat} disabled={busy} className={sideButton}>
               <SquarePen size={14} aria-hidden="true" />
@@ -480,6 +493,8 @@ export default function CandorClient({
           setInput(e.target.value);
           grow();
         }}
+        onFocus={() => setTyping(true)}
+        onBlur={() => setTyping(false)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
             // Touch keyboards have no Shift+Enter: Return adds a newline there
@@ -613,7 +628,7 @@ export default function CandorClient({
 
       <div
         className={`mx-auto max-w-3xl px-4 sm:px-6 ${
-          started ? 'pb-32 pt-0 sm:pb-16 sm:pt-6' : 'pb-10 pt-[max(0.5rem,env(safe-area-inset-top))] sm:pt-28'
+          started ? 'pb-44 pt-0 sm:pb-16 sm:pt-6' : 'pb-10 pt-[max(0.5rem,env(safe-area-inset-top))] sm:pt-28'
         }`}
       >
         {header}
@@ -889,6 +904,12 @@ export default function CandorClient({
             style={{ bottom: keyboardInset }}
           >
             <div className="mx-auto max-w-3xl sm:max-w-none">
+              {/* Book again, in the composer's own bar on a phone: one bar
+                  along the bottom, not two stacked. Gone while typing. On a
+                  wider screen the bar below the page carries it. */}
+              {!typing && keyboardInset === 0 && (
+                <BookAgainCta variant="inline" className="mb-2.5 sm:hidden" />
+              )}
               {composer}
               {/* Inside the bar, not after it: rendered after, on a phone the
                   error landed underneath the fixed composer where nobody
@@ -904,6 +925,15 @@ export default function CandorClient({
       </div>
 
       <VslDisclaimer />
+
+      {/* Book again along the bottom: everywhere before the first question,
+          and on a wider screen throughout. On a phone mid-chat it rides in
+          the composer bar instead (above). The spacer lets the end of the
+          page clear it. Story and chat history (z-200) cover it. */}
+      {bookingState && (
+        <div aria-hidden="true" className={started ? 'hidden sm:block' : ''} style={{ height: BOOK_BAR_SPACE }} />
+      )}
+      <BookAgainCta variant="bar" className={started ? 'max-sm:hidden' : ''} />
 
       <StoryViewer
         ref={story}

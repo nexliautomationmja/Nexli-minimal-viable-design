@@ -234,6 +234,15 @@ export const ADVISORY_THANK_YOU_PATH = '/advisory-pricing/BOBA-thank-you';
 export const ADVISORY_QUALIFY_PATH = '/agency/qualify';
 
 /**
+ * The calendar for a firm that already qualified, without the qualifier
+ * (Marcel, 2026-11-16). The sticky button on /math, /candor and /ai-avatars
+ * sends qualified firms here, and it is the link for GHL's no-show and
+ * retargeting messages: it shows the calendar to a browser we recognise and
+ * asks anyone else for the email they qualified with. See app/book.
+ */
+export const ADVISORY_BOOK_PATH = '/book';
+
+/**
  * The `angle` each page appends to its CTA, and the only thing that carries
  * which belief converted into GoHighLevel.
  *

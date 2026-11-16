@@ -33,7 +33,9 @@ import { MotionConfig } from 'framer-motion';
 import { Download, Maximize2, Minimize2 } from 'lucide-react';
 import FunnelLogo from '@/components/FunnelLogo';
 import { OUTFIT } from '@/components/funnel/primitives';
-import ReadingNav, { READING_NAV_SPACE } from '@/components/math/ReadingNav';
+import ReadingNav, { READING_NAV_CTA_SPACE, READING_NAV_SPACE } from '@/components/math/ReadingNav';
+import BookAgainCta, { useBookingState } from '@/components/booking/BookAgainCta';
+import RebookCallButton from '@/components/booking/RebookCallButton';
 import { SLIDES } from '@/components/math/slides';
 import { PDF_NAME } from '@/components/math/pdf';
 import { usePdfHref } from '@/components/math/pdf-link';
@@ -79,6 +81,8 @@ export default function MathDeck() {
   // fullscreen is exactly what turns a short laptop window into a deck.
   const [wide, setWide] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  // null until known; the slide bar grows a row for the booking button then.
+  const bookingState = useBookingState();
   // Where a run of key presses is heading. The observer lags behind a smooth
   // scroll, so pressing → three times fast has to count from the target, not
   // from whatever slide happens to be under the middle of the screen.
@@ -262,7 +266,9 @@ export default function MathDeck() {
         style={{
           backgroundColor: '#020617',
           ...OUTFIT,
-          ...(ready && !deckMode ? { paddingBottom: READING_NAV_SPACE } : null),
+          ...(ready && !deckMode
+            ? { paddingBottom: bookingState ? READING_NAV_CTA_SPACE : READING_NAV_SPACE }
+            : null),
         }}
       >
         {/* Candor's three glows, fixed so every slide sits under them. */}
@@ -297,6 +303,9 @@ export default function MathDeck() {
         <div
           className={`${deckMode ? 'fixed' : 'absolute'} right-5 top-6 z-[110] flex items-center gap-2 md:right-8 md:top-8`}
         >
+          {/* Rebook call (Marcel, 2026-11-16), for firms retargeted back
+              here. Off in fullscreen, like the bottom pill. */}
+          {!fullscreen && <RebookCallButton size="sm" />}
           <a
             href={pdfHref}
             download={PDF_NAME}
@@ -350,6 +359,11 @@ export default function MathDeck() {
             <div className="pointer-events-none fixed bottom-6 right-8 z-[100] text-xs font-semibold tabular-nums tracking-[0.12em] text-white/45">
               <span className="text-white/85">{pad(current + 1)}</span> / {pad(SLIDES.length)}
             </div>
+
+            {/* Book again (Marcel, 2026-11-16): off on the cover, where the
+                PDF button and the chain own the bottom of the slide, and
+                off in fullscreen, which is how this is presented on a call. */}
+            <BookAgainCta variant="pill" show={current >= 1 && !fullscreen} />
           </>
         )}
 
@@ -361,6 +375,7 @@ export default function MathDeck() {
             atEnd={atEnd}
             onStep={step}
             onGo={(i) => goTo(i)}
+            cta={<BookAgainCta variant="inline" className="mx-auto max-w-xl px-3 pt-2.5" />}
           />
         )}
       </main>

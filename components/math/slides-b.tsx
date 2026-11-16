@@ -819,9 +819,11 @@ export function CloseSlide() {
             ))}
           </dl>
 
-          {/* The one action on the close: the prospect leaves with the
-              document. No booking button by design; they are already on the
-              call, or have just had it. Not in the PDF, which is the document. */}
+          {/* The one action on the slide: the prospect leaves with the
+              document. Not in the PDF, which is the document. Booking is the
+              sticky button the deck pins over every slide but the cover
+              (components/booking/BookAgainCta, Marcel 2026-11-16), for the
+              firms retargeted back here after booking or missing the call. */}
           {!print && (
             <div className="mt-8 flex flex-wrap gap-3">
               <a
