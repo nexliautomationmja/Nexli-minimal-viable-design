@@ -67,7 +67,7 @@ export const PLANS: Record<PlanId, Plan> = {
   annual: {
     id: 'annual',
     label: 'Paid annually',
-    // Setup plus the service year, prepaid: $74,000.
+    // Setup plus the service year, prepaid: $82,000.
     upfront: SETUP_FEE + 12 * ANNUAL_SERVICE_MONTHLY,
     // Only the ads are billed monthly once the service year is prepaid.
     perMonth: AD_SPEND,
@@ -169,6 +169,23 @@ export function chain(s: Scenario): Chain {
 /** Days of new fees, at full pace, that cover the setup fee. */
 export function setupCoverDays(s: Scenario): number {
   return (SETUP_FEE / chain(s).newFees) * 30;
+}
+
+/**
+ * setupCoverDays in words, for the "setup fee" callout on /math. It was
+ * three hand-written labels ("Within the first month", "About two weeks",
+ * "About 10 days") that were right at $32,000 and wrong at $40,000; now a
+ * change to the fee or a scenario moves them too. At $40,000: 30, 20 and 12
+ * days.
+ */
+export function setupCoverLabel(s: Scenario): string {
+  const d = Math.round(setupCoverDays(s));
+  if (d > 31) return `About ${Math.round(d / 7)} weeks`;
+  if (d >= 28) return 'One month';
+  if (d >= 18) return 'About three weeks';
+  if (d >= 13) return 'About two weeks';
+  if (d >= 11) return 'Under two weeks';
+  return `About ${d} days`;
 }
 
 /** One month's new clients, valued over their first year. */

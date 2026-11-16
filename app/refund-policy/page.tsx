@@ -20,11 +20,13 @@ import {
 } from '@/lib/advisory-config';
 import {
   AGENCY_AD_SPEND,
+  AGENCY_ANNUAL_PLAN_BONUS,
   AGENCY_ANNUAL_SERVICE_FEE,
   AGENCY_ANNUAL_TERM_MONTHS,
   AGENCY_ANNUAL_UPFRONT,
   AGENCY_CANCEL_NOTICE_DAYS,
   AGENCY_INITIAL_TERM_MONTHS,
+  AGENCY_MONTHLY_PLAN_BONUS,
   AGENCY_SETUP_FEE,
   AGENCY_TOTAL_MONTHLY,
   usd,
@@ -50,7 +52,7 @@ export default function RefundPolicyPage() {
       eyebrow="Refunds & Cancellations"
       icon={RotateCcw}
       title="Refund Policy"
-      dateLine="Effective Date: November 9, 2026"
+      dateLine="Effective Date: November 16, 2026"
       intro="What you can get back, how to ask for it, and how long it takes. This policy forms part of our Terms and Conditions."
     >
       <LegalSection title={`1. ${ADVISORY_PRODUCT_NAME} (${ADVISORY_PRICE_DISPLAY})`} variant="feature">
@@ -126,6 +128,17 @@ export default function RefundPolicyPage() {
             remains payable through the end of that term, and nothing already paid is refunded. The annual plan
             does <Strong>not</Strong> renew automatically: nothing is charged after the{' '}
             {AGENCY_ANNUAL_TERM_MONTHS} months unless you agree in writing to continue.
+          </li>
+          <li>
+            <Strong>Unspent advertising budget:</Strong> your advertising budget is held in a separate account
+            for advertising funds and allocated to your own campaigns. Your term always runs its full length
+            first; when your service then ends, any of your budget still unspent in that account, bonus
+            included, is forfeited. It is not refunded, credited against a fee or paid out.
+          </li>
+          <li>
+            <Strong>First-month bonus:</Strong> the {usd(AGENCY_MONTHLY_PLAN_BONUS)} (monthly plan) or{' '}
+            {usd(AGENCY_ANNUAL_PLAN_BONUS)} (annual plan) we add to your campaigns in your first month of ads is
+            our own money. It has no cash value and is never refunded, paid out or credited against a fee.
           </li>
           <li>
             <Strong>One system, one fee:</Strong> parts of the system cannot be removed, paused or refunded
