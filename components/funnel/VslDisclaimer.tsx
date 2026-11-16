@@ -26,12 +26,7 @@
 
 import React from 'react';
 import PolicyLinks from '../legal/PolicyLinks';
-import {
-  AGENCY_ANNUAL_PLAN_BONUS,
-  AGENCY_MONTHLY_PLAN_BONUS,
-  PLAN_BONUS_CONDITIONS,
-  usd,
-} from '@/lib/agency-offer';
+import { AD_CREDIT_FOOTNOTE } from '@/lib/agency-offer';
 
 const MUTED = 'var(--text-muted)';
 
@@ -50,9 +45,7 @@ const VslDisclaimer: React.FC<{ adCredit?: boolean }> = ({ adCredit = false }) =
     <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
       {adCredit && (
         <p className="text-[11px] leading-relaxed md:text-xs" style={{ color: MUTED }}>
-          <span className="font-bold text-white/70">*Ad credit.</span>{' '}
-          {usd(AGENCY_ANNUAL_PLAN_BONUS)} on the annual plan. On the monthly plan, Nexli matches your first month
-          of ads: {usd(AGENCY_MONTHLY_PLAN_BONUS)}. {PLAN_BONUS_CONDITIONS}
+          <span className="font-bold text-white/70">*Ad credit.</span> {AD_CREDIT_FOOTNOTE}
         </p>
       )}
 

@@ -40,10 +40,12 @@ import AdCreativeLab from './booking/AdCreativeLab';
 import SystemFlow from './booking/SystemFlow';
 import PricingBlock from './booking/PricingBlock';
 import DanielaFaq from './booking/DanielaFaq';
+import AdCreditBonus from './funnel/AdCreditBonus';
 import { BOOKING_B_FAQ } from '@/lib/booking-faq';
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent } from '@/lib/meta-events';
 import {
+  AD_CREDIT_FOOTNOTE,
   AGENCY_ENGAGEMENT_HIGH,
   AGENCY_ENGAGEMENT_LOW,
   AGENCY_LAUNCH_DAYS,
@@ -221,6 +223,13 @@ export default function BookingConfirmedB() {
             the only question left: when do we start.
           </p>
 
+          {/* The ad-credit bonus, the same banner as under the VSLs' qualify
+              button (Marcel, 2026-11-16): booked, this is what signing gets
+              them. The asterisk is answered under the price. */}
+          <div className="mt-7">
+            <AdCreditBonus tone={theme === 'light' ? 'light' : 'dark'} />
+          </div>
+
           {/* The one thing we need them to do before the call. */}
           <div
             className="mt-8 mx-auto max-w-xl rounded-2xl border p-4 sm:p-5 text-left"
@@ -375,6 +384,10 @@ export default function BookingConfirmedB() {
         {/* ── 8. The price ──────────────────────────────────────────── */}
         <section>
           <PricingBlock />
+          {/* The asterisk on the bonus banner at the top of the page. */}
+          <p className="mx-auto mt-3 max-w-3xl text-center text-[11px] leading-relaxed text-[var(--text-muted)] md:text-xs">
+            <span className="font-bold text-[var(--text-main)]">*Ad credit.</span> {AD_CREDIT_FOOTNOTE}
+          </p>
         </section>
 
         {/* ── 9. After you sign ─────────────────────────────────────── */}
