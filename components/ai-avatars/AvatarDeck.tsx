@@ -79,6 +79,8 @@ import {
 import { DANIELA_PAGE_VIDEO, EXAMPLE_AVATAR_SLUG } from '@/lib/ai-avatars';
 import { AiBadge, AvatarPortrait, type CardAvatar } from './AvatarCard';
 import AvatarLibrary from './AvatarLibrary';
+import BookAgainCta, { BOOK_BAR_SPACE, useBookingState } from '@/components/booking/BookAgainCta';
+import RebookCallButton from '@/components/booking/RebookCallButton';
 
 const AvatarPlayer = dynamic(() => import('./AvatarPlayer'), { ssr: false });
 
@@ -188,13 +190,19 @@ function CoverSlide({
             becomes a brand.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-            <a
-              href="#library"
-              className="group inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white no-underline shadow-xl shadow-blue-600/25 transition-transform hover:scale-[1.02] sm:text-base"
-            >
-              <Play className="h-4 w-4 fill-white" aria-hidden="true" />
-              Meet the cast
-            </a>
+            {/* Rebook call right under Meet the cast (Marcel, 2026-11-16),
+                for the firms retargeted back here. A column, so the two
+                buttons take the same width. */}
+            <div className="flex flex-col gap-3">
+              <a
+                href="#library"
+                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white no-underline shadow-xl shadow-blue-600/25 transition-transform hover:scale-[1.02] sm:text-base"
+              >
+                <Play className="h-4 w-4 fill-white" aria-hidden="true" />
+                Meet the cast
+              </a>
+              <RebookCallButton />
+            </div>
             {faces.length > 0 && (
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-3" aria-hidden="true">
@@ -785,6 +793,9 @@ export default function AvatarDeck({ daniela, library, firmSpots, ctaHref }: Ava
 
   const [current, setCurrent] = useState(0);
   const [deckMode, setDeckMode] = useState(false);
+  // Book again (Marcel, 2026-11-16): null until known, then the page leaves
+  // room for the bar along the bottom (reading mode).
+  const bookingState = useBookingState();
   const target = useRef(0);
   const scroller = useRef<HTMLElement>(null);
 
@@ -897,7 +908,11 @@ export default function AvatarDeck({ daniela, library, firmSpots, ctaHref }: Ava
       <main
         ref={scroller}
         className="deck-scroller relative overflow-x-hidden text-white"
-        style={{ backgroundColor: '#020617', ...OUTFIT }}
+        style={{
+          backgroundColor: '#020617',
+          ...OUTFIT,
+          ...(bookingState && !deckMode ? { paddingBottom: BOOK_BAR_SPACE } : null),
+        }}
       >
         <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
           <div
@@ -954,6 +969,15 @@ export default function AvatarDeck({ daniela, library, firmSpots, ctaHref }: Ava
               <span className="text-white/85">{pad(current + 1)}</span> / {pad(slides.length)}
             </div>
           </>
+        )}
+
+        {/* Floating while presenting, from the second slide (the cover's
+            own button sits at its foot); a bar along the bottom on a phone.
+            The video popup (z-300) covers either. */}
+        {deckMode ? (
+          <BookAgainCta variant="pill" show={current >= 1} />
+        ) : (
+          <BookAgainCta variant="bar" />
         )}
       </main>
     </MotionConfig>

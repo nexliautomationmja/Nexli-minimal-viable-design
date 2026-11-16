@@ -35,8 +35,9 @@ export const callMetadata: Metadata = {
 
 const OUTFIT = { fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif" } as const;
 
-/** The call-prep block Cal.com shows alongside the booking. */
-function buildNotes(lead: typeof leads.$inferSelect): string {
+/** The call-prep block Cal.com shows alongside the booking. Also used by
+ *  /book for a firm the session cookie recognises. */
+export function buildNotes(lead: typeof leads.$inferSelect): string {
   const lines = ['--- Nexli advisory funnel — cleared the qualifier ---'];
   if (lead.firmName) lines.push(`Firm: ${lead.firmName}`);
   lines.push(`US based: ${lead.usBased === null ? 'N/A' : lead.usBased ? 'Yes' : 'No'}`);

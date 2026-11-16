@@ -28,6 +28,8 @@ import FunnelLogo from '@/components/FunnelLogo';
 import AvatarGallery from '@/components/ai-avatars/AvatarGallery';
 import AvatarPlayer from '@/components/ai-avatars/AvatarPlayer';
 import { AiBadge, AvatarPortrait } from '@/components/ai-avatars/AvatarCard';
+import BookAgainCta from '@/components/booking/BookAgainCta';
+import RebookCallButton from '@/components/booking/RebookCallButton';
 
 export const dynamic = 'force-static';
 export const dynamicParams = false;
@@ -104,13 +106,16 @@ export default async function AiAvatarPage({ params }: Props) {
 
       <FunnelLogo />
 
-      <div className="relative mx-auto max-w-6xl px-5 pb-24 pt-24 sm:px-8 md:pt-32">
-        <Link
-          href="/ai-avatars#library"
-          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-white/60 no-underline transition-colors hover:text-white"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All avatars
-        </Link>
+      <div className="relative mx-auto max-w-6xl px-5 pb-36 pt-24 sm:px-8 md:pt-32">
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <Link
+            href="/ai-avatars#library"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 no-underline transition-colors hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All avatars
+          </Link>
+          <RebookCallButton size="sm" />
+        </div>
 
         <section className="mb-14 grid items-center gap-8 md:mb-20 md:grid-cols-[minmax(0,340px)_1fr] md:gap-14">
           {avatar.playbackId ? (
@@ -224,6 +229,9 @@ export default async function AiAvatarPage({ params }: Props) {
           </Link>
         </div>
       </div>
+      {/* Book again, pinned along the bottom (Marcel, 2026-11-16). z-90,
+          under the gallery lightbox (z-100). */}
+      <BookAgainCta variant="bar" />
     </main>
   );
 }

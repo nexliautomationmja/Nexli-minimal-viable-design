@@ -55,6 +55,9 @@ export default function ConditionalNavbar() {
     // deck chrome as /math: just the logo, no way out but the CTA.
     pathname === '/ai-avatars' ||
     pathname.startsWith('/ai-avatars/') ||
+    // /book, the calendar for a firm that already qualified. A funnel step
+    // like /agency/call, so the same bare chrome.
+    pathname === '/book' ||
     pathname === '/agency' ||
     pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||

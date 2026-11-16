@@ -56,6 +56,9 @@ const Footer: React.FC = () => {
     // /ai-avatars, the AI avatar pitch deck. Same as the navbar's list.
     pathname === '/ai-avatars' ||
     pathname.startsWith('/ai-avatars/') ||
+    // /book, the calendar for a firm that already qualified. Same as the
+    // navbar's list.
+    pathname === '/book' ||
     pathname === '/agency' ||
     pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||
