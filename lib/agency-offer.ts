@@ -125,8 +125,10 @@ export const AGENCY_ANNUAL_UPFRONT = AGENCY_SETUP_FEE + AGENCY_ANNUAL_SERVICE_FE
 // THE CONDITIONS: it is Nexli's money, placed in the client's campaigns
 // that month. It has no cash value, cannot be withdrawn, is not refunded, is
 // not credited against any fee and does not carry into later months.
-// PLAN_BONUS_CONDITIONS says it in the second person for /pricing and the
-// /math slide; /terms and /refund-policy say the same in their own voice.
+// PLAN_BONUS_CONDITIONS says it in the second person for /pricing, the
+// /math slide and the VSL pages' footer (the asterisk on "Up to $10,000 in
+// ad credit when you sign", components/funnel/AdCreditBonus); /terms and
+// /refund-policy say the same in their own voice.
 // Change them all together.
 //
 // /math does NOT model it: every projection there runs on the client's own
