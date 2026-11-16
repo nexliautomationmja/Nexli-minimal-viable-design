@@ -11,7 +11,7 @@
 // page competing with the funnels. Linked from every footer.
 //
 // The setup fee and the annual plan ARE priced here (Marcel, 2026-11-09):
-// the underwriters match the $32,000 and $74,000 charges they will process
+// the underwriters match the $40,000 and $82,000 charges they will process
 // against this page. The sales pages still say "quoted on the call" — see
 // the rule in lib/agency-offer.ts. Every number comes from those constants,
 // and this page must say what /terms and /refund-policy say.
@@ -31,6 +31,7 @@ import {
 } from '@/lib/advisory-config';
 import {
   AGENCY_AD_SPEND,
+  AGENCY_ANNUAL_PLAN_BONUS,
   AGENCY_ANNUAL_SERVICE_FEE,
   AGENCY_ANNUAL_TERM_MONTHS,
   AGENCY_ANNUAL_UPFRONT,
@@ -38,8 +39,11 @@ import {
   AGENCY_INITIAL_TERM_MONTHS,
   AGENCY_LAUNCH_DAYS,
   AGENCY_MONTHLY_FEE,
+  AGENCY_MONTHLY_PLAN_BONUS,
   AGENCY_SETUP_FEE,
   AGENCY_TOTAL_MONTHLY,
+  AD_BUDGET_TERMS,
+  PLAN_BONUS_CONDITIONS,
   usd,
 } from '@/lib/agency-offer';
 import { MIN_REVENUE } from '@/lib/site';
@@ -121,6 +125,10 @@ const PLANS: { name: string; rows: [string, string][] }[] = [
         'Minimum commitment',
         `${usd(AGENCY_SETUP_FEE + AGENCY_INITIAL_TERM_MONTHS * AGENCY_TOTAL_MONTHLY)} (${usd(AGENCY_SETUP_FEE)} + ${AGENCY_INITIAL_TERM_MONTHS} × ${usd(AGENCY_TOTAL_MONTHLY)})`,
       ],
+      [
+        'First-month bonus',
+        `We match your first month of ads: ${usd(AGENCY_MONTHLY_PLAN_BONUS)} of our own added to your campaigns that month`,
+      ],
       ['Refunds', 'None, except billing errors'],
     ],
   },
@@ -139,6 +147,10 @@ const PLANS: { name: string; rows: [string, string][] }[] = [
       [
         'Minimum commitment',
         `${usd(AGENCY_ANNUAL_UPFRONT + AGENCY_ANNUAL_TERM_MONTHS * AGENCY_AD_SPEND)} (${usd(AGENCY_ANNUAL_UPFRONT)} + ${AGENCY_ANNUAL_TERM_MONTHS} × ${usd(AGENCY_AD_SPEND)})`,
+      ],
+      [
+        'First-month bonus',
+        `${usd(AGENCY_ANNUAL_PLAN_BONUS)} in ad credits of our own, added to your campaigns in your first month of ads`,
       ],
       ['Refunds', 'None, except billing errors'],
     ],
@@ -211,6 +223,12 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+        <p className="text-base">
+          {PLAN_BONUS_CONDITIONS} Your first month of ads is the month beginning at launch.
+        </p>
+        <p className="text-base">
+          {AD_BUDGET_TERMS} Your term always runs its full length first.
+        </p>
         <p className="text-base">
           Hosting is not included on either plan; you pay your hosting provider directly. Parts of the system
           cannot be removed or priced separately. You own the website, portal, funnel and automations we build.

@@ -23,6 +23,7 @@ import {
   chain,
   pct,
   scenarioById,
+  setupCoverLabel,
   usd,
   usdCompact,
   yearOneValue,
@@ -422,11 +423,7 @@ export function ReturnSlide() {
               {usd(SETUP_FEE)} setup ({usd(cons.newFees)}).
             </p>
             <ul className="mt-4 space-y-2.5">
-              {[
-                { label: 'Conservative', when: 'Within the first month', v: cons.newFees },
-                { label: 'Moderate', when: 'About two weeks', v: mod.newFees },
-                { label: 'Best case', when: 'About 10 days', v: best.newFees },
-              ].map((r) => (
+              {SCENARIOS.map((sc) => ({ label: sc.label, when: setupCoverLabel(sc) })).map((r) => (
                 <li key={r.label} className="flex items-baseline justify-between gap-3 border-t border-white/[0.08] pt-2.5">
                   <span className="text-sm" style={{ color: MUTED }}>
                     {r.label}

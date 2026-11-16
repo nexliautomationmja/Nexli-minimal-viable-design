@@ -56,7 +56,7 @@ export default function DeliveryPolicyPage() {
       eyebrow="Delivery"
       icon={Truck}
       title="Delivery Policy"
-      dateLine="Effective Date: November 9, 2026"
+      dateLine="Effective Date: November 16, 2026"
       intro="Nexli sells a digital product and a done-for-you service. Nothing is shipped: there are no physical goods, shipping charges or delivery addresses involved in any purchase."
     >
       <LegalSection title={`1. ${ADVISORY_PRODUCT_NAME} (digital product)`} variant="feature">
@@ -117,7 +117,8 @@ export default function DeliveryPolicyPage() {
           <li>
             <Strong>Every month after launch:</Strong> we maintain your website, portal and automations; make
             changes to the funnels, ads and automations as they are needed; run your ad campaigns, including
-            placing the {usd(AGENCY_AD_SPEND)} advertising budget included in your monthly fee; and send a
+            placing the {usd(AGENCY_AD_SPEND)} advertising budget included in your monthly fee, which we hold
+            in a separate account for advertising funds, allocated to your campaigns; and send a
             weekly written update on where the budget went and what it produced.
           </li>
           <li>

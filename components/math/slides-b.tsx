@@ -18,8 +18,15 @@ import {
   Handshake,
   Layers,
   Megaphone,
+  Star,
 } from 'lucide-react';
 import { RimCard } from '@/components/funnel/primitives';
+import {
+  AD_BUDGET_TERMS,
+  AGENCY_ANNUAL_PLAN_BONUS,
+  AGENCY_MONTHLY_PLAN_BONUS,
+  PLAN_BONUS_CONDITIONS,
+} from '@/lib/agency-offer';
 import {
   AD_SPEND,
   BACK_END_ANNUAL,
@@ -53,6 +60,7 @@ import {
   type Plan,
   type ScenarioId,
 } from '@/lib/see-the-math';
+import BonusStar, { BONUS_SHEEN_CSS } from './BonusStar';
 import BreakEvenChart from './BreakEvenChart';
 import CoverChart from './CoverChart';
 import { ScenarioToggle } from './ScenarioBits';
@@ -270,8 +278,56 @@ export function TimelineSlide() {
 
 // ── 11. What you invest ───────────────────────────────────────────────────
 
+/**
+ * The first-month bonus on each plan (Marcel, 2026-11-16; amounts and
+ * conditions in lib/agency-offer). The annual one is the one meant to stop
+ * the eye: gold, a slow sheen, and the animated star on the card's corner.
+ * Not modelled anywhere in the deck; the fine print under the cards says so.
+ */
+function PlanBonus({ annual }: { annual: boolean }) {
+  if (!annual) {
+    return (
+      <div className="mt-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3">
+        <Star className="h-5 w-5 shrink-0 text-amber-300/70" aria-hidden="true" />
+        <div className="min-w-0">
+          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200/70 sm:text-[11px]">
+            Bonus · we match your first month of ads
+          </div>
+          <div className="mt-0.5 text-lg font-bold text-white sm:text-xl">+{usd(AGENCY_MONTHLY_PLAN_BONUS)} in ad spend</div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div
+      className="bonus-sheen relative mt-4 overflow-hidden rounded-2xl border border-amber-300/60 px-4 py-3.5"
+      style={{
+        background: 'linear-gradient(135deg, rgba(251,191,36,0.22) 0%, rgba(245,158,11,0.09) 55%, rgba(180,83,9,0.14) 100%)',
+        boxShadow: '0 0 44px -14px rgba(251,191,36,0.6), inset 0 1px 0 rgba(255,247,214,0.18)',
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <Star className="h-6 w-6 shrink-0 fill-amber-300 text-amber-200" aria-hidden="true" />
+        <div className="min-w-0">
+          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200 sm:text-[11px]">
+            Bonus · your first month of ads
+          </div>
+          <div className="mt-0.5 text-2xl font-black leading-tight sm:text-[1.9rem]">
+            {/* Solid gold, not gradient text: the PDF's print page flattens
+                every bg-clip-text to lavender (app/math/print/math-print). */}
+            <span className="text-amber-300" style={{ textShadow: '0 0 18px rgba(251,191,36,0.45)' }}>
+              +{usd(AGENCY_ANNUAL_PLAN_BONUS)}
+            </span>{' '}
+            <span className="text-amber-50">in ad credits</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlanCard({ plan, highlight, footer }: { plan: Plan; highlight?: boolean; footer: React.ReactNode }) {
-  // The annual plan's $74,000 is the full system setup PLUS the year of
+  // The annual plan's $82,000 is the full system setup PLUS the year of
   // service, so after signing the only thing billed monthly is the ads.
   // The rows say that outright rather than leaving it to be inferred.
   const annual = plan.id === 'annual';
@@ -284,12 +340,17 @@ function PlanCard({ plan, highlight, footer }: { plan: Plan; highlight?: boolean
   ];
   return (
     <div
-      className={`flex h-full flex-col rounded-3xl border p-5 sm:p-7 ${
+      className={`relative flex h-full flex-col rounded-3xl border p-5 sm:p-7 ${
         highlight
           ? 'border-emerald-400/55 bg-gradient-to-br from-emerald-400/[0.09] to-cyan-400/[0.04] shadow-[0_0_60px_-24px_rgba(52,211,153,0.6)]'
           : 'border-white/10 bg-white/[0.035]'
       }`}
     >
+      {annual && (
+        <span className="absolute -right-4 -top-8 z-10 sm:-right-6 sm:-top-10">
+          <BonusStar size={80} />
+        </span>
+      )}
       <div className={`text-[11px] font-bold uppercase tracking-[0.16em] ${highlight ? 'text-emerald-300' : 'text-cyan-300'}`}>
         {plan.label}
       </div>
@@ -308,6 +369,7 @@ function PlanCard({ plan, highlight, footer }: { plan: Plan; highlight?: boolean
           </div>
         ))}
       </dl>
+      <PlanBonus annual={annual} />
       <div className={`mt-4 text-[15px] font-bold ${highlight ? 'text-emerald-300' : 'text-white/60'}`}>{footer}</div>
     </div>
   );
@@ -318,6 +380,7 @@ export function InvestSlide() {
   const extraUpfront = PLANS.annual.upfront - PLANS.monthly.upfront;
   return (
     <Slide id="invest">
+      <style>{BONUS_SHEEN_CSS}</style>
       <Heading kicker="What you invest">
         Pay annually and <span className={GRADIENT_TEXT}>keep about {usd(aboutThousands(saved))} more.</span>
       </Heading>
@@ -342,6 +405,9 @@ export function InvestSlide() {
           {usd(extraUpfront)} more in at signing, so you break even in the same month or one month later. From month{' '}
           {annualAheadFromMonth()} on you&apos;re ahead, and by month 12 you&apos;ve kept about {usd(aboutThousands(saved))} more.
         </Body>
+        <p className="mt-3 max-w-4xl text-xs leading-relaxed sm:text-[13px]" style={{ color: FAINT }}>
+          {PLAN_BONUS_CONDITIONS} It is not counted anywhere in this deck&apos;s numbers. {AD_BUDGET_TERMS}
+        </p>
       </Reveal>
     </Slide>
   );
