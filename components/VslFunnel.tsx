@@ -23,6 +23,7 @@ import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
 import DeadlineUrgency, { DeadlineBanner } from './advisory/DeadlineUrgency';
 import UrgencyPill from './funnel/UrgencyPill';
 import VslDisclaimer from './funnel/VslDisclaimer';
+import AdCreditBonus from './funnel/AdCreditBonus';
 import MetaLogo from './icons/MetaLogo';
 
 // Google "G" icon matching lucide-react component interface
@@ -57,7 +58,7 @@ const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ siz
 const CTA_LABEL = 'See If Your Firm Qualifies';
 
 const CTA_CLASS = {
-  lg: 'inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer',
+  lg: 'inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 lg:py-4 rounded-full text-base sm:text-lg md:text-xl lg:text-lg font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer',
   bar: 'w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer',
 } as const;
 
@@ -299,7 +300,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative inline-flex items-center mb-6 md:mb-8 rounded-full overflow-hidden p-[1px]"
+            className="relative inline-flex items-center self-center mb-6 md:mb-8 rounded-full overflow-hidden p-[1px]"
           >
             <span
               className="absolute inset-[-100%] animate-[shimmer_4s_linear_infinite] opacity-70"
@@ -332,7 +333,20 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full blur-[120px] bg-blue-500/8" />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
+      {/*
+        DESKTOP IS TWO COLUMNS (Marcel, 2026-11-16): the words, the qualify
+        button and the ad-credit bonus on the left, the video on the right.
+        Stacked, the 16:9 video alone was ~500px tall and pushed the button
+        and the bonus 340-640px below the fold on every laptop and monitor;
+        side by side, all three are on the first screen.
+
+        Below lg it is the same single column as before, video above the
+        button. The text column is `contents` there, so its children sit in
+        this flex column directly and the CTAs can be ordered after the
+        video (max-lg:order-last).
+      */}
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col text-center lg:grid lg:max-w-7xl lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-12 lg:text-left xl:gap-16">
+        <div className="contents lg:block">
         {showEyebrow && eyebrowPill}
 
         {/* Meta chip. Leads the hero on the advisory page, where the
@@ -351,7 +365,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mb-6 md:mb-8 flex justify-center"
+            className="mb-6 md:mb-8 lg:mb-4 flex justify-center lg:justify-start"
           >
             <span className="group relative inline-flex rounded-full p-[1px]">
               <MetaCampaignChip />
@@ -386,7 +400,9 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 md:mb-8"
+          // Smaller on desktop, where it has half the width: 60px across
+          // the full width before the two columns.
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.5rem] 2xl:text-[2.75rem] font-black leading-[1.1] tracking-tight mb-6 md:mb-8 lg:mb-4"
           style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
         >
           {headline || (
@@ -404,18 +420,52 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-base md:text-lg max-w-2xl mx-auto mb-10 md:mb-14 leading-relaxed"
+          className="text-base md:text-lg max-w-2xl mx-auto mb-10 md:mb-14 lg:mx-0 lg:mb-6 leading-relaxed"
           style={{ color: 'rgba(255,255,255,0.7)' }}
         >
           {subheadline || 'The Digital Rainmaker System is a complete, done-for-you infrastructure that automates your intake, secures your documents, and engineers 5-star Google reviews on autopilot. Built exclusively for established CPA firms.'}
         </motion.p>
+
+        {/* CTAs. Under the video below lg, under the subheadline beside it
+            from lg up (see the note on the columns above). */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="space-y-4 max-lg:order-last"
+        >
+          {/* The Hidden Drain Button */}
+          {showHiddenDrain && (
+            <a
+              href="/revenuecalc"
+              className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-red-600/25 group cursor-pointer"
+            >
+              Find My Hidden Drain
+              <Droplets size={22} className="group-hover:translate-y-[-2px] transition-transform" />
+            </a>
+          )}
+
+          {/* Booking Button */}
+          <QualifyCta ctaHref={ctaHref} />
+
+          {/* The ad-credit bonus, right under the button (Marcel,
+              2026-11-16): a reason to finish the qualifier now. */}
+          <div>
+            <AdCreditBonus />
+          </div>
+
+          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            We only partner with established CPA firms. No startups. No high-pressure pitch.
+          </p>
+        </motion.div>
+        </div>
 
         {/* Video Player */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="max-w-4xl mx-auto mb-10 md:mb-14"
+          className="w-full max-w-4xl mx-auto mb-10 md:mb-14 lg:mb-0 lg:max-w-none"
         >
           {/* Edge to edge inside a thin border — no inset bezel. It used to
               sit on a near-black panel with up to 32px of padding around it,
@@ -476,32 +526,6 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
               )}
             </AnimatePresence>
           </div>
-        </motion.div>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="space-y-4"
-        >
-          {/* The Hidden Drain Button */}
-          {showHiddenDrain && (
-            <a
-              href="/revenuecalc"
-              className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-red-600/25 group cursor-pointer"
-            >
-              Find My Hidden Drain
-              <Droplets size={22} className="group-hover:translate-y-[-2px] transition-transform" />
-            </a>
-          )}
-
-          {/* Booking Button */}
-          <QualifyCta ctaHref={ctaHref} />
-
-          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established CPA firms. No startups. No high-pressure pitch.
-          </p>
         </motion.div>
       </div>
     </section>
@@ -1663,6 +1687,9 @@ const FAQSection: React.FC<{ variant?: string; ctaHref?: string }> = ({ variant 
           className="text-center mt-10 sm:mt-14"
         >
           <QualifyCta ctaHref={ctaHref} />
+          <div className="mt-4">
+            <AdCreditBonus />
+          </div>
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
           </p>
@@ -1816,13 +1843,11 @@ const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
             borderColor: 'rgba(255,255,255,0.08)',
           }}
         >
-          <div className="max-w-5xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-4">
-            <p
-              className="hidden sm:block text-sm md:text-base font-semibold"
-              style={{ color: 'rgba(255,255,255,0.7)' }}
-            >
-              Ready to modernize your firm?
-            </p>
+          {/* The ad-credit bonus where "Ready to modernize your firm?" was
+              (Marcel, 2026-11-16): beside the button from sm up, under it
+              on a phone (column-reverse, so the button stays on top). */}
+          <div className="max-w-5xl mx-auto px-4 py-2.5 sm:py-3.5 flex flex-col-reverse sm:flex-row items-center justify-between gap-1.5 sm:gap-4">
+            <AdCreditBonus size="sm" />
             <QualifyCta ctaHref={ctaHref} size="bar" />
           </div>
         </motion.div>
@@ -1896,7 +1921,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
   }, [variant]);
 
   return (
-    <div className="min-h-screen pb-14 sm:pb-16">
+    <div className="min-h-screen pb-[5.5rem] sm:pb-16">
       {deadlineUrgency && <DeadlineBanner />}
       {/*
         DESKTOP ONLY, and this is the whole reason the wrapper exists.
@@ -1937,7 +1962,7 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
         link and no copyright anywhere on an ad destination that quotes
         money figures.
       */}
-      <VslDisclaimer />
+      <VslDisclaimer adCredit />
       <StickyCTA ctaHref={ctaHref} />
       {showExitIntent && <ExitIntentPopup />}
     </div>
