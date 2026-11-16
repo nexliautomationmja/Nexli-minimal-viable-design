@@ -145,6 +145,11 @@ export const AGENCY_ANNUAL_PLAN_BONUS = 10_000;
 export const PLAN_BONUS_CONDITIONS =
   'The bonus is Nexli’s own money, placed in your campaigns in your first month of ads, on top of your own budget. It has no cash value, cannot be withdrawn, is not refunded, is not credited against any fee and does not carry into later months.';
 
+/** The asterisk on "Up to $10,000 in ad credit when you sign*"
+ *  (components/funnel/AdCreditBonus, on the VSL pages and
+ *  /booking-confirmed-b): which plan gets how much, then the conditions. */
+export const AD_CREDIT_FOOTNOTE = `${usd(AGENCY_ANNUAL_PLAN_BONUS)} on the annual plan. On the monthly plan, Nexli matches your first month of ads: ${usd(AGENCY_MONTHLY_PLAN_BONUS)}. ${PLAN_BONUS_CONDITIONS}`;
+
 /** Minimum initial term on the monthly plan, in months, counted from launch. */
 export const AGENCY_INITIAL_TERM_MONTHS = 6;
 
