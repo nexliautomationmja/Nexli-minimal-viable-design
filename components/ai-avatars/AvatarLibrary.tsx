@@ -1,11 +1,14 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// The library on /ai-avatars: every avatar as a 9:16 card with her intro
-// video, and a pop-up player to watch it with sound.
+// The library on /ai-avatars: every avatar as a 9:16 card with an intro
+// video, and a pop-up player to watch it with sound. The deck passes one
+// tab's avatars at a time (women or men), so the pop-up's previous / next
+// stay within that tab. Copy about one avatar takes "her" or "his" from
+// possessive() / objective() in lib/ai-avatars.
 //
-// THE CARD is her portrait.webp, the selfie that matches the outfit in her
-// video. On a mouse, hovering mounts a silent preview of the video that fades
+// THE CARD is the avatar's portrait.webp, the selfie that matches the outfit
+// in the video. On a mouse, hovering mounts a silent preview of the video that fades
 // in over the still once its first frame plays; leaving unmounts it, so only
 // one video streams at a time however fast someone sweeps across the grid.
 // A touch screen has no hover: a tap goes straight to the pop-up.
@@ -25,7 +28,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight, Images, Play, Sparkles, UserRound, X } from 'lucide-react';
-import { avatarAlt, muxPoster } from '@/lib/ai-avatars';
+import { avatarAlt, muxPoster, objective, possessive } from '@/lib/ai-avatars';
 import { AiBadge, type CardAvatar } from './AvatarCard';
 
 const AvatarPlayer = dynamic(() => import('./AvatarPlayer'), { ssr: false });
@@ -94,7 +97,7 @@ function VideoCard({ a, onOpen }: { a: CardAvatar; onOpen: (el: HTMLButtonElemen
                 {a.name}
               </div>
               <div className="mt-0.5 text-[11px] font-semibold text-white/65">
-                {a.playbackId ? 'Watch her intro' : 'Photos'}
+                {a.playbackId ? `Watch ${possessive(a)} intro` : 'Photos'}
               </div>
             </div>
             {a.playbackId && (
@@ -202,7 +205,7 @@ function VideoModal({
           </h2>
           <p className="mt-3 text-sm leading-relaxed lg:text-base" style={{ color: 'rgba(255,255,255,0.62)' }}>
             AI-generated, like every face in the library. While your firm is with us, no other client&apos;s ads
-            use her.
+            use {objective(a)}.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
             <Link
@@ -210,7 +213,7 @@ function VideoModal({
               className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-2.5 text-sm font-bold text-white no-underline shadow-lg shadow-blue-600/25"
             >
               <Images className="h-4 w-4" aria-hidden="true" />
-              See her photos
+              See {possessive(a)} photos
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </Link>
             {/* Phones get prev / next here; the side arrows need the room. */}

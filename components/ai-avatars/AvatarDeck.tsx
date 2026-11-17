@@ -76,7 +76,7 @@ import {
   Reveal,
   Slide,
 } from '@/components/math/ui';
-import { DANIELA_PAGE_VIDEO, EXAMPLE_AVATAR_SLUG } from '@/lib/ai-avatars';
+import { DANIELA_PAGE_VIDEO, EXAMPLE_AVATAR_SLUG, LIBRARY_MEN_PARAM } from '@/lib/ai-avatars';
 import { AiBadge, AvatarPortrait, type CardAvatar } from './AvatarCard';
 import AvatarLibrary from './AvatarLibrary';
 import BookAgainCta, { BOOK_BAR_SPACE, useBookingState } from '@/components/booking/BookAgainCta';
@@ -217,7 +217,7 @@ function CoverSlide({
                 </div>
                 <span className="text-sm leading-snug" style={{ color: MUTED }}>
                   {library.length} avatars, each with
-                  <br className="sm:hidden" /> her own intro video
+                  <br className="sm:hidden" /> an intro video
                 </span>
               </div>
             )}
@@ -524,7 +524,7 @@ function AnswerSlide({ example }: { example: CardAvatar | undefined }) {
           <Reveal delay={0.08}>
             <Body className="mt-5 max-w-2xl lg:text-lg">
               We build your ads around an AI-generated presenter chosen for your firm, and while you are with us
-              no other client&apos;s ads use her. The same face shows up in every ad you run, so your market
+              no other client&apos;s ads use that presenter. The same face shows up in every ad you run, so your market
               starts to know your firm by it, and stops lumping you in with everyone else. You never film it and
               you never run it: we make the ads and run the campaigns.
             </Body>
@@ -595,20 +595,37 @@ function CastingSlide() {
   );
 }
 
-type Filter = 'all' | 'female' | 'male';
+type Filter = 'female' | 'male';
 const TABS: { key: Filter; label: string }[] = [
-  { key: 'all', label: 'All' },
   { key: 'female', label: 'Women' },
   { key: 'male', label: 'Men' },
 ];
 
-/** Not a Slide: taller than the window, see .deck-tall in DECK_CSS. The
- *  filter tabs only show once the library has both women and men in it. */
+/** Not a Slide: taller than the window, see .deck-tall in DECK_CSS.
+ *
+ *  WOMEN FIRST, MEN ONE CLICK AWAY (Marcel, 2026-11-17): the library opens on
+ *  the women and the Men tab swaps the grid for the men. The tab is kept in
+ *  the address as ?show=men (libraryHref in lib/ai-avatars), so a man's page
+ *  links back to the men, and Back from his page lands on them too. The tabs
+ *  only show while the library has both. */
 function LibrarySection({ library }: { library: CardAvatar[] }) {
-  const [filter, setFilter] = useState<Filter>('all');
-  const shown = filter === 'all' ? library : library.filter((a) => a.gender === filter);
-  const count = (f: Filter) => (f === 'all' ? library.length : library.filter((a) => a.gender === f).length);
+  const [filter, setFilter] = useState<Filter>('female');
+  const count = (f: Filter) => library.filter((a) => a.gender === f).length;
   const mixed = count('female') > 0 && count('male') > 0;
+  const shown = mixed ? library.filter((a) => a.gender === filter) : library;
+
+  // The page is static, so the tab in the address is read here, after load.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('show') === LIBRARY_MEN_PARAM) setFilter('male');
+  }, []);
+
+  const choose = (f: Filter) => {
+    setFilter(f);
+    const url = new URL(window.location.href);
+    if (f === 'male') url.searchParams.set('show', LIBRARY_MEN_PARAM);
+    else url.searchParams.delete('show');
+    window.history.replaceState(null, '', url);
+  };
   return (
     <section
       id="library"
@@ -619,7 +636,7 @@ function LibrarySection({ library }: { library: CardAvatar[] }) {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <Heading
             kicker="The library"
-            sub={`${library.length} AI-generated presenters, each with her own intro video. Each one runs for one firm at a time, so the face in your ads never turns up in another firm's.`}
+            sub={`${library.length} AI-generated presenters, women and men, each with an intro video. Each one runs for one firm at a time, so the face in your ads never turns up in another firm's.`}
           >
             Meet <span className={GRADIENT_TEXT}>the cast.</span>
           </Heading>
@@ -634,7 +651,7 @@ function LibrarySection({ library }: { library: CardAvatar[] }) {
                       type="button"
                       role="tab"
                       aria-selected={active}
-                      onClick={() => setFilter(t.key)}
+                      onClick={() => choose(t.key)}
                       className={`rounded-full border px-4 py-2 text-xs font-bold transition-colors sm:text-sm ${
                         active
                           ? 'border-cyan-400/60 bg-cyan-400/15 text-white'
