@@ -20,15 +20,17 @@
 // firms that all look the same get treated the same and priced the same. A
 // firm's own avatar sets it apart and makes it a brand.
 //
-// THE ROSTER (Marcel, 2026-11-13): sixteen women besides Daniela, each
-// with a short intro video on Mux. No men yet. Listed alphabetically, which is
-// the order the library shows them in.
+// THE ROSTER (Marcel, 2026-11-17): seventeen women besides Daniela and
+// fourteen men, each with a short intro video on Mux. Women first, then men,
+// each alphabetically. The library opens on the women, with a Men tab
+// beside it (Marcel, 2026-11-17), so the order here is the order of each tab.
 //
-// ADDING ONE. Add an entry here (the slug is the URL, /ai-avatars/<slug>),
-// then put her images in public/ai-avatars/<slug>/ as WebP. A file named
-// portrait.webp is the card and the video poster: use the 9:16 selfie that
-// matches the outfit in her video, so the hover preview picks up from it.
-// lib/ai-avatar-images finds the rest with no other change.
+// ADDING ONE. Add an entry here with woman() or man() (the slug is the URL,
+// /ai-avatars/<slug>), then put the images in public/ai-avatars/<slug>/ as
+// WebP. A file named portrait.webp is the card and the video poster: use the
+// 9:16 selfie that matches the outfit in the video, so the hover preview
+// picks up from it. lib/ai-avatar-images finds the rest with no other change.
+// The name is the one burned into the video's "AI AVATAR – NAME" tag.
 //
 // THE VIDEOS. Mux PLAYBACK ids, not asset ids (https://stream.mux.com/<id>.m3u8
 // returns 200 for a playback id). Every one was checked before wiring. The
@@ -59,14 +61,16 @@ export const NEXLI_AVATAR: AiAvatar = {
   persona: 'The face of Nexli. She answers prospects on Candor and on the booking page.',
 };
 
-const woman = (name: string, playbackId: string): AiAvatar => ({
+const avatar = (gender: AvatarGender) => (name: string, playbackId: string): AiAvatar => ({
   slug: name.toLowerCase(),
   name,
-  gender: 'female',
+  gender,
   playbackId,
 });
+const woman = avatar('female');
+const man = avatar('male');
 
-/** The library a firm picks from. */
+/** The library a firm picks from: the women, then the men. */
 export const AI_AVATARS: AiAvatar[] = [
   woman('Abbey', 'Rl1S1B537ZkFBmlCmNFCpECDcZt7h5uYYCNJrKYobjk'),
   woman('Adrianna', 'lAFoxqj02Kku5CW4D01rYGVDm8D9HC3hIK9q009VXymuCk'),
@@ -83,8 +87,40 @@ export const AI_AVATARS: AiAvatar[] = [
   woman('Rene', 'yllxGWf6AVrx4nAEg76i1RVmRb5FI3GgKhi3nmSCqIE'),
   woman('Sofia', 'zi14WHwTKvzsX9HCDiW6O3UU2IVSs02F3VEV2mJpVH01Y'),
   woman('Vivian', '6Hdih9wWtXjCu3BtvtuJxvbf2W3sPzVZA4OgFlRbjw8'),
+  woman('Yasmin', '6G5cdFpYM4ww6H19QNnxeWS00ibkoOFYigKCKtRWpBJI'),
   woman('Zoey', 'F5RCKS3800Lbyl022micl67OafLWfEnzHQlzWdi8xTVh8'),
+
+  man('Andre', 'NYG7LNkRR4mObTBc5cwSYnU1J5nRlemKQZ5HrxnnK2g'),
+  man('Arthur', 'EBX6DrW9ipbQl7ksC01gr00vcaUM02LYYZ6mv7eLz9uPK4'),
+  man('Charles', 'eYzKUp2lIPrXsUt88ZVluEx5gI02G158Q4DjJM4E4pnI'),
+  man('Declan', 'fo00I1Tiz69Ka5L9IfTrxPgMw00GKbfkexG8tb7xLs5WI'),
+  man('James', 'cBU7wWUW1qZB3Viyfqaagim3Gjvg5BZZQ01AqYcCQU1I'),
+  man('Junho', '01FmSAfBvT02a7q37jbxTunaSyM02Jm7NtkQw3ASZq5aWY'),
+  man('Karim', 'THjmp5BSx701GFpeE16tFhcJwDz47Lt001VaOXwRotmVI'),
+  man('Kenji', 'G00hN9qNkt00ZntTVpB3SXU6rFYDglU42SzAFVK99Bjto'),
+  man('Marcus', 'sO021tnicUvQwB01dcc026ikG00oCgdCoiTeQT63HS7uISU'),
+  man('Mateo', 'uXeEjfQ8eiMalmCzuJB3lg4yErmMcWTtk2wZtc00nMyg'),
+  // "Palolo" as burned into his video's name tag and as Marcel typed it;
+  // his reference folder spells it "Paolo". Change both or neither.
+  man('Palolo', 'g7dikBHKXzh2H00BGTZ100nJnCAL020202OzbxSj02JnhOH014'),
+  man('Rohan', 'OBShdZYTI18HB5O01ESPALKWydcQKh6xktYC5kpzBkWc'),
+  man('William', '01tv23vHBoBCeY7YXTXFSFCzstftz00RrPNNMVUjZrJb8'),
+  man('Xavier', 'bVR66wxSd9LagTIQ2xVvbms3I7h4NVKw84EIoPdoCBk'),
 ];
+
+/** "her" or "his", for copy written about one avatar. */
+export const possessive = (a: Pick<AiAvatar, 'gender'>) => (a.gender === 'male' ? 'his' : 'her');
+/** "her" or "him". */
+export const objective = (a: Pick<AiAvatar, 'gender'>) => (a.gender === 'male' ? 'him' : 'her');
+
+/**
+ * The library, opened on one gender's tab. The library opens on the women;
+ * ?show=men opens it on the men, so a man's page links back to the tab it
+ * came from. The page is static, so the deck reads it in the browser.
+ */
+export const LIBRARY_MEN_PARAM = 'men';
+export const libraryHref = (gender: AvatarGender) =>
+  gender === 'male' ? `/ai-avatars?show=${LIBRARY_MEN_PARAM}#library` : '/ai-avatars#library';
 
 /** The face in the deck's example ad. */
 export const EXAMPLE_AVATAR_SLUG = 'olivia';

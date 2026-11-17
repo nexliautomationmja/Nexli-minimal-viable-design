@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
-// /ai-avatars/<slug> — one avatar: her intro video and profile, every image
-// of her, then more of the library to keep browsing.
+// /ai-avatars/<slug> — one avatar: the intro video and profile, every image
+// of them, then more of the library to keep browsing.
 //
 // Same chrome as the deck it hangs off (components/ai-avatars/AvatarDeck):
 // the logo top left, no site nav or footer (ConditionalNavbar and Footer
@@ -21,7 +21,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, Play } from 'lucide-react';
 import { socialMeta } from '@/lib/seo';
-import { AI_AVATARS, NAMED_AVATARS, NEXLI_AVATAR, avatarAlt, avatarBySlug } from '@/lib/ai-avatars';
+import { AI_AVATARS, NAMED_AVATARS, NEXLI_AVATAR, avatarAlt, avatarBySlug, libraryHref } from '@/lib/ai-avatars';
 import { avatarImages } from '@/lib/ai-avatar-images';
 import { ADVISORY_PATH } from '@/lib/advisory-config';
 import FunnelLogo from '@/components/FunnelLogo';
@@ -83,13 +83,17 @@ export default async function AiAvatarPage({ params }: Props) {
   const isNexli = avatar.slug === NEXLI_AVATAR.slug;
   const card = { ...avatar, portrait: images.portrait };
 
-  // The next few in the library after this one, wrapping round, so every
-  // page leads on to different faces. Daniela's page starts from the top.
-  const at = AI_AVATARS.findIndex((a) => a.slug === avatar.slug);
-  const more = Array.from({ length: Math.min(5, AI_AVATARS.length - (at >= 0 ? 1 : 0)) }, (_, i) => {
-    const a = AI_AVATARS[(at + 1 + i) % AI_AVATARS.length];
+  // The next few after this one in the same tab of the library (women or
+  // men), wrapping round, so every page leads on to different faces of the
+  // kind the visitor was browsing. Daniela's page starts from the top. The
+  // links back go to that tab too (libraryHref).
+  const tab = AI_AVATARS.filter((a) => a.gender === avatar.gender);
+  const at = tab.findIndex((a) => a.slug === avatar.slug);
+  const more = Array.from({ length: Math.min(5, tab.length - (at >= 0 ? 1 : 0)) }, (_, i) => {
+    const a = tab[(at + 1 + i) % tab.length];
     return { ...a, portrait: avatarImages(a.slug).portrait };
   });
+  const back = libraryHref(avatar.gender);
 
   return (
     <main className="relative min-h-screen overflow-x-hidden text-white" style={{ backgroundColor: '#020617', ...OUTFIT }}>
@@ -109,7 +113,7 @@ export default async function AiAvatarPage({ params }: Props) {
       <div className="relative mx-auto max-w-6xl px-5 pb-36 pt-24 sm:px-8 md:pt-32">
         <div className="mb-8 flex items-center justify-between gap-4">
           <Link
-            href="/ai-avatars#library"
+            href={back}
             className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 no-underline transition-colors hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All avatars
@@ -176,10 +180,10 @@ export default async function AiAvatarPage({ params }: Props) {
                 More from the library
               </h2>
               <Link
-                href="/ai-avatars#library"
+                href={back}
                 className="shrink-0 text-sm font-semibold text-cyan-300 no-underline hover:text-white"
               >
-                See all {AI_AVATARS.length}
+                See all {tab.length}
               </Link>
             </div>
             <ul className="grid list-none grid-cols-3 gap-3 p-0 sm:grid-cols-5 md:gap-4">
@@ -215,7 +219,7 @@ export default async function AiAvatarPage({ params }: Props) {
 
         <div className="mt-16 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-5">
           <Link
-            href="/ai-avatars#library"
+            href={back}
             className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-bold text-white no-underline transition-colors hover:border-white/25"
           >
             Browse the library
