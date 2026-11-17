@@ -58,6 +58,9 @@ export default function ConditionalNavbar() {
     // /book, the calendar for a firm that already qualified. A funnel step
     // like /agency/call, so the same bare chrome.
     pathname === '/book' ||
+    // /tax-planning-tool, the estimator firms send their own prospects.
+    // It carries the firm's name, not Nexli's; same as the Footer's list.
+    pathname === '/tax-planning-tool' ||
     pathname === '/agency' ||
     pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||

@@ -120,7 +120,11 @@ export default function RootLayout({
         <Analytics />
         <AttributionCapture />
 
-        {/* Meta Pixel Script — beforeInteractive so fbq stub is available for useEffect calls */}
+        {/* Meta Pixel Script — beforeInteractive so fbq stub is available for useEffect calls.
+            No PageView on a firm's /tax-planning-tool link (?firm=...): those
+            visitors are other firms' prospects, not CPA firms, and would
+            dilute the retargeting and lookalike audiences. The bare page,
+            where a firm sets the tool up, still counts. */}
         <Script id="meta-pixel" strategy="beforeInteractive">
           {`!function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -131,7 +135,7 @@ export default function RootLayout({
           s.parentNode.insertBefore(t,s)}(window, document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
           fbq('init', '${process.env.NEXT_PUBLIC_META_PIXEL_ID || '910151701422761'}');
-          fbq('track', 'PageView');`}
+          if (!(location.pathname.indexOf('/tax-planning-tool') === 0 && new URLSearchParams(location.search).has('firm'))) fbq('track', 'PageView');`}
         </Script>
 
         {/* Nexli Analytics */}
