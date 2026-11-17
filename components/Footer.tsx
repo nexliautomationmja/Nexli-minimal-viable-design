@@ -59,6 +59,8 @@ const Footer: React.FC = () => {
     // /book, the calendar for a firm that already qualified. Same as the
     // navbar's list.
     pathname === '/book' ||
+    // /tax-planning-tool. Same as the navbar's list.
+    pathname === '/tax-planning-tool' ||
     pathname === '/agency' ||
     pathname.startsWith('/agency/') ||
     pathname === '/better-clients' ||
