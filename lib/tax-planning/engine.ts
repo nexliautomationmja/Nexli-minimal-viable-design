@@ -36,6 +36,12 @@ export interface Answers {
   revenueThisYear: number;
   /** The owner's share of this year's profit, before paying themselves. */
   profit: number;
+  /**
+   * Profit as a share of this year's revenue, 0–1. The two are linked
+   * (withLinkedProfit): change revenue and profit follows at this margin;
+   * type a profit and the margin follows instead.
+   */
+  margin: number;
   entity: Entity;
   /** A specified service business (§199A(d)(2)): health, law, accounting... */
   sstb: boolean;
@@ -80,7 +86,8 @@ export interface Answers {
 export const SAMPLE: Answers = {
   revenueLastYear: 800_000,
   revenueThisYear: 1_050_000,
-  profit: 300_000,
+  profit: 315_000,
+  margin: 0.3,
   entity: 'sole',
   sstb: false,
   payroll: 0,
@@ -642,6 +649,13 @@ export function sanitizeAnswers(raw: unknown, isState: (code: unknown) => boolea
     revenueLastYear: num('revenueLastYear'),
     revenueThisYear: num('revenueThisYear'),
     profit: num('profit'),
+    margin:
+      typeof o.margin === 'number' && Number.isFinite(o.margin) && o.margin >= 0 && o.margin <= 1
+        ? o.margin
+        : // A save from before the margin existed: read it off the save itself.
+          num('revenueThisYear') > 0
+          ? Math.min(1, num('profit') / num('revenueThisYear'))
+          : SAMPLE.margin,
     entity: pick('entity', ENTITIES),
     sstb: typeof o.sstb === 'boolean' ? o.sstb : SAMPLE.sstb,
     payroll: num('payroll'),
@@ -670,4 +684,22 @@ export function sanitizeAnswers(raw: unknown, isState: (code: unknown) => boolea
       ? (o.strategyOff.filter((x) => (STRATEGY_IDS as readonly unknown[]).includes(x)) as StrategyId[])
       : [],
   };
+}
+
+// ── Profit follows revenue ──────────────────────────────────────────────────
+
+/**
+ * Keeps profit and margin in step after `changed` was edited, so a prospect
+ * who only knows their revenue never has to work out a profit:
+ *   revenue this year or margin changed → profit = revenue × margin
+ *   profit changed                     → margin = profit ÷ revenue
+ */
+export function withLinkedProfit(a: Answers, changed: keyof Answers): Answers {
+  if (changed === 'revenueThisYear' || changed === 'margin') {
+    return { ...a, profit: Math.round(a.revenueThisYear * a.margin) };
+  }
+  if (changed === 'profit' && a.revenueThisYear > 0) {
+    return { ...a, margin: Math.min(1, a.profit / a.revenueThisYear) };
+  }
+  return a;
 }

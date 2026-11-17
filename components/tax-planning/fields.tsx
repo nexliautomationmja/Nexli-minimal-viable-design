@@ -297,3 +297,68 @@ export function QuestionPanel({
     </section>
   );
 }
+
+/**
+ * A percentage, typed as text so "2" on the way to "25" and "5." on the way
+ * to "5.5" survive mid-entry. `empty` decides what clearing it means: null
+ * for an optional override, or "keep the last value" for a required one.
+ */
+export function PercentField({
+  label,
+  value,
+  onChange,
+  max = 100,
+  placeholder,
+  hint,
+  emptyIsNull = false,
+  className,
+}: {
+  label: React.ReactNode;
+  value: number | null;
+  onChange: (v: number | null) => void;
+  max?: number;
+  placeholder?: string;
+  hint?: React.ReactNode;
+  emptyIsNull?: boolean;
+  className?: string;
+}) {
+  const id = useId();
+  const show = (v: number | null) => (v == null ? '' : String(Math.round(v * 10) / 10));
+  const [text, setText] = React.useState(show(value));
+  // Follow changes made elsewhere (a typed profit moves the margin; Start
+  // over clears an override), but never fight the typing.
+  React.useEffect(() => {
+    setText((t) => {
+      const n = parseFloat(t);
+      if (value == null) return Number.isFinite(n) ? '' : t;
+      return Number.isFinite(n) && Math.abs(n - value) < 0.05 ? t : show(value);
+    });
+  }, [value]);
+  return (
+    <Field label={label} hint={hint} htmlFor={id} className={className}>
+      <div className="relative">
+        <input
+          id={id}
+          type="text"
+          inputMode="decimal"
+          value={text}
+          placeholder={placeholder}
+          onFocus={(e) => e.target.select()}
+          onBlur={() => setText(show(value))}
+          onChange={(e) => {
+            const t = e.target.value.replace(/[^\d.]/g, '').slice(0, 5);
+            setText(t);
+            const n = parseFloat(t);
+            if (t === '' || !Number.isFinite(n)) {
+              if (emptyIsNull) onChange(null);
+              return;
+            }
+            onChange(Math.min(max, n));
+          }}
+          className={`${INPUT} pl-3.5 pr-8`}
+        />
+        <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-white/40">%</span>
+      </div>
+    </Field>
+  );
+}

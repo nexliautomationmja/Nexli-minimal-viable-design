@@ -21,7 +21,7 @@ import { MotionConfig } from 'framer-motion';
 import { ArrowDown, CalendarCheck, ChevronDown, Printer, RotateCcw } from 'lucide-react';
 import { OUTFIT, RimCard } from '@/components/funnel/primitives';
 import { GRADIENT_TEXT, HEADING, Kicker, MUTED } from '@/components/math/ui';
-import { MoneyField, QuestionPanel, Segmented, Select, Stepper, Field, INPUT } from '@/components/tax-planning/fields';
+import { Field, INPUT, MoneyField, PercentField, QuestionPanel, Segmented, Select, Stepper } from '@/components/tax-planning/fields';
 import FirmSetup from '@/components/tax-planning/FirmSetup';
 import Summary from '@/components/tax-planning/Summary';
 import StrategyList from '@/components/tax-planning/StrategyList';
@@ -29,7 +29,7 @@ import { CheapRoute, Growth, Quarterly } from '@/components/tax-planning/MoreRes
 import ToolFooter from '@/components/tax-planning/ToolFooter';
 import PrintSummary from '@/components/tax-planning/PrintSummary';
 import { firmName, money, round100 } from '@/components/tax-planning/format';
-import { SAMPLE, run, sanitizeAnswers, type Answers, type Entity } from '@/lib/tax-planning/engine';
+import { SAMPLE, run, sanitizeAnswers, withLinkedProfit, type Answers, type Entity } from '@/lib/tax-planning/engine';
 import { ratesFor } from '@/lib/tax-planning/rates';
 import { STATES, isStateCode, stateInfo } from '@/lib/tax-planning/states';
 import { TOOL_PATH, firmQuery, type FirmConfig } from '@/lib/tax-planning/firm';
@@ -95,7 +95,7 @@ export default function TaxTool({
   }, [answers, touched]);
 
   const set = useCallback(<K extends keyof Answers>(key: K, value: Answers[K]) => {
-    setAnswers((a) => ({ ...a, [key]: value }));
+    setAnswers((a) => withLinkedProfit({ ...a, [key]: value }, key));
     setTouched(true);
   }, []);
 
@@ -134,7 +134,6 @@ export default function TaxTool({
   const r = full.thisYear;
   const rates = ratesFor(year);
   const growth = answers.revenueLastYear > 0 ? answers.revenueThisYear / answers.revenueLastYear - 1 : null;
-  const margin = answers.revenueThisYear > 0 ? answers.profit / answers.revenueThisYear : null;
   const liability = round100(r.baseline.total);
 
   return (
@@ -218,21 +217,34 @@ export default function TaxTool({
                     aside={growth != null && Number.isFinite(growth) ? <GrowthChip g={growth} /> : undefined}
                   />
                 </div>
-                <div className="grid gap-5 sm:grid-cols-2">
+                {/* Profit follows revenue at this margin (withLinkedProfit),
+                    so someone who only knows their revenue can skip it. */}
+                <div className="grid grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] gap-3 sm:gap-5">
+                  <PercentField
+                    label="Profit margin"
+                    value={Math.round(answers.margin * 1000) / 10}
+                    onChange={(v) => v != null && set('margin', v / 100)}
+                  />
                   <MoneyField
                     label="Your profit this year"
                     value={answers.profit}
                     onChange={(v) => set('profit', v)}
-                    hint={`Your share, before paying yourself.${margin != null && margin > 0 && margin <= 1 ? ` A ${Math.round(margin * 100)}% margin.` : ''}`}
-                  />
-                  <Select
-                    label="State"
-                    value={answers.state}
-                    onChange={(v) => set('state', v)}
-                    options={STATE_OPTIONS}
-                    hint={stateInfo(answers.state).brackets.length === 0 ? 'No state tax on wages or business income.' : undefined}
+                    aside={<span className="rounded-full bg-cyan-400/10 px-2 py-0.5 text-[10px] font-bold text-cyan-300">AUTO</span>}
                   />
                 </div>
+                <div className="-mt-3 text-xs leading-snug text-white/45">
+                  Revenue × margin, your share before paying yourself. Type your own profit if you know it.
+                  {answers.revenueLastYear > 0 && answers.margin > 0 && (
+                    <> Last year at the same margin: about {money(answers.revenueLastYear * answers.margin)}.</>
+                  )}
+                </div>
+                <Select
+                  label="State"
+                  value={answers.state}
+                  onChange={(v) => set('state', v)}
+                  options={STATE_OPTIONS}
+                  hint={stateInfo(answers.state).brackets.length === 0 ? 'No state tax on wages or business income.' : undefined}
+                />
                 <Segmented
                   label="How the business is set up"
                   value={answers.entity}
@@ -330,7 +342,15 @@ export default function TaxTool({
                   />
                 </div>
                 <div className="grid gap-5 sm:grid-cols-2">
-                  <RateField value={answers.stateRate} onChange={(v) => set('stateRate', v)} />
+                  <PercentField
+                    label="Your own state rate"
+                    value={answers.stateRate}
+                    onChange={(v) => set('stateRate', v)}
+                    max={20}
+                    placeholder="Auto"
+                    emptyIsNull
+                    hint="Optional. Overrides the state’s brackets, e.g. to add city tax."
+                  />
                   <PreparedFor value={answers.preparedFor} onChange={(v) => set('preparedFor', v)} />
                 </div>
               </MoreDetail>
@@ -472,42 +492,6 @@ function GrowthChip({ g }: { g: number }) {
       {up ? '+' : '−'}
       {Math.round(Math.abs(g) * 100)}%
     </span>
-  );
-}
-
-/** An optional flat state rate, for anyone folding in city or county tax. */
-function RateField({ value, onChange }: { value: number | null; onChange: (v: number | null) => void }) {
-  const [text, setText] = useState(value == null ? '' : String(value));
-  // Follow outside changes (Start over), but never fight the typing: "5."
-  // and "." are mid-entry, not something to overwrite.
-  useEffect(() => {
-    setText((t) => {
-      const n = parseFloat(t);
-      if (value == null) return Number.isFinite(n) ? '' : t;
-      return n === value ? t : String(value);
-    });
-  }, [value]);
-  return (
-    <Field label="Your own rate" hint="Optional. Overrides the state’s brackets.">
-      <div className="relative">
-        <input
-          type="text"
-          inputMode="decimal"
-          value={text}
-          placeholder="Auto"
-          aria-label="Your own state tax rate, percent"
-          onFocus={(e) => e.target.select()}
-          onChange={(e) => {
-            const t = e.target.value.replace(/[^\d.]/g, '').slice(0, 5);
-            setText(t);
-            const n = parseFloat(t);
-            onChange(t === '' || !Number.isFinite(n) ? null : Math.min(20, n));
-          }}
-          className={`${INPUT} pl-3.5 pr-8`}
-        />
-        <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-white/40">%</span>
-      </div>
-    </Field>
   );
 }
 
