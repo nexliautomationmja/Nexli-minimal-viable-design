@@ -51,6 +51,10 @@ export default function ConditionalNavbar() {
     // their own chrome; the site nav would sit on top of every one of them.
     pathname === '/math' ||
     pathname.startsWith('/math/') ||
+    // /pitch, the Agency Pitch Deck Marcel presents on sales calls. Same
+    // deck chrome as /math.
+    pathname === '/pitch' ||
+    pathname.startsWith('/pitch/') ||
     // /ai-avatars, the AI avatar pitch deck and each avatar's page. Same
     // deck chrome as /math: just the logo, no way out but the CTA.
     pathname === '/ai-avatars' ||

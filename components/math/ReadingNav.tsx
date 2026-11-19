@@ -37,6 +37,8 @@ export const READING_NAV_CTA_SPACE = 'calc(126px + env(safe-area-inset-bottom, 0
 
 export default function ReadingNav({
   slides,
+  label = 'See the math',
+  pdf,
   current,
   atStart,
   atEnd,
@@ -45,6 +47,10 @@ export default function ReadingNav({
   cta,
 }: {
   slides: readonly { id: string; title: string }[];
+  /** The kicker over the slide list (components/deck/DeckShell). */
+  label?: string;
+  /** The list's download row. Left out: /math's PDF. null: no row (/pitch). */
+  pdf?: { href: string; name: string } | null;
   current: number;
   atStart: boolean;
   atEnd: boolean;
@@ -55,8 +61,10 @@ export default function ReadingNav({
   cta?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
-  // On a phone, the phone PDF (components/math/pdf).
-  const pdfHref = usePdfHref();
+  // On a phone, the phone PDF (components/math/pdf), unless the deck passes
+  // its own PDF or none.
+  const mathPdfHref = usePdfHref();
+  const download = pdf === null ? null : pdf ?? { href: mathPdfHref, name: PDF_NAME };
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const currentItem = useRef<HTMLButtonElement>(null);
@@ -193,7 +201,7 @@ export default function ReadingNav({
               <div aria-hidden="true" className="mx-auto mt-2.5 h-1 w-10 shrink-0 rounded-full bg-white/20" />
               <div className="flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-3">
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-400">See the math</div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-400">{label}</div>
                   <div id="slides-sheet-title" className="mt-0.5 text-lg font-bold text-white">
                     Jump to a slide
                   </div>
@@ -241,16 +249,18 @@ export default function ReadingNav({
                 })}
               </ol>
 
+              {download && (
               <div className="shrink-0 border-t border-white/[0.08] px-4 pb-4 pt-3">
                 <a
-                  href={pdfHref}
-                  download={PDF_NAME}
+                  href={download.href}
+                  download={download.name}
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.05] text-sm font-semibold text-white/90 [-webkit-tap-highlight-color:transparent] active:bg-white/[0.1]"
                 >
                   <Download className="h-4 w-4" aria-hidden="true" />
                   Download the PDF
                 </a>
               </div>
+              )}
             </motion.div>
           </motion.div>
         )}

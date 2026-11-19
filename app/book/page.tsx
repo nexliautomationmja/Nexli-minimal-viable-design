@@ -93,7 +93,7 @@ export default async function BookPage() {
 
         <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed sm:text-base" style={MUTED}>
           {access
-            ? 'You already cleared the qualifier, so there are no questions this time. 45 minutes, camera on, no slide deck.'
+            ? 'You already cleared the qualifier, so there are no questions this time. 45 minutes, camera on.'
             : 'Already qualified? Use the email you qualified with and you’ll go straight to the calendar. No questions this time.'}
         </p>
 

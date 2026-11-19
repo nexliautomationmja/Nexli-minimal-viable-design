@@ -107,7 +107,7 @@ export default async function CallStep({ angle }: { angle: VslAngle }) {
           style={{ color: 'rgba(255,255,255,0.65)' }}
         >
           Your answers cleared the bar, so there is nothing else to fill in. 45 minutes,
-          camera on, no slide deck.
+          camera on.
         </p>
       </section>
 

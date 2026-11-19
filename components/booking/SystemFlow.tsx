@@ -3,24 +3,24 @@
 // ---------------------------------------------------------------------------
 // What actually gets built, as a flow — booking-confirmed B.
 //
-//     [ Ad ] -> [ The offer ] -> [ Qualifier ]
-//                                      |
-//                        +-------------+-------------+
-//              [ Qualified: VSL + calendar ]   [ Not a fit: keeps the
-//                                                guide, you keep the lead ]
+//     [ Ad ] -> [ The VSL ] -> [ Qualifier ]
+//                                    |
+//                      +-------------+-------------+
+//        [ Qualified: your calendar,     [ Not a fit: never reaches
+//          then the automations ]          your calendar; stays a
+//                                          contact in your CRM ]
 //
 // The list of deliverables two sections down says WHAT we build. This says
 // how the pieces connect, which is the thing a firm cannot picture from a
 // list, and it answers the question the list raises: what happens to the
 // leads who are not ready? They are not thrown away.
 //
-// THE FREEBIE IS THE ENTRY, NOT THE CONSOLATION. This diagram used to show
-// a generic "funnel" page in the middle and put the guide on the not-a-fit
-// branch, as though it were what you hand someone who failed. That is
-// backwards and it misdescribes the funnel we actually run: the free guide
-// is the thing the ad promises, answering the questions is how you get it,
-// and everybody who answers receives it. Qualifying is what the offer DOES,
-// not a gate in front of it.
+// THE CLIENT FUNNEL IS AD → VSL → QUALIFIER → CALENDAR → AUTOMATIONS
+// (Marcel, 2026-11-19). The firm's AI avatar fronts the ad and teaches on
+// the VSL; the qualifier sits on that same page; a fit books straight onto
+// the firm's calendar and the automations take it from there. It used to be
+// drawn with a free guide as the entry ("the freebie is the entry, not the
+// consolation"); that funnel is retired. Same order as the /pitch deck.
 //
 // Theme-aware, unlike AdCreativeLab above it. This is page content, so it
 // uses the page's own tokens (--glass-bg / --glass-border / --text-main) and
@@ -37,9 +37,9 @@ import {
   ArrowRight,
   CalendarCheck,
   ChevronDown,
-  Gift,
   ListFilter,
   Megaphone,
+  PlayCircle,
   UserPlus,
 } from 'lucide-react';
 
@@ -51,17 +51,17 @@ const STAGES = [
   {
     Icon: Megaphone,
     label: 'The ad',
-    body: 'Photo and video angles running on Meta, pointed at business owners and high earners in your market.',
+    body: 'Video and photo angles running on Meta, fronted by your firm\'s AI avatar and written for business owners and high earners in your market.',
   },
   {
-    Icon: Gift,
-    label: 'The offer',
-    body: 'A free guide or a low-ticket product, built to be worth having on its own. It is what the ad promises and what makes the right person raise their hand.',
+    Icon: PlayCircle,
+    label: 'The VSL',
+    body: 'The ad lands on a short video page. The same avatar explains what proactive tax planning saves, so they arrive at the call already knowing what it is for.',
   },
   {
     Icon: ListFilter,
     label: 'The qualifier',
-    body: 'Answering a short set of questions is how they get it. That is also what sorts a real prospect from a tyre-kicker, before anyone reaches your calendar.',
+    body: 'A few questions on that same page, set with you. They sort a real prospect from a tyre-kicker before anyone reaches your calendar.',
   },
 ];
 
@@ -195,8 +195,8 @@ export default function SystemFlow() {
         <Node
           Icon={CalendarCheck}
           className="h-full"
-          label="Qualified → the video, then your calendar"
-          body="They are shown a short video making the case for the work, with your calendar directly beneath it. They book without going anywhere, answers attached, so you open the call already knowing the firm."
+          label="Qualified → your calendar, then the automations"
+          body="They book straight onto your calendar, answers attached. Confirmations, reminders and follow-up that speaks to their problem take it from there, so they show up expecting you to fix it."
         />
         {/* Amber, never red. A lead who is not ready today is not a loss,
             and colouring them like one would argue against the point the
@@ -205,8 +205,8 @@ export default function SystemFlow() {
           Icon={UserPlus}
           tone="amber"
           className="h-full"
-          label="Not a fit → you still get the lead"
-          body="They receive what they came for and nothing else is asked of them. You keep the contact and they stay in follow-up, so nothing you paid to reach is thrown away."
+          label="Not a fit → you still keep the contact"
+          body="They never reach your calendar, so no call is wasted on them. Their details stay in your CRM, so nothing you paid to reach is thrown away."
         />
       </div>
     </div>
