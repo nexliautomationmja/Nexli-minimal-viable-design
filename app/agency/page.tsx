@@ -22,12 +22,12 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_AGENCY } from '@/lib/advisory-config';
+import { VSL_ANGLE_AGENCY, VSL_AUDIENCE_REVENUE } from '@/lib/advisory-config';
 import AgencyVslClient from './agency-client';
 
 const TITLE = 'Why the $15,000 client never calls your firm | Nexli';
 const DESCRIPTION =
-  'A short video on what established CPA firms put in place before they spend a dollar on ads — and why the firms that skip it burn the budget finding out.';
+  `A short video for CPA firms doing ${VSL_AUDIENCE_REVENUE} a year on what to put in place before you spend a dollar on ads — and why the firms that skip it burn the budget finding out.`;
 
 export const metadata: Metadata = {
   title: TITLE,

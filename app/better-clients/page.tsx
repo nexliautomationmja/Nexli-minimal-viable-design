@@ -20,12 +20,12 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_BETTER_CLIENTS } from '@/lib/advisory-config';
+import { VSL_ANGLE_BETTER_CLIENTS, VSL_AUDIENCE_REVENUE } from '@/lib/advisory-config';
 import BetterClientsVslClient from './better-clients-client';
 
 const TITLE = 'You do not need more leads | Nexli';
 const DESCRIPTION =
-  'A short video for CPA firms on why chasing lead volume keeps margins thin — and what changes when you filter for the clients who pay five figures for planning.';
+  `A short video for CPA firms doing ${VSL_AUDIENCE_REVENUE} a year on why chasing lead volume keeps margins thin — and what changes when you filter for the clients who pay five figures for planning.`;
 
 export const metadata: Metadata = {
   title: TITLE,

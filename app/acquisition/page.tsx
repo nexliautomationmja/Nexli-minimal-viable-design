@@ -16,12 +16,12 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_ACQUISITION } from '@/lib/advisory-config';
+import { VSL_ANGLE_ACQUISITION, VSL_AUDIENCE_REVENUE } from '@/lib/advisory-config';
 import AcquisitionVslClient from './acquisition-client';
 
 const TITLE = 'Referrals built your firm. They will not scale it | Nexli';
 const DESCRIPTION =
-  'A short video for CPA firms on why a book built on referrals cannot be forecast or valued — and what a predictable acquisition channel changes.';
+  `A short video for CPA firms doing ${VSL_AUDIENCE_REVENUE} a year on why a book built on referrals cannot be forecast or valued — and what a predictable acquisition channel changes.`;
 
 export const metadata: Metadata = {
   title: TITLE,

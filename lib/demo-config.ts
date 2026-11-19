@@ -42,12 +42,17 @@ export const BOOKING_CONFIRMED_B_PATH = '/booking-confirmed-b';
  * 200 for a playback id and 400 for an asset id. The current cut (Marcel,
  * 2026-11-09) was checked that way before this swap.
  *
- * Previous cuts, both still in Mux, so reverting is this line and nothing
+ * The current cut is Marcel's of 2026-11-19 (1080p, the same office set as
+ * the new Better Clients VSL), checked the same way. Its first frame is the
+ * presenter smiling with no caption yet, so poster time 0 still holds.
+ *
+ * Previous cuts, all still in Mux, so reverting is this line and nothing
  * else:
+ *   ReRcdF6QfmeNu0200UtGT00g3aV4s4ciDkF2XUOBUWK6yM  (2026-11-09 to 11-19)
  *   brQvpc77PpgGE2004Uu7c7njC5n9rwo01GPWHG02KY6S74  (until 2026-11-09)
  *   1YNqqVjhqvAdjOCpFnyCXSewrZt2Iu3HcnvzbcYZ9Gs     (before that)
  */
-export const BOOKING_WELCOME_VIDEO_ID = 'ReRcdF6QfmeNu0200UtGT00g3aV4s4ciDkF2XUOBUWK6yM';
+export const BOOKING_WELCOME_VIDEO_ID = 'GM69SSCMNHKcvckskUu7dec3BzPV2O02mC02SudOp00nYU';
 export const BOOKING_WELCOME_VIDEO_TITLE = 'Booking Confirmed - Thank You';
 
 /**
