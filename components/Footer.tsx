@@ -54,6 +54,9 @@ const Footer: React.FC = () => {
     // their own chrome; the site nav would sit on top of every one of them.
     pathname === '/math' ||
     pathname.startsWith('/math/') ||
+    // /pitch, the Agency Pitch Deck. Same as the navbar's list.
+    pathname === '/pitch' ||
+    pathname.startsWith('/pitch/') ||
     // /ai-avatars, the AI avatar pitch deck. Same as the navbar's list.
     pathname === '/ai-avatars' ||
     pathname.startsWith('/ai-avatars/') ||

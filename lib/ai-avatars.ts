@@ -13,6 +13,13 @@
 //   - Daniela is Nexli's own. She presents Nexli (Candor, the booking page)
 //     and is never offered to a client.
 //   - Like all ad creative, an avatar stays Nexli's property (Terms §6).
+//   - NEXLI CASTS IT; THE FIRM DOES NOT PICK (Marcel, 2026-11-19). Who
+//     appears in an ad changes who Meta delivers it to (Ali et al. 2019,
+//     "Discrimination through Optimization", arXiv:1904.02095: changing only
+//     an ad's image, headline and text changed its delivery under identical
+//     targeting). So the avatar is cast from the firm, its market and the
+//     clients it wants to reach. The library is the faces we cast from, not
+//     a menu. Say the reason neutrally, as above, on every page.
 //
 // WHY WE DO IT, which is what the page argues (Marcel, 2026-11-13): most
 // agencies run the same ads across all their clients. The same people see

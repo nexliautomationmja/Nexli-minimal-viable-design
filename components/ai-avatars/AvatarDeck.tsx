@@ -572,7 +572,11 @@ function CastingSlide() {
     <Slide id="casting">
       <Heading
         kicker="How we choose"
-        sub="Pick one from the library yourself, or tell us about your firm and we choose. Three things decide it."
+        // WE CAST, THE FIRM DOES NOT PICK (Marcel, 2026-11-19). Who is in an
+        // ad changes who Meta delivers it to, so the avatar is a targeting
+        // decision, not a matter of taste. The source line under the panels
+        // is the study behind it; say it neutrally, as it is said here.
+        sub="You don't pick from the library. We cast your avatar, because who appears in an ad changes who Meta shows it to. Three things decide it."
       >
         Cast for your market, <span className={GRADIENT_TEXT}>not for &ldquo;accounting.&rdquo;</span>
       </Heading>
@@ -591,6 +595,22 @@ function CastingSlide() {
           </Reveal>
         ))}
       </div>
+      <Reveal delay={0.2}>
+        <p className="mt-5 max-w-4xl text-xs leading-relaxed sm:text-[13px]" style={{ color: FAINT }}>
+          Researchers at Northeastern, USC and Upturn ran Facebook ads with identical targeting and changed only the
+          image, headline and text; who the ads were delivered to changed with them (Ali et al., &ldquo;Discrimination
+          through Optimization,&rdquo; 2019,{' '}
+          <a
+            href="https://arxiv.org/abs/1904.02095"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-white/30 underline-offset-4 hover:text-white"
+          >
+            arXiv:1904.02095
+          </a>
+          ).
+        </p>
+      </Reveal>
     </Slide>
   );
 }
@@ -636,7 +656,7 @@ function LibrarySection({ library }: { library: CardAvatar[] }) {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <Heading
             kicker="The library"
-            sub={`${library.length} AI-generated presenters, women and men, each with an intro video. Each one runs for one firm at a time, so the face in your ads never turns up in another firm's.`}
+            sub={`${library.length} AI-generated presenters, women and men, each with an intro video: the faces we cast from. Each one runs for one firm at a time, so the face in your ads never turns up in another firm's.`}
           >
             Meet <span className={GRADIENT_TEXT}>the cast.</span>
           </Heading>
@@ -736,6 +756,7 @@ function YoursAloneSlide({ firmSpots }: { firmSpots: string }) {
 
 const QA = [
   ['Are these real people?', 'No. Every avatar is AI-generated: presenters we create for ads, not models, actors or employees.'],
+  ['Can I pick my avatar?', 'No. We cast it for you, from your firm, your market and the clients you want to reach, because who is in an ad changes who Meta shows it to.'],
   ['Do I own my avatar?', 'No. Like all the ad creative we make, it stays ours. While you are with us it runs only in your ads; after you leave, it can go to another firm.'],
   ['Can I have Daniela?', 'No. Daniela is the face of Nexli and is not available to clients.'],
 ];

@@ -48,6 +48,11 @@ export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 //     pay", named and NOT explained: how it works is walked through on the
 //     call. The VSLs and /booking-confirmed-b do not show the prepay; /math
 //     and Candor may offer it as the way to save.
+//   THE CALL DECK (/pitch, Marcel's Agency Pitch Deck, 2026-11-19): one
+//     slide spells the 10% out (the $10,000 covers up to $100,000 a month of
+//     agreed, attributable net revenue; above that, 10%, credited, with the
+//     $120,000 example), because the call is where Marcel explains it. No
+//     prepay there.
 //   POLICY PAGES (/terms, /pricing, /refund-policy, /delivery-policy): all of
 //     it, the performance-pay rule and the prepay included. The card
 //     processor's underwriters match every charge they process against

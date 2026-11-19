@@ -42,6 +42,8 @@ const DISALLOW = [
   // and full projections, not a search page. Shown on the call and sent
   // after it.
   '/math',
+  // The Agency Pitch Deck: Marcel's sales-call deck, unlisted.
+  '/pitch',
   // The Tax Planning Tool: unlisted until its tax figures have had a CPA's
   // review, and a firm's link to it is that firm's, not a search result.
   '/tax-planning-tool',
