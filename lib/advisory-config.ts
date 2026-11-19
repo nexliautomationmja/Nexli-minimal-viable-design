@@ -167,8 +167,11 @@ export const SYSTEMS_VSL_PLAYBACK_ID =
   'MOzPjnV4QY3Y85OYCcUcyNLtdHatO1r7YY9qtNLDoic';
 export const SYSTEMS_VSL_TITLE = 'Systems VSL';
 
+// The new Acquisition cut (Marcel, 2026-11-19): opens on the presenter with
+// no caption yet, so poster time 0 still holds. Replaced
+// ofWX01agb2iNVd3qiqFG7ybD4202DW2qRAEFEySOkd4lY.
 export const ACQUISITION_VSL_PLAYBACK_ID =
-  'ofWX01agb2iNVd3qiqFG7ybD4202DW2qRAEFEySOkd4lY';
+  'zome02rUGBQhgmO345aBmJDsSiOq4TEk01lnZZseWiuls';
 export const ACQUISITION_VSL_TITLE = 'Acquisition VSL';
 
 /**
@@ -255,6 +258,15 @@ export const ADVISORY_BOOK_PATH = '/book';
  * only — a returning lead keeps the landing_page from whichever page they
  * saw first, forever. This param does not have that problem.
  */
+/**
+ * Who the four VSLs speak to (Marcel, 2026-11-19): CPA firms doing $1M–$5M+
+ * a year. The plus is his: "because we will help bigger firms", so a $10M
+ * firm does not read itself out. Said in the hero, under every button and
+ * in each page's link preview. TARGETING COPY, NOT A GATE: nobody is turned
+ * away by it, and MIN_REVENUE in lib/site stays the published minimum.
+ */
+export const VSL_AUDIENCE_REVENUE = '$1M–$5M+';
+
 export const VSL_ANGLE_AGENCY = 'agency';
 export const VSL_ANGLE_BETTER_CLIENTS = 'better-clients';
 export const VSL_ANGLE_SYSTEMS = 'systems';

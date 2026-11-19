@@ -11,12 +11,12 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_SYSTEMS } from '@/lib/advisory-config';
+import { VSL_ANGLE_SYSTEMS, VSL_AUDIENCE_REVENUE } from '@/lib/advisory-config';
 import SystemsVslClient from './systems-client';
 
 const TITLE = 'The problem is not that you are not working hard enough | Nexli';
 const DESCRIPTION =
-  'A short video for CPA firms on why long hours stop scaling a practice — and what has to be systematised before more effort changes anything.';
+  `A short video for CPA firms doing ${VSL_AUDIENCE_REVENUE} a year on why long hours stop scaling a practice — and what has to be systematised before more effort changes anything.`;
 
 export const metadata: Metadata = {
   title: TITLE,

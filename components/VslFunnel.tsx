@@ -17,6 +17,7 @@ import {
   usd,
 } from '@/lib/agency-offer';
 import { useTheme } from './ThemeProvider';
+import { VSL_AUDIENCE_REVENUE } from '@/lib/advisory-config';
 import MuxPlayer from '@mux/mux-player-react';
 import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
 import DeadlineUrgency from './advisory/DeadlineUrgency';
@@ -393,13 +394,19 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
             month is the kind of thing a careful CPA checks.
 
             Only renders when the page passes `metaChip`, so the other
-            VslFunnel pages are unchanged. */}
+            VslFunnel pages are unchanged.
+
+            It shares a row with the audience callout below from lg up, so
+            the callout costs no height on a laptop: the CTA has to stay on
+            the first screen (VIDEO_FIT), and a line of its own pushed it
+            under the fold at 1536×730. On a phone they stack. */}
+        <div className="mb-6 flex flex-col items-center gap-3 md:mb-8 lg:mb-5 lg:flex-row lg:justify-center lg:gap-4">
         {metaChip && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mb-6 md:mb-8 lg:mb-5 flex justify-center"
+            className="flex justify-center"
           >
             <span className="group relative inline-flex rounded-full p-[1px]">
               <MetaCampaignChip />
@@ -428,6 +435,19 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           </motion.div>
         )}
 
+        {/* Who this is for (Marcel, 2026-11-19): CPA firms doing $1M–$5M+ a
+            year, called out before the headline so the right owner knows
+            the page is talking to them. */}
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="text-[11px] font-bold uppercase tracking-[0.18em] sm:text-xs"
+          style={{ color: 'rgba(255,255,255,0.75)' }}
+        >
+          For CPA firm owners doing <span style={{ color: '#a3e635' }}>{VSL_AUDIENCE_REVENUE}</span> a year
+        </motion.p>
+        </div>
 
         {/* Headline */}
         <motion.h1
@@ -549,7 +569,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           <BookCta />
 
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established CPA firms. No startups. No high-pressure pitch.
+            Built for CPA firms doing {VSL_AUDIENCE_REVENUE} a year. No high-pressure pitch.
           </p>
         </motion.div>
       </div>
@@ -1760,7 +1780,7 @@ const FAQSection: React.FC<{ variant?: string }> = ({ variant = 'A' }) => {
         >
           <BookCta />
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established CPA firms. No startups. No high-pressure pitch.
+            Built for CPA firms doing {VSL_AUDIENCE_REVENUE} a year. No high-pressure pitch.
           </p>
         </motion.div>
       </div>
