@@ -9,155 +9,107 @@
 // Tune them here. The pipeline math everywhere else is computed from them.
 // ---------------------------------------------------------------------------
 
-/** $9,997, $15,000. Declared first: CLIENT_VALUE_LINE below calls it at load. */
+/** $10,000, $15,000. Declared first: CLIENT_VALUE_LINE below calls it at load. */
 export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 
-// ── What the firm pays Nexli ──────────────────────────────────────────────
-// The RECURRING side, and it is NOT itemised anywhere. The system is sold
-// whole: one monthly fee for the website, the portal, the funnel and the
-// automations together. Do not add per-component constants — the moment the
-// monthly has parts, the sales page starts arguing about the parts.
+// ── THE RETAINER: what the firm pays Nexli (Marcel, 2026-11-19) ──────────
+// It replaced the setup-fee model ($40,000 setup + $9,997 a month with the
+// ads inside it, or an $82,000 annual plan, and a first-month ad bonus) on
+// every page at once: the VSLs, /booking-confirmed-b, /terms, /pricing,
+// /refund-policy, /delivery-policy, /math, Candor, lib/site and the guides.
 //
-// There is also a ONE-TIME SETUP FEE covering the build: AGENCY_SETUP_FEE.
+//   - $10,000 a month, the agency minimum. NO SETUP FEE.
+//   - Billed from SIGNING: the first month is due when the agreement is
+//     signed, and the six-month initial term counts from signing.
+//   - After six months it RENEWS for another six months, and so on, unless
+//     the firm cancels before the current term ends.
+//   - Or PREPAY the six months: $50,000 instead of $60,000, a $10,000 saving.
+//   - The firm's ad budget is separate: at least $5,000 a month (the pages
+//     show a $5,000–$30,000 range), paid by the firm DIRECTLY to Meta on its
+//     own card. Nexli never bills it, holds it or places it.
+//   - PERFORMANCE PAY: each month Nexli's compensation is the GREATER of the
+//     $10,000 minimum or 10% of agreed, attributable net revenue, as the
+//     agreement defines it. What was already paid for that month is
+//     credited against it, not added to it. On a prepaid term, the share of
+//     the prepayment allocated to each month is credited the same way.
+//   - Every charge can be paid by credit or debit card, ACH or wire.
+//   - Nothing is refundable (unchanged from the setup-fee model).
 //
-// WHERE IT IS PRICED (Marcel, 2026-11-09): on the policy pages — /pricing,
-// /terms, /refund-policy, /delivery-policy — and on /math. The card
-// processor's underwriters match the charges they process against those
-// pages, and a $40,000 or $82,000 charge that no page prices is the first
-// thing they would query. The SALES pages (booking page, FAQs, VSLs, Candor)
-// still say "quoted on the call" and do not import it. Keep that split:
-// import AGENCY_SETUP_FEE only into a policy page or the /math model.
+// SAY IT THE WAY THE AGREEMENT DOES. "Agreed, attributable net revenue" is
+// the contract's term. Never describe it as 10% of the firm's revenue, and
+// never invent deductions for it on a page: the definition is the
+// agreement's, not ours to paraphrase. How much of a prepayment counts
+// toward each month is the agreement's to say, too; no page puts a number
+// on it.
 //
-// IT IS FLAT. The same fee for every firm, because every firm gets the same
-// build — the website, the portal, the funnel and the automations. It is not
-// scoped per firm and there is no smaller version to sell, because the
-// system does not work with a piece missing.
-//
-// This comment used to read "because it varies with what a firm already
-// has". That was removed from the pages on 2026-10-20 and the reason is in
-// components/booking/PricingBlock: it read as a reason the fee might move
-// and invited a firm to negotiate down from a number nobody had said yet.
-// The comment here was missed in that pass, which is how lib/candor-corpus
-// then inherited the old claim from it. Do not reintroduce it. Pages must DISCLOSE it —
-// a $9,997 sticker with an unmentioned setup fee is a bait.
-//
-// OWNERSHIP AND HOSTING (Marcel, 2026-11-09). The client owns what is built:
-// the website, the portal, the funnel, the automations. Nexli does not pay
-// for hosting; the client pays the hosting provider directly. The service
-// fee pays for Nexli's upkeep and management of the whole system, not for
-// the right to use it. Never describe the monthly as including hosting, and
-// never say the portal or automations stop when the engagement ends.
-//
-// Keep these distinct from AGENCY_ENGAGEMENT_* below, which is a completely
-// different thing: what the CPA charges THEIR client. Conflating the two is
-// the easiest mistake to make in this file.
+// WHERE EACH PART IS SAID (Marcel, 2026-11-19):
+//   SALES PAGES (the VSLs, /booking-confirmed-b, Candor, /math): the
+//     $10,000 a month, no setup fee, the ad budget and "plus 10% performance
+//     pay", named and NOT explained: how it works is walked through on the
+//     call. The VSLs and /booking-confirmed-b do not show the prepay; /math
+//     and Candor may offer it as the way to save.
+//   POLICY PAGES (/terms, /pricing, /refund-policy, /delivery-policy): all of
+//     it, the performance-pay rule and the prepay included. The card
+//     processor's underwriters match every charge they process against
+//     these pages, and a $50,000 charge or a performance invoice that no
+//     page prices is the first thing they would query.
 
-/** The recurring service fee, flat, every month, billed from launch. It pays
- *  for Nexli's upkeep and management of the whole system. Six-month minimum
- *  initial term from launch, then month to month — see
- *  components/TermsAndConditions. */
-export const AGENCY_MONTHLY_FEE = 4_997;
+/** The monthly agency minimum, and the whole monthly fee most months. */
+export const AGENCY_RETAINER_MONTHLY = 10_000;
+
+/** The initial term, in months, counted from signing. Renewals are the same length. */
+export const AGENCY_RETAINER_TERM_MONTHS = 6;
+
+/** The six months paid up front: the way to save. Advertising is separate. */
+export const AGENCY_RETAINER_PREPAY = 50_000;
+
+/** What prepaying saves against six monthly payments: $10,000. */
+export const AGENCY_PREPAY_SAVING = AGENCY_RETAINER_MONTHLY * AGENCY_RETAINER_TERM_MONTHS - AGENCY_RETAINER_PREPAY;
+
+/** The least a firm puts into its ads each month, paid straight to Meta. */
+export const AGENCY_MIN_AD_BUDGET = 5_000;
 
 /**
- * The ad budget, collected by Nexli as part of the monthly and placed into
- * the campaigns. It is NOT billed separately and the firm does not pay the
- * platforms itself — running it through us is what keeps spend on schedule.
- *
- * Kept as its own constant only so the split can be disclosed. The price
- * quoted anywhere is AGENCY_TOTAL_MONTHLY, one number.
+ * The top of the ad-budget range the VSLs show: "$5K–$30K a month" (Marcel,
+ * 2026-11-19). The range firms run, from the $5,000 minimum up; the page
+ * does not call it a cap. Every ROI model uses the minimum, the worst case.
  */
-export const AGENCY_AD_SPEND = 5_000;
+export const AGENCY_MAX_AD_BUDGET = 30_000;
 
-/**
- * HOW THE AD BUDGET IS HELD, AND WHAT HAPPENS TO IT WHEN A CLIENT LEAVES
- * (Marcel, 2026-11-16: "just so there is no gray area"):
- *   - Nexli holds every client's ad budget in a separate account for
- *     advertising funds, allocated client by client: each client's budget
- *     goes into that client's own campaigns.
- *   - Leaving does not cut a term short. The monthly plan's initial term and
- *     the annual plan's term run their full length first.
- *   - When the client's service ends (they cancel once the term allows it,
- *     or the annual term runs out), any of their budget still unspent in that
- *     account, bonus included, is FORFEITED: not refunded, not credited
- *     against a fee, not transferred, not paid out.
- * /terms (§2 and §4), /refund-policy, /pricing, /delivery-policy, the /math
- * fine print and Candor all say this. Change it everywhere or nowhere.
- */
-export const AD_BUDGET_TERMS =
-  'Your ad budget is held in a separate account for advertising funds and allocated to your own campaigns. If you end your service once your term allows it, any of it still unspent when service ends is forfeited: it is not refunded, credited against a fee or paid out.';
+/** "$5K", "$30K": the compact form the price cards use for the range. */
+export const usdK = (n: number) => `$${Math.round(n / 1000)}K`;
 
-/** The sticker price. One number, quoted everywhere: $9,997 a month. */
-export const AGENCY_TOTAL_MONTHLY = AGENCY_MONTHLY_FEE + AGENCY_AD_SPEND;
+/** Of agreed, attributable net revenue, when it beats the monthly minimum. */
+export const AGENCY_PERFORMANCE_RATE = 0.1;
 
-/** One-time, due at signing, non-refundable. See the note at the top for
- *  which pages may show it.
- *
- *  HOW EACH CHARGE IS PAID (Marcel, 2026-11-09). This fee and
- *  AGENCY_ANNUAL_UPFRONT are paid by ACH bank transfer or wire ONLY, never
- *  by card. Every other charge (the monthly plan, the annual plan's monthly
- *  ad budget, the $97 guide) is paid by credit or debit card. The card
- *  processor's underwriters match what they process against the policy
- *  pages, so /terms, /pricing, /refund-policy, /delivery-policy and /privacy
- *  all say exactly this. Change it here and on all five, or not at all.
- *
- *  $40,000 from 2026-11-16 (Marcel); it was $32,000. Every page that shows
- *  it reads this constant, so the policy pages, /math and the model moved
- *  together; rebuild the /math PDFs after any change. */
-export const AGENCY_SETUP_FEE = 40_000;
+/** "10%", for copy. */
+export const AGENCY_PERFORMANCE_PERCENT = `${Math.round(AGENCY_PERFORMANCE_RATE * 100)}%`;
 
-/**
- * The annual plan: the service year prepaid at signing, $42,000 instead of
- * twelve months at AGENCY_MONTHLY_FEE. The ad budget is still billed monthly
- * from launch. Twelve-month term from launch, non-refundable, and it does
- * NOT renew automatically (Marcel, 2026-11-09).
- */
-export const AGENCY_ANNUAL_SERVICE_FEE = 42_000;
+/** A month's total compensation for a given attributable net revenue. */
+export const agencyCompensation = (attributableNetRevenue: number) =>
+  Math.max(AGENCY_RETAINER_MONTHLY, Math.round(attributableNetRevenue * AGENCY_PERFORMANCE_RATE));
 
-/** Due at signing on the annual plan: setup plus the service year, $82,000. */
-export const AGENCY_ANNUAL_UPFRONT = AGENCY_SETUP_FEE + AGENCY_ANNUAL_SERVICE_FEE;
+/** The worked example Marcel set: $120,000 → $12,000 → a $2,000 invoice. */
+export const PERFORMANCE_EXAMPLE_REVENUE = 120_000;
+export const PERFORMANCE_EXAMPLE_TOTAL = agencyCompensation(PERFORMANCE_EXAMPLE_REVENUE);
+export const PERFORMANCE_EXAMPLE_EXTRA = PERFORMANCE_EXAMPLE_TOTAL - AGENCY_RETAINER_MONTHLY;
 
-// ── The first-month bonus (Marcel, 2026-11-16) ───────────────────────────
-// Nexli puts its own money into the client's ads in their first month of
-// ads (the month from launch), on top of the client's own budget:
-//   monthly plan  Nexli matches that month's ad budget: +$5,000.
-//   annual plan   $10,000 in ad credits: more for paying up front.
-//
-// THE CONDITIONS: it is Nexli's money, placed in the client's campaigns
-// that month. It has no cash value, cannot be withdrawn, is not refunded, is
-// not credited against any fee and does not carry into later months.
-// PLAN_BONUS_CONDITIONS says it in the second person for /pricing, the
-// /math slide and the VSL pages' footer (the asterisk on "Up to $10,000 in
-// ad credit when you sign", components/funnel/AdCreditBonus); /terms and
-// /refund-policy say the same in their own voice.
-// Change them all together.
-//
-// /math does NOT model it: every projection there runs on the client's own
-// $5,000 a month, and the slide says the bonus is counted nowhere in the
-// deck. Candor may state it (it says nothing about the setup fee).
+/** The example, word for word as Marcel wrote it. Policy pages only (see
+ *  WHERE EACH PART IS SAID above); the numbers come from the constants. */
+export const PERFORMANCE_EXAMPLE = `At ${usd(PERFORMANCE_EXAMPLE_REVENUE)} of agreed attributable net revenue, total agency compensation is ${usd(PERFORMANCE_EXAMPLE_TOTAL)}. Since ${usd(AGENCY_RETAINER_MONTHLY)} has already been paid, the additional invoice is ${usd(PERFORMANCE_EXAMPLE_EXTRA)}.`;
 
-/** Monthly plan: the first month of ads, matched. */
-export const AGENCY_MONTHLY_PLAN_BONUS = AGENCY_AD_SPEND;
+/** The performance-pay rule in one sentence, for the policy pages. */
+export const PERFORMANCE_RULE = `Each month, Nexli's compensation is the greater of the ${usd(AGENCY_RETAINER_MONTHLY)} monthly minimum or ${AGENCY_PERFORMANCE_PERCENT} of agreed, attributable net revenue, as your agreement defines it. The agency fee already paid for that month is credited against it, not added to it; on a prepaid term, the share of the prepayment allocated to that month is credited the same way. Only the difference, if any, is invoiced.`;
 
-/** Annual plan: ad credits in the first month of ads. */
-export const AGENCY_ANNUAL_PLAN_BONUS = 10_000;
+/** How every charge is paid. The same sentence on /terms, /pricing,
+ *  /refund-policy, /delivery-policy and /privacy, for the underwriters. */
+export const PAYMENT_METHODS = 'Every charge (the monthly fee, a six-month prepayment and any performance invoice) can be paid by credit or debit card, ACH bank transfer or wire.';
 
-/** The bonus's conditions, word for word, on every page that offers it. */
-export const PLAN_BONUS_CONDITIONS =
-  'The bonus is Nexli’s own money, placed in your campaigns in your first month of ads, on top of your own budget. It has no cash value, cannot be withdrawn, is not refunded, is not credited against any fee and does not carry into later months.';
+/** The renewal, in one sentence. */
+export const RENEWAL_TERMS = `After the ${AGENCY_RETAINER_TERM_MONTHS}-month initial term, the engagement renews for another ${AGENCY_RETAINER_TERM_MONTHS} months, and so on, unless you cancel before the current term ends.`;
 
-/** The asterisk on "Up to $10,000 in ad credit when you sign*"
- *  (components/funnel/AdCreditBonus, on the VSL pages and
- *  /booking-confirmed-b): which plan gets how much, then the conditions. */
-export const AD_CREDIT_FOOTNOTE = `${usd(AGENCY_ANNUAL_PLAN_BONUS)} on the annual plan. On the monthly plan, Nexli matches your first month of ads: ${usd(AGENCY_MONTHLY_PLAN_BONUS)}. ${PLAN_BONUS_CONDITIONS}`;
-
-/** Minimum initial term on the monthly plan, in months, counted from launch. */
-export const AGENCY_INITIAL_TERM_MONTHS = 6;
-
-/** The annual plan's term, in months, counted from launch. */
-export const AGENCY_ANNUAL_TERM_MONTHS = 12;
-
-/** Written notice to cancel the monthly plan once the initial term is done. */
-export const AGENCY_CANCEL_NOTICE_DAYS = 30;
+/** The ad budget, in one sentence: where it goes and who pays it. */
+export const AD_BUDGET_TERMS = `Your ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is separate from Nexli's fees: you pay it directly to Meta on your own card, and it never passes through Nexli.`;
 
 // ── What the CPA charges their own client ────────────────────────────────
 //
@@ -213,8 +165,9 @@ export const CLIENT_VALUE_LINE = `tax-planning clients, each an engagement worth
 /**
  * How long a build takes, kickoff to launch: about 21 days. That covers the
  * website, the portal, the funnel, the automations, A2P 10DLC registration,
- * the ad account and invoicing. Launch is the day the ads go live, and the
- * day monthly billing and the minimum term both start.
+ * the ad account and invoicing. Launch is the day the ads go live. Under the
+ * retainer (2026-11-19) billing and the six-month term start at SIGNING, not
+ * at launch: the build runs inside the first month.
  *
  * ONE NUMBER (Marcel, 2026-11-09). There used to be three, "10 to 14 days,
  * 21 at the outside", while /math said 21 days and some FAQs said "2

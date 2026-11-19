@@ -1,5 +1,5 @@
 /**
- * Server-only resolver for Firm Foundation sites.
+ * Server-only resolver for client firm sites.
  *
  * Primary source is the `firm_sites` table (written by the dashboard admin);
  * the static registry in data/firm-sites is the fallback. Never import this

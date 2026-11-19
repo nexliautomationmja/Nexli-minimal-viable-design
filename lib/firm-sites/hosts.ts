@@ -1,6 +1,6 @@
 /**
  * Which request hosts belong to Nexli itself (marketing site, previews,
- * local dev) as opposed to a Firm Foundation client's custom domain.
+ * local dev) as opposed to a client firm's custom domain.
  *
  * Imported by middleware.ts (Edge runtime): no DB, no Node-only modules.
  * Any host that is NOT one of ours is treated as a potential firm domain and

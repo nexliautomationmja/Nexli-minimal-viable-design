@@ -10,20 +10,19 @@ import {
 } from 'lucide-react';
 import { trackMetaEvent } from '@/lib/meta-events';
 import {
-  AGENCY_ENGAGEMENT_AVG,
   AGENCY_ENGAGEMENT_HIGH,
   AGENCY_ENGAGEMENT_LOW,
-  AGENCY_TOTAL_MONTHLY,
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_RETAINER_MONTHLY,
   usd,
 } from '@/lib/agency-offer';
 import { useTheme } from './ThemeProvider';
-import { useBooking } from './QualificationProvider';
 import MuxPlayer from '@mux/mux-player-react';
 import { advisoryFaq, betterClientsFaq } from '../data/vsl-faqs';
-import DeadlineUrgency, { DeadlineBanner } from './advisory/DeadlineUrgency';
-import UrgencyPill from './funnel/UrgencyPill';
+import DeadlineUrgency from './advisory/DeadlineUrgency';
 import VslDisclaimer from './funnel/VslDisclaimer';
-import AdCreditBonus from './funnel/AdCreditBonus';
+import VslBooking from './funnel/VslBooking';
+import PricingBlock from './booking/PricingBlock';
 import MetaLogo from './icons/MetaLogo';
 
 // Google "G" icon matching lucide-react component interface
@@ -37,57 +36,51 @@ const GoogleG: React.FC<{ size?: number; style?: React.CSSProperties }> = ({ siz
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// QUALIFY CTA — the one conversion button on this page, used four times here
-// four times on this page.
+// BOOK CTA — the one conversion button on this page (Marcel, 2026-11-19).
 //
-// Two behaviours:
+// Every one scrolls to #book: the pricing, then the calendar directly under
+// it. It used to be "See If Your Firm Qualifies", a link to a five-step
+// qualifier on another page, with the calendar on a third; firms that could
+// afford the work were falling out between the pages. Nothing on this page
+// links to the qualifier now. Its routes still exist for /book, the
+// rebook buttons and /accelerator.
 //
-//   no ctaHref   calls openBooking() — the modal qualifier from
-//                QualificationProvider. What the five public /vslfunnel*
-//                pages have always done; leave them on it.
-//
-//   ctaHref set  a plain link. The gated advisory funnel points this at its
-//                own qualifier page, which writes a lead row, sets funnelPath,
-//                tags the contact in GoHighLevel and has a downsell branch for
-//                firms that do not qualify. The modal does none of that — it
-//                simply declines to open the calendar.
-//
-// Extracted because the same markup was repeated at four call sites and the
-// next person to change the button would have found three of them.
+// A plain anchor, so it works before hydration and without JS. The scroll
+// is smooth from globals.css; #book's scroll margin clears the fixed logo.
 // ─────────────────────────────────────────────────────────────────────────────
-const CTA_LABEL = 'See If Your Firm Qualifies';
+const CTA_LABEL = 'Book Your CPA Acquisition Review';
+export const BOOK_ANCHOR = 'book';
 
 const CTA_CLASS = {
-  lg: 'inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 lg:py-4 rounded-full text-base sm:text-lg md:text-xl lg:text-lg font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer',
+  lg: 'inline-flex items-center justify-center gap-2 sm:gap-3 bg-blue-600 hover:bg-blue-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-blue-600/25 group cursor-pointer',
   bar: 'w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20 group cursor-pointer',
 } as const;
 
-const QualifyCta: React.FC<{ ctaHref?: string; size?: keyof typeof CTA_CLASS }> = ({
-  ctaHref,
-  size = 'lg',
-}) => {
-  const { openBooking } = useBooking();
-  const cls = CTA_CLASS[size];
-  const arrow = (
+const BookCta: React.FC<{ size?: keyof typeof CTA_CLASS }> = ({ size = 'lg' }) => (
+  <a href={`#${BOOK_ANCHOR}`} className={CTA_CLASS[size]}>
+    {CTA_LABEL}
     <ArrowRight
       size={size === 'lg' ? 22 : 18}
       className="group-hover:translate-x-1 transition-transform"
     />
-  );
+  </a>
+);
 
-  // Raw <a> rather than next/link — this file uses no next/link anywhere.
-  return ctaHref ? (
-    <a href={ctaHref} className={cls}>
-      {CTA_LABEL}
-      {arrow}
-    </a>
-  ) : (
-    <button onClick={() => openBooking()} className={cls}>
-      {CTA_LABEL}
-      {arrow}
-    </button>
-  );
-};
+/** The button again, centred, after a section that has just made a case. */
+const SectionCta: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6 }}
+    className={`relative z-10 px-4 text-center ${className}`}
+  >
+    <BookCta />
+    <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+      See the price first, then pick a time. No qualifier to fill in.
+    </p>
+  </motion.div>
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATIC LOGO — Non-linking brand anchor (replaces Navbar on funnel pages)
@@ -140,7 +133,6 @@ interface HeroProps {
   eyebrowIcon?: React.ElementType;
   eyebrowTone?: 'blue' | 'orange' | 'emerald' | 'violet';
   showHiddenDrain?: boolean;
-  ctaHref?: string;
   /** Show the "campaigns run on Meta" chip above the headline. */
   metaChip?: boolean;
   /** Render the eyebrow pill at all. */
@@ -182,8 +174,52 @@ const EYEBROW_TONES = {
   },
 } as const;
 
-const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, ctaHref, metaChip = false, showEyebrow = true, hasBanner = false, posterTime = 0 }) => {
+/**
+ * The video's width from lg up, capped by the viewport HEIGHT so the button
+ * under it is on the first screen of a laptop: 16:9 of whatever height is
+ * left under the headline and subheadline once the button has its share,
+ * never wider than the column and never narrower than 26rem. Phones and
+ * tablets keep the full column width. (26rem is the floor: below it the
+ * video stops reading as the point of the page.)
+ *
+ * Two layers. This class is the estimate that renders before hydration
+ * (about 32rem of banner, chip, two-line headline, subheadline and button).
+ * useVideoFit then measures where the video actually starts, because the
+ * four headlines are not the same length: /systems runs to three lines.
+ */
+const VIDEO_FIT = 'lg:max-w-[min(56rem,max(26rem,calc((100svh_-_32rem)_*_16_/_9)))]';
+const VIDEO_MAX_PX = 896; // max-w-4xl
+const VIDEO_MIN_PX = 416; // 26rem
+const BELOW_VIDEO_PX = 24 + 72 + 20; // the gap, the button, a little air
+
+function useVideoFit() {
+  const markerRef = useRef<HTMLDivElement>(null);
+  const [maxWidth, setMaxWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const fit = () => {
+      const el = markerRef.current;
+      if (!el || window.innerWidth < 1024) {
+        setMaxWidth(null);
+        return;
+      }
+      // The marker is a plain block, so framer-motion's entrance transforms
+      // on the elements around it do not skew the measurement.
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      const height = window.innerHeight - top - BELOW_VIDEO_PX;
+      setMaxWidth(Math.round(Math.min(VIDEO_MAX_PX, Math.max(VIDEO_MIN_PX, (height * 16) / 9))));
+    };
+    fit();
+    // The headline is set in Syne; its line breaks can move once it loads.
+    document.fonts?.ready.then(fit).catch(() => {});
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
+  return { markerRef, maxWidth };
+}
+
+const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId, videoTitle, eyebrowText = 'Built Exclusively for Established CPA Firms', eyebrowIcon: EyebrowIcon = Shield, eyebrowTone = 'blue', showHiddenDrain = true, metaChip = false, showEyebrow = true, hasBanner = false, posterTime = 0 }) => {
   const eyebrow = EYEBROW_TONES[eyebrowTone] ?? EYEBROW_TONES.blue;
+  const videoFit = useVideoFit();
   const videoRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
 
@@ -325,7 +361,10 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
         because there both are still there to clear.
       */
       className={`relative pb-16 md:pb-24 px-4 ${
-        hasBanner ? 'pt-8 md:pt-24' : 'pt-12 md:pt-32'
+        // lg:pt-12 under the banner: the hero is one centred column now, and
+        // every pixel above the video is a pixel the button loses on a
+        // laptop. The fixed logo and pill sit in the margins, clear of it.
+        hasBanner ? 'pt-8 md:pt-24 lg:pt-12' : 'pt-12 md:pt-32 lg:pt-24'
       }`}
     >
       {/* Background glow */}
@@ -334,19 +373,14 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
       </div>
 
       {/*
-        DESKTOP IS TWO COLUMNS (Marcel, 2026-11-16): the words, the qualify
-        button and the ad-credit bonus on the left, the video on the right.
-        Stacked, the 16:9 video alone was ~500px tall and pushed the button
-        and the bonus 340-640px below the fold on every laptop and monitor;
-        side by side, all three are on the first screen.
-
-        Below lg it is the same single column as before, video above the
-        button. The text column is `contents` there, so its children sit in
-        this flex column directly and the CTAs can be ordered after the
-        video (max-lg:order-last).
+        ONE CENTRED COLUMN AT EVERY WIDTH (Marcel, 2026-11-19): headline,
+        subheadline, video, button. It was two columns on desktop from
+        2026-11-16 to fit the ad-credit bonus above the fold; the bonus is
+        gone and the page is centred again, as it was. The video's width is
+        capped by the viewport height from lg up (VIDEO_FIT below) so the
+        button still lands on the first screen of a laptop.
       */}
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col text-center lg:grid lg:max-w-7xl lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-12 lg:text-left xl:gap-16">
-        <div className="contents lg:block">
+      <div className="relative z-10 max-w-4xl mx-auto text-center">
         {showEyebrow && eyebrowPill}
 
         {/* Meta chip. Leads the hero on the advisory page, where the
@@ -365,7 +399,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mb-6 md:mb-8 lg:mb-4 flex justify-center lg:justify-start"
+            className="mb-6 md:mb-8 lg:mb-5 flex justify-center"
           >
             <span className="group relative inline-flex rounded-full p-[1px]">
               <MetaCampaignChip />
@@ -385,9 +419,9 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
                   className="block text-[11px] leading-relaxed"
                   style={{ color: 'rgba(255,255,255,0.72)' }}
                 >
-                  We build the campaigns and the creative, and we place the
-                  spend, so the budget reaches the ads on schedule. You see
-                  where it went in the weekly report.
+                  We build the campaigns and the creative and run them day
+                  to day. Your ad budget goes straight to Meta on your own
+                  card. You see what it brought in the weekly report.
                 </span>
               </span>
             </span>
@@ -400,9 +434,7 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          // Smaller on desktop, where it has half the width: 60px across
-          // the full width before the two columns.
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.5rem] 2xl:text-[2.75rem] font-black leading-[1.1] tracking-tight mb-6 md:mb-8 lg:mb-4"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.1] tracking-tight mb-6 md:mb-8 lg:mb-5"
           style={{ fontFamily: "'Syne', sans-serif", color: '#ffffff' }}
         >
           {headline || (
@@ -420,52 +452,20 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-base md:text-lg max-w-2xl mx-auto mb-10 md:mb-14 lg:mx-0 lg:mb-6 leading-relaxed"
+          className="text-base md:text-lg max-w-2xl mx-auto mb-10 md:mb-14 lg:mb-8 leading-relaxed"
           style={{ color: 'rgba(255,255,255,0.7)' }}
         >
           {subheadline || 'The Digital Rainmaker System is a complete, done-for-you infrastructure that automates your intake, secures your documents, and engineers 5-star Google reviews on autopilot. Built exclusively for established CPA firms.'}
         </motion.p>
 
-        {/* CTAs. Under the video below lg, under the subheadline beside it
-            from lg up (see the note on the columns above). */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="space-y-4 max-lg:order-last"
-        >
-          {/* The Hidden Drain Button */}
-          {showHiddenDrain && (
-            <a
-              href="/revenuecalc"
-              className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-red-600/25 group cursor-pointer"
-            >
-              Find My Hidden Drain
-              <Droplets size={22} className="group-hover:translate-y-[-2px] transition-transform" />
-            </a>
-          )}
-
-          {/* Booking Button */}
-          <QualifyCta ctaHref={ctaHref} />
-
-          {/* The ad-credit bonus, right under the button (Marcel,
-              2026-11-16): a reason to finish the qualifier now. */}
-          <div>
-            <AdCreditBonus />
-          </div>
-
-          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We only partner with established CPA firms. No startups. No high-pressure pitch.
-          </p>
-        </motion.div>
-        </div>
-
         {/* Video Player */}
+        <div ref={videoFit.markerRef} aria-hidden="true" />
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full max-w-4xl mx-auto mb-10 md:mb-14 lg:mb-0 lg:max-w-none"
+          className={`w-full max-w-4xl mx-auto mb-10 md:mb-12 lg:mb-6 ${VIDEO_FIT}`}
+          style={videoFit.maxWidth ? { maxWidth: videoFit.maxWidth } : undefined}
         >
           {/* Edge to edge inside a thin border — no inset bezel. It used to
               sit on a near-black panel with up to 32px of padding around it,
@@ -526,6 +526,31 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
               )}
             </AnimatePresence>
           </div>
+        </motion.div>
+
+        {/* CTAs, under the video. */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="space-y-4"
+        >
+          {/* The Hidden Drain Button */}
+          {showHiddenDrain && (
+            <a
+              href="/revenuecalc"
+              className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-7 py-4 sm:px-10 sm:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-red-600/25 group cursor-pointer"
+            >
+              Find My Hidden Drain
+              <Droplets size={22} className="group-hover:translate-y-[-2px] transition-transform" />
+            </a>
+          )}
+
+          <BookCta />
+
+          <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            We only partner with established CPA firms. No startups. No high-pressure pitch.
+          </p>
         </motion.div>
       </div>
     </section>
@@ -1312,6 +1337,51 @@ const CostOfInactionSection: React.FC<{ showDeadline?: boolean }> = ({
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// #book — THE PRICE, THEN THE CALENDAR (Marcel, 2026-11-19)
+//
+// Where every button on the page lands. The pricing comes first and the
+// calendar sits immediately under it, so nobody books without having seen
+// the price, and nobody has to finish the video or a qualifier to get here.
+// ─────────────────────────────────────────────────────────────────────────────
+const BookSection: React.FC<{ angle: string }> = ({ angle }) => (
+  <section
+    id={BOOK_ANCHOR}
+    // Clears the fixed logo and pill (desktop) when a button scrolls here.
+    className="relative scroll-mt-4 md:scroll-mt-20 py-14 sm:py-20 md:py-24 px-4"
+    style={{ backgroundColor: 'var(--bg-main)' }}
+  >
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[260px] rounded-full blur-[120px] bg-emerald-500/8 pointer-events-none" />
+    <div className="relative z-10">
+      {/* Set in /math's type (Outfit 800, the blue-violet-cyan half), the
+          language the price block is drawn in. */}
+      <PricingBlock
+        headline={
+          <>
+            <h2
+              className="mx-auto mt-3 max-w-4xl text-pretty text-center text-[1.85rem] sm:text-4xl lg:text-[3.25rem]"
+              style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif", fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#ffffff' }}
+            >
+              One monthly fee.{' '}
+              <span className="whitespace-nowrap bg-gradient-to-r from-blue-400 via-violet-400 to-cyan-300 bg-clip-text text-transparent">
+                No setup fee.
+              </span>
+            </h2>
+            <p
+              className="mx-auto mt-4 max-w-2xl text-balance text-center text-[15px] leading-relaxed sm:text-base lg:text-lg"
+              style={{ color: 'rgba(255,255,255,0.62)' }}
+            >
+              Everything you would pay, before you pick a time. Three numbers, and none of them
+              hidden.
+            </p>
+          </>
+        }
+      />
+      <VslBooking angle={angle} />
+    </div>
+  </section>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 // SECTION 4: ROI JUSTIFICATION — The Math
 // ─────────────────────────────────────────────────────────────────────────────
 const ROISection: React.FC = () => {
@@ -1339,16 +1409,18 @@ const ROISection: React.FC = () => {
             </span>{' '}
             a month.
           </h2>
-          {/* Every figure here reads from lib/agency-offer.ts, so it cannot
-              drift from the price stated in the FAQ or on the confirmation
-              pages. */}
+          {/* Every figure here reads from lib/agency-offer.ts (THE
+              RETAINER), so it cannot drift from the pricing above or on the
+              confirmation page. The cost side is the fee AND the minimum ad
+              budget the firm pays Meta, both: leaving the ads out would
+              flatter the multiple. */}
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
             Two engagements at {usd(AGENCY_ENGAGEMENT_LOW)} — the{' '}
             <strong style={{ color: '#ffffff' }}>bottom</strong> of the range, not the middle —
             is{' '}
             <strong style={{ color: '#ffffff' }}>{usd(AGENCY_ENGAGEMENT_LOW * 2)} a month</strong>{' '}
-            against about {usd(AGENCY_TOTAL_MONTHLY)} a month, plus a one-time setup fee for the
-            build. Price two at the top of the range
+            against {usd(AGENCY_RETAINER_MONTHLY)} a month for us, plus at least{' '}
+            {usd(AGENCY_MIN_AD_BUDGET)} in ads you pay Meta directly. Price two at the top of the range
             instead and it is {usd(AGENCY_ENGAGEMENT_HIGH * 2)}. Everything below is the worst
             case, and the worst case already pays.
           </p>
@@ -1374,9 +1446,9 @@ const ROISection: React.FC = () => {
             },
             {
               Icon: TrendingUp,
-              value: `${Math.floor((AGENCY_ENGAGEMENT_LOW * 2) / AGENCY_TOTAL_MONTHLY)}x`,
+              value: `${Math.floor((AGENCY_ENGAGEMENT_LOW * 2) / (AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET))}x`,
               label: 'What it costs you, covered',
-              note: `${usd(AGENCY_TOTAL_MONTHLY)} a month, ad spend included, plus a one-time setup fee.`,
+              note: `${usd(AGENCY_RETAINER_MONTHLY)} a month plus at least ${usd(AGENCY_MIN_AD_BUDGET)} in ads, paid to Meta.`,
             },
           ].map(({ Icon, value, label, note }, i) => (
             <motion.div
@@ -1607,7 +1679,7 @@ const FAQ_BY_VARIANT: Record<string, typeof DEFAULT_FAQ> = {
   BetterClients: betterClientsFaq,
 };
 
-const FAQSection: React.FC<{ variant?: string; ctaHref?: string }> = ({ variant = 'A', ctaHref }) => {
+const FAQSection: React.FC<{ variant?: string }> = ({ variant = 'A' }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = FAQ_BY_VARIANT[variant] ?? DEFAULT_FAQ;
@@ -1686,10 +1758,7 @@ const FAQSection: React.FC<{ variant?: string; ctaHref?: string }> = ({ variant 
           transition={{ duration: 0.6 }}
           className="text-center mt-10 sm:mt-14"
         >
-          <QualifyCta ctaHref={ctaHref} />
-          <div className="mt-4">
-            <AdCreditBonus />
-          </div>
+          <BookCta />
           <p className="mt-3 text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
             We only partner with established CPA firms. No startups. No high-pressure pitch.
           </p>
@@ -1815,17 +1884,38 @@ const ExitIntentPopup: React.FC = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // STICKY CTA BAR — Appears after scrolling past hero
 // ────────────��────────────────────────────────────────────────────────────────
-const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
-  const [visible, setVisible] = useState(false);
+const StickyCTA: React.FC = () => {
+  const [pastHero, setPastHero] = useState(false);
+  /**
+   * Hidden while #book is on screen (Marcel, 2026-11-19). The bar's only
+   * job is to get people to the pricing and the calendar; over the calendar
+   * it would cover Cal's form and its confirm button on a phone.
+   */
+  const [atBooking, setAtBooking] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       // Show once user scrolls past ~600px (roughly past the hero)
-      setVisible(window.scrollY > 600);
+      setPastHero(window.scrollY > 600);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    const target = document.getElementById(BOOK_ANCHOR);
+    const observer =
+      target && 'IntersectionObserver' in window
+        ? new IntersectionObserver(([entry]) => setAtBooking(entry.isIntersecting), {
+            rootMargin: '0px 0px -15% 0px',
+          })
+        : null;
+    if (target && observer) observer.observe(target);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer?.disconnect();
+    };
   }, []);
+
+  const visible = pastHero && !atBooking;
 
   return (
     <AnimatePresence>
@@ -1843,12 +1933,14 @@ const StickyCTA: React.FC<{ ctaHref?: string }> = ({ ctaHref }) => {
             borderColor: 'rgba(255,255,255,0.08)',
           }}
         >
-          {/* The ad-credit bonus where "Ready to modernize your firm?" was
-              (Marcel, 2026-11-16): beside the button from sm up, under it
-              on a phone (column-reverse, so the button stays on top). */}
-          <div className="max-w-5xl mx-auto px-4 py-2.5 sm:py-3.5 flex flex-col-reverse sm:flex-row items-center justify-between gap-1.5 sm:gap-4">
-            <AdCreditBonus size="sm" />
-            <QualifyCta ctaHref={ctaHref} size="bar" />
+          <div className="max-w-5xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-4">
+            <p
+              className="hidden sm:block text-sm md:text-base font-semibold"
+              style={{ color: 'rgba(255,255,255,0.7)' }}
+            >
+              Ready to modernize your firm?
+            </p>
+            <BookCta size="bar" />
           </div>
         </motion.div>
       )}
@@ -1890,12 +1982,11 @@ interface VslFunnelProps {
    */
   posterTime?: number;
   /**
-   * Set this and every conversion CTA becomes a link to it instead of opening
-   * the QualificationProvider modal. Used by the gated advisory funnel, whose
-   * own qualifier page records the lead and has a downsell branch. Leave it
-   * unset on the public pages.
+   * Which VSL this is ('agency', 'systems', 'acquisition', 'better-clients').
+   * Rides on every booking from this page's calendar as Cal metadata, so the
+   * webhook can tag the contact with the argument they booked from.
    */
-  ctaHref?: string;
+  angle: string;
   /**
    * Render the FAQ accordion. On by default. The advisory VSL turns it off:
    * its objections are answered on the booking-confirmed page instead, once
@@ -1903,16 +1994,15 @@ interface VslFunnelProps {
    */
   showFaq?: boolean;
   /**
-   * The December 31 deadline — a bar above the hero and the explained version
-   * inside "The Cost of Doing Nothing". Off by default: the public
-   * /vslfunnel* pages sell the system, not the tax year, and a planning
-   * deadline on a page that never mentions planning reads as borrowed
-   * urgency. On for /advisory-pricing, where the whole offer is planning.
+   * The December 31 deadline, explained inside "The Cost of Doing Nothing".
+   * It used to put a bar above the hero too; that bar and the "spots left"
+   * pill came off every VSL on 2026-11-19 (Marcel), and only this card in
+   * the page remains.
    */
   deadlineUrgency?: boolean;
 }
 
-const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, ctaHref, metaChip, showEyebrow = true, showFaq = true, deadlineUrgency = false, posterTime = 0 }) => {
+const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 'A', muxPlaybackId, videoTitle, eyebrowText, eyebrowIcon, eyebrowTone, showHiddenDrain, showExitIntent = true, angle, metaChip, showEyebrow = true, showFaq = true, deadlineUrgency = false, posterTime = 0 }) => {
   useEffect(() => {
     trackMetaEvent('ViewContent', {
       content_name: `VSL Funnel Landing Page (Variant ${variant})`,
@@ -1922,48 +2012,46 @@ const VslFunnel: React.FC<VslFunnelProps> = ({ headline, subheadline, variant = 
 
   return (
     <div className="min-h-screen pb-[5.5rem] sm:pb-16">
-      {deadlineUrgency && <DeadlineBanner />}
       {/*
-        DESKTOP ONLY, and this is the whole reason the wrapper exists.
+        NO DEADLINE BAR AND NO "SPOTS LEFT" PILL (Marcel, 2026-11-19). Both
+        came off every VSL: the page leads with the headline. The deadline
+        argument stays where it is explained, in "The Cost of Doing Nothing"
+        (deadlineUrgency). UrgencyPill and DeadlineBanner still exist for
+        the pages that use them (/accelerator/next mounts the pill).
 
-        On a phone the deadline banner, the brand badge, the capacity pill
-        and the Meta chip stack into four rows of chrome above the headline,
-        and the headline is the only one of the five doing any selling. Two
-        of the four earn their place - the banner carries the deadline
-        argument and the Meta chip is proof - so the two that go are the two
-        that are purely decorative here: the brand badge, which anchors
-        nothing on a page that has no navbar and tells an ad visitor
-        something they do not need before the first sentence, and the
-        scarcity pill.
-
-        Both are kept on desktop, where they sit in the margins beside the
-        headline rather than stacking on top of it.
-
-        CSS rather than a conditional render: these are the first pixels
-        after hydration and a width check in JS either flashes or mismatches.
-        The pill's own three-second timer still runs behind display:none,
-        which costs nothing and keeps UrgencyPill reusable - /accelerator/next
-        mounts the same component and is not affected by any of this.
+        The logo is desktop only. On a phone it anchors nothing on a page
+        with no navbar, and it would stack above the headline. CSS rather
+        than a conditional render: a width check in JS either flashes or
+        mismatches on the first pixels after hydration.
       */}
       <div className="hidden md:block">
-        <StaticLogo belowBanner={deadlineUrgency} />
-        <UrgencyPill belowBanner={deadlineUrgency} />
+        <StaticLogo />
       </div>
-      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} ctaHref={ctaHref} metaChip={metaChip} showEyebrow={showEyebrow} hasBanner={deadlineUrgency} posterTime={posterTime} />
+      <HeroSection headline={headline} subheadline={subheadline} muxPlaybackId={muxPlaybackId} videoTitle={videoTitle} eyebrowText={eyebrowText} eyebrowIcon={eyebrowIcon} eyebrowTone={eyebrowTone} showHiddenDrain={showHiddenDrain} metaChip={metaChip} showEyebrow={showEyebrow} posterTime={posterTime} />
+      {/*
+        THE ORDER (Marcel, 2026-11-19): the hero; a short proof and system
+        preview; then #book, the price with the calendar directly under it.
+        Everything after #book is for whoever keeps reading, and each part
+        ends on the same button back up to it.
+      */}
       <TrustBar />
       <TransformationSection />
+      <SectionCta className="pb-14 sm:pb-20" />
+      <BookSection angle={angle} />
       <CostOfInactionSection showDeadline={deadlineUrgency} />
       <ROISection />
+      <SectionCta className="pb-14 sm:pb-20" />
       <FounderStorySection />
-      {showFaq && <FAQSection variant={variant} ctaHref={ctaHref} />}
+      <SectionCta className="py-14 sm:py-20" />
+      {showFaq && <FAQSection variant={variant} />}
       {/*
         Last thing on the page, above the sticky bar. These pages suppress
         the site Footer, so without this there is no disclaimer, no privacy
         link and no copyright anywhere on an ad destination that quotes
         money figures.
       */}
-      <VslDisclaimer adCredit />
-      <StickyCTA ctaHref={ctaHref} />
+      <VslDisclaimer />
+      <StickyCTA />
       {showExitIntent && <ExitIntentPopup />}
     </div>
   );

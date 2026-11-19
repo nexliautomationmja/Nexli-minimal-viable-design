@@ -20,7 +20,7 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_BETTER_CLIENTS, qualifyPathForAngle } from '@/lib/advisory-config';
+import { VSL_ANGLE_BETTER_CLIENTS } from '@/lib/advisory-config';
 import BetterClientsVslClient from './better-clients-client';
 
 const TITLE = 'You do not need more leads | Nexli';
@@ -35,5 +35,5 @@ export const metadata: Metadata = {
 };
 
 export default function BetterClientsVslPage() {
-  return <BetterClientsVslClient ctaHref={qualifyPathForAngle(VSL_ANGLE_BETTER_CLIENTS)} />;
+  return <BetterClientsVslClient angle={VSL_ANGLE_BETTER_CLIENTS} />;
 }

@@ -27,7 +27,7 @@ const PrivacyPolicy: React.FC = () => (
         eyebrow="Security First"
         icon={Shield}
         title="Privacy Policy"
-        dateLine="Last Updated: November 9, 2026"
+        dateLine="Last Updated: November 19, 2026"
     >
         <LegalSection title="1. Introduction">
             <p>
@@ -59,7 +59,7 @@ const PrivacyPolicy: React.FC = () => (
                     <Strong>Information you give us:</Strong> your name, work email address, mobile phone number, firm name and website when you fill out a form, book a call or opt in to a guide; your answers to our qualifying questions (such as your location, your role, your firm&apos;s revenue and your budget); your SMS and email consent choices; and anything you write to us, including conversations with Candor, the AI assistant on our Website.
                 </li>
                 <li>
-                    <Strong>Purchase information:</Strong> when you pay by card, our payment processor collects your card details, name, email address and billing information. We receive confirmation of the payment, such as the amount, the date and a transaction reference. We never receive your full card number. When you pay by ACH bank transfer or wire transfer (as the Digital Rainmaker System setup fee and annual plan payment are paid), the payment comes from your bank to ours, and we receive the sending account holder&apos;s name and bank details with it.
+                    <Strong>Purchase information:</Strong> when you pay by card, our payment processor collects your card details, name, email address and billing information. We receive confirmation of the payment, such as the amount, the date and a transaction reference. We never receive your full card number. When you pay by ACH bank transfer or wire transfer (any Digital Rainmaker System charge can be paid that way), the payment comes from your bank to ours, and we receive the sending account holder&apos;s name and bank details with it.
                 </li>
                 <li>
                     <Strong>Information collected automatically:</Strong> your IP address, browser and device type, the pages you view and how long you spend on them, the page that referred you, how much of our videos you watch, and, if you arrived from an ad, the ad-click identifier and campaign (UTM) tags attached to the link.

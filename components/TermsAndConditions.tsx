@@ -4,18 +4,16 @@ import { FileText } from 'lucide-react';
 import LegalPage, { LegalSection, Strong, legalLinkClass } from './legal/LegalPage';
 import { ADVISORY_PRICE_DISPLAY, ADVISORY_REFUND_DAYS } from '../lib/advisory-config';
 import {
-    AGENCY_AD_SPEND,
-    AGENCY_ANNUAL_PLAN_BONUS,
-    AGENCY_ANNUAL_SERVICE_FEE,
-    AGENCY_ANNUAL_TERM_MONTHS,
-    AGENCY_ANNUAL_UPFRONT,
-    AGENCY_CANCEL_NOTICE_DAYS,
-    AGENCY_INITIAL_TERM_MONTHS,
+    AD_BUDGET_TERMS,
     AGENCY_LAUNCH_DAYS,
-    AGENCY_MONTHLY_FEE,
-    AGENCY_MONTHLY_PLAN_BONUS,
-    AGENCY_SETUP_FEE,
-    AGENCY_TOTAL_MONTHLY,
+    AGENCY_MIN_AD_BUDGET,
+    AGENCY_PREPAY_SAVING,
+    AGENCY_RETAINER_MONTHLY,
+    AGENCY_RETAINER_PREPAY,
+    AGENCY_RETAINER_TERM_MONTHS,
+    PAYMENT_METHODS,
+    PERFORMANCE_RULE,
+    RENEWAL_TERMS,
     usd,
 } from '../lib/agency-offer';
 import { ADDRESS_LINES, EMAIL, LEGAL_NAME, PHONE_DISPLAY, PHONE_E164 } from '../lib/site';
@@ -25,13 +23,19 @@ import { ADDRESS_LINES, EMAIL, LEGAL_NAME, PHONE_DISPLAY, PHONE_E164 } from '../
 // it and must never say more or less than it does; every figure comes from
 // lib/agency-offer so they cannot quote different numbers.
 //
-// The Digital Rainmaker System terms, as Marcel set them on 2026-11-09:
-// setup at signing; monthly plan $9,997 from launch with a six-month
-// minimum counted from launch; annual plan at signing plus the ad budget
-// monthly, twelve months from launch, no automatic renewal; nothing
-// refundable; the client owns what is built and pays its own hosting.
-// 2026-11-16: setup $40,000 (was $32,000), so the annual plan is $82,000 at
-// signing (was $74,000), and the first-month bonus is added.
+// The Digital Rainmaker System terms are THE RETAINER (lib/agency-offer.ts,
+// Marcel, 2026-11-19): $10,000 a month from signing, no setup fee, a
+// six-month term that renews for six months unless cancelled before it
+// ends, or $50,000 to prepay the six months; 10% performance pay on agreed,
+// attributable net revenue (greater-of, credited not added); the ad budget
+// paid by the client directly to Meta; every charge by card, ACH or wire;
+// nothing refundable; the client owns what is built (except the ad
+// creative) and pays its own hosting.
+//
+// History: 2026-11-09 to 11-19 this page sold a $40,000 setup fee (it was
+// $32,000 until 11-16), $9,997 a month with a $5,000 ad budget Nexli held
+// and placed, an $82,000 annual plan and a first-month ad bonus. All of it
+// is retired.
 // ---------------------------------------------------------------------------
 
 const TermsAndConditions: React.FC = () => (
@@ -39,7 +43,7 @@ const TermsAndConditions: React.FC = () => (
         eyebrow="Partnership Terms"
         icon={FileText}
         title="Terms & Conditions"
-        dateLine="Effective Date: November 16, 2026"
+        dateLine="Effective Date: November 19, 2026"
     >
         <LegalSection title="1. Scope of Service">
             <p>
@@ -53,26 +57,23 @@ const TermsAndConditions: React.FC = () => (
                 section. A card processor's underwriter reads that as two
                 refund policies. It now covers only what it means to. */}
             <p className="text-[var(--text-main)] font-medium">
-                The Digital Rainmaker System is sold under a signed agreement, billed by invoice, and paid in one of two ways: monthly or annually. All prices are in US dollars. Its fees are non-refundable, except for billing errors (section 4). The Book of Business Accelerator carries a {ADVISORY_REFUND_DAYS}-day refund, described under Digital Products.
+                The Digital Rainmaker System is sold under a signed agreement and billed by invoice: a monthly agency fee, or the six months paid up front, plus performance pay. There is no setup fee. All prices are in US dollars. Its fees are non-refundable, except for billing errors (section 4). The Book of Business Accelerator carries a {ADVISORY_REFUND_DAYS}-day refund, described under Digital Products.
             </p>
             <ul className="list-disc pl-6 space-y-3">
                 <li>
-                    <Strong>Setup Fee:</Strong> A one-time fee of {usd(AGENCY_SETUP_FEE)}, due at signing on either plan. It pays for the build: the website, client portal, sales funnel, AI automations, A2P 10DLC registration for business text messaging, the advertising account, invoicing, and the other tools the system needs. Work begins once it is paid. The setup fee is the same for every client and is non-refundable.
+                    <Strong>Monthly Agency Fee:</Strong> {usd(AGENCY_RETAINER_MONTHLY)} a month, the agency minimum. Billing begins at signing: the first month&apos;s fee is due when the agreement is signed, and each later month&apos;s fee is due monthly after that. It pays for the build (the website, client portal, sales funnel, AI automations, A2P 10DLC registration for business text messaging, the advertising account, invoicing, and the other tools the system needs) and for Nexli&apos;s upkeep and management of the whole system: maintaining the website, portal and automations, making changes to the funnels, ads and automations throughout the term, and running the ad campaigns. There is no separate setup fee. Monthly fees are non-refundable once charged.
                 </li>
                 <li>
-                    <Strong>Monthly Plan:</Strong> {usd(AGENCY_TOTAL_MONTHLY)} a month, billed from launch, meaning the day the build is complete and the ads go live. Of that, {usd(AGENCY_AD_SPEND)} is the advertising budget, which Nexli collects and places into the client&apos;s campaigns; the client does not pay the advertising platforms for it separately. The other {usd(AGENCY_MONTHLY_FEE)} pays for Nexli&apos;s upkeep and management of the whole system: maintaining the website, portal and automations, making changes to the funnels, ads and automations throughout the term, and running the ad campaigns. Monthly fees are non-refundable once charged.
+                    <Strong>Six-Month Prepayment:</Strong> Instead of paying monthly, the client may pay the {AGENCY_RETAINER_TERM_MONTHS}-month term up front: {usd(AGENCY_RETAINER_PREPAY)}, due at signing, in place of {AGENCY_RETAINER_TERM_MONTHS} monthly fees of {usd(AGENCY_RETAINER_MONTHLY)} (a saving of {usd(AGENCY_PREPAY_SAVING)}). The prepayment is non-refundable, in whole and in part.
                 </li>
                 <li>
-                    <Strong>Annual Plan:</Strong> {usd(AGENCY_ANNUAL_UPFRONT)}, due at signing: the {usd(AGENCY_SETUP_FEE)} setup fee plus {usd(AGENCY_ANNUAL_SERVICE_FEE)} for twelve months of Nexli&apos;s upkeep and management, paid in advance. The {usd(AGENCY_AD_SPEND)} advertising budget is still billed each month from launch. The {usd(AGENCY_ANNUAL_UPFRONT)} is non-refundable, in whole and in part, and each month&apos;s advertising budget is non-refundable once charged.
+                    <Strong>Performance Pay:</Strong> {PERFORMANCE_RULE} Any performance invoice is issued as the signed agreement sets out, and is non-refundable once charged. &quot;Agreed, attributable net revenue&quot; has the meaning given to it in the signed agreement; it is not the client&apos;s total revenue.
                 </li>
                 <li>
-                    <Strong>Advertising Budget:</Strong> On either plan, the {usd(AGENCY_AD_SPEND)} monthly advertising budget is held in a separate Nexli account for advertising funds, where each client&apos;s budget is allocated to that client and placed into that client&apos;s own campaigns. Ending the service does not shorten a term: the monthly plan&apos;s initial term and the annual plan&apos;s term run their full length first. When the client&apos;s service ends, whether the client cancels once the term allows it or the annual plan&apos;s term runs out, any of the client&apos;s advertising budget still unspent in that account, including any bonus, is forfeited: it is not refunded, credited against any fee, transferred or paid out.
+                    <Strong>Advertising Budget:</Strong> {AD_BUDGET_TERMS} The client pays the advertising platform for it directly; Nexli does not collect, hold or place it, does not invoice it, and cannot refund it. It is at least {usd(AGENCY_MIN_AD_BUDGET)} a month while the engagement runs.
                 </li>
                 <li>
-                    <Strong>First-Month Bonus:</Strong> On the monthly plan, Nexli matches the client&apos;s advertising budget in the first month of ads, adding {usd(AGENCY_MONTHLY_PLAN_BONUS)} of its own to the campaigns that month. On the annual plan, Nexli adds {usd(AGENCY_ANNUAL_PLAN_BONUS)} of its own in that first month. The first month of ads is the month beginning at launch. The bonus is Nexli&apos;s own funds, placed in the client&apos;s campaigns that month: it has no cash value, cannot be withdrawn, is not refunded, is not credited against any fee, and does not carry into later months.
-                </li>
-                <li>
-                    <Strong>How Each Charge Is Paid:</Strong> The {usd(AGENCY_SETUP_FEE)} setup fee and the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan payment are paid by ACH bank transfer or wire transfer only; they cannot be paid by credit or debit card. Every other charge, meaning the {usd(AGENCY_TOTAL_MONTHLY)} monthly plan fee and, on the annual plan, the {usd(AGENCY_AD_SPEND)} monthly advertising budget, is paid by credit or debit card. Work begins once the setup payment has arrived in Nexli&apos;s account.
+                    <Strong>How Each Charge Is Paid:</Strong> {PAYMENT_METHODS} Work begins once the first month&apos;s fee, or the six-month prepayment, has arrived in Nexli&apos;s account.
                 </li>
                 <li>
                     <Strong>One System, One Fee:</Strong> The fees are for the complete system. Parts of it cannot be removed, paused or priced separately, and fees are not reduced if the client chooses not to use part of it.
@@ -81,13 +82,10 @@ const TermsAndConditions: React.FC = () => (
                     <Strong>Hosting:</Strong> Nexli&apos;s fees do not include hosting. The client pays the hosting provider directly.
                 </li>
                 <li>
-                    <Strong>Monthly Plan Term:</Strong> A minimum initial term of {AGENCY_INITIAL_TERM_MONTHS} months, beginning at launch: {AGENCY_INITIAL_TERM_MONTHS} monthly payments. The client may give notice of cancellation at any point during the initial term, but cancellation does not take effect before the end of it, and the monthly fees falling due within it remain payable.
+                    <Strong>Initial Term:</Strong> {AGENCY_RETAINER_TERM_MONTHS} months, beginning at signing. The client may give notice of cancellation at any point during a term, but cancellation does not take effect before the end of that term, and the fees falling due within it, including any performance pay for its months, remain payable.
                 </li>
                 <li>
-                    <Strong>After the Initial Term:</Strong> The monthly plan continues month to month with no further minimum commitment. The client may cancel at any time with {AGENCY_CANCEL_NOTICE_DAYS} days&apos; written notice to <strong>{EMAIL}</strong>. Cancellation takes effect at the end of the notice period, and no partial-month refunds are issued.
-                </li>
-                <li>
-                    <Strong>Annual Plan Term:</Strong> {AGENCY_ANNUAL_TERM_MONTHS} months, beginning at launch. The client may give notice of cancellation at any time; service continues to the end of the {AGENCY_ANNUAL_TERM_MONTHS} months, the monthly advertising budget remains payable through the end of the term, and nothing already paid is refunded. The annual plan does not renew automatically: nothing is charged after the {AGENCY_ANNUAL_TERM_MONTHS} months unless the client agrees in writing, before the term ends, to continue on the monthly or the annual plan.
+                    <Strong>Renewal:</Strong> {RENEWAL_TERMS} Notice of cancellation is given in writing to <strong>{EMAIL}</strong>. No partial-month or partial-term refunds are issued.
                 </li>
             </ul>
             <h3 className="text-xl font-bold text-[var(--text-main)] pt-4">Digital Products</h3>
@@ -98,7 +96,7 @@ const TermsAndConditions: React.FC = () => (
 
         <LegalSection title="3. Delivery Policy" id="delivery">
             <p>
-                Nexli does not sell or ship physical goods. The Book of Business Accelerator is delivered by email to the address supplied at checkout, immediately after payment, and usually arrives within a few minutes; if it has not arrived within an hour, contact us and we will resend it within one business day. For the Digital Rainmaker System, work begins at a kickoff call once the agreement is signed and the setup fee (or, on the annual plan, the {usd(AGENCY_ANNUAL_UPFRONT)}) is paid, and the build takes about {AGENCY_LAUNCH_DAYS} days from kickoff. That timeline depends on the client supplying the assets, access and approvals requested, and on reviews Nexli does not control, such as the carriers&apos; review of the A2P 10DLC registration and the ad platforms&apos; review of the advertising account. Launch is the day the ads go live; monthly billing and the term begin then. Upkeep and campaign management are delivered throughout each month after launch. The full policy is on our{' '}
+                Nexli does not sell or ship physical goods. The Book of Business Accelerator is delivered by email to the address supplied at checkout, immediately after payment, and usually arrives within a few minutes; if it has not arrived within an hour, contact us and we will resend it within one business day. For the Digital Rainmaker System, work begins at a kickoff call once the agreement is signed and the first month&apos;s fee (or the {usd(AGENCY_RETAINER_PREPAY)} six-month prepayment) is paid, and the build takes about {AGENCY_LAUNCH_DAYS} days from kickoff. That timeline depends on the client supplying the assets, access and approvals requested, and on reviews Nexli does not control, such as the carriers&apos; review of the A2P 10DLC registration and the ad platforms&apos; review of the advertising account. Launch is the day the ads go live. Billing and the term begin at signing, not at launch: the build runs inside the first month. Upkeep and campaign management are delivered throughout each month after launch. The full policy is on our{' '}
                 <Link href="/delivery-policy" className={legalLinkClass}>Delivery Policy</Link> page.
             </p>
         </LegalSection>
@@ -106,7 +104,7 @@ const TermsAndConditions: React.FC = () => (
         <LegalSection title="4. Refunds and Cancellations" id="refunds">
             <p>
                 Refunds and cancellations are governed by section 2 above and set out in full, with how to request one, on our{' '}
-                <Link href="/refund-policy" className={legalLinkClass}>Refund Policy</Link> page. In short: the Book of Business Accelerator may be refunded in full within {ADVISORY_REFUND_DAYS} days of purchase for any reason. Digital Rainmaker System fees are non-refundable: the {usd(AGENCY_SETUP_FEE)} setup fee, the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan, and monthly fees and advertising budget once charged. Any advertising budget still unspent when the service ends is forfeited (section 2). Cancellation follows the terms in section 2. Duplicate or mistaken charges are always refunded in full.
+                <Link href="/refund-policy" className={legalLinkClass}>Refund Policy</Link> page. In short: the Book of Business Accelerator may be refunded in full within {ADVISORY_REFUND_DAYS} days of purchase for any reason. Digital Rainmaker System fees are non-refundable: the {usd(AGENCY_RETAINER_MONTHLY)} monthly agency fee once charged, the {usd(AGENCY_RETAINER_PREPAY)} six-month prepayment, and any performance pay invoice. The advertising budget is paid by the client directly to the advertising platform and never passes through Nexli, so it is not Nexli&apos;s to refund. Cancellation follows the terms in section 2: it takes effect at the end of the current term. Duplicate or mistaken charges are always refunded in full.
             </p>
         </LegalSection>
 
@@ -137,7 +135,7 @@ const TermsAndConditions: React.FC = () => (
                 the client owns the website, the build and the portal, and
                 pays its own hosting; the monthly is upkeep, not rent. */}
             <p>
-                The client owns what Nexli builds for them: the website, the client portal, the sales funnel and the automations, together with the client&apos;s content, brand assets (logos, colors, photography and copy), domain name, advertising account, and all client data. The setup fee pays for building them. The monthly fee, or the annual plan&apos;s year of service, pays for Nexli&apos;s upkeep and management of them, not for the right to use them.
+                The client owns what Nexli builds for them: the website, the client portal, the sales funnel and the automations, together with the client&apos;s content, brand assets (logos, colors, photography and copy), domain name, advertising account, and all client data. Nexli&apos;s fees pay for building them and for Nexli&apos;s upkeep and management of them, not for the right to use them.
             </p>
             {/* Marcel, 2026-11-09: Nexli keeps the ad creative. It makes a
                 great deal of it inside each ad account, and sorting it out

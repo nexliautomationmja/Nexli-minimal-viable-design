@@ -3,12 +3,21 @@
  * Shape matches the accordion in components/VslFunnel.tsx and
  * components/VslFunnelOffer.tsx ({ q, a }) so the JSX stays untouched.
  *
- * Facts stated here must match lib/site.ts: $500K+ per year minimum,
- * Nexli runs the ads and the firm funds ad spend separately, pricing is
- * $9,997/mo plus a one-time setup fee, covering the system and the $5,000 ad budget,
- * six-month initial term, no guarantees offered.
+ * Facts stated here must match lib/site.ts and THE RETAINER in
+ * lib/agency-offer.ts (Marcel, 2026-11-19): $500K+ per year minimum,
+ * $10,000 a month with no setup fee plus 10% performance pay (named, not
+ * explained: that is for the call), the ad budget paid by the firm directly
+ * to Meta, a six-month initial term that renews for six months at a time,
+ * no guarantees offered.
  */
-import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW, usd } from '../lib/agency-offer';
+import {
+  AGENCY_ENGAGEMENT_HIGH,
+  AGENCY_ENGAGEMENT_LOW,
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_PERFORMANCE_PERCENT,
+  AGENCY_RETAINER_MONTHLY,
+  usd,
+} from '../lib/agency-offer';
 
 export interface VslFaqItem {
   q: string;
@@ -29,12 +38,12 @@ const whatCounts: VslFaqItem = {
 
 const whatItCosts: VslFaqItem = {
   q: 'What does it cost?',
-  a: "$9,997 a month. One recurring number and one invoice: the website, the portal, the funnel and the automations, plus the $5,000 ad budget, which runs through us so it reaches the campaigns on schedule. There is also a one-time setup fee for the build, quoted on the call. The initial term is six months, then it continues month to month. The math is simple: if it helps you close 4-5 new advisory clients this year at $15,000-$55,000 each, it has paid for itself several times over.",
+  a: `${usd(AGENCY_RETAINER_MONTHLY)} a month for the website, the portal, the funnel and the automations, built and run for you, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay that we walk you through on the call. Your ad budget is separate: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card. The initial term is six months, renewing for six months at a time. The math: two planning engagements a month at ${usd(AGENCY_ENGAGEMENT_LOW)}, the bottom of the range, is ${usd(AGENCY_ENGAGEMENT_LOW * 2)} a month against ${usd(AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET)} in our fee and the minimum ads.`,
 };
 
 const whoRunsAds: VslFaqItem = {
   q: 'Who runs the ads, and who pays for them?',
-  a: 'We do, in house. No white-label and no subcontractor. The ad budget is part of your monthly and runs through us, so it reaches the campaigns on schedule rather than stalling on a declined card, and the weekly update shows exactly what was spent and what it produced.',
+  a: `We do, in house. No white-label and no subcontractor. You pay for the ads yourself: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, straight to Meta on your own card, and it never passes through us. The weekly update shows exactly what was spent and what it produced.`,
 };
 
 const howLong: VslFaqItem = {
@@ -49,12 +58,12 @@ const existingWebsite: VslFaqItem = {
 
 const canWeCancel: VslFaqItem = {
   q: 'Can we cancel?',
-  a: 'The initial term is six months from launch, which is how long it takes for the campaigns to have genuinely run. After that it continues month to month and you can end it on 30 days notice. You stay because the system is producing, not because a contract says so.',
+  a: 'The initial term is six months from signing, which is how long it takes for the campaigns to have genuinely run. It then renews for six months at a time, and you can cancel any time before a term ends.',
 };
 
 const salesPitch: VslFaqItem = {
   q: 'Is there a high-pressure sales pitch on the call?',
-  a: "Absolutely not. The strategy call is a genuine audit of your current systems. We will identify gaps, show you what is possible, and give you a custom roadmap. If it is a fit, we talk pricing then. If not, you still walk away with actionable insights.",
+  a: "Absolutely not. The strategy call is a genuine audit of your current systems. We will identify gaps, show you what is possible, and give you a custom roadmap. If it is a fit, we walk through the agreement then. If not, you still walk away with actionable insights.",
 };
 
 const whatYouGet = (angle: string): VslFaqItem => ({
@@ -142,7 +151,7 @@ export const offerFaq: VslFaqItem[] = [
   },
   {
     q: 'Do you guarantee results?',
-    a: `No, and we would be careful of anyone who does. We do not promise a number of clients. What we can tell you is what each one is worth: the system brings you tax-planning clients, each an engagement worth ${CLIENT_VALUE}. You get a written update every week showing exactly what the campaigns produced, and after the six-month initial term the engagement continues month to month, so you are not tied to it indefinitely.`,
+    a: `No, and we would be careful of anyone who does. We do not promise a number of clients. What we can tell you is what each one is worth: the system brings you tax-planning clients, each an engagement worth ${CLIENT_VALUE}. You get a written update every week showing exactly what the campaigns produced, and the engagement runs six months at a time, so you can leave at the end of any term.`,
   },
   whatItCosts,
   whoRunsAds,
@@ -157,6 +166,6 @@ export const offerFaq: VslFaqItem[] = [
   canWeCancel,
   {
     q: 'Is there a high-pressure sales pitch on the call?',
-    a: 'Absolutely not. The call is a genuine fit assessment. We walk through your market, your capacity for planning work, and what the client flow would look like. If it is a fit, we talk pricing then. If not, you still walk away knowing exactly what this opportunity looks like in your market.',
+    a: 'Absolutely not. The call is a genuine fit assessment. We walk through your market, your capacity for planning work, and what the client flow would look like. If it is a fit, we walk through the agreement then. If not, you still walk away knowing exactly what this opportunity looks like in your market.',
   },
 ];

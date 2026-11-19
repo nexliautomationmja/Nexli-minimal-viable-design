@@ -1,5 +1,5 @@
 /**
- * Nexli-look palettes for Firm Foundation sites. Plain data, edge-safe.
+ * Nexli-look palettes for client firm sites. Plain data, edge-safe.
  *
  * A generated site carries BOTH palettes: `colors` is the light palette and
  * `darkColors` the dark one; `theme` picks the default. The firm's own accent

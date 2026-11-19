@@ -1,5 +1,5 @@
 /**
- * Canonical service copy for Firm Foundation websites, keyed by the ids the
+ * Canonical service copy for client firm websites, keyed by the ids the
  * intake form collects. Ported from dashboard/src/lib/firm-sites/service-library.ts
  * and extended with a keyword matcher so free-text service names (from a
  * prospect's current website) can be mapped onto the library.

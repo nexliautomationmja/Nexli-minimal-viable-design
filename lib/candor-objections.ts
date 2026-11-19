@@ -17,7 +17,7 @@
 // the answer grows a player above the written reply, and nothing else has to
 // change. An empty string is the correct value for "not recorded yet": the
 // chip renders plain and the answer is text only, which is the same graceful
-// path lib/demo-config and lib/foundation-config use for pending uploads.
+// path lib/demo-config uses for pending uploads.
 //
 // VERIFY THE ID FIRST. https://stream.mux.com/<id>.m3u8 and
 // https://image.mux.com/<id>/thumbnail.jpg both return 200 for a playback id

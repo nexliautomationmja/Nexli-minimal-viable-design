@@ -38,8 +38,9 @@ const DISALLOW = [
   // Candor is an unlisted link in the booking email sequence, not a search
   // destination.
   '/candor',
-  // The See the Math sales deck and its PDF: they price the setup fee,
-  // which no public page does. Shown on the call and sent after it.
+  // The See the Math sales deck and its PDF: a call deck with the prepay
+  // and full projections, not a search page. Shown on the call and sent
+  // after it.
   '/math',
   // The Tax Planning Tool: unlisted until its tax figures have had a CPA's
   // review, and a firm's link to it is that firm's, not a search result.

@@ -1,156 +1,352 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Megaphone, Wrench } from 'lucide-react';
-import AnimatedNumber from '@/components/AnimatedNumber';
+import { motion, useReducedMotion } from 'framer-motion';
 import {
-  AGENCY_AD_SPEND,
-  AGENCY_TOTAL_MONTHLY,
+  Building2,
+  CalendarClock,
+  CheckCircle2,
+  ChevronRight,
+  CircleDollarSign,
+  Megaphone,
+  MessagesSquare,
+  Percent,
+  Plus,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
+import AnimatedNumber from '@/components/AnimatedNumber';
+import MetaLogo from '@/components/icons/MetaLogo';
+import { OUTFIT } from '@/components/funnel/primitives';
+import {
+  AGENCY_MAX_AD_BUDGET,
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_PERFORMANCE_PERCENT,
+  AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_TERM_MONTHS,
   usd,
+  usdK,
 } from '@/lib/agency-offer';
 
 /**
- * What the engagement costs, on both confirmation pages.
+ * What the engagement costs: THE RETAINER in lib/agency-offer.ts (Marcel,
+ * 2026-11-19). On the VSLs, right above the calendar, and on
+ * /booking-confirmed-b.
  *
- * ONE sticker price. It used to show the fee and the ad spend as two cards
- * side by side, which read as two bills and invited the question of whether
- * you could take just one. There is one number: AGENCY_TOTAL_MONTHLY.
+ * Shared rather than copied because a price laid out differently on two
+ * pages reads as two different prices, and these two pages are read minutes
+ * apart: the VSL, then the confirmation after booking.
  *
- * The ad-spend split sits underneath as a disclosure, not a line item —
- * it answers "where does the money go", not "what am I buying". Ad spend
- * is collected by Nexli as part of the monthly and placed into the
- * campaigns; it is not billed separately and the firm does not pay the
- * platforms itself.
+ * DRAWN IN /math's LANGUAGE (Marcel, 2026-11-19): not one box with the
+ * price in it, but the "How the math works" chain. Three numbered cards
+ * with their icon tiles, joined by plus signs, are what the firm pays:
+ * the agency fee, the performance pay, its own ad budget. Under them, a
+ * small diagram of where that money goes (Nexli, and Meta directly, never
+ * through us) and the terms.
  *
- * Shared rather than copied because this is the one block that has to look
- * identical on A and B. A price laid out differently on two pages reads as
- * two different prices.
+ * PERFORMANCE PAY IS NAMED, NOT EXPLAINED (Marcel, 2026-11-19): "plus 10%
+ * performance pay", and how it works is walked through on the call. He
+ * would rather a firm get on the call and see it than read the mechanics
+ * on a landing page. Do not add the worked example, the "greater of"
+ * rule or the definition of attributable net revenue back here.
  *
- * The counter holds at zero until scrolled into view and renders instantly
- * under prefers-reduced-motion; both are handled inside AnimatedNumber.
+ * NO PREPAY ON THE PAGE (same day). The $60,000 six-month prepay exists
+ * (AGENCY_RETAINER_PREPAY) but is not shown or offered here.
+ *
+ * DARK WHATEVER THE THEME. /booking-confirmed-b follows the site theme, so
+ * every surface here is opaque navy rather than /math's translucent glass,
+ * which would vanish on a white page. Only the kicker and the line under
+ * the heading follow the theme.
  */
-export default function PricingBlock() {
-  return (
-    <div className="max-w-3xl mx-auto mt-10 md:mt-14">
-      <p className="text-center text-[11px] font-black uppercase tracking-[0.2em] text-green-500">
-        What it costs
-      </p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, ease: 'circOut' }}
-        className="mt-6 rounded-2xl md:rounded-3xl border border-green-500/25 bg-gradient-to-br from-slate-900 to-slate-950 px-6 py-10 md:px-10 md:py-14 text-center"
+const SURFACE = 'linear-gradient(160deg, #101c33 0%, #0a1020 100%)';
+const MUTED = 'rgba(255,255,255,0.62)';
+
+type Tone = 'emerald' | 'amber' | 'blue' | 'cyan';
+
+/** /math's tile colours (components/math/ChainIcons). */
+const TONES: Record<Tone, { tile: string; text: string; shadow: string; line: string }> = {
+  emerald: { tile: 'bg-emerald-500/20 border-emerald-500/30', text: 'text-emerald-400', shadow: 'rgba(16,185,129,0.35)', line: '#10B981' },
+  amber: { tile: 'bg-amber-500/20 border-amber-500/30', text: 'text-amber-400', shadow: 'rgba(245,158,11,0.35)', line: '#F59E0B' },
+  blue: { tile: 'bg-blue-500/20 border-blue-500/30', text: 'text-blue-400', shadow: 'rgba(37,99,235,0.35)', line: '#0081FB' },
+  cyan: { tile: 'bg-cyan-500/20 border-cyan-500/30', text: 'text-cyan-400', shadow: 'rgba(6,182,212,0.35)', line: '#06B6D4' },
+};
+
+function Tile({ Icon, tone, n }: { Icon: LucideIcon; tone: Tone; n?: number }) {
+  const t = TONES[tone];
+  return (
+    <span className="relative inline-flex">
+      <span
+        className={`flex h-11 w-11 items-center justify-center rounded-xl border ${t.tile}`}
+        style={{ filter: `drop-shadow(0 4px 8px ${t.shadow})` }}
       >
+        <Icon className={`h-5 w-5 ${t.text}`} aria-hidden="true" />
+      </span>
+      {n !== undefined && (
+        <span
+          aria-hidden="true"
+          className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500 text-[10px] font-black text-[#020617] ring-2 ring-[#0b1220]"
+        >
+          {n}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/** Nexli's three chevrons, as in the page logo. */
+function NexliMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" fill="none" aria-label="Nexli" role="img">
+      <path d="M4 36L20 24L4 12L4 20L12 24L4 28L4 36Z" fill="#2563EB" />
+      <path d="M12 36L28 24L12 12L12 18L18 24L12 30L12 36Z" fill="#3B82F6" />
+      <path d="M20 36L44 24L20 12L20 18L32 24L20 30L20 36Z" fill="#06B6D4" />
+    </svg>
+  );
+}
+
+const rise = (delay: number) => ({
+  initial: { opacity: 0, y: 22 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.2 },
+  transition: { duration: 0.55, ease: 'easeOut' as const, delay },
+});
+
+/** The plus between two cards: beside them on desktop, between them on a phone. */
+function Join() {
+  return (
+    <div className="flex items-center justify-center py-1 lg:px-2 lg:py-0" aria-hidden="true">
+      <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-[#0d1526] text-white/60">
+        <Plus className="h-4 w-4" strokeWidth={2.5} />
+      </span>
+    </div>
+  );
+}
+
+/** One lane of "where your money goes": a line with a packet on it, then who gets it. */
+function Lane({
+  tone,
+  logo,
+  name,
+  amount,
+  detail,
+  delay,
+}: {
+  tone: Tone;
+  logo: React.ReactNode;
+  name: string;
+  amount: string;
+  detail: string;
+  delay: number;
+}) {
+  const still = useReducedMotion();
+  const color = TONES[tone].line;
+  return (
+    <div className="flex items-center">
+      <div className="relative h-[2px] min-w-[1.75rem] flex-1 rounded-full" style={{ background: `linear-gradient(90deg, rgba(255,255,255,0.12), ${color})` }}>
+        {!still && (
+          <motion.span
+            aria-hidden="true"
+            className="absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full"
+            style={{ background: color, boxShadow: `0 0 10px ${color}` }}
+            initial={{ left: '0%', opacity: 0 }}
+            animate={{ left: ['0%', '100%'], opacity: [0, 1, 1, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay }}
+          />
+        )}
+      </div>
+      <ChevronRight className="-ml-1.5 h-4 w-4 shrink-0" style={{ color }} aria-hidden="true" />
+      {/* One width for both, so the two arrows end at the same point. */}
+      <div className="ml-1 flex w-[12.25rem] shrink-0 items-center gap-2.5 rounded-xl border border-white/10 bg-[#0d1526] px-3 py-2.5 sm:w-56 sm:px-4">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
+          {logo}
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-white/50">{name}</span>
+          <span className="block text-sm font-bold text-white sm:text-[15px]">{amount}</span>
+          <span className="block text-[11px] leading-snug sm:text-xs" style={{ color: MUTED }}>
+            {detail}
+          </span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export default function PricingBlock({ headline }: { headline?: React.ReactNode }) {
+  const parts = [
+    {
+      n: 1,
+      tone: 'emerald' as Tone,
+      Icon: CircleDollarSign,
+      label: 'Agency fee',
+      value: (
         <AnimatedNumber
-          value={AGENCY_TOTAL_MONTHLY}
+          value={AGENCY_RETAINER_MONTHLY}
           animateOnView
           format={(n) => usd(Math.round(n))}
-          className="block text-6xl md:text-8xl font-black leading-none text-white"
-          style={{
-            fontFamily: "'Syne', sans-serif",
-            filter: 'drop-shadow(0 0 28px rgba(34,197,94,0.35))',
-          }}
         />
-        <p className="mt-3 text-base md:text-lg font-bold text-white">a month</p>
-        <p className="mt-2 text-sm md:text-base leading-relaxed text-white/60">
-          Everything above, built and run for you.
-        </p>
+      ),
+      unit: 'a month',
+      note: 'The website, portal, funnel, automations and campaigns, built and run for you.',
+      highlight: true,
+    },
+    {
+      n: 2,
+      tone: 'amber' as Tone,
+      Icon: Percent,
+      label: 'Performance pay',
+      value: AGENCY_PERFORMANCE_PERCENT,
+      // No gloss on the 10%: what it is a percentage of is for the call.
+      unit: '',
+      note: 'We’ll walk you through how it works on the call.',
+      highlight: false,
+    },
+    {
+      n: 3,
+      tone: 'blue' as Tone,
+      Icon: Megaphone,
+      label: 'Your ad budget',
+      // The range (Marcel, 2026-11-19). The top end counts up from the
+      // bottom as it scrolls in, so the range opens out to $5K–$30K.
+      value: (
+        <span className="whitespace-nowrap">
+          {usdK(AGENCY_MIN_AD_BUDGET)}–
+          <AnimatedNumber
+            value={AGENCY_MAX_AD_BUDGET}
+            animateOnView
+            duration={1100}
+            format={(n) => usdK(Math.max(AGENCY_MIN_AD_BUDGET, n))}
+          />
+        </span>
+      ),
+      unit: 'a month',
+      note: `Anywhere from ${usd(AGENCY_MIN_AD_BUDGET)} to ${usd(AGENCY_MAX_AD_BUDGET)} a month, paid straight to Meta on your own card. It never passes through us.`,
+      highlight: false,
+    },
+  ];
 
-        {/* Where the money goes — a disclosure, not a second price. */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.25 }}
-          className="mx-auto mt-8 flex max-w-lg items-start gap-3.5 rounded-2xl border border-green-500/20 bg-green-500/[0.06] px-4 py-4 text-left md:px-5"
-        >
-          <span
-            className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-green-500/30 bg-[#001a0d]"
-            aria-hidden="true"
-          >
-            <Megaphone className="h-4 w-4 text-green-400" strokeWidth={2} />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-white">
-              {usd(AGENCY_AD_SPEND)} of that is your ad spend
-            </span>
-            <span className="mt-1 block text-xs md:text-sm leading-relaxed text-white/60">
-              It runs through us so the budget actually reaches the campaigns on
-              schedule, instead of sitting in an account waiting on a card that
-              declined. You see where every dollar of it went in the weekly update.
-            </span>
-          </span>
+  const terms: { Icon: LucideIcon; title: string; body: string }[] = [
+    { Icon: Wrench, title: 'No setup fee', body: 'Nothing separate to pay for the build.' },
+    {
+      Icon: CalendarClock,
+      title: `${AGENCY_RETAINER_TERM_MONTHS}-month initial term`,
+      body: 'Long enough for the campaigns to have actually run.',
+    },
+    {
+      Icon: MessagesSquare,
+      title: 'Walked through on the call',
+      body: 'The agreement and the performance pay, before anything is signed. Nothing here changes.',
+    },
+  ];
+
+  return (
+    <div className="mx-auto mt-10 max-w-6xl md:mt-14" style={OUTFIT}>
+      <p className="text-center text-[11px] font-bold uppercase tracking-[0.18em] text-cyan-400 sm:text-xs">
+        What it costs
+      </p>
+      {headline}
+
+      {/* What you pay: three numbered cards and the plus signs between them,
+          the "How the math works" chain on /math. */}
+      <div className="mt-8 grid grid-cols-1 lg:mt-10 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+        {parts.map((p, i) => (
+          <React.Fragment key={p.label}>
+            {i > 0 && <Join />}
+            <motion.div {...rise(0.08 * i)} className="flex">
+              <div
+                className={`flex w-full flex-col rounded-2xl border p-5 lg:p-6 ${
+                  p.highlight
+                    ? 'border-emerald-400/55 shadow-[0_0_50px_-16px_rgba(52,211,153,0.6)]'
+                    : 'border-white/10'
+                }`}
+                style={{ background: SURFACE }}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="pr-1.5 pt-1.5">
+                    <Tile Icon={p.Icon} tone={p.tone} n={p.n} />
+                  </span>
+                  <span className={`text-[10px] font-bold uppercase tracking-[0.16em] sm:text-[11px] ${TONES[p.tone].text}`}>
+                    {p.label}
+                  </span>
+                </div>
+                <div className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <span className="text-[2.6rem] font-black leading-none tracking-tight text-white lg:text-5xl">
+                    {p.value}
+                  </span>
+                  {p.unit && <span className="text-sm font-bold text-white/70 sm:text-base">{p.unit}</span>}
+                </div>
+                <span className="mt-3 block text-[13px] leading-snug sm:text-sm" style={{ color: MUTED }}>
+                  {p.note}
+                </span>
+              </div>
+            </motion.div>
+          </React.Fragment>
+        ))}
+      </div>
+
+      <div className="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[1.35fr_1fr]">
+        {/* Where the money goes: one source, two lanes. The second lane is
+            the point: the ad budget goes from the firm to Meta, not to us. */}
+        <motion.div {...rise(0.2)} className="rounded-2xl border border-white/10 p-4 sm:p-6" style={{ background: SURFACE }}>
+          <div className="mb-5 text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-400/90 sm:text-[11px]">
+            Where your money goes
+          </div>
+          <div className="flex items-stretch gap-2 sm:gap-3">
+            <div className="flex shrink-0 flex-col items-center justify-center gap-2">
+              <Tile Icon={Building2} tone="cyan" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">Your firm</span>
+            </div>
+            <div className="relative flex flex-1 flex-col justify-center gap-4">
+              {/* The fork: one line down from the firm, a lane off each end. */}
+              <span aria-hidden="true" className="absolute bottom-[22%] left-0 top-[22%] w-[2px] rounded-full bg-white/15" />
+              <Lane
+                tone="emerald"
+                logo={<NexliMark className="h-5 w-5" />}
+                name="Nexli"
+                amount={`${usd(AGENCY_RETAINER_MONTHLY)} a month`}
+                detail={`+ ${AGENCY_PERFORMANCE_PERCENT} performance pay`}
+                delay={0}
+              />
+              <Lane
+                tone="blue"
+                logo={<MetaLogo className="h-5 w-5" />}
+                name="Meta"
+                amount={`${usdK(AGENCY_MIN_AD_BUDGET)}–${usdK(AGENCY_MAX_AD_BUDGET)} a month`}
+                detail="Your ad budget, your card"
+                delay={1.1}
+              />
+            </div>
+          </div>
         </motion.div>
 
-        {/* The setup fee, given its own card.
-            It used to be half of a grey sentence under the ad-spend box,
-            sharing a line with the contract term — the one cost on the page
-            that is NOT inside the big number, set smaller than everything
-            that is. A firm that reads $9,997, books, and meets the setup fee
-            on the call has been surprised by us, which is the expensive kind
-            of surprise.
-
-            Amber, not green, and deliberately. The green box above explains
-            what is INSIDE the monthly; this is the thing that sits outside
-            it. Matching them would blur the only distinction that matters
-            here. The shimmer rim is the hero chip's pattern (a rotating
-            conic gradient behind a 1px inset) — hard-coded rather than
-            theme-aware because this card is always on the dark pricing
-            panel, unlike the chip at the top of the page.
-
-            Still no number, but no hedging either. It used to end "because
-            it depends on what your firm already has", which read as a reason
-            the fee might vary and invited the firm to start negotiating it
-            down from a number nobody had said yet. It is one build, and
-            almost nobody arrives with any of it already in place. */}
-        <div className="relative mx-auto mt-8 max-w-lg rounded-2xl p-[1px]">
-          <span
-            className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
-            aria-hidden="true"
-          >
-            <span
-              className="absolute inset-[-100%] animate-[shimmer_6s_linear_infinite]"
-              style={{
-                background:
-                  'conic-gradient(from 0deg at 50% 50%, #fbbf24, #78350f, #fbbf24, #78350f, #fbbf24)',
-              }}
-            />
-          </span>
-
-          <div
-            className="relative z-10 flex items-start gap-3.5 rounded-2xl px-4 py-4 text-left md:px-5 md:py-5"
-            style={{ background: 'linear-gradient(rgba(251,191,36,0.07), rgba(251,191,36,0.07)), #0b1120' }}
-          >
-            <span
-              className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-[#1c1206]"
-              aria-hidden="true"
-            >
-              <Wrench className="h-4 w-4 text-amber-400" strokeWidth={2} />
-            </span>
-            <span>
-              <span className="block text-base md:text-lg font-black leading-snug text-white">
-                Plus a one-time{' '}
-                <span className="text-amber-300">setup fee</span> for the build
-              </span>
-              <span className="mt-1.5 block text-xs md:text-sm leading-relaxed text-white/60">
-                The website, the portal, the funnel and the automations all have
-                to be built before any of it runs. One fee, quoted on the call.
-              </span>
-            </span>
-          </div>
-        </div>
-
-        <p className="mt-5 text-sm text-white/55">
-          Six-month initial term, then month to month.
-        </p>
-      </motion.div>
-
-      <p className="mt-4 text-center text-xs text-[var(--text-muted)]">
-        We will walk through the numbers on the call. Nothing here changes.
-      </p>
+        <motion.div
+          {...rise(0.28)}
+          className="relative overflow-hidden rounded-2xl border py-5 pl-6 pr-5 sm:pl-7"
+          style={{ borderColor: 'rgba(20,168,119,0.4)', background: 'linear-gradient(160deg, #0c2620 0%, #0a1020 100%)' }}
+        >
+          <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1" style={{ background: '#14A877' }} />
+          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300 sm:text-[11px]">The terms</div>
+          <ul className="mt-3 list-none space-y-3.5 p-0">
+            {terms.map(({ Icon, title, body }) => (
+              <li key={title} className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/15">
+                  <Icon className="h-3.5 w-3.5 text-emerald-400" strokeWidth={2.25} aria-hidden="true" />
+                </span>
+                <span>
+                  <span className="flex items-center gap-1.5 text-sm font-bold text-white sm:text-[15px]">
+                    {title}
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+                  </span>
+                  <span className="mt-0.5 block text-[13px] leading-snug" style={{ color: MUTED }}>
+                    {body}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      </div>
     </div>
   );
 }

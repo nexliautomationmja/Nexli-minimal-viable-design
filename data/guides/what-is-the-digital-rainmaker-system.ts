@@ -11,10 +11,10 @@ const guide: Guide = {
     'The Digital Rainmaker System is a done-for-you client acquisition system that Nexli Automation builds for established CPA and accounting firms, combining a premium website, an AI automation layer, a secure client portal, and a Google review engine, then running paid ads to it.',
     'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and the build takes about 21 days from kickoff.',
     'Each client the system brings in is a tax-planning engagement worth $15,000 to $55,000 to the firm. The build takes about 21 days, and Nexli reports on what the campaigns produced every week.',
-    'Pricing is $9,997 a month all in, covering the complete system and the $5,000 ad budget together. Six-month initial term, then month to month, plus a one-time setup fee for the build.',
+    'Pricing is $10,000 a month with no setup fee, plus 10% performance pay explained on the strategy call. The ad budget is separate: at least $5,000 a month, paid directly to Meta. Six-month initial term, renewing six months at a time.',
   ],
   publishedAt: '2026-09-08',
-  updatedAt: '2026-11-09',
+  updatedAt: '2026-11-19',
   author: 'marcel-allen',
   category: 'Product',
   stats: [
@@ -140,7 +140,7 @@ const guide: Guide = {
       bullets: [
         '**What each client is worth: $15,000 to $55,000.** The system brings in tax-planning clients: US-based business owners and high-income individuals who fit the firm\'s advisory criteria and book a consultation. Each one is a tax-planning engagement worth $15,000 to $55,000 to the firm. The firm\'s close rate determines what it banks, and the weekly report shows what the campaigns produced.',
         '**Live in about 21 days.** The build takes about 21 days from kickoff, matching the engagement letter, and the variable is how quickly assets, access and approvals come back from the firm.',
-        '**Pricing:** $9,997 a month all in. That covers the complete system and the $5,000 ad budget together; Nexli collects it and places the spend into the campaigns, and reports where it went each week. Billed monthly from launch on a six-month initial term that then continues month to month, plus a one-time setup fee for the build. The firm owns what Nexli builds and pays its own hosting. Firms apply and book a strategy call through the [advisory application page](/agency); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
+        '**Pricing:** $10,000 a month for the complete system, with no setup fee, plus 10% performance pay that is explained on the strategy call. The ad budget is separate: at least $5,000 a month, paid by the firm directly to Meta on its own card, and Nexli reports where it went each week. Billed monthly from signing on a six-month initial term that renews for six months at a time. The firm owns what Nexli builds and pays its own hosting. Firms apply and book a strategy call through the [advisory application page](/agency); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
       ],
     },
     {
@@ -159,7 +159,7 @@ const guide: Guide = {
           ['Brings in clients', 'No', 'Only if traffic already exists', 'Yes, if the site converts', 'Yes; ads drive traffic into the built system'],
           ['Handles follow-up and booking', 'Partially, if configured', 'No', 'Usually not', 'Yes, automated 24/7'],
           ['What each new client is worth', 'Not stated', 'Not stated', 'Rarely stated', '$15,000 to $55,000 per tax-planning engagement'],
-          ['Contract', 'Annual or monthly subscription', 'One-time project', 'Varies', 'Six-month initial term, then month to month'],
+          ['Contract', 'Annual or monthly subscription', 'One-time project', 'Varies', 'Six-month initial term, renewing six months at a time'],
           ['Best for', 'Firms that want to run their own workflow tooling', 'Firms that only need a new site', 'Firms with strong intake already', 'Established firms ($500K+) that want advisory growth without adding admin staff'],
         ],
       },
@@ -185,7 +185,7 @@ const guide: Guide = {
     },
     {
       question: 'Does the Digital Rainmaker System come with a guarantee?',
-      answer: 'No. Nexli does not offer performance guarantees or promise a number of clients. What it is specific about is what each client is worth: a tax-planning engagement of $15,000 to $55,000. The build takes about 21 days, and Nexli sends a written update every week showing what the campaigns produced. After the six-month initial term the engagement continues month to month, so a firm that is not seeing results can leave.',
+      answer: 'No. Nexli does not offer performance guarantees or promise a number of clients. What it is specific about is what each client is worth: a tax-planning engagement of $15,000 to $55,000. The build takes about 21 days, and Nexli sends a written update every week showing what the campaigns produced. The initial term is six months and it renews six months at a time, so a firm that is not seeing results can leave at the end of a term.',
     },
     {
       question: 'Who qualifies for the Digital Rainmaker System?',
@@ -193,7 +193,7 @@ const guide: Guide = {
     },
     {
       question: 'How much does the Digital Rainmaker System cost?',
-      answer: '$9,997 a month all in, covering the complete system and the $5,000 ad budget together, on a six-month initial term that then continues month to month. There is also a one-time setup fee for the build, quoted on the strategy call, which reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/agency; pricing is also listed at nexli.net/pricing.',
+      answer: '$10,000 a month for the complete system, with no setup fee, plus 10% performance pay explained on the strategy call. The ad budget is separate: at least $5,000 a month, paid directly to Meta. The initial term is six months and renews six months at a time. The strategy call reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/agency; pricing is also listed at nexli.net/pricing.',
     },
     {
       question: 'How long does it take to launch?',

@@ -13,17 +13,18 @@ import {
   AD_SPEND,
   BACK_END_ANNUAL,
   BACK_END_MONTHLY,
+  FEE_MONTHLY,
   MONTHLY_TOTAL,
   PLAN_FEE,
   PLAN_FEE_HIGH,
   PLAN_FEE_LOW,
   SCENARIOS,
-  SETUP_FEE,
   SHOW_RATE,
+  billCoverLabel,
   chain,
   pct,
   scenarioById,
-  setupCoverLabel,
+  times,
   usd,
   usdCompact,
   yearOneValue,
@@ -119,7 +120,7 @@ export function TitleSlide() {
                   {c.clients} clients a month
                 </span>
                 <span className="rounded-full border border-amber-400/30 bg-amber-400/[0.08] px-2.5 py-1 text-amber-200">
-                  {c.multiple}× the investment
+                  {times(c.multiple)} the investment
                 </span>
               </div>
             </>
@@ -381,14 +382,19 @@ export function ReturnSlide() {
     <Slide id="return">
       <Heading kicker="New fees each month">
         Even the conservative pace brings in{' '}
-        <span className={GRADIENT_TEXT}>{cons.multiple}× the monthly investment.</span>
+        <span className={GRADIENT_TEXT}>{times(cons.multiple)} the monthly investment.</span>
       </Heading>
 
       <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1.65fr_1fr]">
         <Reveal delay={0.12}>
           <Panel title="New tax planning fees each month, once ads reach full pace">
             <div className="mb-2">
-              <LineKey color={C.invest} dash="7 6" label={`Your investment: ${usd(MONTHLY_TOTAL)} a month`} sub={`incl. ${usd(AD_SPEND)} in ads`} />
+              <LineKey
+                color={C.invest}
+                dash="7 6"
+                label={`Your investment: ${usd(MONTHLY_TOTAL)} a month`}
+                sub={`our ${usd(FEE_MONTHLY)} + ${usd(AD_SPEND)} in ads`}
+              />
             </div>
             <Columns
               caption="New tax planning fees each month by scenario"
@@ -408,7 +414,7 @@ export function ReturnSlide() {
                   value: c.newFees,
                   color: C.planning,
                   capLabel: usd(c.newFees),
-                  capSub: `${c.multiple}× the investment`,
+                  capSub: `${times(c.multiple)} the investment`,
                   tip: { value: usd(c.newFees), label: `${s.label}: ${c.clients} clients × ${usd(PLAN_FEE)}` },
                 };
               })}
@@ -417,13 +423,17 @@ export function ReturnSlide() {
         </Reveal>
 
         <Reveal delay={0.22}>
-          <Callout label="The setup fee" className="h-full">
+          {/* Where the setup-fee callout was (Marcel, 2026-11-19: no setup fee
+              any more). What a month of the whole bill costs in days of new
+              fees, from billCoverLabel in lib/see-the-math. */}
+          <Callout label="No setup fee" className="h-full">
             <p style={{ color: 'rgba(255,255,255,0.9)' }}>
-              Once ads reach full pace, one month of new fees at the conservative pace covers the{' '}
-              {usd(SETUP_FEE)} setup ({usd(cons.newFees)}).
+              Nothing to pay for the build. Your investment is {usd(MONTHLY_TOTAL)} a month: our{' '}
+              {usd(FEE_MONTHLY)} and at least {usd(AD_SPEND)} in ads, paid to Meta on your own card. Once ads reach
+              full pace, new fees cover a month of it in:
             </p>
             <ul className="mt-4 space-y-2.5">
-              {SCENARIOS.map((sc) => ({ label: sc.label, when: setupCoverLabel(sc) })).map((r) => (
+              {SCENARIOS.map((sc) => ({ label: sc.label, when: billCoverLabel(sc) })).map((r) => (
                 <li key={r.label} className="flex items-baseline justify-between gap-3 border-t border-white/[0.08] pt-2.5">
                   <span className="text-sm" style={{ color: MUTED }}>
                     {r.label}

@@ -5,7 +5,7 @@ import { buildFirmSiteMetadata, NOT_FOUND_METADATA } from '../../../../lib/firm-
 import { resolveFirmSite } from '../../../../lib/firm-sites/resolve';
 
 /**
- * /sites/host/<host> — a Firm Foundation site by custom domain.
+ * /sites/host/<host> — a client firm site by custom domain.
  *
  * middleware.ts rewrites every request whose host is not one of ours here,
  * so the browser URL stays on the firm's domain. The domain is looked up in

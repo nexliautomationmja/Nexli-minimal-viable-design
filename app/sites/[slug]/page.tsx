@@ -7,7 +7,7 @@ import { buildFirmSiteMetadata, NOT_FOUND_METADATA } from '../../../lib/firm-sit
 import { resolveFirmSite } from '../../../lib/firm-sites/resolve';
 
 /**
- * /sites/<slug> — a Firm Foundation site by slug.
+ * /sites/<slug> — a client firm site by slug.
  *
  * Resolved at request time from the `firm_sites` table (published rows, or
  * any row when `?preview=<token>` matches its preview token), falling back

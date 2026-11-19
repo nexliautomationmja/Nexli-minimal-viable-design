@@ -1,4 +1,11 @@
-import { AGENCY_ENGAGEMENT_HIGH, AGENCY_ENGAGEMENT_LOW, AGENCY_TOTAL_MONTHLY, usd } from '../lib/agency-offer';
+import {
+  AGENCY_ENGAGEMENT_HIGH,
+  AGENCY_ENGAGEMENT_LOW,
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_PERFORMANCE_PERCENT,
+  AGENCY_RETAINER_MONTHLY,
+  usd,
+} from '../lib/agency-offer';
 import { ADDRESS_LINES, PHONE_DISPLAY, SOCIAL_PROFILES } from '../lib/site';
 
 const CLIENT_VALUE = `${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)}`;
@@ -25,7 +32,7 @@ export const aboutFacts: AboutFact[] = [
   { label: 'Founder', value: 'Marcel Allen' },
   { label: 'Email', value: 'mail@nexli.net' },
   { label: 'Serves', value: 'Established CPA and accounting firms with $500K+ in annual revenue (about $40K-$50K a month)' },
-  { label: 'Contract terms', value: 'Six-month initial term from launch, then month to month' },
+  { label: 'Contract terms', value: 'Six-month initial term from signing, renewing for six months at a time' },
   { label: 'Launch time', value: 'About 21 days from kickoff, which is what the engagement letter commits to' },
 ];
 
@@ -56,7 +63,7 @@ export const aboutSections: AboutSection[] = [
     heading: 'Who we work with',
     body: [
       'Nexli works exclusively with established CPA and accounting firms doing $500K or more in annual revenue. The firms we work best with already have a stable client base, deliver good work, and want more advisory clients without adding headcount to get them.',
-      `We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is ${usd(AGENCY_TOTAL_MONTHLY)} a month, covering the complete system and the ad budget together, plus a one-time setup fee for the build quoted on the call ([pricing](/pricing)). Firms apply for a strategy call, and we take on the ones where the system fits.`,
+      `We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is ${usd(AGENCY_RETAINER_MONTHLY)} a month for the complete system, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay explained on the call; the ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is paid by the firm directly to Meta ([pricing](/pricing)). Firms apply for a strategy call, and we take on the ones where the system fits.`,
     ],
   },
   {
@@ -64,7 +71,7 @@ export const aboutSections: AboutSection[] = [
     heading: 'How we work',
     body: [
       'Engagements start with an application and a strategy call. If the firm fits, we build the system first and turn on campaigns once it is live. The build takes about 21 days.',
-      'The initial term is six months from launch — long enough for the campaigns to have actually run — and after that it continues month to month. There is a one-time setup fee for the build, quoted on the call. The firm owns what we build, the website, the portal and the automations, and pays its own hosting; the monthly fee pays for us to maintain and run it.',
+      'The initial term is six months from signing — long enough for the campaigns to have actually run — and it then renews for six months at a time unless the firm cancels before the term ends. There is no setup fee. The firm owns what we build, the website, the portal and the automations, and pays its own hosting; the monthly fee pays for us to maintain and run it.',
       `We do not offer performance guarantees or promise a number of clients. What we tell a firm is what each client is worth: the system brings in tax-planning clients, each an engagement worth ${CLIENT_VALUE}. Every week the firm gets a written update showing what the campaigns produced.`,
     ],
     bullets: [
@@ -90,7 +97,7 @@ export const aboutSections: AboutSection[] = [
       'Growth should not require hiring. Capacity comes from intake, collection, and delivery systems before it comes from payroll.',
       'A firm should own its demand. Referrals are a gift; a booked calendar is a system.',
       'Targets should be specific and reported. A number, a date, and an honest weekly update on the pace.',
-      'Six months, then month to month. Long enough to judge the work on results rather than on a first impression, short enough that we have to keep earning it.',
+      'Six months at a time. Long enough to judge the work on results rather than on a first impression, short enough that we have to keep earning it.',
     ],
   },
   {

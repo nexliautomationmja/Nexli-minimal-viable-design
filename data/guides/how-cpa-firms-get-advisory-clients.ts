@@ -14,7 +14,7 @@ const guide: Guide = {
     'This guide covers who the advisory client is, the five parts of the system, how to package the offer, how to convert existing compliance clients, and a 90-day launch sequence.',
   ],
   publishedAt: '2026-09-08',
-  updatedAt: '2026-11-09',
+  updatedAt: '2026-11-19',
   author: 'marcel-allen',
   category: 'Growth',
   stats: [
@@ -156,7 +156,7 @@ const guide: Guide = {
       heading: 'How Nexli does this',
       body: [
         'Nexli Automation is a CPA firm growth agency. It builds the system described above, called the Digital Rainmaker System, and then runs paid ads to it. The build includes a premium website structured around the firm\'s advisory offer, an AI automation layer for missed-call text-back, 24/7 intake, automated booking, and nurture sequences, a secure client document portal, and a Google review engine that adds 3-5 extra Google reviews per month. The build takes about 21 days.',
-        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), on a six-month initial term that then continues month to month, with a one-time setup fee for the build. The system brings those firms tax-planning clients, each an engagement worth $15,000 to $55,000, with a build that takes about 21 days and a written report every week.',
+        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), on a six-month initial term that renews for six months at a time, at $10,000 a month with no setup fee. The system brings those firms tax-planning clients, each an engagement worth $15,000 to $55,000, with a build that takes about 21 days and a written report every week.',
         'If that fits your firm, [watch the short presentation and apply for a strategy call](/agency). For a full breakdown of the components, read [What Is the Digital Rainmaker System?](/guides/what-is-the-digital-rainmaker-system).',
       ],
     },

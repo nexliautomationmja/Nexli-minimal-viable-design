@@ -3,94 +3,97 @@
 //
 // Pure functions, no React. Every number the page shows is computed here, so
 // the page cannot drift from itself: change an input and the table, every
-// chart and the break-even month all move together. The PDF in
-// public/downloads is a static copy of the same numbers — if you change an
-// input here, re-export the PDF too, or the leave-behind disagrees with the
-// page that was just presented.
+// chart and the break-even month all move together. The PDFs in
+// public/downloads are static copies of the same numbers, built from the
+// deck by scripts/build-math-pdf.mjs. Change an input here and rebuild them,
+// or the leave-behind disagrees with the page that was just presented.
 //
-// THE SETUP FEE AND THE ANNUAL PLAN come from lib/agency-offer, like every
-// other price here. They used to be defined in this file only, back when
-// /math was the one place that priced them. Since 2026-11-09 the policy
-// pages (/pricing, /terms, /refund-policy, /delivery-policy) price them too,
-// for the card processor's underwriters, and a second copy here would be the
-// first thing to drift. The sales pages still say "quoted on the call"; see
-// the note in lib/agency-offer for which pages may import the figure.
+// THE PRICES come from lib/agency-offer (THE RETAINER, Marcel 2026-11-19),
+// like every other price on the site:
+//   - $10,000 a month to Nexli, NO setup fee, billed from signing: the first
+//     month is due when the agreement is signed.
+//   - Or the six months prepaid: $50,000 instead of $60,000.
+//   - The firm's ads on top, at least $5,000 a month, paid straight to Meta.
+//   - Plus 10% performance pay, which this model does NOT count: the deck
+//     names it and says it is walked through on the call. Every projection
+//     here uses the $10,000 minimum and the $5,000 minimum ad budget.
+// The setup fee, the annual plan and the first-month ad bonus that this file
+// used to model were retired the same day.
 // ---------------------------------------------------------------------------
 import {
-  AGENCY_AD_SPEND,
-  AGENCY_ANNUAL_SERVICE_FEE,
   AGENCY_ENGAGEMENT_HIGH,
   AGENCY_ENGAGEMENT_LOW,
-  AGENCY_MONTHLY_FEE,
-  AGENCY_SETUP_FEE,
-  AGENCY_TOTAL_MONTHLY,
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_PREPAY_SAVING,
+  AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_PREPAY,
+  AGENCY_RETAINER_TERM_MONTHS,
 } from '@/lib/agency-offer';
 
 // ── What the firm pays ─────────────────────────────────────────────────────
 
-/** One-time, due at signing. */
-export const SETUP_FEE = AGENCY_SETUP_FEE;
+/** Nexli's fee, a month: the $10,000 agency minimum. */
+export const FEE_MONTHLY = AGENCY_RETAINER_MONTHLY;
 
-/** Nexli's service fee when the service year is prepaid: $42,000 / 12. */
-export const ANNUAL_SERVICE_MONTHLY = AGENCY_ANNUAL_SERVICE_FEE / 12;
+/** The firm's ads every month, at the $5,000 minimum, paid to Meta directly. */
+export const AD_SPEND = AGENCY_MIN_AD_BUDGET;
 
-/** Ads every month, either plan. */
-export const AD_SPEND = AGENCY_AD_SPEND;
+/** The whole monthly bill on the monthly plan: our fee and your ads, $15,000. */
+export const MONTHLY_TOTAL = FEE_MONTHLY + AD_SPEND;
 
-/** Paid monthly: ads + service, $9,997. */
-export const MONTHLY_TOTAL = AGENCY_TOTAL_MONTHLY;
+/** One term, in months: six. It renews for another six unless cancelled. */
+export const TERM_MONTHS = AGENCY_RETAINER_TERM_MONTHS;
 
-/** Paid annually, as a monthly figure: ads + prepaid service, $8,500. */
-export const ANNUAL_MONTHLY_EQUIVALENT = AD_SPEND + ANNUAL_SERVICE_MONTHLY;
+/** The six months prepaid, $50,000, and what that saves over paying monthly. */
+export const PREPAY = AGENCY_RETAINER_PREPAY;
+export const PREPAY_SAVING = AGENCY_PREPAY_SAVING;
 
-export type PlanId = 'monthly' | 'annual';
+export type PlanId = 'monthly' | 'prepaid';
 
 export interface Plan {
   id: PlanId;
   label: string;
-  /** Due at signing. */
-  upfront: number;
-  /** Billed every month from launch (about day 21), months 1–12. */
-  perMonth: number;
-  /** Nexli's service line, as a monthly figure, for display. */
-  serviceMonthly: number;
+  /** Due at signing: the first month, or the first six months prepaid. */
+  dueAtSigning: number;
+  /** Nexli's fees for one six-month term. */
+  termCost: number;
 }
 
 export const PLANS: Record<PlanId, Plan> = {
   monthly: {
     id: 'monthly',
     label: 'Paid monthly',
-    upfront: SETUP_FEE,
-    perMonth: MONTHLY_TOTAL,
-    serviceMonthly: AGENCY_MONTHLY_FEE,
+    dueAtSigning: FEE_MONTHLY,
+    termCost: FEE_MONTHLY * TERM_MONTHS,
   },
-  annual: {
-    id: 'annual',
-    label: 'Paid annually',
-    // Setup plus the service year, prepaid: $82,000.
-    upfront: SETUP_FEE + 12 * ANNUAL_SERVICE_MONTHLY,
-    // Only the ads are billed monthly once the service year is prepaid.
-    perMonth: AD_SPEND,
-    serviceMonthly: ANNUAL_SERVICE_MONTHLY,
+  prepaid: {
+    id: 'prepaid',
+    label: 'Prepaid six months',
+    dueAtSigning: PREPAY,
+    termCost: PREPAY,
   },
 };
 
-/** Everything paid to Nexli in year one, setup included. */
-export function yearOneCost(plan: Plan): number {
-  return plan.upfront + 12 * plan.perMonth;
+/**
+ * Nexli's fee charged at the START of month m (1-based; month 1's is the
+ * payment at signing). Paid monthly: $10,000 every month. Prepaid: the
+ * $50,000 at the start of each six-month term, months 1 and 7 in year one.
+ *
+ * ASSUMPTION, stated on the break-even slide: both plans renew at month 7
+ * on the same plan. The agreement renews for six months unless cancelled;
+ * a prepaid firm paying monthly in its second term would sit between the
+ * two lines.
+ */
+export function feeAtStartOf(plan: Plan, m: number): number {
+  if (plan.id === 'monthly') return FEE_MONTHLY;
+  return (m - 1) % TERM_MONTHS === 0 ? PREPAY : 0;
 }
 
-/**
- * The first month in which paying annually has cost less in total than
- * paying monthly. It costs $42,000 more at signing and $4,997 less a
- * month after, so it crosses during month 9.
- */
-export function annualAheadFromMonth(): number {
-  const { monthly, annual } = PLANS;
-  for (let m = 1; m <= 24; m++) {
-    if (annual.upfront + m * annual.perMonth < monthly.upfront + m * monthly.perMonth) return m;
-  }
-  return Infinity;
+/** Everything paid to Nexli in year one (ads not included). */
+export function yearOneFees(plan: Plan): number {
+  let total = 0;
+  for (let m = 1; m <= 12; m++) total += feeAtStartOf(plan, m);
+  return total;
 }
 
 // ── What the firm earns ────────────────────────────────────────────────────
@@ -146,7 +149,7 @@ export interface Chain {
   callsHeld: number;
   clients: number;
   newFees: number;
-  /** New fees ÷ the $9,997 monthly investment. */
+  /** New fees ÷ the whole monthly bill, our fee and the ads: one decimal. */
   multiple: number;
 }
 
@@ -162,29 +165,27 @@ export function chain(s: Scenario): Chain {
     callsHeld,
     clients,
     newFees,
-    multiple: Math.round(newFees / MONTHLY_TOTAL),
+    multiple: Math.round((newFees / MONTHLY_TOTAL) * 10) / 10,
   };
 }
 
-/** Days of new fees, at full pace, that cover the setup fee. */
-export function setupCoverDays(s: Scenario): number {
-  return (SETUP_FEE / chain(s).newFees) * 30;
-}
+/** "2.7×", "4×": a multiple as the deck prints it. */
+export const times = (n: number) => `${Number.isInteger(n) ? n : n.toFixed(1)}×`;
 
 /**
- * setupCoverDays in words, for the "setup fee" callout on /math. It was
- * three hand-written labels ("Within the first month", "About two weeks",
- * "About 10 days") that were right at $32,000 and wrong at $40,000; now a
- * change to the fee or a scenario moves them too. At $40,000: 30, 20 and 12
- * days.
+ * Days of new fees, at full pace, that pay a whole month's bill (our fee
+ * and the ads), and the same in words, for the "No setup fee" callout on
+ * /math. It replaced setupCoverDays when the setup fee went (2026-11-19).
+ * At $15,000: about 11, 8 and 5 days.
  */
-export function setupCoverLabel(s: Scenario): string {
-  const d = Math.round(setupCoverDays(s));
-  if (d > 31) return `About ${Math.round(d / 7)} weeks`;
-  if (d >= 28) return 'One month';
-  if (d >= 18) return 'About three weeks';
+export function billCoverDays(s: Scenario): number {
+  return (MONTHLY_TOTAL / chain(s).newFees) * 30;
+}
+
+export function billCoverLabel(s: Scenario): string {
+  const d = Math.round(billCoverDays(s));
+  if (d >= 28) return 'About a month';
   if (d >= 13) return 'About two weeks';
-  if (d >= 11) return 'Under two weeks';
   return `About ${d} days`;
 }
 
@@ -241,13 +242,20 @@ export function revenueIn(s: Scenario, m: number): number {
 }
 
 /**
- * Where the firm stands after everything paid to Nexli, month 0 (signing)
- * to month 12. Index = month. Before the firm's own cost of doing the work.
+ * Where the firm stands after everything paid to Nexli and to Meta, month 0
+ * (signing) to month 12. Index = month. Before the firm's own cost of doing
+ * the work, and without performance pay (see the note at the top).
+ *
+ * Index 0 is the payment at signing. Month m then adds that month's new
+ * fees and bundle, less the ads (every month, at the minimum) and Nexli's
+ * fee for month m when it falls due at its start (month 2 on; month 1's was
+ * paid at signing).
  */
 export function netSeries(s: Scenario, plan: Plan): number[] {
-  const out = [-plan.upfront];
+  const out = [-feeAtStartOf(plan, 1)];
   for (let m = 1; m <= MONTHS; m++) {
-    out.push(out[m - 1] + revenueIn(s, m) - plan.perMonth);
+    const fee = m === 1 ? 0 : feeAtStartOf(plan, m);
+    out.push(out[m - 1] + revenueIn(s, m) - AD_SPEND - fee);
   }
   return out;
 }
@@ -283,7 +291,8 @@ export const RETENTION_SOURCE = 'https://smartfirm.io/faq/good-client-retention-
  * only, before anyone new signs. Tax planning clients renew at the plan fee,
  * bookkeeping and payroll keep paying, RETENTION of each stay (rounded down,
  * as clients are everywhere else), and the system's year on the monthly plan
- * comes off. The setup fee is not in it: that is paid once, at signing.
+ * comes off: our fee and the minimum ads, twelve months. There is no setup
+ * fee to leave out any more.
  */
 export function recurringBook(s: Scenario) {
   const planningClients = clientsBy(s, MONTHS);
@@ -309,7 +318,7 @@ export function recurringBook(s: Scenario) {
 
 // ── Formatting ─────────────────────────────────────────────────────────────
 
-/** $40,000, and −$41,997 with a real minus sign rather than "$-41,997". */
+/** $40,000, and −$15,000 with a real minus sign rather than "$-15,000". */
 export const usd = (n: number) =>
   `${n < 0 ? '−' : ''}$${Math.abs(Math.round(n)).toLocaleString('en-US')}`;
 

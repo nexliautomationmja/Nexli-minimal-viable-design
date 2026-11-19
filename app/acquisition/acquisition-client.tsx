@@ -58,7 +58,7 @@ const SPECTRUM_TEXT: React.CSSProperties = {
   WebkitBoxDecorationBreak: 'slice',
 };
 
-export default function AcquisitionVslClient({ ctaHref }: { ctaHref: string }) {
+export default function AcquisitionVslClient({ angle }: { angle: string }) {
   return (
     <VslFunnel
       variant="Acquisition-Angle"
@@ -76,7 +76,7 @@ export default function AcquisitionVslClient({ ctaHref }: { ctaHref: string }) {
       // switches on the explained version of the same argument further down
       // the page, so the two cannot disagree.
       deadlineUrgency
-      ctaHref={ctaHref}
+      angle={angle}
       // NAMES A CEILING, NOT A FAULT. "Referrals built your firm" was true
       // but inert - it credited them and then took it away. This version
       // concedes the win and puts a number on where it stops, which is the

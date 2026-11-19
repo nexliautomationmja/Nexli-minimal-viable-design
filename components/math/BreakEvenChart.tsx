@@ -3,8 +3,9 @@
 // ---------------------------------------------------------------------------
 // Where the firm stands, month 0 to 12, after everything paid to Nexli.
 //
-// Two lines on ONE axis — paid monthly (solid) and paid annually
-// (dashed, the second channel besides colour). Below zero is shaded as
+// Two lines on ONE axis — paid monthly (solid) and the six months prepaid
+// (dashed, the second channel besides colour). Both net of our fee and the
+// firm's ads, with no setup fee (THE RETAINER, lib/agency-offer). Below zero is shaded as
 // "earning back the investment", above as "in the green". A crosshair snaps
 // to the nearest month and reads out both plans; the scenario table beside
 // it carries the same figures without hovering.
@@ -31,11 +32,11 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
   const [hover, setHover] = useState<number | null>(null);
 
   const monthly = useMemo(() => netSeries(scenario, PLANS.monthly), [scenario]);
-  const annual = useMemo(() => netSeries(scenario, PLANS.annual), [scenario]);
+  const prepaid = useMemo(() => netSeries(scenario, PLANS.prepaid), [scenario]);
   const beM = breakEvenMonth(scenario, PLANS.monthly);
-  const beA = breakEvenMonth(scenario, PLANS.annual);
+  const beP = breakEvenMonth(scenario, PLANS.prepaid);
 
-  const top = Math.max(...monthly, ...annual);
+  const top = Math.max(...monthly, ...prepaid);
   const step = niceStep(top);
   const yMax = Math.ceil((top * 1.08) / step) * step;
   const ticks = [Y_MIN, 0];
@@ -54,7 +55,7 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
     setHover(Math.max(0, Math.min(MONTHS, m)));
   };
 
-  const sameMonth = beM !== null && beM === beA;
+  const sameMonth = beM !== null && beM === beP;
 
   return (
     <div ref={seenRef} className="relative">
@@ -115,10 +116,10 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
             <g clipPath="url(#be-reveal)">
               <motion.path
                 initial={false}
-                animate={{ d: path(annual) }}
+                animate={{ d: path(prepaid) }}
                 transition={{ duration: 0.6, ease: 'easeInOut' }}
                 fill="none"
-                stroke={C.annual}
+                stroke={C.prepaid}
                 strokeWidth={2.5}
                 strokeDasharray="7 6"
                 strokeLinecap="round"
@@ -138,11 +139,11 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
 
             {/* Break-even markers, after the lines have drawn. */}
             <g style={{ opacity: seen ? 1 : 0, transition: 'opacity 0.4s ease 1.2s' }}>
-              {beA !== null && !sameMonth && (
+              {beP !== null && !sameMonth && (
                 <g>
-                  <circle cx={x(beA)} cy={y(annual[beA])} r={6} fill={C.annual} stroke={C.surface} strokeWidth={2.5} />
-                  <text x={x(beA) + 10} y={y(annual[beA]) + 22} fontSize={13} fontWeight={700} fill="#fff">
-                    Month {beA}
+                  <circle cx={x(beP)} cy={y(prepaid[beP])} r={6} fill={C.prepaid} stroke={C.surface} strokeWidth={2.5} />
+                  <text x={x(beP) + 10} y={y(prepaid[beP]) + 22} fontSize={13} fontWeight={700} fill="#fff">
+                    Month {beP}
                   </text>
                 </g>
               )}
@@ -177,7 +178,7 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
             {hover !== null && (
               <g pointerEvents="none">
                 <line x1={x(hover)} x2={x(hover)} y1={M.top} y2={M.top + plotH} stroke="rgba(255,255,255,0.35)" strokeWidth={1} />
-                <circle cx={x(hover)} cy={y(annual[hover])} r={5} fill={C.annual} stroke={C.surface} strokeWidth={2} />
+                <circle cx={x(hover)} cy={y(prepaid[hover])} r={5} fill={C.prepaid} stroke={C.surface} strokeWidth={2} />
                 <circle cx={x(hover)} cy={y(monthly[hover])} r={5} fill={C.monthly} stroke={C.surface} strokeWidth={2} />
               </g>
             )}
@@ -208,7 +209,7 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
             </div>
             {[
               { label: 'Paid monthly', v: monthly[hover], color: C.monthly, dash: undefined },
-              { label: 'Paid annually', v: annual[hover], color: C.annual, dash: '4 3' },
+              { label: 'Prepaid', v: prepaid[hover], color: C.prepaid, dash: '4 3' },
             ].map((r) => (
               <div key={r.label} className="flex items-center gap-2.5 py-0.5">
                 <svg width="16" height="4" aria-hidden="true">
@@ -229,13 +230,13 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
 
       <table className="sr-only">
         <caption>
-          Where the firm stands after everything paid to Nexli, {scenario.label.toLowerCase()} pace, by month
+          Where the firm stands after everything paid to Nexli and Meta, {scenario.label.toLowerCase()} pace, by month
         </caption>
         <thead>
           <tr>
             <th scope="col">Month</th>
             <th scope="col">Paid monthly</th>
-            <th scope="col">Paid annually</th>
+            <th scope="col">Prepaid six months</th>
           </tr>
         </thead>
         <tbody>
@@ -243,7 +244,7 @@ export default function BreakEvenChart({ scenario, height = 300 }: { scenario: S
             <tr key={m}>
               <th scope="row">{m}</th>
               <td>{usd(v)}</td>
-              <td>{usd(annual[m])}</td>
+              <td>{usd(prepaid[m])}</td>
             </tr>
           ))}
         </tbody>

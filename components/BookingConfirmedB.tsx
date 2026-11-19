@@ -40,15 +40,15 @@ import AdCreativeLab from './booking/AdCreativeLab';
 import SystemFlow from './booking/SystemFlow';
 import PricingBlock from './booking/PricingBlock';
 import DanielaFaq from './booking/DanielaFaq';
-import AdCreditBonus from './funnel/AdCreditBonus';
 import { BOOKING_B_FAQ } from '@/lib/booking-faq';
 import { useTheme } from './ThemeProvider';
 import { trackMetaEvent } from '@/lib/meta-events';
 import {
-  AD_CREDIT_FOOTNOTE,
   AGENCY_ENGAGEMENT_HIGH,
   AGENCY_ENGAGEMENT_LOW,
   AGENCY_LAUNCH_DAYS,
+  AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_TERM_MONTHS,
   usd,
 } from '@/lib/agency-offer';
 import {
@@ -73,7 +73,10 @@ const TIMELINE = [
     Icon: FileSignature,
     when: 'Day 0',
     title: 'You sign. That is the whole commitment.',
-    body: 'You sign the agreement and settle the one-time setup fee for the build. Nothing monthly is billed until you launch.',
+    // THE RETAINER (lib/agency-offer.ts, 2026-11-19): no setup fee, and the
+    // first month is billed at signing. This page does not show the prepay
+    // (the VSLs and this page leave it to the call).
+    body: `You sign the agreement and pay the first month, ${usd(AGENCY_RETAINER_MONTHLY)}. There is no setup fee for the build.`,
   },
   {
     Icon: Sparkles,
@@ -85,7 +88,7 @@ const TIMELINE = [
     Icon: Rocket,
     when: `By day ${AGENCY_LAUNCH_DAYS}`,
     title: 'Everything is live',
-    body: `Website, client portal, funnel, automations, texting registration, your ad account and invoicing, all of it yours. The build takes about ${AGENCY_LAUNCH_DAYS} days, and the variable is how fast your assets come back, not us. Monthly billing starts at launch.`,
+    body: `Website, client portal, funnel, automations, texting registration, your ad account and invoicing, all of it yours. The build takes about ${AGENCY_LAUNCH_DAYS} days, and the variable is how fast your assets come back, not us.`,
   },
   {
     Icon: CalendarCheck,
@@ -98,8 +101,10 @@ const TIMELINE = [
   {
     Icon: ShieldCheck,
     when: 'Ongoing',
-    title: 'Six months, then month to month',
-    body: 'The initial term is six months from launch — long enough for the campaigns to have actually run. After that it continues month to month and you can end it on 30 days notice.',
+    // The retainer's term (2026-11-19): six months from signing, renewing
+    // for six months unless cancelled before it ends.
+    title: `${AGENCY_RETAINER_TERM_MONTHS} months at a time`,
+    body: `The initial term is ${AGENCY_RETAINER_TERM_MONTHS} months from signing — long enough for the campaigns to have actually run. It renews for another ${AGENCY_RETAINER_TERM_MONTHS} months unless you cancel before it ends.`,
   },
 ];
 
@@ -222,13 +227,6 @@ export default function BookingConfirmedB() {
             and what the first ninety days look like. Read it, and come to the call with
             the only question left: when do we start.
           </p>
-
-          {/* The ad-credit bonus, the same banner as under the VSLs' qualify
-              button (Marcel, 2026-11-16): booked, this is what signing gets
-              them. The asterisk is answered under the price. */}
-          <div className="mt-7">
-            <AdCreditBonus tone={theme === 'light' ? 'light' : 'dark'} />
-          </div>
 
           {/* The one thing we need them to do before the call. */}
           <div
@@ -384,10 +382,6 @@ export default function BookingConfirmedB() {
         {/* ── 8. The price ──────────────────────────────────────────── */}
         <section>
           <PricingBlock />
-          {/* The asterisk on the bonus banner at the top of the page. */}
-          <p className="mx-auto mt-3 max-w-3xl text-center text-[11px] leading-relaxed text-[var(--text-muted)] md:text-xs">
-            <span className="font-bold text-[var(--text-main)]">*Ad credit.</span> {AD_CREDIT_FOOTNOTE}
-          </p>
         </section>
 
         {/* ── 9. After you sign ─────────────────────────────────────── */}

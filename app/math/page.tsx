@@ -5,9 +5,10 @@
 // offers) afterwards as the leave-behind. Built from Nexli-See-The-Math.pdf;
 // the numbers come from lib/see-the-math.
 //
-// UNLISTED. It prices the setup fee, which no public page does (see the note
-// in lib/see-the-math), so it is noindexed here, disallowed in app/robots.ts,
-// left out of the sitemap and llms.txt, and linked from nowhere on the site.
+// UNLISTED. It is the call deck, with the full pricing walk-through (the
+// retainer, the prepay and what it all turns into; see lib/see-the-math), so
+// it is noindexed here, disallowed in app/robots.ts, left out of the sitemap
+// and llms.txt, and linked from nowhere on the site.
 // The site navbar and footer are suppressed for it in ConditionalNavbar and
 // Footer, the same as Candor.
 //

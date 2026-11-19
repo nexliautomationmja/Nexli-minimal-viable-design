@@ -1,6 +1,7 @@
-# Firm Foundation sites
+# Client firm sites
 
-Config-driven client websites for the $497/mo Firm Foundation tier. One
+Config-driven client websites (built for the retired $497/mo Firm Foundation
+tier; now the system behind the /booking-confirmed-b demo firm). One
 `FirmSiteConfig` object produces a complete, branded site (nav, hero, trust bar,
 services, client-portal section, about, testimonials, CTA, footer) rendered by
 `components/firm-site/FirmSitePage.tsx`.
