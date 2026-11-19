@@ -38,7 +38,7 @@ import {
   ADVISORY_VSL_VIDEO_TITLE,
 } from '@/lib/advisory-config';
 
-export default function AgencyVslClient({ ctaHref }: { ctaHref: string }) {
+export default function AgencyVslClient({ angle }: { angle: string }) {
   return (
     <VslFunnel
       variant="Agency-Angle"
@@ -58,7 +58,7 @@ export default function AgencyVslClient({ ctaHref }: { ctaHref: string }) {
       // December 31. The real deadline behind this whole offer: planning sold
       // in February is planning against a year that is already written.
       deadlineUrgency
-      ctaHref={ctaHref}
+      angle={angle}
       // CONCEDES THE FIRST SENTENCE SO THE SECOND ONE LANDS. The reader's
       // agency really did deliver the leads it sold — arguing otherwise
       // picks a fight with something they watched happen. So the headline

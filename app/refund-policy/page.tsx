@@ -19,16 +19,12 @@ import {
   ADVISORY_REFUND_DAYS,
 } from '@/lib/advisory-config';
 import {
-  AGENCY_AD_SPEND,
-  AGENCY_ANNUAL_PLAN_BONUS,
-  AGENCY_ANNUAL_SERVICE_FEE,
-  AGENCY_ANNUAL_TERM_MONTHS,
-  AGENCY_ANNUAL_UPFRONT,
-  AGENCY_CANCEL_NOTICE_DAYS,
-  AGENCY_INITIAL_TERM_MONTHS,
-  AGENCY_MONTHLY_PLAN_BONUS,
-  AGENCY_SETUP_FEE,
-  AGENCY_TOTAL_MONTHLY,
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_PERFORMANCE_PERCENT,
+  AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_PREPAY,
+  AGENCY_RETAINER_TERM_MONTHS,
+  RENEWAL_TERMS,
   usd,
 } from '@/lib/agency-offer';
 import { EMAIL, PHONE_DISPLAY, PHONE_E164 } from '@/lib/site';
@@ -52,7 +48,7 @@ export default function RefundPolicyPage() {
       eyebrow="Refunds & Cancellations"
       icon={RotateCcw}
       title="Refund Policy"
-      dateLine="Effective Date: November 16, 2026"
+      dateLine="Effective Date: November 19, 2026"
       intro="What you can get back, how to ask for it, and how long it takes. This policy forms part of our Terms and Conditions."
     >
       <LegalSection title={`1. ${ADVISORY_PRODUCT_NAME} (${ADVISORY_PRICE_DISPLAY})`} variant="feature">
@@ -88,57 +84,42 @@ export default function RefundPolicyPage() {
           (section 3).
         </p>
         <p>
-          It is a done-for-you service sold under a signed agreement, paid monthly or annually, and both start
-          with a one-time {usd(AGENCY_SETUP_FEE)} setup fee. The fees pay for work we schedule and carry out
-          for you, which is why they are not refundable. You read and sign these terms before you pay anything.
+          It is a done-for-you service sold under a signed agreement, paid monthly or with the{' '}
+          {AGENCY_RETAINER_TERM_MONTHS} months prepaid. There is no setup fee. The fees pay for work we schedule
+          and carry out for you, which is why they are not refundable. You read and sign these terms before you
+          pay anything.
         </p>
         <ul className="list-disc pl-6 space-y-3">
           <li>
-            <Strong>Setup fee ({usd(AGENCY_SETUP_FEE)}, due at signing):</Strong> pays for the build of your
-            website, client portal, sales funnel, automations, text-messaging registration, ad account and
-            invoicing. Non-refundable.
+            <Strong>Monthly agency fee ({usd(AGENCY_RETAINER_MONTHLY)} a month, from signing):</Strong> the
+            first month is due when you sign and pays for the build of your website, client portal, sales
+            funnel, automations, text-messaging registration, ad account and invoicing, along with our upkeep
+            and management. Each monthly fee is non-refundable once charged.
           </li>
           <li>
-            <Strong>Monthly plan ({usd(AGENCY_TOTAL_MONTHLY)} a month, from launch):</Strong> includes the{' '}
-            {usd(AGENCY_AD_SPEND)} advertising budget, which we place into your campaigns that month. Each
-            monthly fee is non-refundable once charged.
+            <Strong>Six-month prepayment ({usd(AGENCY_RETAINER_PREPAY)}, due at signing):</Strong> paid in
+            place of the {AGENCY_RETAINER_TERM_MONTHS} monthly fees. None of it is refundable, in whole or in
+            part.
           </li>
           <li>
-            <Strong>{AGENCY_INITIAL_TERM_MONTHS}-month minimum on the monthly plan:</Strong> the minimum term
-            is {AGENCY_INITIAL_TERM_MONTHS} months from launch. You may give notice at any time during it, but
-            cancellation takes effect at the end of the {AGENCY_INITIAL_TERM_MONTHS} months, and the monthly
-            fees due within that period remain payable.
-          </li>
-          <li>
-            <Strong>After the minimum term:</Strong> the monthly plan continues month to month and you may
-            cancel with {AGENCY_CANCEL_NOTICE_DAYS} days&apos; written notice to <Email />. Cancellation takes
-            effect at the end of the notice period. We do not issue partial-month refunds.
-          </li>
-          <li>
-            <Strong>Annual plan ({usd(AGENCY_ANNUAL_UPFRONT)}, due at signing):</Strong> the{' '}
-            {usd(AGENCY_SETUP_FEE)} setup fee plus {usd(AGENCY_ANNUAL_SERVICE_FEE)} for{' '}
-            {AGENCY_ANNUAL_TERM_MONTHS} months of service, paid in advance, with the {usd(AGENCY_AD_SPEND)}{' '}
-            advertising budget billed monthly from launch. None of the {usd(AGENCY_ANNUAL_UPFRONT)} is
-            refundable, in whole or in part, and each month&apos;s advertising budget is non-refundable once
+            <Strong>Performance pay:</Strong> the {AGENCY_PERFORMANCE_PERCENT} performance pay set out in our{' '}
+            <Link href="/pricing" className={legalLinkClass}>Pricing</Link> and{' '}
+            <Link href="/terms" className={legalLinkClass}>Terms</Link> is non-refundable once invoiced and
             charged.
           </li>
           <li>
-            <Strong>Cancelling the annual plan:</Strong> you may give notice at any time. Service continues to
-            the end of the {AGENCY_ANNUAL_TERM_MONTHS} months from launch, the monthly advertising budget
-            remains payable through the end of that term, and nothing already paid is refunded. The annual plan
-            does <Strong>not</Strong> renew automatically: nothing is charged after the{' '}
-            {AGENCY_ANNUAL_TERM_MONTHS} months unless you agree in writing to continue.
+            <Strong>{AGENCY_RETAINER_TERM_MONTHS}-month term:</Strong> your term is{' '}
+            {AGENCY_RETAINER_TERM_MONTHS} months from signing. You may give notice at any time during it, but
+            cancellation takes effect at the end of the term, and the fees due within it remain payable.
           </li>
           <li>
-            <Strong>Unspent advertising budget:</Strong> your advertising budget is held in a separate account
-            for advertising funds and allocated to your own campaigns. Your term always runs its full length
-            first; when your service then ends, any of your budget still unspent in that account, bonus
-            included, is forfeited. It is not refunded, credited against a fee or paid out.
+            <Strong>Renewal:</Strong> {RENEWAL_TERMS} Send notice to <Email />. We do not issue partial-month
+            or partial-term refunds.
           </li>
           <li>
-            <Strong>First-month bonus:</Strong> the {usd(AGENCY_MONTHLY_PLAN_BONUS)} (monthly plan) or{' '}
-            {usd(AGENCY_ANNUAL_PLAN_BONUS)} (annual plan) we add to your campaigns in your first month of ads is
-            our own money. It has no cash value and is never refunded, paid out or credited against a fee.
+            <Strong>Your advertising budget:</Strong> at least {usd(AGENCY_MIN_AD_BUDGET)} a month, paid by you
+            directly to Meta on your own card. It never passes through us, so it is not ours to refund; any
+            question about an ad charge goes to Meta.
           </li>
           <li>
             <Strong>One system, one fee:</Strong> parts of the system cannot be removed, paused or refunded
@@ -156,8 +137,7 @@ export default function RefundPolicyPage() {
           If you were charged twice, charged the wrong amount, or charged for something you did not buy, we
           refund the difference in full whenever you raise it. Email <Email /> or call <Tel /> with the date
           and amount of the charge. The refund goes back the way you paid: to your card for card payments, or
-          to your bank account for payments made by ACH or wire transfer (the {usd(AGENCY_SETUP_FEE)} setup
-          fee and the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan payment).
+          to your bank account for payments made by ACH or wire transfer.
         </p>
       </LegalSection>
 

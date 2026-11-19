@@ -13,7 +13,7 @@ import CTA from './CTA';
 import Footer from './Footer';
 
 /**
- * Full Firm Foundation site, composed from a single FirmSiteConfig.
+ * A full client firm site, composed from a single FirmSiteConfig.
  * Section order mirrors the portfolio demos: Hero, trust bar, services,
  * portal preview, about, testimonials, CTA, footer.
  */

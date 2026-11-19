@@ -1,7 +1,7 @@
 import type { FirmSiteConfig } from '../../lib/firm-sites/types';
 
 /**
- * Sample Firm Foundation site. Fictional firm, used as the reference config
+ * Sample client firm site. Fictional firm, used as the reference config
  * and as the /sites/example-firm preview. Copy this file to start a new firm.
  */
 export const exampleFirm: FirmSiteConfig = {

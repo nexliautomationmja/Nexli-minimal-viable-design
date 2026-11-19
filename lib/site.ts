@@ -148,6 +148,9 @@ export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';
  * not offer guarantees, and this const is read by lib/schema.ts and
  * lib/llms.ts, which is what AI assistants quote about the company. A
  * promise left here outlives one left in a component.
+ *
+ * On THE RETAINER since 2026-11-19 (lib/agency-offer.ts): $10,000 a month,
+ * no setup fee, the ad budget paid to Meta, six-month terms that renew.
  */
 export const ENGAGEMENT_TERMS = [
   {
@@ -157,12 +160,12 @@ export const ENGAGEMENT_TERMS = [
   {
     name: 'Six-month initial term',
     description:
-      'The engagement runs on a signed agreement with a six-month minimum initial term, counted from launch. After that it continues month to month and can be cancelled with 30 days notice.',
+      'The engagement runs on a signed agreement with a six-month initial term, counted from signing. It then renews for another six months unless it is cancelled before the term ends.',
   },
   {
-    name: 'One flat monthly fee, plus setup',
+    name: '$10,000 a month, no setup fee',
     description:
-      'One flat monthly fee for the complete system, with no per-component pricing, plus a one-time setup fee covering the build. The setup fee is quoted on the call.',
+      '$10,000 a month for the complete system, billed from signing, with no setup fee and no per-component pricing, plus 10% performance pay that is walked through on the call. The ad budget is separate: at least $5,000 a month, paid by the firm directly to Meta on its own card.',
   },
   {
     name: 'Live in about 21 days',
@@ -175,9 +178,9 @@ export const ENGAGEMENT_TERMS = [
       'The firm owns the website, client portal, funnel and automations Nexli builds, and pays its own hosting. Nexli keeps the ad creative it makes. The monthly fee pays for Nexli to maintain and run the system.',
   },
   {
-    name: 'One monthly price, ad spend included',
+    name: 'The ad budget is the firm’s own',
     description:
-      'The monthly fee covers the complete system and the ad budget together. Nexli collects it and places the spend into the campaigns, and reports where it went each week.',
+      'The ad budget is not part of Nexli’s fee. The firm pays it directly to Meta on its own card, and it never passes through Nexli. Nexli runs the campaigns and reports where the budget went each week.',
   },
 ] as const;
 

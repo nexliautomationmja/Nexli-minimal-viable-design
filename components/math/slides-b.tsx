@@ -21,29 +21,26 @@ import {
   Star,
 } from 'lucide-react';
 import { RimCard } from '@/components/funnel/primitives';
-import {
-  AD_BUDGET_TERMS,
-  AGENCY_ANNUAL_PLAN_BONUS,
-  AGENCY_MONTHLY_PLAN_BONUS,
-  PLAN_BONUS_CONDITIONS,
-} from '@/lib/agency-offer';
+import { AGENCY_PERFORMANCE_PERCENT } from '@/lib/agency-offer';
 import {
   AD_SPEND,
   BACK_END_ANNUAL,
+  FEE_MONTHLY,
   MONTHLY_TOTAL,
   MONTHS,
   PLANS,
   PLAN_FEE,
   PLAN_FEE_HIGH,
   PLAN_FEE_LOW,
+  PREPAY,
+  PREPAY_SAVING,
   RETENTION,
   RETENTION_BENCHMARK,
   RETENTION_SOURCE,
   SCENARIOS,
-  SETUP_FEE,
   TAKE_RATE,
+  TERM_MONTHS,
   aboutThousands,
-  annualAheadFromMonth,
   backEndAnnualAfter,
   backEndBilledIn,
   breakEvenMonth,
@@ -54,9 +51,9 @@ import {
   pct,
   recurringBook,
   scenarioById,
+  times,
   usd,
   usdCompact,
-  yearOneCost,
   type Plan,
   type ScenarioId,
 } from '@/lib/see-the-math';
@@ -225,7 +222,7 @@ export function TimelineSlide() {
       title: 'In the green',
       who: null,
       green: true,
-      body: `Paying monthly, you've earned back everything you put in, setup included: month ${beCons} at the conservative pace, month ${beBest} at the best-case pace.`,
+      body: `Paying monthly, you've earned back everything you've put in, our fee and your ads: month ${beCons} at the conservative pace, month ${beBest} at the best-case pace.`,
     },
   ];
 
@@ -277,23 +274,29 @@ export function TimelineSlide() {
 }
 
 // ── 11. What you invest ───────────────────────────────────────────────────
+//
+// THE RETAINER (lib/agency-offer, Marcel 2026-11-19), and the two ways to
+// pay it: monthly, or the six months prepaid for less. It was the setup fee
+// and the monthly plan against the annual plan, with a first-month ad bonus
+// on each; all three are gone. Performance pay is named here and nowhere
+// explained: Marcel walks firms through it on the call.
 
 /**
- * The first-month bonus on each plan (Marcel, 2026-11-16; amounts and
- * conditions in lib/agency-offer). The annual one is the one meant to stop
- * the eye: gold, a slow sheen, and the animated star on the card's corner.
- * Not modelled anywhere in the deck; the fine print under the cards says so.
+ * Under each plan's rows, the one thing that plan is for. The prepay's is
+ * the one meant to stop the eye: gold, a slow sheen and the star on the
+ * card's corner, as the annual plan's bonus had. It says a saving, never a
+ * bonus or a credit.
  */
-function PlanBonus({ annual }: { annual: boolean }) {
-  if (!annual) {
+function PlanNote({ prepaid }: { prepaid: boolean }) {
+  if (!prepaid) {
     return (
       <div className="mt-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3">
-        <Star className="h-5 w-5 shrink-0 text-amber-300/70" aria-hidden="true" />
+        <CalendarCheck className="h-5 w-5 shrink-0 text-cyan-300/80" aria-hidden="true" />
         <div className="min-w-0">
-          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200/70 sm:text-[11px]">
-            Bonus · we match your first month of ads
+          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200/70 sm:text-[11px]">
+            Pay as you go
           </div>
-          <div className="mt-0.5 text-lg font-bold text-white sm:text-xl">+{usd(AGENCY_MONTHLY_PLAN_BONUS)} in ad spend</div>
+          <div className="mt-0.5 text-lg font-bold text-white sm:text-xl">{usd(FEE_MONTHLY)} a month, from signing</div>
         </div>
       </div>
     );
@@ -310,15 +313,15 @@ function PlanBonus({ annual }: { annual: boolean }) {
         <Star className="h-6 w-6 shrink-0 fill-amber-300 text-amber-200" aria-hidden="true" />
         <div className="min-w-0">
           <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200 sm:text-[11px]">
-            Bonus · your first month of ads
+            The way to save
           </div>
           <div className="mt-0.5 text-2xl font-black leading-tight sm:text-[1.9rem]">
             {/* Solid gold, not gradient text: the PDF's print page flattens
                 every bg-clip-text to lavender (app/math/print/math-print). */}
             <span className="text-amber-300" style={{ textShadow: '0 0 18px rgba(251,191,36,0.45)' }}>
-              +{usd(AGENCY_ANNUAL_PLAN_BONUS)}
+              {usd(PREPAY_SAVING)}
             </span>{' '}
-            <span className="text-amber-50">in ad credits</span>
+            <span className="text-amber-50">less over six months</span>
           </div>
         </div>
       </div>
@@ -327,16 +330,13 @@ function PlanBonus({ annual }: { annual: boolean }) {
 }
 
 function PlanCard({ plan, highlight, footer }: { plan: Plan; highlight?: boolean; footer: React.ReactNode }) {
-  // The annual plan's $82,000 is the full system setup PLUS the year of
-  // service, so after signing the only thing billed monthly is the ads.
-  // The rows say that outright rather than leaving it to be inferred.
-  const annual = plan.id === 'annual';
+  const prepaid = plan.id === 'prepaid';
   const rows: [string, string][] = [
-    ['Due at signing', annual ? `${usd(plan.upfront)} setup + annual plan` : `${usd(plan.upfront)} setup`],
-    ['Billed monthly', annual ? 'Ads only, from about day 21' : 'Ads + service, from about day 21'],
-    ['Ads', `${usd(AD_SPEND)} a month`],
-    ['Nexli service', annual ? `In the annual plan (${usd(plan.serviceMonthly)} a month)` : `${usd(plan.serviceMonthly)} a month`],
-    ['Year one total', usd(yearOneCost(plan))],
+    ['Due at signing', prepaid ? `${usd(PREPAY)}, all six months` : `${usd(FEE_MONTHLY)}, your first month`],
+    ['Billed monthly by us', prepaid ? `Nothing for ${TERM_MONTHS} months` : `${usd(FEE_MONTHLY)} a month`],
+    ['Setup fee', 'None'],
+    ['Your ads', `${usd(AD_SPEND)}+ a month, paid to Meta`],
+    ['Six months with us', usd(plan.termCost)],
   ];
   return (
     <div
@@ -346,7 +346,7 @@ function PlanCard({ plan, highlight, footer }: { plan: Plan; highlight?: boolean
           : 'border-white/10 bg-white/[0.035]'
       }`}
     >
-      {annual && (
+      {prepaid && (
         <span className="absolute -right-4 -top-8 z-10 sm:-right-6 sm:-top-10">
           <BonusStar size={80} />
         </span>
@@ -369,20 +369,18 @@ function PlanCard({ plan, highlight, footer }: { plan: Plan; highlight?: boolean
           </div>
         ))}
       </dl>
-      <PlanBonus annual={annual} />
+      <PlanNote prepaid={prepaid} />
       <div className={`mt-4 text-[15px] font-bold ${highlight ? 'text-emerald-300' : 'text-white/60'}`}>{footer}</div>
     </div>
   );
 }
 
 export function InvestSlide() {
-  const saved = yearOneCost(PLANS.monthly) - yearOneCost(PLANS.annual);
-  const extraUpfront = PLANS.annual.upfront - PLANS.monthly.upfront;
   return (
     <Slide id="invest">
       <style>{BONUS_SHEEN_CSS}</style>
       <Heading kicker="What you invest">
-        Pay annually and <span className={GRADIENT_TEXT}>keep about {usd(aboutThousands(saved))} more.</span>
+        Prepay six months and <span className={GRADIENT_TEXT}>keep {usd(PREPAY_SAVING)}.</span>
       </Heading>
 
       <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-2">
@@ -390,23 +388,21 @@ export function InvestSlide() {
           <PlanCard plan={PLANS.monthly} footer="Less cash up front" />
         </Reveal>
         <Reveal delay={0.2}>
-          <PlanCard plan={PLANS.annual} highlight footer={`Keep ${usd(saved)} more in year one`} />
+          <PlanCard plan={PLANS.prepaid} highlight footer={`Keep ${usd(PREPAY_SAVING)} over the six months`} />
         </Reveal>
       </div>
 
       <Reveal delay={0.28}>
-        {/* The terms sentence matches /terms and /refund-policy (Marcel,
-            2026-11-09). The PDF is the pricing document a prospect keeps,
-            and "Month to month" on its own read as "no minimum term". */}
         <Body className="mt-6 max-w-4xl">
-          Nothing monthly is billed until your build is done and ads launch, about day 21. Paid monthly has a six-month
-          minimum from launch; paid annually covers twelve months from launch and does not renew automatically. On the
-          annual plan, your ads are the only monthly bill. Paying annually puts{' '}
-          {usd(extraUpfront)} more in at signing, so you break even in the same month or one month later. From month{' '}
-          {annualAheadFromMonth()} on you&apos;re ahead, and by month 12 you&apos;ve kept about {usd(aboutThousands(saved))} more.
+          There&apos;s no setup fee. Your first month is due when you sign, and the {TERM_MONTHS}-month term starts
+          then: {usd(FEE_MONTHLY)} a month, or {usd(PREPAY)} for all six months up front. Either way it renews for
+          another {TERM_MONTHS} months unless you cancel before the term ends. Your ad budget is separate on both: at
+          least {usd(AD_SPEND)} a month, paid straight to Meta on your own card. It never passes through us.
         </Body>
         <p className="mt-3 max-w-4xl text-xs leading-relaxed sm:text-[13px]" style={{ color: FAINT }}>
-          {PLAN_BONUS_CONDITIONS} It is not counted anywhere in this deck&apos;s numbers. {AD_BUDGET_TERMS}
+          Plus {AGENCY_PERFORMANCE_PERCENT} performance pay on both, walked through on the call. Every projection in
+          this deck counts the {usd(FEE_MONTHLY)} monthly minimum and the {usd(AD_SPEND)} minimum ad budget;
+          performance pay isn&apos;t counted.
         </p>
       </Reveal>
     </Slide>
@@ -698,12 +694,12 @@ export function BreakEvenSlide() {
       <div className="mt-7 grid gap-5 lg:mt-9 lg:grid-cols-[1.55fr_1fr]">
         <Reveal delay={0.12}>
           <Panel
-            title={`Where you stand at the ${scenario.label.toLowerCase()} pace, bundle included, after everything paid to Nexli`}
+            title={`Where you stand at the ${scenario.label.toLowerCase()} pace, bundle included, after everything paid to Nexli and Meta`}
             className="h-full"
           >
             <div className="mb-3 flex flex-wrap gap-x-6 gap-y-2">
               <LineKey color={C.monthly} label="Paid monthly" />
-              <LineKey color={C.annual} dash="7 6" label="Paid annually" />
+              <LineKey color={C.prepaid} dash="7 6" label="Prepaid six months" />
             </div>
             <BreakEvenChart scenario={scenario} height={290} />
           </Panel>
@@ -750,7 +746,7 @@ export function BreakEvenSlide() {
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-3">
                   {cell(PLANS.monthly)}
-                  {cell(PLANS.annual)}
+                  {cell(PLANS.prepaid)}
                 </div>
               </button>
             );
@@ -767,10 +763,11 @@ export function BreakEvenSlide() {
           <p className="mt-2 text-[13px] leading-relaxed" style={{ color: MUTED }}>
             Every number counts the bundle: the tax plan when a client signs, plus $2,000 a month in bookkeeping and payroll
             from the next month for half your planning clients. Compliance work isn&apos;t counted. No new clients in month
-            1, half your pace in months 2 and 3, full pace from month 4. Paid monthly: {usd(SETUP_FEE)} at signing, then{' '}
-            {usd(MONTHLY_TOTAL)} a month from launch (about day 21). Paid annually: {usd(PLANS.annual.upfront)} at signing (
-            {usd(SETUP_FEE)} setup plus {usd(PLANS.annual.upfront - SETUP_FEE)} for the annual plan), then {usd(AD_SPEND)} a
-            month in ads from launch. Net is after everything paid to Nexli, before your cost of doing the work.
+            1, half your pace in months 2 and 3, full pace from month 4. Paid monthly: {usd(FEE_MONTHLY)} at signing for
+            your first month, then {usd(FEE_MONTHLY)} at the start of each month. Prepaid: {usd(PREPAY)} at signing for the
+            first six months, and again at month 7, assuming you renew on the same plan. Both: your ads at the{' '}
+            {usd(AD_SPEND)} minimum, paid to Meta, every month. There&apos;s no setup fee, and performance pay isn&apos;t
+            counted. Net is after everything paid to Nexli and Meta, before your cost of doing the work.
           </p>
         </details>
       </Reveal>
@@ -790,7 +787,7 @@ export function CloseSlide() {
   const recap = [
     { v: String(c.bookedCalls), l: 'booked calls a month' },
     { v: String(c.clients), l: 'new clients a month' },
-    { v: `${c.multiple}×`, l: 'the monthly investment' },
+    { v: times(c.multiple), l: 'the monthly investment' },
     { v: `Month ${be}`, l: 'in the green' },
   ];
   return (

@@ -3,8 +3,8 @@
 //
 // WHY A SECOND FUNNEL. Meta's optimiser needs roughly fifty conversions a
 // week before it learns anything useful, and the advisory funnel will never
-// produce that: it is gated on a $750K revenue floor and a $9,997/month
-// budget question, by design. This funnel exists to feed the optimiser. It
+// produce that: it is gated on a $750K revenue floor (and, until
+// 2026-11-11, a budget question), by design. This funnel exists to feed the optimiser. It
 // gives the Book of Business Accelerator away, captures the contact, and
 // lets Meta optimise against a number it can actually reach.
 //
@@ -63,7 +63,8 @@ export const TAG_ACCELERATOR_FREE = 'accelerator free lead';
 /**
  * The Accelerator cut. This page held the ADVISORY video until now, which
  * opens on a premise its audience has never heard — it addresses someone
- * already quoted $9,997, and a firm here has not been shown a price at all.
+ * already quoted the agency's price, and a firm here has not been shown a
+ * price at all.
  *
  * PLAYBACK id, not the asset id: https://stream.mux.com/<id>.m3u8 returns
  * 200 for a playback id and 400 for an asset id. Verified 200, as is

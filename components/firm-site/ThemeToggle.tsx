@@ -42,7 +42,8 @@ function notifyParent(theme: FirmSiteTheme) {
  * Resolution order on first load: `?theme=` in the URL, then the value saved
  * in localStorage, then whatever the server rendered. Inside an iframe it
  * reports every change to the parent and accepts `set-firm-site-theme`
- * messages so the Firm Foundation preview page can drive it without reload.
+ * messages so a page embedding the site in an iframe can drive it without
+ * reload.
  */
 export default function ThemeToggle({ slug, className = '' }: { slug: string; className?: string }) {
   const btnRef = useRef<HTMLButtonElement>(null);

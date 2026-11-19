@@ -5,7 +5,7 @@
  *   node scripts/demo/run-sql.mjs <file.sql> [--env <path>]
  *
  * Examples:
- *   node scripts/demo/run-sql.mjs scripts/add-foundation-columns.sql --env .env.local
+ *   node scripts/demo/run-sql.mjs scripts/add-advisory-purchase-columns.sql --env .env.local
  *   node scripts/demo/run-sql.mjs dashboard/scripts/add-firm-sites.sql --env dashboard/.env.local
  *
  * Reads DATABASE_URL (or POSTGRES_URL) from the environment; --env loads a

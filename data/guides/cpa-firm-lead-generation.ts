@@ -14,7 +14,7 @@ const guide: Guide = {
     'Firms that treat lead generation as a system (capture, respond, qualify, book, nurture, review) outgrow firms that treat it as a channel.',
   ],
   publishedAt: '2026-09-08',
-  updatedAt: '2026-11-09',
+  updatedAt: '2026-11-19',
   author: 'marcel-allen',
   category: 'Marketing',
   stats: [
@@ -165,7 +165,7 @@ const guide: Guide = {
       heading: 'How Nexli does this',
       body: [
         'Nexli Automation builds exactly this stack for established CPA and accounting firms doing $500K+ a year (about $40K-$50K a month) and calls it the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website, an AI automation layer (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that adds 3 to 5 reviews a month. Once the system is live, Nexli runs paid ads into it, targeted at business owners who want tax advisory rather than a cheap return.',
-        'The build takes about 21 days. The engagement has a six-month initial term and then continues month to month, with a one-time setup fee for the build, and every client it brings in is a tax-planning engagement worth $15,000 to $55,000, reported on weekly. Pricing is $9,997 a month all in, which covers the complete system and the ad budget together; Nexli collects it and places the spend into the campaigns. Firms apply and book a strategy call at [nexli.net/agency](/agency).',
+        'The build takes about 21 days. The engagement has a six-month initial term that renews for six months at a time, and every client it brings in is a tax-planning engagement worth $15,000 to $55,000, reported on weekly. Pricing is $10,000 a month with no setup fee, plus 10% performance pay explained on the strategy call; the ad budget, at least $5,000 a month, is separate and paid by the firm directly to Meta. Firms apply and book a strategy call at [nexli.net/agency](/agency).',
         'If your firm is below $500K or just starting, the stack above still applies; you will just build it yourself with lower-cost tools. The [comparison of CPA marketing agencies](/guides/best-cpa-firm-marketing-agencies) covers the options at every size.',
       ],
     },
@@ -204,7 +204,7 @@ const guide: Guide = {
     {
       question: 'What does Nexli Automation do for CPA firm lead generation?',
       answer:
-        'Nexli builds the Digital Rainmaker System for established CPA and accounting firms doing $500K+ a year: a premium website, AI intake and booking automation, a secure client portal, and a Google review engine, then runs paid ads to it targeting business owners who want tax advisory. The build takes about 21 days, on a six-month initial term that then continues month to month, bringing in tax-planning clients, each an engagement worth $15,000 to $55,000.',
+        'Nexli builds the Digital Rainmaker System for established CPA and accounting firms doing $500K+ a year: a premium website, AI intake and booking automation, a secure client portal, and a Google review engine, then runs paid ads to it targeting business owners who want tax advisory. The build takes about 21 days, on a six-month initial term that renews for six months at a time, bringing in tax-planning clients, each an engagement worth $15,000 to $55,000.',
     },
   ],
   relatedGuides: [

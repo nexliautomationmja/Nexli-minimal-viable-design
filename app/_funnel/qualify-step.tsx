@@ -13,10 +13,10 @@
 // next page is the calendar; miss it and it is the $97.
 //
 // There is no budget question (removed 2026-11-11). The VSL in front of this
-// page already shows the price, the setup fee and the term, so asking where
-// $9,997 sits for them was friction that repeated the pitch.
+// page already shows the price and the term, so asking where the price
+// sits for them was friction that repeated the pitch.
 //
-// Mode "foundation" on the card underneath, so nobody is disqualified
+// Mode "collect" on the card underneath, so nobody is disqualified
 // client-side and every answer is collected: we want the full set in
 // GoHighLevel even for a firm below the bar, so the reason is visible
 // rather than guessed at.

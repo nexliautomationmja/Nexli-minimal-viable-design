@@ -63,8 +63,17 @@ export async function upsertLeadByEmail(opts: {
   userAgent: string;
   /** Prefix for console lines, e.g. "Qualify" or "Partial". */
   logTag: string;
+  /**
+   * Write only what this caller actually has (the VSL calendar's webhook,
+   * app/api/cal/booking). Its form has no firm name and an optional phone,
+   * and an unticked SMS box there is not an opt-out of consent the firm
+   * gave somewhere else. So: blank fields never overwrite stored ones,
+   * marketing SMS is only ever switched ON, and service texts only with a
+   * phone number. The qualifier and partial capture leave this off.
+   */
+  sparse?: boolean;
 }): Promise<UpsertLeadResult> {
-  const { db, contact, formSource, attribution, ip, userAgent, logTag } = opts;
+  const { db, contact, formSource, attribution, ip, userAgent, logTag, sparse = false } = opts;
 
   let lead: LeadRow | null = null;
   try {
@@ -79,18 +88,29 @@ export async function upsertLeadByEmail(opts: {
     console.error(`[${logTag}] email lookup failed:`, err);
   }
 
-  const contactValues = {
-    firstName: contact.firstName,
-    lastName: contact.lastName,
-    email: contact.email,
-    phone: contact.phone,
-    firmName: contact.firmName,
-    marketingSmsOptIn: contact.marketingSmsOptIn,
-    // Service texts are covered by the disclosure shown at the contact
-    // step; only the marketing flag is an explicit tick.
-    nonMarketingSmsOptIn: true,
-    updatedAt: new Date(),
-  };
+  const contactValues = sparse
+    ? {
+        ...(contact.firstName ? { firstName: contact.firstName } : {}),
+        ...(contact.lastName ? { lastName: contact.lastName } : {}),
+        email: contact.email,
+        // A number given "for appointment reminders" covers service texts.
+        ...(contact.phone ? { phone: contact.phone, nonMarketingSmsOptIn: true } : {}),
+        ...(contact.firmName ? { firmName: contact.firmName } : {}),
+        ...(contact.marketingSmsOptIn ? { marketingSmsOptIn: true } : {}),
+        updatedAt: new Date(),
+      }
+    : {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+        firmName: contact.firmName,
+        marketingSmsOptIn: contact.marketingSmsOptIn,
+        // Service texts are covered by the disclosure shown at the contact
+        // step; only the marketing flag is an explicit tick.
+        nonMarketingSmsOptIn: true,
+        updatedAt: new Date(),
+      };
 
   try {
     if (lead) {

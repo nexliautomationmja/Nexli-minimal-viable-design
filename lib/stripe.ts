@@ -6,14 +6,6 @@ import {
   ADVISORY_THANK_YOU_PATH,
   getAdvisoryPriceId,
 } from "./advisory-config";
-import {
-  FOUNDATION_PRODUCT_ID,
-  FOUNDATION_PRODUCT_NAME,
-  FOUNDATION_SETUP_FEE_VALUE,
-  FOUNDATION_FIRST_PAYMENT_VALUE,
-  getFoundationSetupPriceId,
-  getFoundationStripePriceId,
-} from "./foundation-config";
 import { DEMO_OFFER_PATH, DEMO_THANK_YOU_PATH } from "./demo-config";
 
 let _stripe: Stripe | null = null;
@@ -27,7 +19,8 @@ export function getStripe(): Stripe {
   return _stripe;
 }
 
-export type SessionProduct = "advisory" | "foundation";
+/** The one product sold through Stripe. Firm Foundation was retired 2026-11-19. */
+export type SessionProduct = "advisory";
 
 /** Attribution fields carried through Stripe metadata so the webhook can
  *  fire a fully-attributed CAPI Purchase without a DB round-trip. */
@@ -56,15 +49,6 @@ export interface OneTimeCheckoutParams {
   attribution: CheckoutAttributionFields;
 }
 
-export interface FoundationCheckoutParams extends OneTimeCheckoutParams {
-  firmName: string;
-  websiteUrl?: string | null;
-  marketingSmsOptIn: boolean;
-  nonMarketingSmsOptIn: boolean;
-  /** site_previews.token the buyer saw before subscribing; the webhook hands
-   *  its config to the portal as the firm's draft website. */
-  previewToken?: string | null;
-}
 
 /** Stripe metadata values must be strings of at most 500 chars. */
 function meta(value: unknown): string | undefined {
@@ -161,30 +145,6 @@ async function assertAdvisoryPriceMatches(stripe: Stripe): Promise<void> {
   _verifiedPriceId = priceId;
 }
 
-/**
- * Foundation charges two explicit Prices on one `mode: "subscription"`
- * session: the recurring $497/mo Price and a one-time $999 setup Price.
- * Stripe puts the one-time price on the subscription's first invoice, so the
- * first charge is $1,496 and every later charge is $497.
- *
- * ORDER MATTERS BY CONVENTION: the recurring price is always first.
- * A one-time price can never become a subscription item, so
- * `getSubscriptionPeriodEnd` (which reads `items.data[0]`) is safe either
- * way — but keeping the recurring item first makes that invariant obvious
- * and keeps the Checkout page reading "$497/month" above "$999 setup fee".
- */
-function resolveFoundationLineItems(): Stripe.Checkout.SessionCreateParams.LineItem[] {
-  const recurring: Stripe.Checkout.SessionCreateParams.LineItem = {
-    price: getFoundationStripePriceId(),
-    quantity: 1,
-  };
-  const setup: Stripe.Checkout.SessionCreateParams.LineItem = {
-    price: getFoundationSetupPriceId(),
-    quantity: 1,
-  };
-  return [recurring, setup];
-}
-
 export async function createAdvisoryCheckoutSession(
   params: OneTimeCheckoutParams
 ): Promise<{ sessionId: string; checkoutUrl: string }> {
@@ -233,86 +193,6 @@ export async function createAdvisoryCheckoutSession(
   return { sessionId: session.id, checkoutUrl: session.url };
 }
 
-/**
- * Firm Foundation subscription checkout: $999 one-time setup fee plus
- * $497/month, month-to-month. Terms are accepted on the Stripe page
- * (consent_collection) so the buyer never reaches the thank-you page without
- * having agreed to them.
- */
-export async function createFoundationCheckoutSession(
-  params: FoundationCheckoutParams
-): Promise<{ sessionId: string; checkoutUrl: string }> {
-  const stripe = getStripe();
-  const lineItems = resolveFoundationLineItems();
-  const site = getSiteUrl();
-  const a = params.attribution || {};
-
-  const metadata = compact({
-    product: FOUNDATION_PRODUCT_ID,
-    lead_id: meta(params.leadId),
-    first_name: meta(params.firstName),
-    last_name: meta(params.lastName),
-    email: meta(params.email),
-    phone: meta(params.phone),
-    firm_name: meta(params.firmName),
-    website_url: meta(params.websiteUrl),
-    purchase_event_id: meta(params.purchaseEventId),
-    preview_token: meta(params.previewToken),
-    setup_fee: String(FOUNDATION_SETUP_FEE_VALUE),
-    first_payment: String(FOUNDATION_FIRST_PAYMENT_VALUE),
-    sms_marketing: params.marketingSmsOptIn ? "1" : "0",
-    sms_nonmarketing: params.nonMarketingSmsOptIn ? "1" : "0",
-    ...attributionMetadata(a),
-  });
-
-  const previewToken = meta(params.previewToken);
-  const cancelUrl = `${site}${DEMO_OFFER_PATH}?checkout=cancelled`;
-
-  const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
-    payment_method_types: ["card"],
-    payment_method_collection: "always",
-    customer_email: params.email,
-    line_items: lineItems,
-    metadata,
-    subscription_data: {
-      metadata: compact({
-        product: FOUNDATION_PRODUCT_ID,
-        lead_id: meta(params.leadId),
-        email: meta(params.email),
-        firm_name: meta(params.firmName),
-        preview_token: previewToken,
-      }),
-      description: `${FOUNDATION_PRODUCT_NAME} — website + client portal`,
-    },
-    // Stripe requires a Terms of Service URL under the account's public
-    // business details before consent_collection is allowed; without it,
-    // session creation fails. STRIPE_SKIP_TOS_CONSENT=1 drops the consent
-    // step for local demos only. Never set it in production.
-    ...(process.env.STRIPE_SKIP_TOS_CONSENT !== "1"
-      ? {
-          consent_collection: { terms_of_service: "required" as const },
-          custom_text: {
-            terms_of_service_acceptance: {
-              message: `I agree to the ${FOUNDATION_PRODUCT_NAME} service terms.`,
-            },
-          },
-        }
-      : {}),
-    allow_promotion_codes: false,
-    billing_address_collection: "auto",
-    expires_at: Math.floor(Date.now() / 1000) + 45 * 60,
-    success_url: `${site}${DEMO_THANK_YOU_PATH}?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: cancelUrl,
-  });
-
-  if (!session.url) {
-    throw new Error("Stripe did not return a checkout URL");
-  }
-
-  return { sessionId: session.id, checkoutUrl: session.url };
-}
-
 export function isCheckoutSessionId(value: unknown): value is string {
   return typeof value === "string" && /^cs_(test|live)_[A-Za-z0-9]+$/.test(value);
 }
@@ -329,21 +209,9 @@ export async function retrieveCheckoutSession(
   );
 }
 
-export async function retrieveSubscription(
-  subscriptionId: string
-): Promise<Stripe.Subscription> {
-  return getStripe().subscriptions.retrieve(subscriptionId);
-}
-
-/** Stripe v21 moved current_period_end onto subscription items. */
-export function getSubscriptionPeriodEnd(sub: Stripe.Subscription | null | undefined): Date | null {
-  const secs = sub?.items?.data?.[0]?.current_period_end;
-  return typeof secs === "number" ? new Date(secs * 1000) : null;
-}
-
 export function getSessionProduct(session: Stripe.Checkout.Session): SessionProduct | null {
   const p = session.metadata?.product;
-  if (p === "advisory" || p === "foundation") return p;
+  if (p === "advisory") return p;
   return null;
 }
 
@@ -354,17 +222,6 @@ export function isPaidAdvisorySession(session: Stripe.Checkout.Session): boolean
     session.mode === "payment" &&
     session.status === "complete" &&
     session.payment_status === "paid"
-  );
-}
-
-/** True when a session represents an active, paid Firm Foundation subscription checkout. */
-export function isPaidFoundationSession(session: Stripe.Checkout.Session): boolean {
-  return (
-    session.metadata?.product === FOUNDATION_PRODUCT_ID &&
-    session.mode === "subscription" &&
-    session.status === "complete" &&
-    session.payment_status === "paid" &&
-    !!session.subscription
   );
 }
 

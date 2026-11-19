@@ -1,5 +1,6 @@
 /**
- * Registry of every Firm Foundation client site.
+ * Registry of every client firm site (static fallbacks to the firm_sites
+ * table; the /booking-confirmed-b demo firm lives here).
  *
  * Imported by middleware.ts (Edge runtime), so keep this file and every
  * config it imports free of Node-only modules. Plain data only.

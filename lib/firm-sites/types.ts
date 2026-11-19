@@ -2,7 +2,7 @@ import type { FirmBrandConfig } from '../../components/portfolio/firmBrandConfig
 import { contrastText, withAlpha } from './color';
 
 /**
- * Everything needed to render one Firm Foundation client site.
+ * Everything needed to render one client firm site.
  * One object per firm lives in data/firm-sites/<slug>.ts and is registered
  * in lib/firm-sites/registry.ts. Keep this plain data (no functions, no JSX)
  * so it can be passed from server to client components and imported by

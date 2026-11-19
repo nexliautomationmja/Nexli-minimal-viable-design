@@ -10,11 +10,13 @@
 // noindex: it is for underwriters and anyone who asks, not a search landing
 // page competing with the funnels. Linked from every footer.
 //
-// The setup fee and the annual plan ARE priced here (Marcel, 2026-11-09):
-// the underwriters match the $40,000 and $82,000 charges they will process
-// against this page. The sales pages still say "quoted on the call" — see
-// the rule in lib/agency-offer.ts. Every number comes from those constants,
-// and this page must say what /terms and /refund-policy say.
+// THE RETAINER, in full (Marcel, 2026-11-19; lib/agency-offer.ts): the
+// $10,000 monthly minimum, the $50,000 six-month prepayment and the
+// performance-pay rule with its worked example. The sales pages keep the
+// 10% to a name and leave out the prepay; this page cannot, because the
+// underwriters match every charge they will process (a $50,000 prepayment,
+// a performance invoice) against it. Every number comes from those
+// constants, and this page must say what /terms and /refund-policy say.
 // ---------------------------------------------------------------------------
 
 import type { Metadata } from 'next';
@@ -30,27 +32,25 @@ import {
   ADVISORY_REFUND_DAYS,
 } from '@/lib/advisory-config';
 import {
-  AGENCY_AD_SPEND,
-  AGENCY_ANNUAL_PLAN_BONUS,
-  AGENCY_ANNUAL_SERVICE_FEE,
-  AGENCY_ANNUAL_TERM_MONTHS,
-  AGENCY_ANNUAL_UPFRONT,
-  AGENCY_CANCEL_NOTICE_DAYS,
-  AGENCY_INITIAL_TERM_MONTHS,
-  AGENCY_LAUNCH_DAYS,
-  AGENCY_MONTHLY_FEE,
-  AGENCY_MONTHLY_PLAN_BONUS,
-  AGENCY_SETUP_FEE,
-  AGENCY_TOTAL_MONTHLY,
   AD_BUDGET_TERMS,
-  PLAN_BONUS_CONDITIONS,
+  AGENCY_LAUNCH_DAYS,
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_PERFORMANCE_PERCENT,
+  AGENCY_PREPAY_SAVING,
+  AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_PREPAY,
+  AGENCY_RETAINER_TERM_MONTHS,
+  PAYMENT_METHODS,
+  PERFORMANCE_EXAMPLE,
+  PERFORMANCE_RULE,
+  RENEWAL_TERMS,
   usd,
 } from '@/lib/agency-offer';
 import { MIN_REVENUE } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Products & Pricing | Nexli Automation',
-  description: `What Nexli sells and what it costs: the Digital Rainmaker System at ${usd(AGENCY_TOTAL_MONTHLY)} a month and the ${ADVISORY_PRODUCT_NAME} at ${ADVISORY_PRICE_DISPLAY}.`,
+  description: `What Nexli sells and what it costs: the Digital Rainmaker System at ${usd(AGENCY_RETAINER_MONTHLY)} a month with no setup fee, and the ${ADVISORY_PRODUCT_NAME} at ${ADVISORY_PRICE_DISPLAY}.`,
   alternates: { canonical: '/pricing' },
   robots: { index: false, follow: true },
 };
@@ -71,15 +71,15 @@ const PRODUCTS: Product[] = [
     name: 'Digital Rainmaker System',
     kind: 'Done-for-you service',
     summary: `We build and run the system that brings established CPA firms (${MIN_REVENUE} in annual revenue) high-value advisory clients: a premium website, a branded client portal, a sales funnel, AI automations, a Google review engine, and the paid ad campaigns that drive it.`,
-    price: usd(AGENCY_TOTAL_MONTHLY),
+    price: usd(AGENCY_RETAINER_MONTHLY),
     per: '/ month',
-    priceNote: `Includes the ${usd(AGENCY_AD_SPEND)} monthly ad budget, which we place into your campaigns. Plus a one-time ${usd(AGENCY_SETUP_FEE)} setup fee at signing. Or pay annually: both plans are set out below.`,
+    priceNote: `The agency minimum. No setup fee. Plus ${AGENCY_PERFORMANCE_PERCENT} performance pay on agreed, attributable net revenue (set out below). Your ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is separate and paid by you directly to Meta.`,
     points: [
       'Sold under a signed agreement, billed by invoice',
-      `Setup fee (${usd(AGENCY_SETUP_FEE)}) and annual payment (${usd(AGENCY_ANNUAL_UPFRONT)}): ACH or wire only. Monthly charges: credit or debit card`,
-      `Built in about ${AGENCY_LAUNCH_DAYS} days from kickoff; monthly billing starts at launch`,
-      `Monthly plan: ${AGENCY_INITIAL_TERM_MONTHS}-month minimum from launch, then month to month with ${AGENCY_CANCEL_NOTICE_DAYS} days’ notice`,
-      `Annual plan: ${AGENCY_ANNUAL_TERM_MONTHS} months from launch, no automatic renewal`,
+      'Every charge by credit or debit card, ACH or wire',
+      `Billing starts at signing; built in about ${AGENCY_LAUNCH_DAYS} days from kickoff`,
+      `${AGENCY_RETAINER_TERM_MONTHS}-month term from signing; renews for ${AGENCY_RETAINER_TERM_MONTHS} months unless you cancel before it ends`,
+      `Or prepay the ${AGENCY_RETAINER_TERM_MONTHS} months: ${usd(AGENCY_RETAINER_PREPAY)}, saving ${usd(AGENCY_PREPAY_SAVING)}`,
       'You own the website, portal, funnel and automations we build; you pay your hosting provider directly',
       'All fees non-refundable',
     ],
@@ -110,49 +110,28 @@ const PRODUCTS: Product[] = [
  */
 const PLANS: { name: string; rows: [string, string][] }[] = [
   {
-    name: 'Monthly plan',
+    name: 'Paid monthly',
     rows: [
-      ['Due at signing', `${usd(AGENCY_SETUP_FEE)} setup fee`],
-      [
-        'Billed monthly, from launch',
-        `${usd(AGENCY_TOTAL_MONTHLY)}: the ${usd(AGENCY_AD_SPEND)} ad budget plus ${usd(AGENCY_MONTHLY_FEE)} for our upkeep and management of the system`,
-      ],
-      [
-        'Term',
-        `${AGENCY_INITIAL_TERM_MONTHS} months minimum from launch, then month to month; cancel with ${AGENCY_CANCEL_NOTICE_DAYS} days’ written notice`,
-      ],
+      ['Due at signing', `${usd(AGENCY_RETAINER_MONTHLY)}, the first month. No setup fee.`],
+      ['Billed monthly, from signing', `${usd(AGENCY_RETAINER_MONTHLY)} agency minimum`],
+      ['Performance pay', `${AGENCY_PERFORMANCE_PERCENT} of agreed, attributable net revenue, where it is more than the month’s ${usd(AGENCY_RETAINER_MONTHLY)}: only the difference is invoiced`],
+      ['Term', `${AGENCY_RETAINER_TERM_MONTHS} months from signing; renews for ${AGENCY_RETAINER_TERM_MONTHS} months unless you cancel before it ends`],
       [
         'Minimum commitment',
-        `${usd(AGENCY_SETUP_FEE + AGENCY_INITIAL_TERM_MONTHS * AGENCY_TOTAL_MONTHLY)} (${usd(AGENCY_SETUP_FEE)} + ${AGENCY_INITIAL_TERM_MONTHS} × ${usd(AGENCY_TOTAL_MONTHLY)})`,
-      ],
-      [
-        'First-month bonus',
-        `We match your first month of ads: ${usd(AGENCY_MONTHLY_PLAN_BONUS)} of our own added to your campaigns that month`,
+        `${usd(AGENCY_RETAINER_TERM_MONTHS * AGENCY_RETAINER_MONTHLY)} (${AGENCY_RETAINER_TERM_MONTHS} × ${usd(AGENCY_RETAINER_MONTHLY)}), plus any performance pay`,
       ],
       ['Refunds', 'None, except billing errors'],
     ],
   },
   {
-    name: 'Annual plan',
+    name: `Prepaid, ${AGENCY_RETAINER_TERM_MONTHS} months`,
     rows: [
-      [
-        'Due at signing',
-        `${usd(AGENCY_ANNUAL_UPFRONT)}: the ${usd(AGENCY_SETUP_FEE)} setup fee plus ${usd(AGENCY_ANNUAL_SERVICE_FEE)} for ${AGENCY_ANNUAL_TERM_MONTHS} months of upkeep and management, paid in advance`,
-      ],
-      ['Billed monthly, from launch', `${usd(AGENCY_AD_SPEND)} ad budget`],
-      [
-        'Term',
-        `${AGENCY_ANNUAL_TERM_MONTHS} months from launch. Cancel any time and service runs to the end of the term. Does not renew automatically.`,
-      ],
-      [
-        'Minimum commitment',
-        `${usd(AGENCY_ANNUAL_UPFRONT + AGENCY_ANNUAL_TERM_MONTHS * AGENCY_AD_SPEND)} (${usd(AGENCY_ANNUAL_UPFRONT)} + ${AGENCY_ANNUAL_TERM_MONTHS} × ${usd(AGENCY_AD_SPEND)})`,
-      ],
-      [
-        'First-month bonus',
-        `${usd(AGENCY_ANNUAL_PLAN_BONUS)} in ad credits of our own, added to your campaigns in your first month of ads`,
-      ],
-      ['Refunds', 'None, except billing errors'],
+      ['Due at signing', `${usd(AGENCY_RETAINER_PREPAY)} for the ${AGENCY_RETAINER_TERM_MONTHS} months, saving ${usd(AGENCY_PREPAY_SAVING)}. No setup fee.`],
+      ['Billed monthly, from signing', 'No agency fee during the term'],
+      ['Performance pay', `${AGENCY_PERFORMANCE_PERCENT} of agreed, attributable net revenue, where it is more than the share of the prepayment allocated to that month: only the difference is invoiced`],
+      ['Term', `${AGENCY_RETAINER_TERM_MONTHS} months from signing; renews for ${AGENCY_RETAINER_TERM_MONTHS} months unless you cancel before it ends`],
+      ['Minimum commitment', `${usd(AGENCY_RETAINER_PREPAY)}, plus any performance pay`],
+      ['Refunds', 'None, in whole or in part, except billing errors'],
     ],
   },
 ];
@@ -204,8 +183,8 @@ export default function PricingPage() {
         <div className="space-y-2">
           <h2 className="text-xl font-bold text-[var(--text-main)]">Digital Rainmaker System: two ways to pay</h2>
           <p className="text-base">
-            Both plans start with the same build, about {AGENCY_LAUNCH_DAYS} days from kickoff. Launch is the day
-            your ads go live, and it is when monthly billing and your term begin.
+            Both start with the same build, about {AGENCY_LAUNCH_DAYS} days from kickoff, and neither has a setup
+            fee. Billing and your term begin at signing; launch is the day your ads go live.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -223,14 +202,24 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold text-[var(--text-main)]">How performance pay works</h3>
+          <p className="text-base">{PERFORMANCE_RULE}</p>
+          <p className="text-base">{PERFORMANCE_EXAMPLE}</p>
+          <p className="text-base">
+            &quot;Agreed, attributable net revenue&quot; is defined in your signed agreement. It is not your
+            firm&apos;s total revenue.
+          </p>
+        </div>
         <p className="text-base">
-          {PLAN_BONUS_CONDITIONS} Your first month of ads is the month beginning at launch.
+          {AD_BUDGET_TERMS} We do not invoice it or refund it.
         </p>
         <p className="text-base">
-          {AD_BUDGET_TERMS} Your term always runs its full length first.
+          {RENEWAL_TERMS} Cancelling takes effect at the end of the current term, and the fees for that term
+          remain payable.
         </p>
         <p className="text-base">
-          Hosting is not included on either plan; you pay your hosting provider directly. Parts of the system
+          Hosting is not included either way; you pay your hosting provider directly. Parts of the system
           cannot be removed or priced separately. You own the website, portal, funnel and automations we build.
           The full terms are in our <Link href="/terms" className={legalLinkClass}>Terms and Conditions</Link>.
         </p>
@@ -240,11 +229,9 @@ export default function PricingPage() {
         <h2 className="text-xl font-bold text-[var(--text-main)]">Payment</h2>
         <CardLogos />
         <p className="text-base">
-          We accept Visa, Mastercard, American Express and Discover, credit or debit, for the monthly plan,
-          the monthly advertising budget and the {ADVISORY_PRODUCT_NAME}. The {usd(AGENCY_SETUP_FEE)} setup
-          fee and the {usd(AGENCY_ANNUAL_UPFRONT)} annual plan payment are paid by ACH bank transfer or wire
-          transfer only, not by card. Card payments are processed securely by our payment processor; Nexli
-          never sees or stores your full card number.
+          We accept Visa, Mastercard, American Express and Discover, credit or debit, as well as ACH bank
+          transfer and wire. {PAYMENT_METHODS} The {ADVISORY_PRODUCT_NAME} is paid by card. Card payments are
+          processed securely by our payment processor; Nexli never sees or stores your full card number.
         </p>
         <p className="text-base">
           Before you buy, please read our{' '}

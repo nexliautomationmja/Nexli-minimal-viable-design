@@ -14,7 +14,7 @@ const guide: Guide = {
     'Whatever you pick, expect 60 to 90 days before paid channels produce booked calls and 6 to 12 months before SEO or content moves the needle.',
   ],
   publishedAt: '2026-09-08',
-  updatedAt: '2026-11-09',
+  updatedAt: '2026-11-19',
   author: 'marcel-allen',
   category: 'Comparison',
   stats: [
@@ -79,7 +79,7 @@ const guide: Guide = {
         '**Brand House Marketing.** A Wisconsin agency founded by, and affiliated with, an IPA Top 300 CPA firm. Best for small to mid-size firms that want strategy plus execution across content, paid ads, SEO, design, and partner LinkedIn from people who have sat inside an accounting firm. Pricing and contract terms are not published. Weakness: the affiliation with an operating CPA firm is a real strength for context and a potential concern if you compete in the same markets or niches.',
         '**Fixyr.** A Canadian firm serving US and Canadian accounting, tax, and advisory practices. Best for firms that want a senior marketing head for less than a hire: a Marketing Action Plan is [$1,495](https://fixyr.com/pricing/), the Strategy First engagement starts at $9,000, done-for-you packages run $1,000 to $5,000 a month, and coaching starts at $750 a month. No long-term contracts. Weakness: the model leans on strategy and coaching; execution packages are scoped narrowly, and there is no performance guarantee.',
         '**Mole Street.** An Elite HubSpot Solutions Partner in Philadelphia with SOC 2 compliance and named Top 100 accounting clients (Sax LLP, HBK). Best for large firms that need CRM, data integration with practice management, and cross-selling visibility across offices. Pricing is not published. Weakness: this is a technology consultancy, not a lead generation agency. If your firm is under $5M, the platform and the engagement are more than you need.',
-        '**Nexli Automation.** A CPA firm growth agency founded by Marcel Allen. It builds the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website, an AI automation layer (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that adds 3 to 5 reviews a month, then runs paid ads to it. Best for established firms doing $500K+ that want advisory clients and a done-for-you system. It brings firms tax-planning clients, each an engagement worth $15,000 to $55,000, and sends a written update every week on what the campaigns produced. $9,997 a month all in, covering the system and the $5,000 ad budget together, a six-month initial term and then month to month, plus a one-time setup fee for the build, which takes about 21 days. Weakness: not a fit for solo or startup firms, and it is application-only, so you cannot just sign up.',
+        '**Nexli Automation.** A CPA firm growth agency founded by Marcel Allen. It builds the [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system): a premium website, an AI automation layer (missed-call text-back, 24/7 intake, automated booking, nurture sequences), a secure client document portal, and a Google review engine that adds 3 to 5 reviews a month, then runs paid ads to it. Best for established firms doing $500K+ that want advisory clients and a done-for-you system. It brings firms tax-planning clients, each an engagement worth $15,000 to $55,000, and sends a written update every week on what the campaigns produced. $10,000 a month with no setup fee, plus 10% performance pay explained on the strategy call; the ad budget, at least $5,000 a month, is separate and paid by the firm directly to Meta. A six-month initial term that renews for six months at a time, and a build that takes about 21 days. Weakness: not a fit for solo or startup firms, and it is application-only, so you cannot just sign up.',
       ],
     },
     {
@@ -102,7 +102,7 @@ const guide: Guide = {
           ['Brand House Marketing', 'Small to mid-size firms wanting strategy plus execution', 'Full-service agency', 'Not published', 'Not published', 'None published'],
           ['Fixyr', 'Firms wanting a senior marketing lead at low cost', 'Strategy, coaching, DFY packages', '$1,495 plan; $9,000+ strategy; $1,000-$5,000/mo DFY', 'No long-term contracts', 'None published'],
           ['Mole Street', 'Top 200 firms needing HubSpot and CRM integration', 'HubSpot consultancy', 'Not published', 'Not published', 'None published'],
-          ['Nexli Automation', 'Established $500K+ firms wanting advisory clients', 'Done-for-you system plus paid ads', '$9,997/mo all in (incl. ad spend)', 'Six-month initial term, then month to month', 'Tax-planning clients worth $15K-$55K per engagement; weekly reporting'],
+          ['Nexli Automation', 'Established $500K+ firms wanting advisory clients', 'Done-for-you system plus paid ads', '$10,000/mo, no setup fee, plus 10% performance pay (ad spend paid separately to Meta)', 'Six-month initial term, renewing six months at a time', 'Tax-planning clients worth $15K-$55K per engagement; weekly reporting'],
         ],
       },
     },
@@ -183,8 +183,8 @@ const guide: Guide = {
       id: 'where-nexli-fits',
       heading: 'Where Nexli fits, and where it does not',
       body: [
-        'Nexli Automation is the only agency on this list that ties its offer to what each new client is worth: tax-planning clients, each an engagement worth $15,000 to $55,000, with a written report every week on what the campaigns produced. That focus is possible because the system is narrow on purpose. It works with established CPA and accounting firms doing $500K+ a year (about $40K-$50K a month), builds the full stack (website, AI intake and booking, document portal, review engine), then runs paid ads into it. The build takes about 21 days, on a six-month initial term that then continues month to month.',
-        'It is not the right choice for a startup practice, a firm that wants a $100-a-month website, a Top 100 firm that needs a HubSpot integration, or a firm that wants to keep doing marketing in-house and just needs coaching. Pricing is $9,997 a month all in, published at [nexli.net/pricing](/pricing); firms apply and book a strategy call at [nexli.net/agency](/agency). For what the system contains, read [What is the Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system).',
+        'Nexli Automation is the only agency on this list that ties its offer to what each new client is worth: tax-planning clients, each an engagement worth $15,000 to $55,000, with a written report every week on what the campaigns produced. That focus is possible because the system is narrow on purpose. It works with established CPA and accounting firms doing $500K+ a year (about $40K-$50K a month), builds the full stack (website, AI intake and booking, document portal, review engine), then runs paid ads into it. The build takes about 21 days, on a six-month initial term that renews for six months at a time.',
+        'It is not the right choice for a startup practice, a firm that wants a $100-a-month website, a Top 100 firm that needs a HubSpot integration, or a firm that wants to keep doing marketing in-house and just needs coaching. Pricing is $10,000 a month with no setup fee, plus 10% performance pay, published at [nexli.net/pricing](/pricing), with the ad budget paid separately to Meta; firms apply and book a strategy call at [nexli.net/agency](/agency). For what the system contains, read [What is the Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system).',
       ],
     },
     {
@@ -237,7 +237,7 @@ const guide: Guide = {
     {
       question: 'Is Nexli Automation a good fit for every CPA firm?',
       answer:
-        'No. Nexli works only with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month) that want advisory clients and a done-for-you system. It is not designed for solo or startup practices, for large firms that need CRM integration work, or for firms that want to keep marketing in-house. Pricing is $9,997 a month all in, published at nexli.net/pricing, and engagement is application-only through a strategy call.',
+        'No. Nexli works only with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month) that want advisory clients and a done-for-you system. It is not designed for solo or startup practices, for large firms that need CRM integration work, or for firms that want to keep marketing in-house. Pricing is $10,000 a month with no setup fee, plus 10% performance pay, published at nexli.net/pricing, with the ad budget paid separately to Meta, and engagement is application-only through a strategy call.',
     },
   ],
   relatedGuides: [

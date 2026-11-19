@@ -5,10 +5,11 @@
 // agency did deliver what it sold: the failure was lead QUALITY, which
 // nobody was measuring, not lead count.
 //
-// There is no opt-in any more. The ad lands here, the video does the selling
-// and names the price, and the only CTA is the qualifier — which is where
-// contact details are collected, because a form in front of the video was
-// costing more leads than it captured.
+// There is no opt-in any more. The ad lands here, the video does the selling,
+// and every button scrolls to the price and the calendar further down this
+// same page (Marcel, 2026-11-19). Cal's booking form is where contact
+// details are collected now; the five-step qualifier is no longer in the
+// path, because firms that could afford the work were falling out of it.
 //
 // LIVED AT /advisory-pricing UNTIL 4 NOVEMBER 2026. The old URL 301s here
 // (next.config.ts) because it is in live ads and in sent email, and the
@@ -21,7 +22,7 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_AGENCY, qualifyPathForAngle } from '@/lib/advisory-config';
+import { VSL_ANGLE_AGENCY } from '@/lib/advisory-config';
 import AgencyVslClient from './agency-client';
 
 const TITLE = 'Why the $15,000 client never calls your firm | Nexli';
@@ -37,8 +38,9 @@ export const metadata: Metadata = {
 };
 
 export default function AgencyVslPage() {
-  // Carries ?angle=agency now. It used to hand over a bare
-  // ADVISORY_QUALIFY_PATH, which meant the one page actually taking ad
-  // traffic was the only one of the four arriving in GoHighLevel untagged.
-  return <AgencyVslClient ctaHref={qualifyPathForAngle(VSL_ANGLE_AGENCY)} />;
+  // The angle rides on every booking from this page's calendar (Cal
+  // metadata), so the contact arrives in GoHighLevel tagged agencyVSL. The
+  // buttons used to link to the qualifier; since 2026-11-19 they scroll to
+  // the pricing and calendar on this page.
+  return <AgencyVslClient angle={VSL_ANGLE_AGENCY} />;
 }

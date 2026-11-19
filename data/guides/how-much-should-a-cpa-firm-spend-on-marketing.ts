@@ -14,7 +14,7 @@ const guide: Guide = {
     'The better way to size the number is backward from client lifetime value and the number of new clients you want, and advisory clients change that math significantly.',
   ],
   publishedAt: '2026-09-08',
-  updatedAt: '2026-11-09',
+  updatedAt: '2026-11-19',
   author: 'marcel-allen',
   category: 'Marketing',
   stats: [
@@ -134,7 +134,7 @@ const guide: Guide = {
           ['Google Ads conversion rate, business services', '4.85% (finance & insurance: 2.64%; all industries: 8.18%)', 'LocaliQ Search Advertising Benchmarks 2026'],
           ['SEO retainer, agency', '$3,209 a month average; $501 to $1,000 most common band', 'Ahrefs SEO pricing survey (439 providers)'],
           ['SEO retainer, freelancer', '$1,349 a month average', 'Ahrefs SEO pricing survey (439 providers)'],
-          ['Managed acquisition system (site + intake + reviews + ads)', '$9,997/mo all in (incl. ad spend), plus a one-time setup fee. Six-month initial term, then month to month', 'Nexli Automation'],
+          ['Managed acquisition system (site + intake + reviews + ads)', '$10,000/mo with no setup fee, plus 10% performance pay; ad spend (at least $5,000/mo) paid separately to Meta. Six-month initial term, renewing six months at a time', 'Nexli Automation'],
         ],
       },
     },
@@ -178,7 +178,7 @@ const guide: Guide = {
       heading: 'How Nexli fits',
       body: [
         '[Nexli Automation](https://www.nexli.net) builds the foundation-first sequence described above as a single system for established CPA firms doing $500K or more in revenue (about $40K-$50K a month). The [Digital Rainmaker System](/guides/what-is-the-digital-rainmaker-system) includes a custom website, an AI automation layer for missed-call text-back, 24/7 intake, booking, and nurture, a secure client portal, and a Google review engine that adds 3 to 5 extra reviews a month, and then runs paid ads into it.',
-        'It is priced as a monthly engagement on a six-month initial term rather than as separate line items, so for budgeting purposes it replaces the website, intake, review, and ad-management rows in the table above. Pricing is $9,997 a month all in, which covers the complete system and the ad budget together; Nexli collects it and places the spend into the campaigns; firms apply for a strategy call at [nexli.net/agency](/agency), and the call includes a review of the firm\'s current spend and where it is leaking. Each client it brings in is a tax-planning engagement worth $15,000 to $55,000, which is the number to weigh the monthly fee against, and Nexli reports what the campaigns produced every week.',
+        'It is priced as a monthly engagement on a six-month initial term rather than as separate line items, so for budgeting purposes it replaces the website, intake, review, and ad-management rows in the table above, while the ad budget itself stays its own line. Pricing is $10,000 a month with no setup fee, plus 10% performance pay explained on the strategy call; the ad budget, at least $5,000 a month, is separate and paid by the firm directly to Meta; firms apply for a strategy call at [nexli.net/agency](/agency), and the call includes a review of the firm\'s current spend and where it is leaking. Each client it brings in is a tax-planning engagement worth $15,000 to $55,000, which is the number to weigh the monthly fee against, and Nexli reports what the campaigns produced every week.',
         'For firms below the threshold, or firms that want to run the plan themselves, the sequence in this guide still applies: fix the site, build the review process, automate intake, then turn on ads. More on the overall approach is in [CPA firm growth strategy](/guides/cpa-firm-growth-strategy) and [How to scale a CPA firm without hiring](/guides/how-to-scale-a-cpa-firm-without-hiring).',
       ],
     },

@@ -1,5 +1,5 @@
 /**
- * Colour helpers for Firm Foundation websites — pure, no I/O.
+ * Colour helpers for client firm websites — pure, no I/O.
  *
  * Ported from dashboard/src/lib/firm-sites/palette.ts. Derives the full 7-key
  * palette a site config needs from the one or two colours a firm gives us,

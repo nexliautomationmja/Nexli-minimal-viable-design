@@ -17,7 +17,7 @@
 // result and must never be presented as one. The panel labels them as example
 // data on screen — if you change the copy, keep that label. Invented numbers
 // shown to a CPA without a label read as a claim, and this page is attached
-// to a $9,997/month offer.
+// to a $10,000-a-month offer.
 //
 // The vocabulary is deliberately lead-centric (leads, cost per lead) rather
 // than impressions and CPM, matching components/demo/AdsDashboard.tsx:10-26.

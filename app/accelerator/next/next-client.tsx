@@ -4,7 +4,7 @@
 // The VSL and the calendar under it.
 //
 // Deliberately NOT components/VslFunnel. That is 1,900 lines whose body
-// sells the $9,997 engagement to someone who has already been quoted it —
+// sells the agency engagement to someone who has already been quoted it —
 // the trust bar, the cost-of-inaction section, the ROI maths, the founder
 // story. The firm reading this page has never been shown a price and came
 // for a free PDF. It also has no calendar slot, and the whole ask here is

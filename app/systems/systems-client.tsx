@@ -22,7 +22,7 @@ import {
   SYSTEMS_VSL_TITLE,
 } from '@/lib/advisory-config';
 
-export default function SystemsVslClient({ ctaHref }: { ctaHref: string }) {
+export default function SystemsVslClient({ angle }: { angle: string }) {
   return (
     <VslFunnel
       variant="Systems-Angle"
@@ -40,7 +40,7 @@ export default function SystemsVslClient({ ctaHref }: { ctaHref: string }) {
       // switches on the explained version of the same argument further down
       // the page, so the two cannot disagree.
       deadlineUrgency
-      ctaHref={ctaHref}
+      angle={angle}
       // TWO ACCENTS, SAME LOGIC AS /better-clients: the page's own colour on
       // the state they are stuck in, and the shared green on the money. Green
       // means the same thing on every angle; violet is this page's problem

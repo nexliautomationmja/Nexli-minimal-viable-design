@@ -189,7 +189,7 @@ export const ACQUISITION_VSL_POSTER_TIME = 0;
 /**
  * The VSL on the $97 offer page.
  *
- * Its own cut, not the funnel's — /advisory-pricing sells a $9,997/month
+ * Its own cut, not the funnel's — the VSLs sell a $10,000-a-month
  * engagement and this sells a five-page PDF. Separate ids also keep the two
  * videos' watch-time apart in Mux.
  *
@@ -409,6 +409,17 @@ export const TAG_ADVISORY_INCOMPLETE = 'advisory incomplete';
  * booking_start custom field in the same write — see ghl-sync.
  */
 export const TAG_ADVISORY_BOOKED = 'advisory booked';
+
+/**
+ * Booked straight from a VSL's own calendar, with no qualifier in front of
+ * it (Marcel, 2026-11-19). Applied with 'call booked' and 'advisory booked'
+ * by app/api/cal/booking. Never with 'advisory qualified' or
+ * 'qualified-vsl': these firms answered no qualifying questions.
+ */
+export const TAG_VSL_BOOKING = 'vsl booking';
+
+/** leads.form_source for a firm whose first contact was a VSL booking. */
+export const VSL_BOOKING_FORM_SOURCE = 'vsl-booking';
 
 // ── The headline math, straight from page 3 of the PDF ────────────────────
 // 20 top clients × a 20% close rate × the average engagement = $60,000.

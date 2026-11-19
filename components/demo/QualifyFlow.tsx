@@ -3,13 +3,13 @@
 // ---------------------------------------------------------------------------
 // Demo funnel — page 3. The six qualification questions.
 //
-// Why mode="foundation" and not mode="call":
+// Why mode="collect" and not mode="call":
 // QualificationStepsCard in call mode short-circuits the moment it hits a
 // disqualifier (step 0, 1 or 4), POSTs to /api/forms/qualification and hands
 // back 'not-qualified' — and the booking funnel's QualificationProvider then
 // renders its "We Might Not Be the Right Fit" modal. Neither is wanted here:
 // in this funnel an unqualified firm is routed to a real offer, and we need
-// all six answers regardless of the outcome. Foundation mode never
+// all six answers regardless of the outcome. Collect mode never
 // disqualifies and never POSTs, so we collect the full set and decide the
 // path ourselves with the same three rules the call mode applies.
 // ---------------------------------------------------------------------------
@@ -282,7 +282,7 @@ const QualifyFlow: React.FC<QualifyFlowProps> = ({
           ) : (
             <QualificationStepsCard
               steps={steps}
-              mode="foundation"
+              mode="collect"
               hideHeader
               hideProgress
               onStepChange={setStep}

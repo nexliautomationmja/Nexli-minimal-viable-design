@@ -16,7 +16,7 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_ACQUISITION, qualifyPathForAngle } from '@/lib/advisory-config';
+import { VSL_ANGLE_ACQUISITION } from '@/lib/advisory-config';
 import AcquisitionVslClient from './acquisition-client';
 
 const TITLE = 'Referrals built your firm. They will not scale it | Nexli';
@@ -31,5 +31,5 @@ export const metadata: Metadata = {
 };
 
 export default function AcquisitionVslPage() {
-  return <AcquisitionVslClient ctaHref={qualifyPathForAngle(VSL_ANGLE_ACQUISITION)} />;
+  return <AcquisitionVslClient angle={VSL_ANGLE_ACQUISITION} />;
 }

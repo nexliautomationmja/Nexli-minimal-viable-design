@@ -144,9 +144,10 @@ export const taxSavingsTagMap: Record<string, string> = {
 
 // ── Budget: RETIRED as a question on 2026-11-11 ──────────────────────────
 // It was the advisory funnel's last step: "Where does that sit for your firm
-// right now?" under the $9,997 price. Marcel took it out because it was
-// friction the VSL had already done the work of: every VSL page shows the
-// price, the setup fee and the term before anyone reaches the qualifier.
+// right now?" under the price (then $9,997 a month). Marcel took it out
+// because it was friction the VSL had already done the work of: every VSL
+// page shows the price and the term. Since 2026-11-19 the VSLs skip the
+// qualifier altogether and book from a calendar under the price.
 //
 // The options, the bar and the column all stay. Leads captured before the
 // change carry a budget answer, lib/advisory-fit still explains a turn-away
@@ -193,7 +194,7 @@ export interface QualificationStepDef {
   hint: string;
   /** Sub-copy for the demo funnel's qualifier (no strategy-session framing —
    *  at this point the visitor does not yet know which path they will get). */
-  foundationHint: string;
+  collectHint: string;
   /** Option list; usBased is a yes/no step and has no options. */
   options: QualificationOption[] | null;
 }
@@ -204,7 +205,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'boolean',
     question: 'Is your firm based in the United States?',
     hint: 'We currently serve US-based CPA firms and accounting practices.',
-    foundationHint: 'We build for US-based CPA firms and accounting practices.',
+    collectHint: 'We build for US-based CPA firms and accounting practices.',
     options: null,
   },
   {
@@ -212,7 +213,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "What's your role in the firm's decision-making?",
     hint: 'This helps us understand who will be involved in evaluating and implementing our system.',
-    foundationHint: 'So we know who else to include in the next step.',
+    collectHint: 'So we know who else to include in the next step.',
     options: decisionRoleOptions,
   },
   {
@@ -220,7 +221,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "What's the main thing you're trying to fix?",
     hint: 'This helps us prepare for your strategy session.',
-    foundationHint: 'So we point you at the part of the system that matters most.',
+    collectHint: 'So we point you at the part of the system that matters most.',
     options: goalOptions,
   },
   {
@@ -228,7 +229,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "How long has this been a problem you've wanted to solve?",
     hint: 'No wrong answer — we just want to understand where you are.',
-    foundationHint: 'No wrong answer — we just want to understand where you are.',
+    collectHint: 'No wrong answer — we just want to understand where you are.',
     options: problemDurationOptions,
   },
   {
@@ -236,7 +237,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "What is your firm's approximate annual revenue?",
     hint: "This helps us tailor the strategy session to your firm's size and goals.",
-    foundationHint: "This decides which of our two options actually fits your firm.",
+    collectHint: "This decides which of our two options actually fits your firm.",
     options: annualRevenueOptions,
   },
   {
@@ -244,7 +245,7 @@ export const QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "What's the most you've ever saved a single client through tax planning?",
     hint: "This tells us how much advisory value you're already creating — and where the ceiling is.",
-    foundationHint: "This tells us how much advisory value you're already creating.",
+    collectHint: "This tells us how much advisory value you're already creating.",
     options: taxSavingsOptions,
   },
 ];
@@ -274,7 +275,7 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'boolean',
     question: 'Is your firm based in the United States?',
     hint: 'We currently serve US-based CPA firms and accounting practices.',
-    foundationHint: 'We build for US-based CPA firms and accounting practices.',
+    collectHint: 'We build for US-based CPA firms and accounting practices.',
     options: null,
   },
   {
@@ -282,7 +283,7 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "What's your role in the firm's decision-making?",
     hint: 'This helps us understand who will be involved in evaluating and implementing our system.',
-    foundationHint: 'So we know who else to include in the next step.',
+    collectHint: 'So we know who else to include in the next step.',
     options: decisionRoleOptions,
   },
   {
@@ -290,7 +291,7 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "What is your firm's approximate annual revenue?",
     hint: "This helps us tailor the strategy session to your firm's size and goals.",
-    foundationHint: 'This decides which of our two options actually fits your firm.',
+    collectHint: 'This decides which of our two options actually fits your firm.',
     options: annualRevenueOptions,
   },
   {
@@ -298,7 +299,7 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'choice',
     question: "What's the main thing you're trying to fix?",
     hint: 'This helps us prepare for your strategy session.',
-    foundationHint: 'So we point you at the part of the system that matters most.',
+    collectHint: 'So we point you at the part of the system that matters most.',
     options: goalOptions,
   },
   {
@@ -313,7 +314,7 @@ export const ADVISORY_QUALIFICATION_STEPS: QualificationStepDef[] = [
     type: 'contact',
     question: 'Who should we prepare this for?',
     hint: 'So we read your answers before the call rather than on it — and so you can pick up where you left off if this tab closes.',
-    foundationHint: 'So we read your answers before the call rather than on it — and so you can pick up where you left off if this tab closes.',
+    collectHint: 'So we read your answers before the call rather than on it — and so you can pick up where you left off if this tab closes.',
     options: null,
   },
 ];
@@ -343,7 +344,7 @@ const ACCELERATOR_OVERRIDES: Partial<
 > = {
   // The advisory hint says this decides "which of our two options actually
   // fits your firm". There is only one thing on offer here.
-  annualRevenue: { foundationHint: 'So we know which version of the playbook applies to you.' },
+  annualRevenue: { collectHint: 'So we know which version of the playbook applies to you.' },
   // And this is what they are actually getting.
   //
   // The question is pinned too, not just the hint. The advisory funnel's
@@ -352,7 +353,7 @@ const ACCELERATOR_OVERRIDES: Partial<
   // Accelerator keeps the wording it has always had.
   contact: {
     question: 'Where should we send your results?',
-    foundationHint: 'Where we send the Accelerator. It arrives by email in a few minutes.',
+    collectHint: 'Where we send the Accelerator. It arrives by email in a few minutes.',
   },
 };
 

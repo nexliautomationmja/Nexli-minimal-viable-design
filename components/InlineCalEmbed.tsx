@@ -10,10 +10,16 @@ interface InlineCalEmbedProps {
   calLink: string;
   /** Unique Cal namespace so this embed never collides with the global modal. */
   namespace: string;
-  /** API route that records the booking; receives { session_id | lead_token, event_id, booking_uid, start_time }. */
-  bookedEndpoint: string;
-  name: string;
-  email: string;
+  /**
+   * API route that records the booking; receives { session_id | lead_token,
+   * event_id, booking_uid, start_time }. Omit it when something else records
+   * the booking: the VSLs' calendar has no lead to authenticate, so Cal's own
+   * signed webhook (app/api/cal/booking) is the only writer there.
+   */
+  bookedEndpoint?: string;
+  /** Prefills. Omitted on the VSLs, where Cal's form collects them. */
+  name?: string;
+  email?: string;
   /**
    * E.164 only (+15551234567). Prefills Cal's phone field, which is what
    * its SMS reminders are sent to — so a wrong value here is worse than a
@@ -44,6 +50,18 @@ interface InlineCalEmbedProps {
   /** Meta pixel Schedule event content_name. */
   scheduleContentName?: string;
   /**
+   * The Schedule event's id, when the server sends the matching CAPI event
+   * from somewhere this component cannot reach (the Cal webhook) and the two
+   * must dedupe. Generated at booking time when omitted, as before.
+   */
+  scheduleEventId?: string;
+  /**
+   * Stored on the booking by Cal and returned in its webhook payload, as
+   * `metadata[key]=value` on the booking page. Values must be strings; Cal
+   * caps keys at 40 characters and values at 500.
+   */
+  metadata?: Record<string, string>;
+  /**
    * Cal's own accent, used for the selected day and the confirm button.
    * Defaults to the value the embed shipped with, so existing callers are
    * unchanged; pages with a different CTA colour pass their own.
@@ -52,7 +70,8 @@ interface InlineCalEmbedProps {
   /** Copy shown after a successful booking. */
   bookedTitle?: string;
   bookedBody?: string;
-  onBooked?: () => void;
+  /** Runs once Cal confirms the booking, with Cal's own event payload. */
+  onBooked?: (data: any) => void;
 }
 
 /** How long to wait for Cal's iframe before offering the direct link. */
@@ -75,6 +94,8 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
   notes,
   angle,
   scheduleContentName = 'Kickoff Call',
+  scheduleEventId,
+  metadata,
   brandColor = '#3b82f6',
   bookedTitle = "You're booked.",
   bookedBody,
@@ -100,15 +121,33 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
    * host; app.cal.com is what the embed iframe uses. Prefills carry over so
    * the lead does not retype what they just gave us.
    */
+  const metadataParams = Object.fromEntries(
+    Object.entries(metadata ?? {})
+      .filter(([, v]) => typeof v === 'string' && v !== '')
+      .map(([k, v]) => [`metadata[${k}]`, v.slice(0, 500)]),
+  );
+
   const fallbackUrl = (() => {
     const qs = new URLSearchParams();
     if (name) qs.set('name', name);
     if (email) qs.set('email', email);
     if (phone) qs.set('attendeePhoneNumber', phone);
     if (notes) qs.set('notes', notes);
+    for (const [k, v] of Object.entries(metadataParams)) qs.set(k, v);
     const q = qs.toString();
     return `https://cal.com/${calLink}${q ? `?${q}` : ''}`;
   })();
+
+  /**
+   * Facebook's and Instagram's in-app browsers, where the ads send most of
+   * the VSL traffic. A target=_blank link there can open a second in-app
+   * window the visitor cannot find their way back from, so the fallback
+   * opens in the same tab instead. Read after mount: the server has no UA.
+   */
+  const [inAppBrowser, setInAppBrowser] = useState(false);
+  useEffect(() => {
+    setInAppBrowser(/FBAN|FBAV|FB_IAB|Instagram/i.test(navigator.userAgent));
+  }, []);
 
   useEffect(() => {
     if (initialized.current || !containerRef.current) return;
@@ -150,14 +189,17 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
       elementOrSelector: containerRef.current,
       calLink,
       config: {
-        name,
-        email,
+        // Only when known. On the VSLs they are not, and an empty string
+        // would render Cal's fields as touched-and-empty.
+        ...(name ? { name } : {}),
+        ...(email ? { email } : {}),
         // Cal's identifier for the phone question. Omitted entirely when
         // blank — passing '' makes Cal render the field as touched-and-
         // empty, which trips its own validation before the visitor has
         // typed anything.
         ...(phone ? { attendeePhoneNumber: phone } : {}),
         notes: notes || '',
+        ...metadataParams,
         layout: 'month_view',
         // theme is set once in the ns('ui') call below — setting it in both
         // places let them drift apart.
@@ -212,14 +254,14 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
           attendeeTimezone = '';
         }
 
-        const scheduleEventId = generateEventId();
+        const eventId = scheduleEventId || generateEventId();
         trackMetaEvent(
           'Schedule',
           { content_name: scheduleContentName, content_category: 'Booking' },
-          scheduleEventId
+          eventId
         );
 
-        fetch(bookedEndpoint, {
+        if (bookedEndpoint) fetch(bookedEndpoint, {
           method: 'POST',
           // onBooked usually navigates (the advisory call page redirects to
           // /booking-confirmed-b 1.8s from here), and a normal fetch is
@@ -230,7 +272,7 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...(leadToken ? { lead_token: leadToken } : { session_id: sessionId }),
-            event_id: scheduleEventId,
+            event_id: eventId,
             booking_uid: data.uid ?? data.booking?.uid ?? '',
             start_time: data.date ?? data.booking?.startTime ?? '',
             attendee_timezone: attendeeTimezone,
@@ -239,11 +281,28 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
         }).catch(() => {});
 
         setBooked(true);
-        onBooked?.();
+        onBooked?.(data);
       },
     });
 
-    // Watch for Cal's iframe rather than trusting the script to have run.
+    const el = containerRef.current;
+    return () => {
+      if (el) el.innerHTML = '';
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /**
+   * Watch for Cal's iframe rather than trusting the script to have run.
+   *
+   * Its own effect, not part of the init above. React's development mode
+   * mounts every effect twice; the init is guarded to run once, so a poll
+   * inside it was cleared by the first cleanup and never restarted, and
+   * the "Loading the calendar…" overlay sat on top of a working calendar
+   * on localhost. Production mounts once either way.
+   */
+  useEffect(() => {
+    if (booked) return;
     const el = containerRef.current;
     const started = Date.now();
     const poll = window.setInterval(() => {
@@ -255,13 +314,8 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
         window.clearInterval(poll);
       }
     }, 400);
-
-    return () => {
-      window.clearInterval(poll);
-      if (el) el.innerHTML = '';
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => window.clearInterval(poll);
+  }, [booked]);
 
   if (booked) {
     return (
@@ -284,7 +338,10 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
           {bookedTitle}
         </h3>
         <p className="text-sm sm:text-base" style={{ color: 'rgba(255,255,255,0.65)' }}>
-          {bookedBody || `The calendar invite is on its way to ${email}.`}
+          {bookedBody ||
+            (email
+              ? `The calendar invite is on its way to ${email}.`
+              : 'The calendar invite is on its way to your inbox.')}
         </p>
       </motion.div>
     );
@@ -321,8 +378,7 @@ const InlineCalEmbed: React.FC<InlineCalEmbedProps> = ({
           </p>
           <a
             href={fallbackUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...(inAppBrowser ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
             className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
             style={{ backgroundColor: brandColor }}
           >

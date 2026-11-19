@@ -1,7 +1,8 @@
 import React from 'react';
 
 /**
- * Minimal layout for Firm Foundation client sites.
+ * Minimal layout for client firm sites (the /booking-confirmed-b demo firm
+ * included).
  *
  * Nexli's marketing chrome is suppressed for this route tree:
  * components/ConditionalNavbar.tsx, components/Footer.tsx and

@@ -272,7 +272,7 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
             // writing that null would wipe the answer a returning lead
             // gave the advisory funnel. That answer is the reason
             // lib/advisory-fit.ts can tell someone WHY they were turned
-            // away, and it is the record that a firm said no to $9,997.
+            // away, and it is the record that a firm said no to the monthly price.
             ...(answers.budget !== null ? { budget: answers.budget } : {}),
             leadScore: scoring.classification,
             disqualifyReason:

@@ -30,7 +30,8 @@ export const C = {
   planning: '#3B82F6',
   backEnd: '#14A877',
   monthly: '#0EA5C4',
-  annual: '#8B5CF6',
+  /** The six months prepaid (it was the annual plan's, until 2026-11-19). */
+  prepaid: '#8B5CF6',
   invest: '#F59E0B',
   surface: '#0d1526',
   grid: 'rgba(255,255,255,0.08)',

@@ -12,7 +12,7 @@ const VARIANTS: Record<PreviewBannerVariant, { text: string; background: string;
     color: '#1f1300',
     border: '1px solid rgba(120, 53, 15, 0.35)',
   },
-  // Firm Foundation prospect preview at /sites/preview/<token>.
+  // A prospect preview (the retired Firm Foundation preview flow used it).
   preview: {
     text: 'Preview of your new website — not live yet',
     background: 'rgba(37, 99, 235, 0.94)',

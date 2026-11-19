@@ -94,7 +94,6 @@ export const TAG_CALL_BOOKED = 'call booked';
 export const TAG_DEMO_VIEWED = 'demo';
 export const TAG_AGENCY_PITCH_VIEWED = 'agency pitch viewed';
 export const TAG_WEB_PITCH_VIEWED = 'web pitch viewed';
-export const TAG_FOUNDATION_CUSTOMER = 'foundation customer';
 
 /** Which side of the split a lead landed on. Stored and sent to GHL. */
 export type FunnelPath = 'agency' | 'web' | 'not-a-fit';
@@ -168,6 +167,33 @@ export const DEMO_OFFER_VIDEO_TITLE = 'Jasmine VSL - Tax Planning Clients';
 /** TODO: a dedicated "Advisory Engine Growth Call" event type in Cal.com. */
 export const DEMO_CAL_LINK = 'nexli-automation-6fgn8j/nexli-demo';
 export const DEMO_CAL_NAMESPACE = 'demo-growth-call';
+
+/**
+ * The calendar on the four VSLs, under the pricing (Marcel, 2026-11-19):
+ * the "CPA Acquisition Review" event type, 45 minutes. Its own event type
+ * so its booking questions are its own without touching nexli-demo, which
+ * the /call pages, /book and /accelerator/next still use. As Marcel set
+ * them (2026-11-19): name, email, "What are you hoping that this system
+ * solves for you?" (`systemsolution`), Website URL (`Website-URL`) and
+ * phone for appointment reminders, all required; notes optional. No SMS
+ * consent checkbox yet: add one identified `sms_consent` and the webhook
+ * records the opt-in; until then marketing SMS is never switched on from
+ * a VSL booking.
+ *
+ * ON THE EVENT TYPE IN CAL, NOT HERE (event type id 7982824): those booking
+ * questions (identifiers `Website-URL` and `sms_consent` are read by
+ * app/api/cal/booking via lib/cal-webhook), "Redirect
+ * on booking" left EMPTY, and the webhook to /api/cal/booking that records
+ * every booking. There is no client-side record for this calendar.
+ */
+export const VSL_CAL_LINK = 'nexli-automation-6fgn8j/cpa-acquisition-review';
+
+/** The VSL call's length. Must match the event type in Cal. */
+export const VSL_CALL_MINUTES = 45;
+
+/** The Meta content_name for a VSL-calendar booking, pixel and CAPI alike:
+ *  the two must match or the events stop deduplicating. */
+export const VSL_BOOKING_CONTENT_NAME = 'CPA Acquisition Review';
 
 // ── Copy shared across the funnel ─────────────────────────────────────────
 /**

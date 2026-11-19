@@ -63,10 +63,14 @@ export type QualificationStatus = 'pending' | 'qualified' | 'not-qualified';
 /**
  * 'call'       — the booking funnel: hard disqualifiers, POSTs to
  *                /api/forms/qualification, then onResult('qualified'|'not-qualified').
- * 'foundation' — Firm Foundation preview: nobody is disqualified, nothing is
- *                POSTed; the final step calls onComplete(answers).
+ * 'collect'    — every answer is collected and nobody is disqualified in
+ *                the browser; nothing is POSTed here, and the final step
+ *                calls onComplete(answers) so the page's own server route
+ *                decides. The advisory and Accelerator qualifiers run in it.
+ *                (It was named 'foundation', after the retired Firm
+ *                Foundation preview page that first used it.)
  */
-export type QualificationMode = 'call' | 'foundation';
+export type QualificationMode = 'call' | 'collect';
 
 // Map raw answer values to human-readable labels for Cal.com notes
 function formatAnswersAsNotes(answers: QualificationAnswers): string {
@@ -153,7 +157,7 @@ export const useBooking = () => {
 
 // ---------------------------------------------------------------------------
 // Qualification steps card — shared by the booking modal (overlay) and the
-// Firm Foundation /foundation/start page (inline).
+// qualifier pages (inline, via components/demo/QualifyFlow).
 // ---------------------------------------------------------------------------
 // Partial on purpose. These used to be exhaustive Records keyed by step, so
 // adding a question meant editing three lookups and a ternary before the
@@ -446,7 +450,7 @@ export function QualificationStepsCard({
   const handleUsBased = (value: boolean) => {
     const updated = { ...answers, usBased: value };
     // Call mode disqualifies in the browser. The advisory funnel runs in
-    // 'foundation' mode precisely so it does not: every answer is collected
+    // 'collect' mode precisely so it does not: every answer is collected
     // and the server decides, so the reason is visible in GoHighLevel.
     if (isCall && !value) {
       setAnswers(updated);
@@ -488,7 +492,7 @@ export function QualificationStepsCard({
   const totalSteps = steps.length;
   const current = steps[step];
   const Icon = STEP_ICONS[current.key] ?? Target;
-  const hint = isCall ? current.hint : current.foundationHint;
+  const hint = isCall ? current.hint : current.collectHint;
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
@@ -681,7 +685,6 @@ export default function QualificationProvider({ children }: { children: React.Re
         // the homepage funnel's /thank-you.
         const path = window.location.pathname;
         if (
-          path.startsWith('/foundation') ||
           path === '/demo' ||
           path.startsWith('/demo/') ||
           // The advisory funnel books through its own inline embed on the

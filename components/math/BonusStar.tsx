@@ -1,15 +1,17 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// The gold star on the annual plan's bonus (Marcel, 2026-11-16: "a gold
-// animated star that makes it really stand out").
+// The gold star (Marcel, 2026-11-16: "a gold animated star that makes it
+// really stand out"). It sat on the annual plan's bonus on /math; since
+// 2026-11-19 it marks the six-month prepay's saving there, and it decorates
+// the tax-planning tool's summary.
 //
 // A five-point star in a gold gradient that tilts and breathes, a pulsing
 // gold glow behind it, and three sparkles that twinkle in turn. It holds
 // still, fully drawn, in the PDF (usePrint) and for anyone who asks the OS
 // for reduced motion, so nothing is ever caught mid-animation on paper.
 //
-// BONUS_SHEEN_CSS is the slow light sweep across the bonus block it sits
+// BONUS_SHEEN_CSS is the slow light sweep across the gold block it sits
 // with: a CSS animation, so it is gated on prefers-reduced-motion itself.
 // ---------------------------------------------------------------------------
 import { useId } from 'react';

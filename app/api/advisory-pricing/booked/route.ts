@@ -1,25 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { formatBookingStart } from "@/lib/booking-time";
 import { eq } from "drizzle-orm";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
-import { sendCAPIEvent } from "@/lib/meta-capi";
-import { createDemoToken, verifyDemoToken, verifyRebookToken } from "@/lib/demo-session";
-import { syncContactToGhl } from "@/lib/ghl-sync";
-import { BOOKING_CONFIRMED_B_PATH, TAG_CALL_BOOKED } from "@/lib/demo-config";
-import {
-  ADVISORY_CALL_PATH,
-  ADVISORY_PRODUCT_NAME,
-  TAG_ADVISORY_BOOKED,
-  TAG_ADVISORY_BUYER,
-  TAG_ADVISORY_OPT_IN,
-  TAG_ADVISORY_QUALIFIED,
-  isVslAngle,
-  TAG_QUALIFIED_VSL,
-  vslTag,
-} from "@/lib/advisory-config";
-import { SITE_URL } from "@/lib/site";
+import { verifyDemoToken, verifyRebookToken } from "@/lib/demo-session";
+import { recordAdvisoryBooking } from "@/lib/advisory-booking";
+import { ADVISORY_CALL_PATH, isVslAngle } from "@/lib/advisory-config";
 
 export const runtime = "nodejs";
 
@@ -65,10 +51,6 @@ export async function POST(req: NextRequest) {
     // Eastern rather than throwing.
     const attendeeTimezone =
       typeof body?.attendee_timezone === "string" ? body?.attendee_timezone.slice(0, 64) : "";
-    // Cal's ISO instant is kept as-is for GHL's date filters and wait steps;
-    // this is the one that goes in an email. '' when there is no usable
-    // timestamp, so a template can fall back to the raw value.
-    const startTimeDisplay = formatBookingStart(startTime, attendeeTimezone);
     /**
      * Which VSL's calendar they booked on, sent by /<angle>/call.
      *
@@ -81,7 +63,6 @@ export async function POST(req: NextRequest) {
      */
     const rawAngle = typeof body?.angle === "string" ? body.angle.trim().toLowerCase() : "";
     const angle = isVslAngle(rawAngle) ? rawAngle : null;
-    const angleTag = vslTag(angle);
     const userAgent = req.headers.get("user-agent") || "";
 
     const db = getDb();
@@ -123,153 +104,23 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (eventId) {
-      sendCAPIEvent({
-        event_name: "Schedule",
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: eventId,
-        action_source: "website",
-        event_source_url: `${SITE_URL}${ADVISORY_CALL_PATH}`,
-        user_data: {
-          em: lead?.email || undefined,
-          ph: lead?.phone || undefined,
-          fn: lead?.firstName || undefined,
-          ln: lead?.lastName || undefined,
-          fbp: lead?.fbp || undefined,
-          fbc: lead?.fbc || undefined,
-          client_ip_address: ip !== "unknown" ? ip : undefined,
-          client_user_agent: userAgent || undefined,
-        },
-        custom_data: {
-          content_name: BOOKING_CONTENT_NAME,
-          content_category: "Booking",
-          funnel_path: "agency",
-        },
-      }).catch(() => {});
-    }
-
-    /**
-     * Back to the confirmation page, from an email, on any device.
-     *
-     * Points at booking-confirmed B — the long version, with the website,
-     * the portal, the ad library, the diagram and the price. That page is
-     * the whole pre-call brief, and the single most useful thing a reminder
-     * email can link to: "here is everything again before we speak".
-     *
-     * The first name rides along in `to` so the page still greets them;
-     * without it they get the generic heading. The resume route only
-     * accepts same-origin paths, and a query string on one is fine.
-     *
-     * Signed and time-limited on the same 30-day clock as the session
-     * cookie, so a reminder sent inside the usual booking window always
-     * works. Written to the contact as well as sent in the webhook, so a
-     * workflow built later can still use it.
-     */
-    const resumeTo = `${BOOKING_CONFIRMED_B_PATH}${
-      lead?.firstName ? `?name=${encodeURIComponent(lead.firstName)}` : ""
-    }`;
-    const resumeUrl = `${SITE_URL}/api/advisory-pricing/resume?t=${encodeURIComponent(
-      await createDemoToken(leadId),
-    )}&to=${encodeURIComponent(resumeTo)}`;
-
-    if (lead?.email) {
-      await syncContactToGhl({
-        resumeUrl,
-        // {{contact.candor_url}} in the booking-flow Candor email and SMS.
-        candorUrl: true,
-        // Onto the contact, not just into the webhook payload, so a
-        // tag-triggered reminder flow can wait until a fixed period
-        // BEFORE the call rather than after the booking.
-        bookingStart: startTime || null,
-        email: lead.email,
-        firstName: lead.firstName,
-        lastName: lead.lastName,
-        phone: lead.phone,
-        firmName: lead.firmName,
-        websiteUrl: lead.websiteUrl,
-        source: `${ADVISORY_PRODUCT_NAME} - Growth Call Booking`,
-        // Milestones accumulate: a booked firm keeps 'advisory qualified' and
-        // gains 'call booked'. The buyer tag goes on buyers only — almost
-        // everyone booking now has paid nothing, and marking them customers
-        // would misreport them and drop them out of the pre-purchase
-        // sequences.
-        tags: [
-          ...(lead.advisoryPurchasedAt ? [TAG_ADVISORY_BUYER] : []),
-          TAG_ADVISORY_QUALIFIED,
-          TAG_CALL_BOOKED,
-          // The one the appointment reminder workflow triggers on. The
-          // other two read as qualification states, and 'agency pitch'
-          // — which the qualifier applies — is on every firm that
-          // cleared the bar whether or not they ever booked.
-          TAG_ADVISORY_BOOKED,
-          // Booking requires having qualified, so a VSL booking is a
-          // qualified VSL lead by definition.
-          ...(angleTag ? [angleTag, TAG_QUALIFIED_VSL] : []),
-        ],
-        // Belt and braces. The qualifier already strips this, but a booking
-        // cannot coexist with "opted in and done nothing since" under any
-        // ordering, including a contact that predates that change.
-        removeTags: [TAG_ADVISORY_OPT_IN],
-        answers: {
-          usBased: lead.usBased ?? null,
-          decisionRole: lead.decisionRole ?? null,
-          goal: lead.goal ?? null,
-          goalTag: lead.goalTag ?? null,
-          problemDuration: lead.problemDuration ?? null,
-          annualRevenue: lead.annualRevenue ?? null,
-          taxSavings: lead.taxSavings ?? null,
-          taxSavingsTag: lead.taxSavingsTag ?? null,
-          budget: lead.budget ?? null,
-        },
-        leadScore: lead.leadScore,
-        funnelPath: "agency",
-        noteHeading: `${rebooked ? "Rebooked" : "Booked"} the growth call${
-          lead.advisoryPurchasedAt ? " (Accelerator buyer)" : ""
-        }`,
-        extraNoteLines: [
-          `Booking uid: ${bookingUid || "n/a"}`,
-          `Call start: ${startTimeDisplay || startTime || "n/a"}`,
-          ...(rebooked
-            ? ["An earlier booking may still be on the calendar. Cancel it if it was not a no-show."]
-            : []),
-        ],
-      });
-    }
-
-    const webhook =
-      process.env.GHL_ADVISORY_BOOKING_WEBHOOK_URL || process.env.GHL_QUALIFICATION_WEBHOOK_URL;
-    if (webhook) {
-      fetch(webhook, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          source: "advisory-growth-call-booking",
-          tag: TAG_CALL_BOOKED,
-          funnel_path: "agency",
-          qualified: true,
-          // True when this firm had booked before: a no-show or a reschedule.
-          rebooked,
-          vsl_angle: angle,
-          vsl_tag: angleTag,
-          lead_id: leadId,
-          firstName: lead?.firstName || "",
-          lastName: lead?.lastName || "",
-          email: lead?.email || "",
-          phone: lead?.phone || "",
-          firm_name: lead?.firmName || "",
-          booking_uid: bookingUid,
-          booking_start: startTime,
-          // Readable, in the attendee's own zone and always naming it.
-          // Use THIS one in email and SMS templates; booking_start
-          // stays machine-readable for GHL's date logic.
-          booking_start_display: startTimeDisplay,
-          resume_url: resumeUrl,
-          submitted_at: new Date().toISOString(),
-        }),
-      }).catch(() => {});
-    } else {
-      console.warn("[Advisory Booked] no GHL booking webhook configured — skipping GHL webhook");
-    }
+    // Meta, GoHighLevel and the booking webhook: shared with the VSL
+    // calendar's webhook (app/api/cal/booking) so the two cannot drift.
+    await recordAdvisoryBooking({
+      leadId,
+      lead,
+      rebooked,
+      bookingUid,
+      startTime,
+      attendeeTimezone,
+      angle,
+      ip,
+      userAgent,
+      capiEvents: eventId ? [{ name: "Schedule", eventId }] : [],
+      contentName: BOOKING_CONTENT_NAME,
+      sourcePath: ADVISORY_CALL_PATH,
+      via: "qualified",
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {

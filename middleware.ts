@@ -3,7 +3,7 @@ import { getSlugForHost } from './lib/firm-sites/registry';
 import { isOwnHost } from './lib/firm-sites/hosts';
 
 /**
- * Host-based routing for Firm Foundation client sites.
+ * Host-based routing for client firm sites.
  *
  * Two kinds of firm domain are served here:
  *

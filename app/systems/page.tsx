@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 import type { Metadata } from 'next';
 import { socialMeta } from '@/lib/seo';
-import { VSL_ANGLE_SYSTEMS, qualifyPathForAngle } from '@/lib/advisory-config';
+import { VSL_ANGLE_SYSTEMS } from '@/lib/advisory-config';
 import SystemsVslClient from './systems-client';
 
 const TITLE = 'The problem is not that you are not working hard enough | Nexli';
@@ -26,5 +26,5 @@ export const metadata: Metadata = {
 };
 
 export default function SystemsVslPage() {
-  return <SystemsVslClient ctaHref={qualifyPathForAngle(VSL_ANGLE_SYSTEMS)} />;
+  return <SystemsVslClient angle={VSL_ANGLE_SYSTEMS} />;
 }

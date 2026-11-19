@@ -22,8 +22,9 @@ const Footer: React.FC = () => {
   const isFirmSite = useIsFirmSite();
 
   // Hide footer on dedicated funnel pages to remove exit paths
-  // '/foundation/start' and '/foundation/preview' used to be listed here;
-  // both pages are gone and /foundation now redirects to /demo-opt-in.
+  // The retired Firm Foundation pages (/foundation, /foundation/start,
+  // /foundation/preview) used to be listed here; they all redirect to
+  // /agency now (next.config.ts).
   if (
     isFirmSite ||
     HIDDEN_FOOTER_ROUTES.includes(pathname) ||

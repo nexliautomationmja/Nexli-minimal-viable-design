@@ -20,7 +20,7 @@ import {
   DISQUALIFYING_REVENUE,
   DISQUALIFYING_ROLE,
 } from './qualification-steps';
-import { AGENCY_TOTAL_MONTHLY, usd } from './agency-offer';
+import { AGENCY_MIN_AD_BUDGET, AGENCY_RETAINER_MONTHLY, usd } from './agency-offer';
 
 export interface FitReason {
   heading: string;
@@ -56,7 +56,9 @@ export function reasonFor(lead: FitAnswers): FitReason {
   }
   if (lead.budget && DISQUALIFYING_BUDGETS.includes(lead.budget)) {
     return {
-      heading: `It comes to about ${usd(AGENCY_TOTAL_MONTHLY)} a month, and you said that is not where you are.`,
+      // The budget question left the qualifier on 2026-11-11; this only
+      // answers rows that still carry an old budget answer.
+      heading: `It comes to ${usd(AGENCY_RETAINER_MONTHLY)} a month plus at least ${usd(AGENCY_MIN_AD_BUDGET)} in ads, and you said that is not where you are.`,
       body: 'That is a straight answer and we will take it at face value rather than try to talk you round. The engine only works when the ad spend runs long enough to compound, and starting it underfunded is how firms conclude ads do not work for accountants. When the budget is there, come back.',
     };
   }

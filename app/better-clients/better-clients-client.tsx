@@ -22,7 +22,7 @@ import {
   BETTER_CLIENTS_VSL_TITLE,
 } from '@/lib/advisory-config';
 
-export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string }) {
+export default function BetterClientsVslClient({ angle }: { angle: string }) {
   return (
     <VslFunnel
       // Not a FAQ key. showFaq is false, so variant reaches exactly one
@@ -43,7 +43,7 @@ export default function BetterClientsVslClient({ ctaHref }: { ctaHref: string })
       // switches on the explained version of the same argument further down
       // the page, so the two cannot disagree.
       deadlineUrgency
-      ctaHref={ctaHref}
+      angle={angle}
       // THE ORIGINAL BETTER CLIENTS COPY, at $15,000 rather than the $8,000
       // the first cut said. This is the wording that ran on
       // /vslfunnel-betterclients and outperformed everything else Marcel has

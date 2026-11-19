@@ -21,10 +21,9 @@ import { Truck } from 'lucide-react';
 import LegalPage, { LegalSection, Strong, legalLinkClass } from '@/components/legal/LegalPage';
 import { ADVISORY_PRODUCT_NAME } from '@/lib/advisory-config';
 import {
-  AGENCY_AD_SPEND,
-  AGENCY_ANNUAL_UPFRONT,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_SETUP_FEE,
+  AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_PREPAY,
   usd,
 } from '@/lib/agency-offer';
 import { EMAIL, PHONE_DISPLAY, PHONE_E164 } from '@/lib/site';
@@ -56,7 +55,7 @@ export default function DeliveryPolicyPage() {
       eyebrow="Delivery"
       icon={Truck}
       title="Delivery Policy"
-      dateLine="Effective Date: November 16, 2026"
+      dateLine="Effective Date: November 19, 2026"
       intro="Nexli sells a digital product and a done-for-you service. Nothing is shipped: there are no physical goods, shipping charges or delivery addresses involved in any purchase."
     >
       <LegalSection title={`1. ${ADVISORY_PRODUCT_NAME} (digital product)`} variant="feature">
@@ -88,10 +87,10 @@ export default function DeliveryPolicyPage() {
       <LegalSection title="2. Digital Rainmaker System (service)" variant="card">
         <ul className="list-disc pl-6 space-y-3">
           <li>
-            <Strong>When work starts:</Strong> at a kickoff call, once the agreement is signed and the{' '}
-            {usd(AGENCY_SETUP_FEE)} setup fee ({usd(AGENCY_ANNUAL_UPFRONT)} on the annual plan) has arrived in
-            our account. Those two payments are made by ACH bank transfer or wire transfer only, not by card.
-            A wire usually arrives the same or next business day; an ACH transfer usually takes one to three
+            <Strong>When work starts:</Strong> at a kickoff call, once the agreement is signed and the first
+            month&apos;s {usd(AGENCY_RETAINER_MONTHLY)} fee (or the {usd(AGENCY_RETAINER_PREPAY)} six-month
+            prepayment) has arrived in our account. There is no setup fee. A card payment clears at once; a
+            wire usually arrives the same or next business day, and an ACH transfer usually takes one to three
             business days.
           </li>
           <li>
@@ -111,15 +110,14 @@ export default function DeliveryPolicyPage() {
             amount.
           </li>
           <li>
-            <Strong>Launch:</Strong> the day the build is complete and your ads go live. Monthly billing
-            starts at launch, and so does your term.
+            <Strong>Launch:</Strong> the day the build is complete and your ads go live. Billing and your term
+            start earlier, at signing: the build runs inside your first month.
           </li>
           <li>
             <Strong>Every month after launch:</Strong> we maintain your website, portal and automations; make
-            changes to the funnels, ads and automations as they are needed; run your ad campaigns, including
-            placing the {usd(AGENCY_AD_SPEND)} advertising budget included in your monthly fee, which we hold
-            in a separate account for advertising funds, allocated to your campaigns; and send a
-            weekly written update on where the budget went and what it produced.
+            changes to the funnels, ads and automations as they are needed; run your ad campaigns, with the
+            advertising budget you pay directly to Meta on your own card (it never passes through us); and send
+            a weekly written update on where the budget went and what it produced.
           </li>
           <li>
             <Strong>Hosting:</Strong> not part of our fees. You pay your hosting provider directly.

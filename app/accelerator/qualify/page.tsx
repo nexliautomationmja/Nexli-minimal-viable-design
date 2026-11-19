@@ -11,7 +11,7 @@
 // done-for-you pitch with a calendar under it; miss it and it is just the
 // delivery confirmation.
 //
-// Mode "foundation" on the card underneath, so nobody is disqualified
+// Mode "collect" on the card underneath, so nobody is disqualified
 // client-side and every answer reaches GoHighLevel even for a firm below
 // the bar.
 // ---------------------------------------------------------------------------

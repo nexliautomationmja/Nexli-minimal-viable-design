@@ -26,29 +26,15 @@
 
 import React from 'react';
 import PolicyLinks from '../legal/PolicyLinks';
-import { AD_CREDIT_FOOTNOTE } from '@/lib/agency-offer';
 
 const MUTED = 'var(--text-muted)';
 
-/**
- * `adCredit`: the VSL pages offer "Up to $10,000 in ad credit when you
- * sign*" under the qualify button (components/funnel/AdCreditBonus). This
- * is the asterisk: which plan gets how much, and the bonus's conditions word
- * for word as /pricing, /terms and /math state them. Off for /candor, which
- * shares this footer but makes no such offer on the page.
- */
-const VslDisclaimer: React.FC<{ adCredit?: boolean }> = ({ adCredit = false }) => (
+const VslDisclaimer: React.FC = () => (
   <footer
     className="relative z-10 border-t px-4 py-10 md:py-14"
     style={{ borderColor: 'rgba(255,255,255,0.08)' }}
   >
     <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
-      {adCredit && (
-        <p className="text-[11px] leading-relaxed md:text-xs" style={{ color: MUTED }}>
-          <span className="font-bold text-white/70">*Ad credit.</span> {AD_CREDIT_FOOTNOTE}
-        </p>
-      )}
-
       <p className="text-[11px] leading-relaxed md:text-xs" style={{ color: MUTED }}>
         <span className="font-bold text-white/70">Earnings disclaimer.</span> Any
         figures on this page or in the video — engagement values, revenue,
