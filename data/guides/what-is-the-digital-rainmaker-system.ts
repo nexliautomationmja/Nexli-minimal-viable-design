@@ -11,7 +11,7 @@ const guide: Guide = {
     'The Digital Rainmaker System is a done-for-you client acquisition system that Nexli Automation builds for established CPA and accounting firms, combining a premium website, an AI automation layer, a secure client portal, and a Google review engine, then running paid ads to it.',
     'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and the build takes about 21 days from kickoff.',
     'Each client the system brings in is a tax-planning engagement worth $15,000 to $55,000 to the firm. The build takes about 21 days, and Nexli reports on what the campaigns produced every week.',
-    'Pricing is $10,000 a month with no setup fee, plus 10% performance pay explained on the strategy call. The ad budget is separate: at least $5,000 a month, paid directly to Meta. Six-month initial term, renewing six months at a time.',
+    'Pricing is $10,000 a month with no setup fee, plus 10% performance pay, which is not 10% of every sale: once a month it is 10% of what the clients Nexli’s ads bring in paid, minus ad spend and commissions (the firm’s referrals and other sales are not counted), and the $10,000 already paid counts toward it. The ad budget is separate: at least $5,000 a month, paid directly to Meta. Six-month initial term, renewing six months at a time.',
   ],
   publishedAt: '2026-09-08',
   updatedAt: '2026-11-19',
@@ -140,7 +140,7 @@ const guide: Guide = {
       bullets: [
         '**What each client is worth: $15,000 to $55,000.** The system brings in tax-planning clients: US-based business owners and high-income individuals who fit the firm\'s advisory criteria and book a consultation. Each one is a tax-planning engagement worth $15,000 to $55,000 to the firm. The firm\'s close rate determines what it banks, and the weekly report shows what the campaigns produced.',
         '**Live in about 21 days.** The build takes about 21 days from kickoff, matching the engagement letter, and the variable is how quickly assets, access and approvals come back from the firm.',
-        '**Pricing:** $10,000 a month for the complete system, with no setup fee, plus 10% performance pay that is explained on the strategy call. The ad budget is separate: at least $5,000 a month, paid by the firm directly to Meta on its own card, and Nexli reports where it went each week. Billed monthly from signing on a six-month initial term that renews for six months at a time. The firm owns what Nexli builds and pays its own hosting. Firms apply and book a strategy call through the [advisory application page](/agency); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
+        '**Pricing:** $10,000 a month for the complete system, with no setup fee, plus 10% performance pay, which is not 10% of every sale: once a month it is 10% of what the clients Nexli’s ads bring in paid, minus ad spend and commissions (the firm’s referrals and other sales are not counted), and the $10,000 already paid counts toward it. The ad budget is separate: at least $5,000 a month, paid by the firm directly to Meta on its own card, and Nexli reports where it went each week. Billed monthly from signing on a six-month initial term that renews for six months at a time. The firm owns what Nexli builds and pays its own hosting. Firms apply and book a strategy call through the [advisory application page](/agency); the call is described as an audit of current systems with a custom roadmap, not a pitch.',
       ],
     },
     {
@@ -193,7 +193,7 @@ const guide: Guide = {
     },
     {
       question: 'How much does the Digital Rainmaker System cost?',
-      answer: '$10,000 a month for the complete system, with no setup fee, plus 10% performance pay explained on the strategy call. The ad budget is separate: at least $5,000 a month, paid directly to Meta. The initial term is six months and renews six months at a time. The strategy call reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/agency; pricing is also listed at nexli.net/pricing.',
+      answer: '$10,000 a month for the complete system, with no setup fee, plus 10% performance pay, which is not 10% of every sale: once a month it is 10% of what the clients Nexli’s ads bring in paid, minus ad spend and commissions (the firm’s referrals and other sales are not counted), and the $10,000 already paid counts toward it. The ad budget is separate: at least $5,000 a month, paid directly to Meta. The initial term is six months and renews six months at a time. The strategy call reviews the firm\'s current website, intake process, and review profile. Firms apply for that call at nexli.net/agency; pricing is also listed at nexli.net/pricing.',
     },
     {
       question: 'How long does it take to launch?',

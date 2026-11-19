@@ -46,6 +46,10 @@ export interface CalBooking {
   notes: string;
   smsConsent: boolean;
   metadata: Record<string, string>;
+  /** On a cancellation: the reason given, if any, else ''. */
+  cancellationReason: string;
+  /** On a cancellation: who cancelled it (an email), if Cal says, else ''. */
+  cancelledBy: string;
 }
 
 const str = (v: unknown, max = 500): string =>
@@ -133,5 +137,7 @@ export function parseCalBooking(payload: any): CalBooking {
       .join('\n'),
     smsConsent: truthy(answer(responses, 'sms_consent')),
     metadata,
+    cancellationReason: str(p.cancellationReason, 500),
+    cancelledBy: str(p.cancelledBy, 320),
   };
 }

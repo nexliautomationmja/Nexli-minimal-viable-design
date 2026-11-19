@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import MetaLogo from '@/components/icons/MetaLogo';
+import PerformancePayExplainer from '@/components/booking/PerformancePayExplainer';
 import { OUTFIT } from '@/components/funnel/primitives';
 import {
   AGENCY_MAX_AD_BUDGET,
@@ -24,6 +25,7 @@ import {
   AGENCY_PERFORMANCE_PERCENT,
   AGENCY_RETAINER_MONTHLY,
   AGENCY_RETAINER_TERM_MONTHS,
+  PERFORMANCE_YOURS,
   usd,
   usdK,
 } from '@/lib/agency-offer';
@@ -44,13 +46,15 @@ import {
  * small diagram of where that money goes (Nexli, and Meta directly, never
  * through us) and the terms.
  *
- * PERFORMANCE PAY IS NAMED, NOT EXPLAINED (Marcel, 2026-11-19): "plus 10%
- * performance pay", and how it works is walked through on the call. He
- * would rather a firm get on the call and see it than read the mechanics
- * on a landing page. Do not add the worked example, the "greater of"
- * rule or the definition of attributable net revenue back here.
+ * THE REAL MATH ON /booking-confirmed-b AND /pitch, NOT THE VSLs (Marcel,
+ * 2026-11-19). With `explainPerformance`, PerformancePayExplainer sits under
+ * the three cards (beside them on /pitch's `deck` slide):
+ * one number a month, not 10% of every sale, a quiet month ($0 more) beside
+ * his $150,000 one ($5,000 more). The VSLs leave the math out: their card
+ * says it is not 10% of every sale and that it is walked through on the
+ * call.
  *
- * NO PREPAY ON THE PAGE (same day). The $60,000 six-month prepay exists
+ * NO PREPAY ON THE PAGE (same day). The $50,000 six-month prepay exists
  * (AGENCY_RETAINER_PREPAY) but is not shown or offered here.
  *
  * DARK WHATEVER THE THEME. /booking-confirmed-b follows the site theme, so
@@ -143,7 +147,7 @@ function Lane({
   const color = TONES[tone].line;
   return (
     <div className="flex items-center">
-      <div className="relative h-[2px] min-w-[1.75rem] flex-1 rounded-full" style={{ background: `linear-gradient(90deg, rgba(255,255,255,0.12), ${color})` }}>
+      <div className="relative h-[2px] min-w-[1rem] flex-1 rounded-full sm:min-w-[1.75rem]" style={{ background: `linear-gradient(90deg, rgba(255,255,255,0.12), ${color})` }}>
         {!still && (
           <motion.span
             aria-hidden="true"
@@ -173,7 +177,23 @@ function Lane({
   );
 }
 
-export default function PricingBlock({ headline }: { headline?: React.ReactNode }) {
+export default function PricingBlock({
+  headline,
+  explainPerformance = false,
+  deck = false,
+}: {
+  headline?: React.ReactNode;
+  /** Show the 10% worked out (PerformancePayExplainer): /booking-confirmed-b and /pitch. */
+  explainPerformance?: boolean;
+  /**
+   * /pitch's pricing slide (Marcel, 2026-11-19: "the full pricing details
+   * just like on the booking confirmed page"). The same pieces, laid out to
+   * fit one screen: the three cards across the top, then the 10% worked out
+   * beside where the money goes and the terms. No kicker; the slide has its
+   * own heading.
+   */
+  deck?: boolean;
+}) {
   const parts = [
     {
       n: 1,
@@ -197,9 +217,12 @@ export default function PricingBlock({ headline }: { headline?: React.ReactNode 
       Icon: Percent,
       label: 'Performance pay',
       value: AGENCY_PERFORMANCE_PERCENT,
-      // No gloss on the 10%: what it is a percentage of is for the call.
       unit: '',
-      note: 'We’ll walk you through how it works on the call.',
+      // Only the revenue our ads bring in (Marcel, 2026-11-19): "your
+      // referrals and your other sales stay yours".
+      note: `Only on revenue from the clients our ads bring you. ${PERFORMANCE_YOURS} Never ${AGENCY_PERFORMANCE_PERCENT} of every sale. ${
+        explainPerformance ? 'See exactly how it works below.' : 'We’ll walk you through it on the call.'
+      }`,
       highlight: false,
     },
     {
@@ -208,7 +231,7 @@ export default function PricingBlock({ headline }: { headline?: React.ReactNode 
       Icon: Megaphone,
       label: 'Your ad budget',
       // The range (Marcel, 2026-11-19). The top end counts up from the
-      // bottom as it scrolls in, so the range opens out to $5K–$30K.
+      // bottom as it scrolls in, so the range opens out to $5K–$15K.
       value: (
         <span className="whitespace-nowrap">
           {usdK(AGENCY_MIN_AD_BUDGET)}–
@@ -221,7 +244,9 @@ export default function PricingBlock({ headline }: { headline?: React.ReactNode 
         </span>
       ),
       unit: 'a month',
-      note: `Anywhere from ${usd(AGENCY_MIN_AD_BUDGET)} to ${usd(AGENCY_MAX_AD_BUDGET)} a month, paid straight to Meta on your own card. It never passes through us.`,
+      // $5K–$15K, "so it doesn't spook them" (Marcel, 2026-11-19), with the
+      // $5,000 minimum as a recommendation and the rest left to the call.
+      note: `We recommend ${usd(AGENCY_MIN_AD_BUDGET)} a month as the minimum, paid straight to Meta on your own card. We’ll talk through your ad spend on the call.`,
       highlight: false,
     },
   ];
@@ -236,9 +261,144 @@ export default function PricingBlock({ headline }: { headline?: React.ReactNode 
     {
       Icon: MessagesSquare,
       title: 'Walked through on the call',
-      body: 'The agreement and the performance pay, before anything is signed. Nothing here changes.',
+      body: explainPerformance
+        ? 'The agreement, before anything is signed. Nothing here changes.'
+        : 'The agreement and the performance pay, before anything is signed. Nothing here changes.',
     },
   ];
+
+  // What you pay: three numbered cards and the plus signs between them, the
+  // "How the math works" chain on /math.
+  const cards = (
+    <div className={`grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr_auto_1fr] ${deck ? '' : 'mt-8 lg:mt-10'}`}>
+      {parts.map((p, i) => (
+        <React.Fragment key={p.label}>
+          {i > 0 && <Join />}
+          <motion.div {...rise(0.08 * i)} className="flex">
+            <div
+              className={`flex w-full flex-col rounded-2xl border ${deck ? 'p-4' : 'p-5 lg:p-6'} ${
+                p.highlight
+                  ? 'border-emerald-400/55 shadow-[0_0_50px_-16px_rgba(52,211,153,0.6)]'
+                  : 'border-white/10'
+              }`}
+              style={{ background: SURFACE }}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="pr-1.5 pt-1.5">
+                  <Tile Icon={p.Icon} tone={p.tone} n={p.n} />
+                </span>
+                <span className={`text-[10px] font-bold uppercase tracking-[0.16em] sm:text-[11px] ${TONES[p.tone].text}`}>
+                  {p.label}
+                </span>
+              </div>
+              <div className={`flex flex-wrap items-baseline gap-x-2 gap-y-1 ${deck ? 'mt-3' : 'mt-4'}`}>
+                <span
+                  className={`font-black leading-none tracking-tight text-white ${
+                    deck ? 'text-[2.3rem]' : 'text-[2.6rem] lg:text-5xl'
+                  }`}
+                >
+                  {p.value}
+                </span>
+                {p.unit && <span className="text-sm font-bold text-white/70 sm:text-base">{p.unit}</span>}
+              </div>
+              <span
+                className={`block leading-snug ${deck ? 'mt-2 text-[12.5px]' : 'mt-3 text-[13px] sm:text-sm'}`}
+                style={{ color: MUTED }}
+              >
+                {p.note}
+              </span>
+            </div>
+          </motion.div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
+  // Where the money goes: one source, two lanes. The second lane is the
+  // point: the ad budget goes from the firm to Meta, not to us.
+  const moneyGoes = (
+    <motion.div
+      {...rise(0.2)}
+      className={`rounded-2xl border border-white/10 ${deck ? 'p-4' : 'p-4 sm:p-6'}`}
+      style={{ background: SURFACE }}
+    >
+      <div className={`text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-400/90 sm:text-[11px] ${deck ? 'mb-3' : 'mb-5'}`}>
+        Where your money goes
+      </div>
+      <div className="flex items-stretch gap-2 sm:gap-3">
+        <div className="flex shrink-0 flex-col items-center justify-center gap-2">
+          <Tile Icon={Building2} tone="cyan" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">Your firm</span>
+        </div>
+        <div className={`relative flex flex-1 flex-col justify-center ${deck ? 'gap-2.5' : 'gap-4'}`}>
+          {/* The fork: one line down from the firm, a lane off each end. */}
+          <span aria-hidden="true" className="absolute bottom-[22%] left-0 top-[22%] w-[2px] rounded-full bg-white/15" />
+          <Lane
+            tone="emerald"
+            logo={<NexliMark className="h-5 w-5" />}
+            name="Nexli"
+            amount={`${usd(AGENCY_RETAINER_MONTHLY)} a month`}
+            detail={`+ ${AGENCY_PERFORMANCE_PERCENT} performance pay`}
+            delay={0}
+          />
+          <Lane
+            tone="blue"
+            logo={<MetaLogo className="h-5 w-5" />}
+            name="Meta"
+            amount={`${usdK(AGENCY_MIN_AD_BUDGET)}–${usdK(AGENCY_MAX_AD_BUDGET)} a month`}
+            detail="Your ad budget, your card"
+            delay={1.1}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const termsPanel = (
+    <motion.div
+      {...rise(0.28)}
+      className={`relative overflow-hidden rounded-2xl border pl-6 pr-5 sm:pl-7 ${deck ? 'py-4' : 'py-5'}`}
+      style={{ borderColor: 'rgba(20,168,119,0.4)', background: 'linear-gradient(160deg, #0c2620 0%, #0a1020 100%)' }}
+    >
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1" style={{ background: '#14A877' }} />
+      <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300 sm:text-[11px]">The terms</div>
+      <ul className={`list-none p-0 ${deck ? 'mt-2.5 space-y-2.5' : 'mt-3 space-y-3.5'}`}>
+        {terms.map(({ Icon, title, body }) => (
+          <li key={title} className="flex items-start gap-3">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/15">
+              <Icon className="h-3.5 w-3.5 text-emerald-400" strokeWidth={2.25} aria-hidden="true" />
+            </span>
+            <span>
+              <span className="flex items-center gap-1.5 text-sm font-bold text-white sm:text-[15px]">
+                {title}
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+              </span>
+              <span className="mt-0.5 block text-[13px] leading-snug" style={{ color: MUTED }}>
+                {body}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+
+  if (deck) {
+    return (
+      <div style={OUTFIT}>
+        {cards}
+        <div className="mt-4 grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+          <motion.div {...rise(0.12)} className="flex">
+            {explainPerformance && <PerformancePayExplainer compact sideBySide className="w-full" />}
+          </motion.div>
+          <div className="grid content-start gap-4">
+            {moneyGoes}
+            {termsPanel}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto mt-10 max-w-6xl md:mt-14" style={OUTFIT}>
@@ -247,105 +407,19 @@ export default function PricingBlock({ headline }: { headline?: React.ReactNode 
       </p>
       {headline}
 
-      {/* What you pay: three numbered cards and the plus signs between them,
-          the "How the math works" chain on /math. */}
-      <div className="mt-8 grid grid-cols-1 lg:mt-10 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
-        {parts.map((p, i) => (
-          <React.Fragment key={p.label}>
-            {i > 0 && <Join />}
-            <motion.div {...rise(0.08 * i)} className="flex">
-              <div
-                className={`flex w-full flex-col rounded-2xl border p-5 lg:p-6 ${
-                  p.highlight
-                    ? 'border-emerald-400/55 shadow-[0_0_50px_-16px_rgba(52,211,153,0.6)]'
-                    : 'border-white/10'
-                }`}
-                style={{ background: SURFACE }}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="pr-1.5 pt-1.5">
-                    <Tile Icon={p.Icon} tone={p.tone} n={p.n} />
-                  </span>
-                  <span className={`text-[10px] font-bold uppercase tracking-[0.16em] sm:text-[11px] ${TONES[p.tone].text}`}>
-                    {p.label}
-                  </span>
-                </div>
-                <div className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  <span className="text-[2.6rem] font-black leading-none tracking-tight text-white lg:text-5xl">
-                    {p.value}
-                  </span>
-                  {p.unit && <span className="text-sm font-bold text-white/70 sm:text-base">{p.unit}</span>}
-                </div>
-                <span className="mt-3 block text-[13px] leading-snug sm:text-sm" style={{ color: MUTED }}>
-                  {p.note}
-                </span>
-              </div>
-            </motion.div>
-          </React.Fragment>
-        ))}
-      </div>
+      {cards}
+
+      {/* The 10%, shown rather than described: one number a month, two
+          example months. Not on the VSLs. */}
+      {explainPerformance && (
+        <motion.div {...rise(0.12)} className="mt-5 lg:mt-6">
+          <PerformancePayExplainer />
+        </motion.div>
+      )}
 
       <div className="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[1.35fr_1fr]">
-        {/* Where the money goes: one source, two lanes. The second lane is
-            the point: the ad budget goes from the firm to Meta, not to us. */}
-        <motion.div {...rise(0.2)} className="rounded-2xl border border-white/10 p-4 sm:p-6" style={{ background: SURFACE }}>
-          <div className="mb-5 text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-400/90 sm:text-[11px]">
-            Where your money goes
-          </div>
-          <div className="flex items-stretch gap-2 sm:gap-3">
-            <div className="flex shrink-0 flex-col items-center justify-center gap-2">
-              <Tile Icon={Building2} tone="cyan" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">Your firm</span>
-            </div>
-            <div className="relative flex flex-1 flex-col justify-center gap-4">
-              {/* The fork: one line down from the firm, a lane off each end. */}
-              <span aria-hidden="true" className="absolute bottom-[22%] left-0 top-[22%] w-[2px] rounded-full bg-white/15" />
-              <Lane
-                tone="emerald"
-                logo={<NexliMark className="h-5 w-5" />}
-                name="Nexli"
-                amount={`${usd(AGENCY_RETAINER_MONTHLY)} a month`}
-                detail={`+ ${AGENCY_PERFORMANCE_PERCENT} performance pay`}
-                delay={0}
-              />
-              <Lane
-                tone="blue"
-                logo={<MetaLogo className="h-5 w-5" />}
-                name="Meta"
-                amount={`${usdK(AGENCY_MIN_AD_BUDGET)}–${usdK(AGENCY_MAX_AD_BUDGET)} a month`}
-                detail="Your ad budget, your card"
-                delay={1.1}
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          {...rise(0.28)}
-          className="relative overflow-hidden rounded-2xl border py-5 pl-6 pr-5 sm:pl-7"
-          style={{ borderColor: 'rgba(20,168,119,0.4)', background: 'linear-gradient(160deg, #0c2620 0%, #0a1020 100%)' }}
-        >
-          <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1" style={{ background: '#14A877' }} />
-          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300 sm:text-[11px]">The terms</div>
-          <ul className="mt-3 list-none space-y-3.5 p-0">
-            {terms.map(({ Icon, title, body }) => (
-              <li key={title} className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/15">
-                  <Icon className="h-3.5 w-3.5 text-emerald-400" strokeWidth={2.25} aria-hidden="true" />
-                </span>
-                <span>
-                  <span className="flex items-center gap-1.5 text-sm font-bold text-white sm:text-[15px]">
-                    {title}
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-                  </span>
-                  <span className="mt-0.5 block text-[13px] leading-snug" style={{ color: MUTED }}>
-                    {body}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
+        {moneyGoes}
+        {termsPanel}
       </div>
     </div>
   );

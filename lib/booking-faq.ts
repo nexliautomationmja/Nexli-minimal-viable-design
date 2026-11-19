@@ -16,6 +16,7 @@ import {
   AGENCY_PERFORMANCE_PERCENT,
   AGENCY_RETAINER_MONTHLY,
   AGENCY_RETAINER_TERM_MONTHS,
+  PERFORMANCE_PLAIN,
   usd,
 } from '@/lib/agency-offer';
 
@@ -141,11 +142,11 @@ export const BOOKING_B_FAQ: FaqItem[] = [
     //
     // Rewritten 2026-11-19 for THE RETAINER (lib/agency-offer.ts): no setup
     // fee, the ad budget paid straight to Meta, plus 10% performance pay,
-    // NAMED but not explained: Marcel walks firms through how it works on
-    // the call, and the prepay is not offered on the page. Candor reads
-    // this answer too (lib/candor-corpus.ts).
+    // explained plainly with PERFORMANCE_PLAIN (Marcel, later the same day:
+    // not 10% of every sale), and the prepay is not offered on the page.
+    // Candor reads this answer too (lib/candor-corpus.ts).
     question: 'How is the price built?',
     answer:
-      `${usd(AGENCY_RETAINER_MONTHLY)} a month, with no separate setup fee. That is the website, the portal, the funnel and the automations, built and run for you, plus the campaigns. We do not sell the pieces separately because they do not work separately.\n\nOn top of that there is ${AGENCY_PERFORMANCE_PERCENT} performance pay. How it works is easier to show than to write, so we walk you through it on the call.\n\nYour ad budget is separate and never passes through us: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card.\n\nBilling starts when you sign, with the first month. The initial term is ${AGENCY_RETAINER_TERM_MONTHS} months from signing, and it renews for another ${AGENCY_RETAINER_TERM_MONTHS} months unless you cancel before it ends.`,
+      `${usd(AGENCY_RETAINER_MONTHLY)} a month, with no separate setup fee. That is the website, the portal, the funnel and the automations, built and run for you, plus the campaigns. We do not sell the pieces separately because they do not work separately.\n\nOn top of that there is ${AGENCY_PERFORMANCE_PERCENT} performance pay. ${PERFORMANCE_PLAIN}\n\nYour ad budget is separate and never passes through us: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card.\n\nBilling starts when you sign, with the first month. The initial term is ${AGENCY_RETAINER_TERM_MONTHS} months from signing, and it renews for another ${AGENCY_RETAINER_TERM_MONTHS} months unless you cancel before it ends.`,
   },
 ];

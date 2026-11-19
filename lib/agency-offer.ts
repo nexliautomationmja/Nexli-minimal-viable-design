@@ -35,24 +35,30 @@ export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 //   - Every charge can be paid by credit or debit card, ACH or wire.
 //   - Nothing is refundable (unchanged from the setup-fee model).
 //
-// SAY IT THE WAY THE AGREEMENT DOES. "Agreed, attributable net revenue" is
-// the contract's term. Never describe it as 10% of the firm's revenue, and
-// never invent deductions for it on a page: the definition is the
-// agreement's, not ours to paraphrase. How much of a prepayment counts
-// toward each month is the agreement's to say, too; no page puts a number
-// on it.
+// SAY IT PLAINLY, AND NEVER AS A CUT OF EVERY SALE (Marcel, 2026-11-19).
+// "Agreed, attributable net revenue" is the contract's term. In plain words
+// it is Marcel's own definition, PERFORMANCE_NET_PLAIN below: what the
+// clients our ads bring the firm paid that month, minus its ad spend and
+// commissions. Only revenue from the ads: the firm's referrals and other
+// sales stay its own (PERFORMANCE_YOURS). Use his words, not a paraphrase of them. Never describe the
+// 10% as 10% of the firm's revenue, and never as 10% of every sale: it is
+// one number, worked out once a month, and the $10,000 counts toward it.
+// How much of a prepayment counts toward each month is the agreement's to
+// say; no page puts a number on it.
 //
 // WHERE EACH PART IS SAID (Marcel, 2026-11-19):
-//   SALES PAGES (the VSLs, /booking-confirmed-b, Candor, /math): the
-//     $10,000 a month, no setup fee, the ad budget and "plus 10% performance
-//     pay", named and NOT explained: how it works is walked through on the
-//     call. The VSLs and /booking-confirmed-b do not show the prepay; /math
-//     and Candor may offer it as the way to save.
-//   THE CALL DECK (/pitch, Marcel's Agency Pitch Deck, 2026-11-19): one
-//     slide spells the 10% out (the $10,000 covers up to $100,000 a month of
-//     agreed, attributable net revenue; above that, 10%, credited, with the
-//     $120,000 example), because the call is where Marcel explains it. No
-//     prepay there.
+//   THE 10% IS EXPLAINED, the same plain way, everywhere it is mentioned
+//     EXCEPT THE VSLs (Marcel, later the same day, reversing "named, not
+//     explained"): /booking-confirmed-b (components/booking/
+//     PerformancePayExplainer, via PricingBlock's explainPerformance),
+//     /pitch, /math, Candor, the booking FAQ, lib/site, llms and the guides,
+//     with the $150,000 → $5,000 and $80,000 → $0 months. "As if a baby was
+//     looking at it": nobody should leave thinking we take 10% of every sale.
+//   THE VSLs leave the math out (Marcel: "show that real math on the
+//     booking confirmed page only"). Their card says it is not 10% of every
+//     sale and that it is walked through on the call.
+//   THE PREPAY: not on the VSLs, /booking-confirmed-b or /pitch. /math and
+//     Candor may offer it as the way to save.
 //   POLICY PAGES (/terms, /pricing, /refund-policy, /delivery-policy): all of
 //     it, the performance-pay rule and the prepay included. The card
 //     processor's underwriters match every charge they process against
@@ -75,13 +81,15 @@ export const AGENCY_PREPAY_SAVING = AGENCY_RETAINER_MONTHLY * AGENCY_RETAINER_TE
 export const AGENCY_MIN_AD_BUDGET = 5_000;
 
 /**
- * The top of the ad-budget range the VSLs show: "$5K–$30K a month" (Marcel,
- * 2026-11-19). The range firms run, from the $5,000 minimum up; the page
+ * The top of the ad-budget range the VSLs and /booking-confirmed-b show:
+ * "$5K–$15K a month" (Marcel, 2026-11-19). It was $30K, which he lowered
+ * "so it doesn't spook them": the card says we recommend $5,000 a month as
+ * the minimum and that ad spend is talked through on the call. The page
  * does not call it a cap. Every ROI model uses the minimum, the worst case.
  */
-export const AGENCY_MAX_AD_BUDGET = 30_000;
+export const AGENCY_MAX_AD_BUDGET = 15_000;
 
-/** "$5K", "$30K": the compact form the price cards use for the range. */
+/** "$5K", "$15K": the compact form the price cards use for the range. */
 export const usdK = (n: number) => `$${Math.round(n / 1000)}K`;
 
 /** Of agreed, attributable net revenue, when it beats the monthly minimum. */
@@ -94,17 +102,61 @@ export const AGENCY_PERFORMANCE_PERCENT = `${Math.round(AGENCY_PERFORMANCE_RATE 
 export const agencyCompensation = (attributableNetRevenue: number) =>
   Math.max(AGENCY_RETAINER_MONTHLY, Math.round(attributableNetRevenue * AGENCY_PERFORMANCE_RATE));
 
-/** The worked example Marcel set: $120,000 → $12,000 → a $2,000 invoice. */
-export const PERFORMANCE_EXAMPLE_REVENUE = 120_000;
+/**
+ * The month's agreed, attributable net revenue above which 10% beats the
+ * $10,000 minimum: $100,000. At or below it, the $10,000 is the whole fee.
+ */
+export const PERFORMANCE_THRESHOLD = AGENCY_RETAINER_MONTHLY / AGENCY_PERFORMANCE_RATE;
+
+/**
+ * The big month, Marcel's example (2026-11-19): $150,000 → 10% is $15,000 →
+ * $10,000 already paid → a $5,000 invoice at the end of the month. It
+ * replaced $120,000 → $2,000 everywhere, the policy pages included.
+ */
+export const PERFORMANCE_EXAMPLE_REVENUE = 150_000;
 export const PERFORMANCE_EXAMPLE_TOTAL = agencyCompensation(PERFORMANCE_EXAMPLE_REVENUE);
 export const PERFORMANCE_EXAMPLE_EXTRA = PERFORMANCE_EXAMPLE_TOTAL - AGENCY_RETAINER_MONTHLY;
 
-/** The example, word for word as Marcel wrote it. Policy pages only (see
- *  WHERE EACH PART IS SAID above); the numbers come from the constants. */
+/**
+ * The quiet month, shown beside the big one so it is obvious most months
+ * cost nothing extra: $80,000 → 10% is $8,000, less than the $10,000
+ * already paid → nothing more.
+ */
+export const PERFORMANCE_QUIET_REVENUE = 80_000;
+/** 10% of the quiet month: $8,000. Not agencyCompensation, which floors at $10,000. */
+export const PERFORMANCE_QUIET_SHARE = Math.round(PERFORMANCE_QUIET_REVENUE * AGENCY_PERFORMANCE_RATE);
+export const PERFORMANCE_QUIET_EXTRA = agencyCompensation(PERFORMANCE_QUIET_REVENUE) - AGENCY_RETAINER_MONTHLY;
+
+/** The example, in the form Marcel first wrote it. For the policy pages;
+ *  the numbers come from the constants. */
 export const PERFORMANCE_EXAMPLE = `At ${usd(PERFORMANCE_EXAMPLE_REVENUE)} of agreed attributable net revenue, total agency compensation is ${usd(PERFORMANCE_EXAMPLE_TOTAL)}. Since ${usd(AGENCY_RETAINER_MONTHLY)} has already been paid, the additional invoice is ${usd(PERFORMANCE_EXAMPLE_EXTRA)}.`;
 
 /** The performance-pay rule in one sentence, for the policy pages. */
 export const PERFORMANCE_RULE = `Each month, Nexli's compensation is the greater of the ${usd(AGENCY_RETAINER_MONTHLY)} monthly minimum or ${AGENCY_PERFORMANCE_PERCENT} of agreed, attributable net revenue, as your agreement defines it. The agency fee already paid for that month is credited against it, not added to it; on a prepaid term, the share of the prepayment allocated to that month is credited the same way. Only the difference, if any, is invoiced.`;
+
+/**
+ * Marcel's definition, word for word in substance (2026-11-19): the number
+ * the 10% is taken from. A phrase, so it drops into a sentence: "10% of
+ * ${PERFORMANCE_NET_PLAIN}".
+ */
+export const PERFORMANCE_NET_PLAIN = 'what the clients our ads bring you paid that month, minus your ad spend and commissions';
+
+/**
+ * What the 10% never touches (Marcel, 2026-11-19): "only from the revenue
+ * that we generate, your referrals and your other sales stay yours. Only
+ * attributed net income from the ads."
+ */
+export const PERFORMANCE_YOURS = 'Your referrals and your other sales stay yours.';
+
+/** The policy pages' plain-terms gloss on the contract's phrase. */
+export const PERFORMANCE_DEFINITION_PLAIN = `In plain terms, agreed, attributable net revenue is what the clients Nexli's ads bring you paid that month, minus your ad spend and commissions. Your referrals and your other sales are not part of it. It is not your firm's total revenue, and the ${AGENCY_PERFORMANCE_PERCENT} is not taken from every sale. On the monthly plan, while it stays at or under ${usd(PERFORMANCE_THRESHOLD)} in a month, nothing more is invoiced.`;
+
+/**
+ * The 10%, explained in one short paragraph, for Candor, the booking FAQ
+ * and anywhere else that explains it in words rather than with
+ * components/booking/PerformancePayExplainer.
+ */
+export const PERFORMANCE_PLAIN = `The ${AGENCY_PERFORMANCE_PERCENT} performance pay is not ${AGENCY_PERFORMANCE_PERCENT} of every sale, and not ${AGENCY_PERFORMANCE_PERCENT} of your firm's revenue. It is one number, worked out once a month: ${PERFORMANCE_NET_PLAIN}. Only revenue from the clients our ads bring you counts. ${PERFORMANCE_YOURS} ${AGENCY_PERFORMANCE_PERCENT} of that is our fee for the month, and the ${usd(AGENCY_RETAINER_MONTHLY)} you paid at the start of the month counts toward it, so only the difference is invoiced at the end of the month. If that number is ${usd(PERFORMANCE_EXAMPLE_REVENUE)}, ${AGENCY_PERFORMANCE_PERCENT} is ${usd(PERFORMANCE_EXAMPLE_TOTAL)}; you already paid ${usd(AGENCY_RETAINER_MONTHLY)}, so we invoice ${usd(PERFORMANCE_EXAMPLE_EXTRA)}. If it is ${usd(PERFORMANCE_QUIET_REVENUE)}, ${AGENCY_PERFORMANCE_PERCENT} is ${usd(PERFORMANCE_QUIET_SHARE)}, less than the ${usd(AGENCY_RETAINER_MONTHLY)} you already paid, so there is nothing more to pay. Until that number passes ${usd(PERFORMANCE_THRESHOLD)} in a month, the ${usd(AGENCY_RETAINER_MONTHLY)} is all you pay us.`;
 
 /** How every charge is paid. The same sentence on /terms, /pricing,
  *  /refund-policy, /delivery-policy and /privacy, for the underwriters. */

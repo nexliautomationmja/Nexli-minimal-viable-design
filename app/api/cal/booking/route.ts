@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { leads } from "@/lib/leads-schema";
 import { upsertLeadByEmail } from "@/lib/lead-upsert";
-import { recordAdvisoryBooking } from "@/lib/advisory-booking";
+import { recordAdvisoryBooking, recordBookingCancellation } from "@/lib/advisory-booking";
 import { parseCalBooking, verifyCalSignature } from "@/lib/cal-webhook";
 import { EMAIL_RE } from "@/lib/contact-validation";
 import { isVslAngle, VSL_BOOKING_FORM_SOURCE } from "@/lib/advisory-config";
@@ -22,7 +22,7 @@ export const runtime = "nodejs";
  *
  * SET UP IN CAL, ON THAT EVENT TYPE (Event type > Webhooks):
  *   Subscriber URL  https://www.nexli.net/api/cal/booking
- *   Triggers        Booking created, Booking rescheduled
+ *   Triggers        Booking created, Booking rescheduled, Booking cancelled
  *   Secret          the value of CAL_WEBHOOK_SECRET (Vercel and .env.local)
  * Scoped to the event type, not the account, so nexli-demo bookings (which
  * /api/advisory-pricing/booked records) never arrive here twice.
@@ -42,6 +42,9 @@ export const runtime = "nodejs";
  * rebooked and rescheduled set, so the contact's booking_start moves and
  * the GHL booking webhook fires again (workflow 3 re-sends the confirmation
  * and reminders for the new time). No Meta events: it is not a new lead.
+ *
+ * A CANCELLATION (Booking cancelled, added 2026-11-19) stops the reminders:
+ * see handleCancellation below.
  *
  * Replies 200 to anything it chose to ignore (a ping, another trigger, a
  * booking with no email), so Cal does not retry it; 401 to a bad signature.
@@ -67,6 +70,7 @@ export async function POST(req: NextRequest) {
 
   // Cal's "Ping test" button, and any trigger this route is not for.
   const trigger = typeof body?.triggerEvent === "string" ? body.triggerEvent : "";
+  if (trigger === "BOOKING_CANCELLED") return handleCancellation(body.payload);
   if (trigger !== "BOOKING_CREATED" && trigger !== "BOOKING_RESCHEDULED") {
     return NextResponse.json({ ok: true, ignored: trigger || "no trigger" });
   }
@@ -173,4 +177,50 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ ok: true });
+}
+
+/**
+ * Booking cancelled (Marcel ticked it on the webhook, 2026-11-19). Cal has
+ * already freed the slot and emailed the attendee. Left alone, GoHighLevel
+ * would keep sending reminders for a call that no longer exists, so:
+ *
+ *   - the lead row's bookedCallAt is cleared: they have no call booked, the
+ *     portal stops showing one, and a booking after this is a fresh booking
+ *     rather than a "rebooked" one with a note to cancel the old slot;
+ *   - recordBookingCancellation tags the GHL contact 'booking cancelled' and
+ *     takes 'advisory booked' and 'call booked' off. GoHighLevel's workflow
+ *     on that tag removes them from the reminder workflows.
+ *
+ * A reschedule is not a cancellation: Cal sends Booking rescheduled for it.
+ *
+ * ONE KNOWN EDGE: someone holding two bookings who cancels one of them is
+ * treated as having no call. The GHL note says which call was cancelled and
+ * to add 'advisory booked' back if they still have one.
+ *
+ * Always 200 once the signature has passed, so Cal does not retry it; a GHL
+ * failure is logged by ghl-sync, not reported to Cal.
+ */
+async function handleCancellation(payload: unknown) {
+  const booking = parseCalBooking(payload);
+  if (!EMAIL_RE.test(booking.email)) {
+    console.warn("[Cal Booking] cancellation without a usable email, uid:", booking.uid || "n/a");
+    return NextResponse.json({ ok: true, ignored: "no email" });
+  }
+
+  const db = getDb();
+  if (db) {
+    try {
+      await db
+        .update(leads)
+        .set({ bookedCallAt: null, updatedAt: new Date() })
+        .where(sql`lower(${leads.email}) = ${booking.email}`);
+    } catch (err) {
+      console.error("[Cal Booking] clearing bookedCallAt failed:", err);
+    }
+  } else {
+    console.error("[Cal Booking] no database — cancellation not recorded on the lead, uid:", booking.uid);
+  }
+
+  await recordBookingCancellation(booking);
+  return NextResponse.json({ ok: true, cancelled: true });
 }

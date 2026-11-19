@@ -38,7 +38,7 @@ const whatCounts: VslFaqItem = {
 
 const whatItCosts: VslFaqItem = {
   q: 'What does it cost?',
-  a: `${usd(AGENCY_RETAINER_MONTHLY)} a month for the website, the portal, the funnel and the automations, built and run for you, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay that we walk you through on the call. Your ad budget is separate: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card. The initial term is six months, renewing for six months at a time. The math: two planning engagements a month at ${usd(AGENCY_ENGAGEMENT_LOW)}, the bottom of the range, is ${usd(AGENCY_ENGAGEMENT_LOW * 2)} a month against ${usd(AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET)} in our fee and the minimum ads.`,
+  a: `${usd(AGENCY_RETAINER_MONTHLY)} a month for the website, the portal, the funnel and the automations, built and run for you, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay, only on revenue from the clients our ads bring you (your referrals and your other sales stay yours, and it is never ${AGENCY_PERFORMANCE_PERCENT} of every sale), which we walk you through on the call. Your ad budget is separate: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card. The initial term is six months, renewing for six months at a time. The math: two planning engagements a month at ${usd(AGENCY_ENGAGEMENT_LOW)}, the bottom of the range, is ${usd(AGENCY_ENGAGEMENT_LOW * 2)} a month against ${usd(AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET)} in our fee and the minimum ads.`,
 };
 
 const whoRunsAds: VslFaqItem = {

@@ -6,7 +6,9 @@
 // (components/math/ui), so this deck reads exactly like See the Math.
 //
 // Marcel presents it on the call, so there is no call to action on any
-// slide and no price. Each slide's <Slide id> is its PITCH_SLIDES id.
+// slide. The price is on two: pricing, the full pricing block from
+// /booking-confirmed-b (Marcel, 2026-11-19), then the-math. Each slide's
+// <Slide id> is its PITCH_SLIDES id.
 // ---------------------------------------------------------------------------
 import React from 'react';
 import {
@@ -36,14 +38,9 @@ import {
 import { motion } from 'framer-motion';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import MetaLogo from '@/components/icons/MetaLogo';
-import {
-  AGENCY_MIN_AD_BUDGET,
-  AGENCY_PERFORMANCE_PERCENT,
-  AGENCY_RETAINER_MONTHLY,
-  PERFORMANCE_EXAMPLE_EXTRA,
-  PERFORMANCE_EXAMPLE_REVENUE,
-  PERFORMANCE_EXAMPLE_TOTAL,
-} from '@/lib/agency-offer';
+import { AGENCY_MIN_AD_BUDGET, AGENCY_PERFORMANCE_PERCENT, AGENCY_RETAINER_MONTHLY } from '@/lib/agency-offer';
+import PerformancePayExplainer from '@/components/booking/PerformancePayExplainer';
+import PricingBlock from '@/components/booking/PricingBlock';
 import { AD_SPEND, MONTHLY_TOTAL, PLAN_FEE, SCENARIOS, chain, times, usd } from '@/lib/see-the-math';
 import { ShimmerBadge } from '@/components/math/ChainIcons';
 import { Body, Callout, FAINT, GRADIENT_TEXT, HEADING, Heading, MUTED, Panel, Reveal, Slide } from '@/components/math/ui';
@@ -673,7 +670,28 @@ function CreativeSlide() {
   );
 }
 
-// ── 12. What it brings in, what it costs ──────────────────────────────────
+// ── 12. What it costs ─────────────────────────────────────────────────────
+
+/**
+ * The full pricing, "just like on the booking confirmed page" (Marcel,
+ * 2026-11-19): /booking-confirmed-b's own PricingBlock, with the 10% worked
+ * out, in its one-screen deck layout. The same component, so the slide and
+ * the page cannot disagree.
+ */
+function PricingSlide() {
+  return (
+    <Slide id="pricing">
+      <Heading kicker="What it costs">
+        One monthly fee. <span className={GRADIENT_TEXT}>No setup fee.</span>
+      </Heading>
+      <div className="mt-6 lg:mt-8">
+        <PricingBlock deck explainPerformance />
+      </div>
+    </Slide>
+  );
+}
+
+// ── 13. What it brings in, what it costs ──────────────────────────────────
 
 /**
  * The most valuable part of See the Math on one slide (Marcel, 2026-11-19):
@@ -692,7 +710,7 @@ function MoneySlide() {
         What it can bring in. <span className={GRADIENT_TEXT}>What it costs you.</span>
       </Heading>
 
-      <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1.35fr_1fr]">
+      <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1.1fr_1fr]">
         <Reveal delay={0.1}>
           <Panel title="New fees a month, at full pace" className="h-full">
             <div className="relative">
@@ -744,79 +762,55 @@ function MoneySlide() {
               <span className="flex items-start gap-2" style={{ color: MUTED }}>
                 <span className="mt-1.5 w-4 shrink-0 border-t-2 border-dashed border-violet-400" aria-hidden="true" />
                 <span>
-                  <strong className="text-white">{usd(PERFORMANCE_THRESHOLD)}</strong> of agreed, attributable net revenue
-                  in a month is where the {AGENCY_PERFORMANCE_PERCENT} starts.
+                  The {AGENCY_PERFORMANCE_PERCENT} only matters past <strong className="text-white">{usd(PERFORMANCE_THRESHOLD)}</strong>{' '}
+                  a month from the clients our ads bring you.
                 </span>
               </span>
             </div>
             <div className="mt-5 rounded-xl border border-emerald-400/30 bg-emerald-400/[0.06] px-4 py-3">
               <p className="text-[13.5px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.88)' }}>
-                <strong className="font-bold text-emerald-300">Even the best case stays on the minimum.</strong> If all of
-                those new fees counted as agreed, attributable net revenue, every pace on this chart would sit at or under{' '}
-                {usd(PERFORMANCE_THRESHOLD)}: you would pay {usd(AGENCY_RETAINER_MONTHLY)}, and the{' '}
-                {AGENCY_PERFORMANCE_PERCENT} only starts once you are past it.
+                <strong className="font-bold text-emerald-300">Every pace here stays on the {usd(AGENCY_RETAINER_MONTHLY)}.</strong>{' '}
+                Even the best one is at or under {usd(PERFORMANCE_THRESHOLD)} a month, so you would pay{' '}
+                {usd(AGENCY_RETAINER_MONTHLY)} and nothing more.
               </p>
+            </div>
+            {/* What you pay, under the chart it is measured against. */}
+            <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+              <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-2.5">
+                <div className="text-[14px] font-bold text-white">{usd(AGENCY_RETAINER_MONTHLY)} at the start of each month</div>
+                <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: MUTED }}>
+                  To us. No setup fee.
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-2.5">
+                <div className="text-[14px] font-bold text-white">Your ad budget, separate</div>
+                <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: MUTED }}>
+                  At least {usd(AGENCY_MIN_AD_BUDGET)} a month, straight to Meta.
+                </p>
+              </div>
             </div>
           </Panel>
         </Reveal>
 
-        <Reveal delay={0.18}>
-          <Panel title="How we're paid" className="h-full">
-            <ol className="space-y-3">
-              <li className="rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-3">
-                <div className="text-[15px] font-bold text-white">{usd(AGENCY_RETAINER_MONTHLY)} a month, the minimum</div>
-                <p className="mt-1 text-[13px] leading-snug" style={{ color: MUTED }}>
-                  That is the whole fee while your agreed, attributable net revenue stays at or under{' '}
-                  {usd(PERFORMANCE_THRESHOLD)} a month. No setup fee.
-                </p>
-              </li>
-              <li className="rounded-xl border border-violet-400/30 bg-violet-400/[0.06] px-4 py-3">
-                <div className="text-[15px] font-bold text-white">
-                  Above {usd(PERFORMANCE_THRESHOLD)}: {AGENCY_PERFORMANCE_PERCENT}
-                </div>
-                <p className="mt-1 text-[13px] leading-snug" style={{ color: MUTED }}>
-                  Our fee for that month becomes {AGENCY_PERFORMANCE_PERCENT} of it. The {usd(AGENCY_RETAINER_MONTHLY)} you
-                  have already paid counts toward it, so only the difference is invoiced.
-                </p>
-                <div className="mt-3 grid grid-cols-3 gap-1.5 text-center">
-                  {[
-                    { v: usd(PERFORMANCE_EXAMPLE_TOTAL), l: `${AGENCY_PERFORMANCE_PERCENT} of ${usd(PERFORMANCE_EXAMPLE_REVENUE)}` },
-                    { v: `−${usd(AGENCY_RETAINER_MONTHLY)}`, l: 'already paid' },
-                    { v: usd(PERFORMANCE_EXAMPLE_EXTRA), l: 'more to invoice' },
-                  ].map((x) => (
-                    <span key={x.l} className="rounded-lg border border-white/10 bg-black/20 px-1.5 py-2">
-                      <span className="block text-[14px] font-black text-white">{x.v}</span>
-                      <span className="mt-0.5 block text-[10px] uppercase tracking-wide" style={{ color: FAINT }}>
-                        {x.l}
-                      </span>
-                    </span>
-                  ))}
-                </div>
-              </li>
-              <li className="rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-3">
-                <div className="text-[15px] font-bold text-white">Your ad budget, separate</div>
-                <p className="mt-1 text-[13px] leading-snug" style={{ color: MUTED }}>
-                  At least {usd(AGENCY_MIN_AD_BUDGET)} a month, paid straight to Meta on your own card. It never passes
-                  through us.
-                </p>
-              </li>
-            </ol>
-          </Panel>
+        {/* The 10%, worked out the same way as /booking-confirmed-b. */}
+        <Reveal delay={0.18} className="h-full">
+          <PerformancePayExplainer compact className="h-full" />
         </Reveal>
       </div>
 
       <Reveal delay={0.3}>
         <p className="mt-5 max-w-5xl text-[12px] leading-relaxed" style={{ color: FAINT }}>
           New fees come from See the Math: {usd(AD_SPEND)} a month in ads, a {usd(PLAN_FEE)} average plan, conservative to
-          best case. They are illustrations, not promises. Agreed, attributable net revenue is defined in your agreement;
-          it is not your firm&apos;s total revenue.
+          best case. They are illustrations, not promises. &ldquo;What the clients our ads bring you paid, minus your ad
+          spend and commissions&rdquo; is what your agreement calls agreed, attributable net revenue. Your referrals and
+          other sales stay yours.
         </p>
       </Reveal>
     </Slide>
   );
 }
 
-// ── 13. Who does what ─────────────────────────────────────────────────────
+// ── 14. Who does what ─────────────────────────────────────────────────────
 
 function RecapSlide() {
   const nexli: { Icon: LucideIcon; t: string }[] = [
@@ -889,6 +883,7 @@ export const PITCH_SLIDES: DeckSlide[] = [
   { id: 'calendar', title: 'Booked onto your calendar', node: <CalendarSlide /> },
   { id: 'follow-up', title: 'The follow-up', node: <FollowUpSlide /> },
   { id: 'creative', title: 'How we make the creative', node: <CreativeSlide /> },
+  { id: 'pricing', title: 'What it costs', node: <PricingSlide /> },
   { id: 'the-math', title: 'What it brings in, what it costs', node: <MoneySlide /> },
   { id: 'recap', title: 'Who does what', node: <RecapSlide /> },
 ];

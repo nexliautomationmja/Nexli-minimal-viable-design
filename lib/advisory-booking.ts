@@ -17,6 +17,9 @@
 //
 // The caller has already found or written the lead row and stamped
 // bookedCallAt; this only reports the booking outward.
+//
+// recordBookingCancellation, at the bottom, is the other direction: a VSL
+// booking cancelled in Cal, reported to GoHighLevel so the reminders stop.
 // ---------------------------------------------------------------------------
 
 import { formatBookingStart } from '@/lib/booking-time';
@@ -30,11 +33,13 @@ import {
   TAG_ADVISORY_BUYER,
   TAG_ADVISORY_OPT_IN,
   TAG_ADVISORY_QUALIFIED,
+  TAG_BOOKING_CANCELLED,
   TAG_QUALIFIED_VSL,
   TAG_VSL_BOOKING,
   vslTag,
   type VslAngle,
 } from '@/lib/advisory-config';
+import type { CalBooking } from '@/lib/cal-webhook';
 import type { leads } from '@/lib/leads-schema';
 import { SITE_URL } from '@/lib/site';
 
@@ -193,8 +198,9 @@ export async function recordAdvisoryBooking(b: AdvisoryBooking): Promise<void> {
           ],
       // Belt and braces. The qualifier already strips this, but a booking
       // cannot coexist with "opted in and done nothing since" under any
-      // ordering, including a contact that predates that change.
-      removeTags: [TAG_ADVISORY_OPT_IN],
+      // ordering, including a contact that predates that change. And a
+      // booking after a cancellation is a live booking again.
+      removeTags: [TAG_ADVISORY_OPT_IN, TAG_BOOKING_CANCELLED],
       answers: direct
         ? null
         : {
@@ -286,4 +292,40 @@ export async function recordAdvisoryBooking(b: AdvisoryBooking): Promise<void> {
   } else {
     console.warn('[Advisory Booked] no GHL booking webhook configured — skipping GHL webhook');
   }
+}
+
+/**
+ * A VSL booking cancelled in Cal (Marcel, 2026-11-19), from
+ * app/api/cal/booking. Cal frees the slot and emails the attendee itself;
+ * what it cannot do is stop GoHighLevel's reminders, which count down to
+ * booking_start on the contact. So the contact is tagged 'booking
+ * cancelled', and 'advisory booked' and 'call booked' come off: they have
+ * no call booked, and the next booking adds 'advisory booked' afresh, which
+ * is what starts the tag-triggered reminders again. GoHighLevel's workflow
+ * on 'booking cancelled' removes them from the reminder workflows.
+ *
+ * booking_start is left as it was: blanking it could make a reminder's
+ * wait step fire at once. No Meta events, and not the booking webhook
+ * (workflow 3), which would read it as a booking.
+ */
+export async function recordBookingCancellation(booking: CalBooking): Promise<void> {
+  const callWas = formatBookingStart(booking.startTime, booking.timeZone) || booking.startTime || 'n/a';
+  await syncContactToGhl({
+    email: booking.email,
+    firstName: booking.firstName,
+    lastName: booking.lastName,
+    phone: booking.phone,
+    websiteUrl: booking.website || null,
+    source: `${ADVISORY_PRODUCT_NAME} - VSL Calendar Booking`,
+    tags: [TAG_BOOKING_CANCELLED],
+    removeTags: [TAG_ADVISORY_BOOKED, TAG_CALL_BOOKED],
+    noteHeading: 'Cancelled their CPA Acquisition Review',
+    extraNoteLines: [
+      `Booking uid: ${booking.uid || 'n/a'}`,
+      `The call was: ${callWas}`,
+      ...(booking.cancellationReason ? [`Reason: ${booking.cancellationReason}`] : []),
+      ...(booking.cancelledBy ? [`Cancelled by: ${booking.cancelledBy}`] : []),
+      'If they still have another call booked, add the "advisory booked" tag back.',
+    ],
+  });
 }
