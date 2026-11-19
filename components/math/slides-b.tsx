@@ -21,7 +21,14 @@ import {
   Star,
 } from 'lucide-react';
 import { RimCard } from '@/components/funnel/primitives';
-import { AGENCY_PERFORMANCE_PERCENT } from '@/lib/agency-offer';
+import {
+  AGENCY_PERFORMANCE_PERCENT,
+  PERFORMANCE_EXAMPLE_EXTRA,
+  PERFORMANCE_EXAMPLE_REVENUE,
+  PERFORMANCE_EXAMPLE_TOTAL,
+  PERFORMANCE_NET_PLAIN,
+  PERFORMANCE_THRESHOLD,
+} from '@/lib/agency-offer';
 import {
   AD_SPEND,
   BACK_END_ANNUAL,
@@ -278,8 +285,9 @@ export function TimelineSlide() {
 // THE RETAINER (lib/agency-offer, Marcel 2026-11-19), and the two ways to
 // pay it: monthly, or the six months prepaid for less. It was the setup fee
 // and the monthly plan against the annual plan, with a first-month ad bonus
-// on each; all three are gone. Performance pay is named here and nowhere
-// explained: Marcel walks firms through it on the call.
+// on each; all three are gone. Performance pay is explained under the plans
+// in one plain line (Marcel, 2026-11-19): not 10% of every sale, his
+// definition, and the $150,000 → $5,000 example, the same as the VSLs.
 
 /**
  * Under each plan's rows, the one thing that plan is for. The prepay's is
@@ -400,9 +408,13 @@ export function InvestSlide() {
           least {usd(AD_SPEND)} a month, paid straight to Meta on your own card. It never passes through us.
         </Body>
         <p className="mt-3 max-w-4xl text-xs leading-relaxed sm:text-[13px]" style={{ color: FAINT }}>
-          Plus {AGENCY_PERFORMANCE_PERCENT} performance pay on both, walked through on the call. Every projection in
-          this deck counts the {usd(FEE_MONTHLY)} monthly minimum and the {usd(AD_SPEND)} minimum ad budget;
-          performance pay isn&apos;t counted.
+          Plus {AGENCY_PERFORMANCE_PERCENT} performance pay on both. It is not {AGENCY_PERFORMANCE_PERCENT} of every
+          sale: once a month we take {AGENCY_PERFORMANCE_PERCENT} of {PERFORMANCE_NET_PLAIN}, and what you already paid
+          for that month counts toward it (on the prepay, that month&apos;s share of it). At{' '}
+          {usd(PERFORMANCE_EXAMPLE_REVENUE)}, {AGENCY_PERFORMANCE_PERCENT} is {usd(PERFORMANCE_EXAMPLE_TOTAL)}, so on the
+          monthly plan we invoice {usd(PERFORMANCE_EXAMPLE_EXTRA)} more; under {usd(PERFORMANCE_THRESHOLD)}, nothing
+          more. Every projection in this deck counts the {usd(FEE_MONTHLY)} monthly minimum and the {usd(AD_SPEND)}{' '}
+          minimum ad budget; performance pay isn&apos;t counted.
         </p>
       </Reveal>
     </Slide>

@@ -156,8 +156,11 @@ export const ADVISORY_VSL_VIDEO_TITLE = 'Daniela VSL - CPA Ads ($15K)';
 // mux-player sets it as a DOM property on hydration — so curl cannot confirm
 // the page is using it. Check in a browser.
 
+// The new Better Clients cut (Marcel, 2026-11-19): 1080p, opens on the
+// presenter framed with no caption yet, so poster time 0 still holds.
+// Replaced mMdc7SPqpRspzwM5ozRfApnNr4fEkiP02vRZOcKvSWBg.
 export const BETTER_CLIENTS_VSL_PLAYBACK_ID =
-  'mMdc7SPqpRspzwM5ozRfApnNr4fEkiP02vRZOcKvSWBg';
+  'rlcMse01a9sucuSWlNYOEFesJ1sVrfqcSuvi3mp6cw7Y';
 export const BETTER_CLIENTS_VSL_TITLE = 'Better Clients VSL';
 
 export const SYSTEMS_VSL_PLAYBACK_ID =
@@ -417,6 +420,16 @@ export const TAG_ADVISORY_BOOKED = 'advisory booked';
  * 'qualified-vsl': these firms answered no qualifying questions.
  */
 export const TAG_VSL_BOOKING = 'vsl booking';
+
+/**
+ * They cancelled their call in Cal (Marcel, 2026-11-19). Applied by
+ * app/api/cal/booking on Booking cancelled, which takes 'advisory booked'
+ * and 'call booked' off in the same write. GoHighLevel's workflow on this
+ * tag removes them from the reminder workflows: those count down to the
+ * call's time on the contact and know nothing of Cal. Any booking after it
+ * takes this tag off again (lib/advisory-booking).
+ */
+export const TAG_BOOKING_CANCELLED = 'booking cancelled';
 
 /** leads.form_source for a firm whose first contact was a VSL booking. */
 export const VSL_BOOKING_FORM_SOURCE = 'vsl-booking';

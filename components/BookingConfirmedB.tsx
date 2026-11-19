@@ -39,6 +39,7 @@ import PortalDemo from './demo/PortalDemo';
 import AdCreativeLab from './booking/AdCreativeLab';
 import SystemFlow from './booking/SystemFlow';
 import PricingBlock from './booking/PricingBlock';
+import AvatarSection from './booking/AvatarSection';
 import DanielaFaq from './booking/DanielaFaq';
 import { BOOKING_B_FAQ } from '@/lib/booking-faq';
 import { useTheme } from './ThemeProvider';
@@ -118,6 +119,8 @@ const INCLUDED = [
   'Invoicing with online payments',
   'Secure client messaging and document collection',
   'AI automations for intake, follow-up and reminders',
+  'Your own AI avatar, cast for your firm',
+  'New ad creative every 7 to 14 days, made by us',
   'Meta campaigns — built, run and reported on',
 ];
 
@@ -317,7 +320,27 @@ export default function BookingConfirmedB() {
           </p>
         </motion.section>
 
-        {/* ── 5. The ads ────────────────────────────────────────────
+        {/* ── 5. The AI avatar (Marcel, 2026-11-19) ──────────────────
+            Between the portal and the ads: the face of their ads, so they
+            never have to get on camera, and the brand their ads are
+            positioned around. */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <SectionHead
+            step="03"
+            title="Your ads need a face. It doesn’t have to be yours."
+            body="Most agencies tell you to get on camera and start posting. We give your firm an AI avatar instead: it fronts your ads, it becomes your brand, and your time stays on your business."
+          />
+          <div className="mt-6">
+            <AvatarSection />
+          </div>
+        </motion.section>
+
+        {/* ── 6. The ads ────────────────────────────────────────────
             The website and the portal are the easy things to show. This is
             what the ad spend actually buys, and it was missing. */}
         <motion.section
@@ -327,7 +350,7 @@ export default function BookingConfirmedB() {
           transition={{ duration: 0.6 }}
         >
           <SectionHead
-            step="03"
+            step="04"
             title="The ads, and who makes them"
             body="We do not guess at one perfect ad. Several angles run at once, in photo and in video, and the spend decides which ones survive."
           />
@@ -335,13 +358,12 @@ export default function BookingConfirmedB() {
             <AdCreativeLab />
           </div>
           <p className="mx-auto mt-4 max-w-3xl text-xs leading-relaxed text-[var(--text-muted)]">
-            The presenters in the video ads are AI-generated. You never record anything, you are
-            never on camera, and you do not have to become a content creator to run ads for your
-            firm. We write the angles, produce the creative and run the account.
+            The presenters in the video ads are AI avatars, like the one above. We write the
+            angles, produce the creative and run the account.
           </p>
         </motion.section>
 
-        {/* ── 6. The system, as a flow ──────────────────────────────── */}
+        {/* ── 7. The system, as a flow ──────────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -349,7 +371,7 @@ export default function BookingConfirmedB() {
           transition={{ duration: 0.6 }}
         >
           <SectionHead
-            step="04"
+            step="05"
             title="What gets built, end to end"
             body="Five moving parts and one fork. Everything above plugs into this."
           />
@@ -358,14 +380,14 @@ export default function BookingConfirmedB() {
           </div>
         </motion.section>
 
-        {/* ── 7. What's included ────────────────────────────────────── */}
+        {/* ── 8. What's included ────────────────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <SectionHead step="05" title="Everything in the engagement" />
+          <SectionHead step="06" title="Everything in the engagement" />
           <ul className="mt-6 grid max-w-4xl mx-auto grid-cols-1 sm:grid-cols-2 gap-3">
             {INCLUDED.map((item) => (
               <li
@@ -379,12 +401,13 @@ export default function BookingConfirmedB() {
           </ul>
         </motion.section>
 
-        {/* ── 8. The price ──────────────────────────────────────────── */}
+        {/* ── 9. The price ──────────────────────────────────────────── */}
         <section>
-          <PricingBlock />
+          {/* The 10% worked out shows here and on /pitch, not on the VSLs (Marcel, 2026-11-19). */}
+          <PricingBlock explainPerformance />
         </section>
 
-        {/* ── 9. After you sign ─────────────────────────────────────── */}
+        {/* ── 10. After you sign ────────────────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -392,7 +415,7 @@ export default function BookingConfirmedB() {
           transition={{ duration: 0.6 }}
         >
           <SectionHead
-            step="06"
+            step="07"
             title="What happens after you say yes"
             body="So there are no surprises about how this runs."
           />
@@ -423,7 +446,7 @@ export default function BookingConfirmedB() {
           </ol>
         </motion.section>
 
-        {/* ── 10. Objections, answered ───────────────────────────────── */}
+        {/* ── 11. Objections, answered ───────────────────────────────── */}
         <DanielaFaq
           items={BOOKING_B_FAQ}
           badge="Before the call"
@@ -431,7 +454,7 @@ export default function BookingConfirmedB() {
           intro="Read them, or play them and hear Daniela answer in her own voice. Either way the call can be about whether this fits, not about what it is."
         />
 
-        {/* ── 10b. Anything the eight answers did not cover ──────────────
+        {/* ── 11b. Anything the eight answers did not cover ──────────────
             The FAQ above is fixed: eight recorded answers, chosen in advance.
             Candor takes the question nobody anticipated, which is usually the
             one actually keeping them from signing. Plain link, no resume
@@ -469,7 +492,7 @@ export default function BookingConfirmedB() {
           </a>
         </motion.section>
 
-        {/* ── 11. Close ──────────────────────────────────────────────── */}
+        {/* ── 12. Close ──────────────────────────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

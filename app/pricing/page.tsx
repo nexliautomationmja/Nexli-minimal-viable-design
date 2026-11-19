@@ -41,6 +41,7 @@ import {
   AGENCY_RETAINER_PREPAY,
   AGENCY_RETAINER_TERM_MONTHS,
   PAYMENT_METHODS,
+  PERFORMANCE_DEFINITION_PLAIN,
   PERFORMANCE_EXAMPLE,
   PERFORMANCE_RULE,
   RENEWAL_TERMS,
@@ -73,7 +74,7 @@ const PRODUCTS: Product[] = [
     summary: `We build and run the system that brings established CPA firms (${MIN_REVENUE} in annual revenue) high-value advisory clients: a premium website, a branded client portal, a sales funnel, AI automations, a Google review engine, and the paid ad campaigns that drive it.`,
     price: usd(AGENCY_RETAINER_MONTHLY),
     per: '/ month',
-    priceNote: `The agency minimum. No setup fee. Plus ${AGENCY_PERFORMANCE_PERCENT} performance pay on agreed, attributable net revenue (set out below). Your ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is separate and paid by you directly to Meta.`,
+    priceNote: `The agency minimum. No setup fee. Plus ${AGENCY_PERFORMANCE_PERCENT} performance pay on agreed, attributable net revenue, which is not ${AGENCY_PERFORMANCE_PERCENT} of every sale (set out below). Your ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is separate and paid by you directly to Meta.`,
     points: [
       'Sold under a signed agreement, billed by invoice',
       'Every charge by credit or debit card, ACH or wire',
@@ -205,6 +206,7 @@ export default function PricingPage() {
         <div className="space-y-2">
           <h3 className="text-lg font-bold text-[var(--text-main)]">How performance pay works</h3>
           <p className="text-base">{PERFORMANCE_RULE}</p>
+          <p className="text-base">{PERFORMANCE_DEFINITION_PLAIN}</p>
           <p className="text-base">{PERFORMANCE_EXAMPLE}</p>
           <p className="text-base">
             &quot;Agreed, attributable net revenue&quot; is defined in your signed agreement. It is not your

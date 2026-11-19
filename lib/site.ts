@@ -165,7 +165,7 @@ export const ENGAGEMENT_TERMS = [
   {
     name: '$10,000 a month, no setup fee',
     description:
-      '$10,000 a month for the complete system, billed from signing, with no setup fee and no per-component pricing, plus 10% performance pay that is walked through on the call. The ad budget is separate: at least $5,000 a month, paid by the firm directly to Meta on its own card.',
+      '$10,000 a month for the complete system, billed from signing, with no setup fee and no per-component pricing, plus 10% performance pay. The 10% is not taken from every sale: once a month it is 10% of what the clients Nexli’s ads bring in paid, minus ad spend and commissions (the firm’s referrals and other sales are not counted), and the $10,000 already paid counts toward it, so nothing more is owed until that passes $100,000 in a month. The ad budget is separate: at least $5,000 a month, paid by the firm directly to Meta on its own card.',
   },
   {
     name: 'Live in about 21 days',

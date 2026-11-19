@@ -34,8 +34,6 @@ import {
   AGENCY_ENGAGEMENT_HIGH,
   AGENCY_ENGAGEMENT_LOW,
   AGENCY_LAUNCH_DAYS,
-  AGENCY_PERFORMANCE_RATE,
-  AGENCY_RETAINER_MONTHLY,
   usd,
 } from '@/lib/agency-offer';
 import { DEMO_FIRM_NAME } from '@/lib/demo-config';
@@ -98,14 +96,13 @@ export const AVATAR_STUDY = {
 // ── The money slide (Marcel, 2026-11-19) ─────────────────────────────────
 // "Since the pricing is all up front and transparent": the most valuable
 // part of See the Math on one slide (what the system can bring in, by pace,
-// against what it costs) and, unlike the VSL and Candor, the 10% spelled
-// out. This deck is presented on the call, which is where Marcel wants the
-// 10% explained. The numbers come from lib/see-the-math and
-// lib/agency-offer, so this slide and /math cannot disagree.
+// against what it costs) and the 10% explained the same plain way as the
+// VSLs (components/booking/PerformancePayExplainer). The numbers come from
+// lib/see-the-math and lib/agency-offer, so this slide, the VSLs and /math
+// cannot disagree.
 
-/** The month's agreed, attributable net revenue above which 10% beats the
- *  $10,000 minimum: $100,000. Below it, the minimum is the whole fee. */
-export const PERFORMANCE_THRESHOLD = AGENCY_RETAINER_MONTHLY / AGENCY_PERFORMANCE_RATE;
+/** $100,000: lives in lib/agency-offer now, re-exported for the slides. */
+export { PERFORMANCE_THRESHOLD } from '@/lib/agency-offer';
 
 // ── The ads ──────────────────────────────────────────────────────────────
 

@@ -15,8 +15,10 @@
 //   - Or the six months prepaid: $50,000 instead of $60,000.
 //   - The firm's ads on top, at least $5,000 a month, paid straight to Meta.
 //   - Plus 10% performance pay, which this model does NOT count: the deck
-//     names it and says it is walked through on the call. Every projection
-//     here uses the $10,000 minimum and the $5,000 minimum ad budget.
+//     explains it in one plain line (not 10% of every sale; lib/agency-offer
+//     PERFORMANCE_PLAIN). Every pace here stays at or under $100,000 a month,
+//     where the $10,000 is the whole fee, and every projection uses the
+//     $10,000 minimum and the $5,000 minimum ad budget.
 // The setup fee, the annual plan and the first-month ad bonus that this file
 // used to model were retired the same day.
 // ---------------------------------------------------------------------------

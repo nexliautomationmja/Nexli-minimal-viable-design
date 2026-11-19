@@ -12,6 +12,8 @@ import {
     AGENCY_RETAINER_PREPAY,
     AGENCY_RETAINER_TERM_MONTHS,
     PAYMENT_METHODS,
+    PERFORMANCE_DEFINITION_PLAIN,
+    PERFORMANCE_EXAMPLE,
     PERFORMANCE_RULE,
     RENEWAL_TERMS,
     usd,
@@ -67,7 +69,7 @@ const TermsAndConditions: React.FC = () => (
                     <Strong>Six-Month Prepayment:</Strong> Instead of paying monthly, the client may pay the {AGENCY_RETAINER_TERM_MONTHS}-month term up front: {usd(AGENCY_RETAINER_PREPAY)}, due at signing, in place of {AGENCY_RETAINER_TERM_MONTHS} monthly fees of {usd(AGENCY_RETAINER_MONTHLY)} (a saving of {usd(AGENCY_PREPAY_SAVING)}). The prepayment is non-refundable, in whole and in part.
                 </li>
                 <li>
-                    <Strong>Performance Pay:</Strong> {PERFORMANCE_RULE} Any performance invoice is issued as the signed agreement sets out, and is non-refundable once charged. &quot;Agreed, attributable net revenue&quot; has the meaning given to it in the signed agreement; it is not the client&apos;s total revenue.
+                    <Strong>Performance Pay:</Strong> {PERFORMANCE_RULE} Any performance invoice is issued as the signed agreement sets out, and is non-refundable once charged. &quot;Agreed, attributable net revenue&quot; has the meaning given to it in the signed agreement; it is not the client&apos;s total revenue. {PERFORMANCE_DEFINITION_PLAIN} {PERFORMANCE_EXAMPLE}
                 </li>
                 <li>
                     <Strong>Advertising Budget:</Strong> {AD_BUDGET_TERMS} The client pays the advertising platform for it directly; Nexli does not collect, hold or place it, does not invoice it, and cannot refund it. It is at least {usd(AGENCY_MIN_AD_BUDGET)} a month while the engagement runs.

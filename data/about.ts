@@ -63,7 +63,7 @@ export const aboutSections: AboutSection[] = [
     heading: 'Who we work with',
     body: [
       'Nexli works exclusively with established CPA and accounting firms doing $500K or more in annual revenue. The firms we work best with already have a stable client base, deliver good work, and want more advisory clients without adding headcount to get them.',
-      `We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is ${usd(AGENCY_RETAINER_MONTHLY)} a month for the complete system, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay explained on the call; the ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is paid by the firm directly to Meta ([pricing](/pricing)). Firms apply for a strategy call, and we take on the ones where the system fits.`,
+      `We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is ${usd(AGENCY_RETAINER_MONTHLY)} a month for the complete system, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay, which is not ${AGENCY_PERFORMANCE_PERCENT} of every sale: once a month it is ${AGENCY_PERFORMANCE_PERCENT} of what the clients Nexli’s ads bring in paid, minus ad spend and commissions (the firm’s referrals and other sales are not counted), and the ${usd(AGENCY_RETAINER_MONTHLY)} already paid counts toward it; the ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is paid by the firm directly to Meta ([pricing](/pricing)). Firms apply for a strategy call, and we take on the ones where the system fits.`,
     ],
   },
   {
