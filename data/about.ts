@@ -23,7 +23,7 @@ export interface AboutFact {
 }
 
 export const aboutIntro: string =
-  'Nexli Automation is a CPA firm growth agency founded by Marcel Allen. It builds and runs the Digital Rainmaker System, a client-acquisition and operations infrastructure for established CPA and accounting firms, made up of a premium website, an AI automation layer, a secure client document portal, and a Google review engine, backed by paid ads. Nexli works only with CPA and accounting firms doing $500K or more in annual revenue (about $40K-$50K a month).';
+  'Nexli Automation is a CPA firm growth agency founded by Marcel Allen. It builds and runs the Digital Rainmaker System, a client-acquisition and operations infrastructure for established CPA and accounting firms, made up of a premium website, an AI automation layer, a secure client document portal, and a Google review engine, backed by paid ads. Nexli is built for CPA and accounting firms doing $1M–$5M+ in annual revenue.';
 
 export const aboutFacts: AboutFact[] = [
   { label: 'Legal name', value: 'Nexli Automation LLC' },
@@ -31,14 +31,14 @@ export const aboutFacts: AboutFact[] = [
   { label: 'Headquarters', value: 'Winter Park, FL' },
   { label: 'Founder', value: 'Marcel Allen' },
   { label: 'Email', value: 'mail@nexli.net' },
-  { label: 'Serves', value: 'Established CPA and accounting firms with $500K+ in annual revenue (about $40K-$50K a month)' },
+  { label: 'Serves', value: 'Established CPA and accounting firms doing $1M–$5M+ in annual revenue' },
   { label: 'Contract terms', value: 'Six-month initial term from signing, renewing for six months at a time' },
   { label: 'Launch time', value: 'About 21 days from kickoff, which is what the engagement letter commits to' },
 ];
 
 export const founderBio: string[] = [
   'Marcel Allen is the founder of Nexli Automation. He started the company to give established CPA firms the client-acquisition and operations infrastructure that larger firms build in-house: a website that converts, automated intake and booking, a secure client portal, a review engine, and paid campaigns that feed all of it.',
-  'His view is that most firms between $500K and $5M in revenue do not have a demand problem or a talent problem so much as an infrastructure problem. The partners are good at the work. What they lack is the front-end system that turns referrals and searches into booked advisory consultations without a partner answering every call.',
+  'His view is that most firms between $1M and $5M in revenue do not have a demand problem or a talent problem so much as an infrastructure problem. The partners are good at the work. What they lack is the front-end system that turns referrals and searches into booked advisory consultations without a partner answering every call.',
   'Marcel leads the strategy work with each firm and runs Nexli with a small team.',
 ];
 
@@ -62,7 +62,7 @@ export const aboutSections: AboutSection[] = [
     id: 'who-we-work-with',
     heading: 'Who we work with',
     body: [
-      'Nexli works exclusively with established CPA and accounting firms doing $500K or more in annual revenue. The firms we work best with already have a stable client base, deliver good work, and want more advisory clients without adding headcount to get them.',
+      'Nexli is built for established CPA and accounting firms doing $1M–$5M+ in annual revenue. The firms we work best with already have a stable client base, deliver good work, and want more advisory clients without adding headcount to get them.',
       `We do not work with startups, bookkeeping-only practices under the revenue threshold, or firms outside accounting. Pricing is ${usd(AGENCY_RETAINER_MONTHLY)} a month for the complete system, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay, which is not ${AGENCY_PERFORMANCE_PERCENT} of every sale: once a month it is ${AGENCY_PERFORMANCE_PERCENT} of what the clients Nexli’s ads bring in paid, minus ad spend and commissions (the firm’s referrals and other sales are not counted), and the ${usd(AGENCY_RETAINER_MONTHLY)} already paid counts toward it; the ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is paid by the firm directly to Meta ([pricing](/pricing)). Firms apply for a strategy call, and we take on the ones where the system fits.`,
     ],
   },

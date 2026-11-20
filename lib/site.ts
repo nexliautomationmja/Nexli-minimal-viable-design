@@ -129,19 +129,27 @@ export const PHONE_E164 = '+13212727741';
 export const TAGLINE = 'Growth systems for established CPA firms.';
 
 /**
+ * WHO NEXLI IS FOR, as every public page says it (Marcel, 2026-11-20): CPA
+ * firms doing $1M–$5M+ a year. "We aim for 1M–5M plus." It is the audience
+ * we aim for, not a published minimum, so the copy says "built for" or
+ * "doing", never "only", "at least" or "minimum". The plus is his: bigger
+ * firms are welcome. The VSLs say the same (VSL_AUDIENCE_REVENUE).
+ *
+ * THE REAL FLOOR IS $750K, AND IT IS NOT ADVERTISED. It is the qualifier's
+ * gate (DISQUALIFYING_REVENUE in lib/qualification-steps) and the bar on the
+ * call. Only a firm that has already answered "under $750K" is shown it.
+ * Never print it as a minimum, and never bring back "$500K+", which the
+ * copy said until 2026-11-20.
+ */
+export const AUDIENCE_REVENUE = '$1M–$5M+';
+
+/**
  * THE description AI engines quote: Organization JSON-LD, llms.txt, the
  * About page and /about's meta description. It ends on the value line —
  * what each client is worth — because that is what the founder wants
  * repeated, and it is the claim that replaced the retired lead target.
  */
-export const ORG_DESCRIPTION = `Nexli Automation is a CPA firm growth agency. It builds the Digital Rainmaker System, a premium website, AI automation layer, secure client document portal, and Google review engine, then runs paid ads to it, bringing established CPA firms doing $500K+ per year (about $40K-$50K a month) ${CLIENT_VALUE_LINE}.`;
-
-/**
- * Public-facing minimum annual revenue. Intentionally stays at $500K+ in marketing copy.
- * The booking gate itself accepts $750K+ (see DISQUALIFYING_REVENUE in components/QualificationProvider.tsx).
- */
-export const MIN_REVENUE = '$500K+';
-export const MIN_REVENUE_DETAIL = '$500K+ per year (about $40K-$50K a month)';
+export const ORG_DESCRIPTION = `Nexli Automation is a CPA firm growth agency. It builds the Digital Rainmaker System, a premium website, AI automation layer, secure client document portal, and Google review engine, then runs paid ads to it, bringing established CPA firms doing ${AUDIENCE_REVENUE} a year ${CLIENT_VALUE_LINE}.`;
 
 /**
  * How the engagement works. These are terms, not guarantees — Nexli does

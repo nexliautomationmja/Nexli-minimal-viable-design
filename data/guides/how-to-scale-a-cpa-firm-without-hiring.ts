@@ -164,7 +164,7 @@ const guide: Guide = {
       heading: 'How Nexli does this',
       body: [
         'Nexli Automation is a CPA firm growth agency. It builds levers two, three, and four as one integrated system, the Digital Rainmaker System: a premium website, an AI automation layer for missed-call text-back, 24/7 intake, automated booking, and nurture sequences, a secure client document portal, and a Google review engine that adds 3-5 extra Google reviews per month. It then runs paid ads to the system so the freed capacity fills with advisory clients. The build takes about 21 days.',
-        'Nexli works exclusively with established CPA and accounting firms doing $500K+ in annual revenue (about $40K-$50K a month), on a six-month initial term that renews for six months at a time, at $10,000 a month with no setup fee. The system brings those firms tax-planning clients, each an engagement worth $15,000 to $55,000, with a build that takes about 21 days and a written report every week.',
+        'Nexli is built for established CPA and accounting firms doing $1M–$5M+ in annual revenue, on a six-month initial term that renews for six months at a time, at $10,000 a month with no setup fee. The system brings those firms tax-planning clients, each an engagement worth $15,000 to $55,000, with a build that takes about 21 days and a written report every week.',
         'If that fits your firm, [watch the short presentation and apply for a strategy call](/agency).',
       ],
     },

@@ -215,31 +215,10 @@ export async function POST(req: NextRequest) {
       }).catch(() => {});
     }
 
-    // If qualified, fire server-only QualifiedLead event
-    if (scoring.classification === "qualified") {
-      sendCAPIEvent({
-        event_name: "QualifiedLead",
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: `ql_${leadId || "unknown"}_${Date.now()}`,
-        action_source: "website",
-        event_source_url: attribution.landing_page || "https://www.nexli.net",
-        user_data: {
-          fbp: attribution.fbp || undefined,
-          fbc: attribution.fbc || undefined,
-          client_ip_address: ip !== "unknown" ? ip : undefined,
-          client_user_agent: userAgent || undefined,
-          country: usBased ? "us" : undefined,
-        },
-        custom_data: {
-          lead_id: leadId,
-          lead_score: "qualified",
-          annual_revenue: annualRevenue,
-          decision_role: decisionRole,
-          goal_tag: goalTag,
-          tax_savings_tag: taxSavingsTag,
-        },
-      }).catch(() => {});
-    }
+    // No QualifiedLead here (Marcel, 2026-11-20). It now means one thing:
+    // he moved the person to the qualified stage of the GHL pipeline
+    // (/api/meta/qualified-lead), and the ads optimize on it. A form score
+    // sending it too would blur that. CompleteRegistration above still goes.
 
     return NextResponse.json({
       ok: true,

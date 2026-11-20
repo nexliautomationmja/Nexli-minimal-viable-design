@@ -9,7 +9,7 @@ const guide: Guide = {
   question: 'What is the Digital Rainmaker System?',
   tldr: [
     'The Digital Rainmaker System is a done-for-you client acquisition system that Nexli Automation builds for established CPA and accounting firms, combining a premium website, an AI automation layer, a secure client portal, and a Google review engine, then running paid ads to it.',
-    'It is sold only to firms doing $500K or more in annual revenue (about $40K-$50K a month), and the build takes about 21 days from kickoff.',
+    'It is built for firms doing $1M–$5M+ in annual revenue, and the build takes about 21 days from kickoff.',
     'Each client the system brings in is a tax-planning engagement worth $15,000 to $55,000 to the firm. The build takes about 21 days, and Nexli reports on what the campaigns produced every week.',
     'Pricing is $10,000 a month with no setup fee, plus 10% performance pay, which is not 10% of every sale: once a month it is 10% of what the clients Nexli’s ads bring in paid, minus ad spend and commissions (the firm’s referrals and other sales are not counted), and the $10,000 already paid counts toward it. The ad budget is separate: at least $5,000 a month, paid directly to Meta. Six-month initial term, renewing six months at a time.',
   ],
@@ -121,13 +121,13 @@ const guide: Guide = {
       id: 'who-its-for',
       heading: 'Who it is for, and who it is not for',
       body: [
-        'Nexli works exclusively with established CPA and accounting firms doing **$500K or more in annual revenue**. The typical fit is a firm that already has a full compliance book, wants to grow tax advisory and planning work, and is losing prospects to competitors with better websites and more reviews rather than to competitors with better tax knowledge.',
+        'Nexli is built for established CPA and accounting firms doing **$1M–$5M+ in annual revenue**. The typical fit is a firm that already has a full compliance book, wants to grow tax advisory and planning work, and is losing prospects to competitors with better websites and more reviews rather than to competitors with better tax knowledge.',
         'That fit tracks where the profession is heading. The Thomson Reuters Institute\'s 2026 advisory services report found that among growing firms, [88% say advisory revenue is growing faster than compliance revenue](https://www.thomsonreuters.com/en-us/posts/tax-and-accounting/tax-firm-advisory-services-report-2026/), and advisory now averages 31% of total firm revenue. The same report found 52% of firms cite staff skills gaps as their biggest barrier to expanding advisory, which is why the system is built to add clients without adding intake and admin headcount. See [How to scale a CPA firm without hiring](/guides/how-to-scale-a-cpa-firm-without-hiring) for more on that side.',
         'It is explicitly not for solo practitioners just starting out, startups, or firms below the revenue threshold. Nexli\'s own FAQ says: "If you\'re a solo practitioner just starting out, this isn\'t the right fit yet." The model only works when the firm has the capacity and the pricing to convert advisory opportunities into engagements, and a newer firm usually does not yet.',
       ],
       bullets: [
-        '**Good fit:** established CPA or accounting firm, $500K+ revenue, wants more advisory clients, has capacity to take them, owner is tired of manual intake and follow-up.',
-        '**Not a fit:** solo practitioners just starting out, pre-revenue or sub-$500K firms, firms that only want a website with no intent to grow, firms unwilling to run paid ads.',
+        '**Good fit:** established CPA or accounting firm, $1M–$5M+ revenue, wants more advisory clients, has capacity to take them, owner is tired of manual intake and follow-up.',
+        '**Not a fit:** solo practitioners just starting out, pre-revenue or very small firms, firms that only want a website with no intent to grow, firms unwilling to run paid ads.',
       ],
     },
     {
@@ -160,7 +160,7 @@ const guide: Guide = {
           ['Handles follow-up and booking', 'Partially, if configured', 'No', 'Usually not', 'Yes, automated 24/7'],
           ['What each new client is worth', 'Not stated', 'Not stated', 'Rarely stated', '$15,000 to $55,000 per tax-planning engagement'],
           ['Contract', 'Annual or monthly subscription', 'One-time project', 'Varies', 'Six-month initial term, renewing six months at a time'],
-          ['Best for', 'Firms that want to run their own workflow tooling', 'Firms that only need a new site', 'Firms with strong intake already', 'Established firms ($500K+) that want advisory growth without adding admin staff'],
+          ['Best for', 'Firms that want to run their own workflow tooling', 'Firms that only need a new site', 'Firms with strong intake already', 'Established firms ($1M–$5M+) that want advisory growth without adding admin staff'],
         ],
       },
     },
@@ -170,7 +170,7 @@ const guide: Guide = {
       body: [
         'The realistic expectation: tax-planning clients booking onto the calendar once the campaigns go live, each an engagement worth $15,000 to $55,000. Nexli does not promise how many. What a firm actually earns depends on how many it closes and on its advisory pricing, and the weekly report shows exactly what the campaigns produced.',
         'The operational results show up sooner than the pipeline. Once the automation layer is live, every inbound call and form gets a response within seconds. Once the portal is live, document collection and engagement letters stop running through email. Once the review engine is live, the firm\'s Google profile starts adding reviews every month. Those changes are what make the ad traffic convert.',
-        'To apply, a firm submits an application and books a strategy call at [nexli.net/agency](/agency). The call reviews the firm\'s current website, intake, and review situation and ends with a roadmap. If the firm is under $500K in revenue or is not ready to pursue advisory growth, Nexli will say so. For broader context on budgeting for this kind of investment, see [How much should a CPA firm spend on marketing?](/guides/how-much-should-a-cpa-firm-spend-on-marketing) and [CPA firm growth strategy](/guides/cpa-firm-growth-strategy).',
+        'To apply, a firm submits an application and books a strategy call at [nexli.net/agency](/agency). The call reviews the firm\'s current website, intake, and review situation and ends with a roadmap. If the firm is too small for it or is not ready to pursue advisory growth, Nexli will say so. For broader context on budgeting for this kind of investment, see [How much should a CPA firm spend on marketing?](/guides/how-much-should-a-cpa-firm-spend-on-marketing) and [CPA firm growth strategy](/guides/cpa-firm-growth-strategy).',
       ],
     },
   ],
@@ -189,7 +189,7 @@ const guide: Guide = {
     },
     {
       question: 'Who qualifies for the Digital Rainmaker System?',
-      answer: 'Established CPA and accounting firms with at least $500K in annual revenue that want to grow tax advisory work. Nexli does not work with solo practitioners just starting out, startups, or firms below that threshold, because the model depends on the firm already having the capacity and pricing to convert advisory consultations.',
+      answer: 'Established CPA and accounting firms doing $1M–$5M+ in annual revenue that want to grow tax advisory work. Nexli does not work with solo practitioners just starting out, startups, or very small firms, because the model depends on the firm already having the capacity and pricing to convert advisory consultations.',
     },
     {
       question: 'How much does the Digital Rainmaker System cost?',

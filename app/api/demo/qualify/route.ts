@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
     ghlSource: "Nexli Demo - Qualifier",
     noteHeading: "Completed the demo qualifier",
     contentName: "Demo Qualifier",
-    qualifiedEventPrefix: "dql",
     webhookUrl: process.env.GHL_DEMO_QUALIFY_WEBHOOK_URL,
     webhookEnvName: "GHL_DEMO_QUALIFY_WEBHOOK_URL",
     webhookSource: "demo-qualifier",

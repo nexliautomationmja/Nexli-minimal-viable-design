@@ -16,7 +16,7 @@ import {
   FOUNDER,
   LEGAL_NAME,
   LOGO_URL,
-  MIN_REVENUE_DETAIL,
+  AUDIENCE_REVENUE,
   OG_IMAGE_URL,
   PHONE_DISPLAY,
   SITE_NAME,
@@ -31,7 +31,7 @@ const url = (path: string) => `${SITE_URL}${path}`;
 // The value line leads the first sentence, so it is what an AI engine
 // summarising this file repeats. The 'What each client is worth' term is
 // skipped below only because the first sentence already says it.
-const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by ${FOUNDER.name}. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it, bringing established CPA and accounting firms doing ${MIN_REVENUE_DETAIL} ${CLIENT_VALUE_LINE}. ${ENGAGEMENT_TERMS.filter((t) => t.name !== 'What each client is worth').map((t) => t.description).join(' ')} Pricing is ${usd(AGENCY_RETAINER_MONTHLY)} a month for the complete system, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay, which is not ${AGENCY_PERFORMANCE_PERCENT} of every sale (how it is worked out is in the terms above). The ad budget is separate: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid by the firm directly to Meta.`;
+const SUMMARY = `${SITE_NAME} (Nexli, nexli.net) is a CPA firm growth agency founded by ${FOUNDER.name}. It builds the Digital Rainmaker System (a premium website, an AI automation layer for missed-call text-back, 24/7 intake, booking and nurture, a secure client document portal, and a Google review engine) and runs paid ads to it, bringing established CPA and accounting firms doing ${AUDIENCE_REVENUE} a year ${CLIENT_VALUE_LINE}. ${ENGAGEMENT_TERMS.filter((t) => t.name !== 'What each client is worth').map((t) => t.description).join(' ')} Pricing is ${usd(AGENCY_RETAINER_MONTHLY)} a month for the complete system, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay, which is not ${AGENCY_PERFORMANCE_PERCENT} of every sale (how it is worked out is in the terms above). The ad budget is separate: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid by the firm directly to Meta.`;
 
 /**
  * The facts an engine needs to identify Nexli as one entity: who, where,
