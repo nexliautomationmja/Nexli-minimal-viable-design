@@ -81,16 +81,21 @@ export const AGENCY_PREPAY_SAVING = AGENCY_RETAINER_MONTHLY * AGENCY_RETAINER_TE
 export const AGENCY_MIN_AD_BUDGET = 5_000;
 
 /**
- * The top of the ad-budget range the VSLs and /booking-confirmed-b show:
- * "$5K–$15K a month" (Marcel, 2026-11-19). It was $30K, which he lowered
- * "so it doesn't spook them": the card says we recommend $5,000 a month as
- * the minimum and that ad spend is talked through on the call. The page
- * does not call it a cap. Every ROI model uses the minimum, the worst case.
+ * The top of the ad-budget range the VSLs, /booking-confirmed-b and /pitch
+ * show: "$5K–$15K+ a month" (Marcel, 2026-11-19). It was $30K, which he
+ * lowered "so it doesn't spook them": the card says we recommend $5,000 a
+ * month as the minimum and that ad spend is talked through on the call.
+ * Shown with a plus (Marcel, 2026-11-20: "make sure the ads budget for 15k
+ * says 15k+"): $15K is not a cap, and bigger firms spend more. Every ROI
+ * model uses the minimum, the worst case.
  */
 export const AGENCY_MAX_AD_BUDGET = 15_000;
 
 /** "$5K", "$15K": the compact form the price cards use for the range. */
 export const usdK = (n: number) => `$${Math.round(n / 1000)}K`;
+
+/** "$5K–$15K+": the range as every page writes it. */
+export const AGENCY_AD_BUDGET_RANGE = `${usdK(AGENCY_MIN_AD_BUDGET)}–${usdK(AGENCY_MAX_AD_BUDGET)}+`;
 
 /** Of agreed, attributable net revenue, when it beats the monthly minimum. */
 export const AGENCY_PERFORMANCE_RATE = 0.1;

@@ -1367,14 +1367,19 @@ const BookSection: React.FC<{ angle: string }> = ({ angle }) => (
   <section
     id={BOOK_ANCHOR}
     // Clears the fixed logo and pill (desktop) when a button scrolls here.
-    className="relative scroll-mt-4 md:scroll-mt-20 py-14 sm:py-20 md:py-24 px-4"
+    // Less padding on top on a phone: a button lands here, so the price
+    // starts near the top of the screen and the calendar is that much closer.
+    className="relative scroll-mt-4 md:scroll-mt-20 pt-10 pb-14 sm:py-20 md:py-24 px-4"
     style={{ backgroundColor: 'var(--bg-main)' }}
   >
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[260px] rounded-full blur-[120px] bg-emerald-500/8 pointer-events-none" />
     <div className="relative z-10">
       {/* Set in /math's type (Outfit 800, the blue-violet-cyan half), the
           language the price block is drawn in. */}
+      {/* phoneCompact (Marcel, 2026-11-20): short on a phone, so getting
+          from the price to the calendar is not a long scroll. */}
       <PricingBlock
+        phoneCompact
         headline={
           <>
             <h2

@@ -127,17 +127,19 @@ export default function VslBooking({ angle }: { angle: string }) {
   );
 
   return (
-    <div className="mx-auto mt-12 max-w-4xl md:mt-16">
+    // Tighter on a phone (Marcel, 2026-11-20): the price sits right above, and
+    // the heading fits one line, so the calendar starts sooner.
+    <div className="mx-auto mt-8 max-w-4xl sm:mt-12 md:mt-16">
       <p className="text-center text-[11px] font-bold uppercase tracking-[0.18em] text-cyan-400 sm:text-xs">
         Pick a time
       </p>
       <h3
-        className="mt-3 text-center text-2xl text-white md:text-3xl"
+        className="mt-2 text-balance text-center text-[1.3rem] text-white sm:mt-3 sm:text-2xl md:text-3xl"
         style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif", fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.02em' }}
       >
         Book your CPA Acquisition Review
       </h3>
-      <div className="mt-4 flex flex-col items-center justify-center gap-2 text-sm text-white/70 sm:flex-row sm:gap-5">
+      <div className="mt-3 flex flex-col items-center justify-center gap-1.5 text-[13px] text-white/70 sm:mt-4 sm:flex-row sm:gap-5 sm:text-sm">
         <span className="inline-flex items-center gap-1.5">
           <Clock className="h-4 w-4 text-blue-400" aria-hidden="true" />
           {VSL_CALL_MINUTES}-minute video call
@@ -150,7 +152,7 @@ export default function VslBooking({ angle }: { angle: string }) {
         </span>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4 sm:mt-6">
         {prepared ? (
           <InlineCalEmbed
             calLink={VSL_CAL_LINK}
