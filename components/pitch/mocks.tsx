@@ -401,7 +401,7 @@ export function QualifierDemo() {
               {fit ? (
                 <div className="rounded-2xl border border-emerald-400/40 bg-emerald-400/[0.08] p-5">
                   <div className="flex items-center gap-2 text-sm font-bold text-emerald-300">
-                    <CalendarCheck className="h-5 w-5" aria-hidden="true" /> A fit: straight to the calendar
+                    <CalendarCheck className="h-5 w-5" aria-hidden="true" /> Meets the criteria: the calendar opens
                   </div>
                   <p className="mt-2 text-[14px] leading-relaxed" style={{ color: MUTED }}>
                     The calendar opens on the same page. They pick a time, and their answers arrive with the booking.
@@ -417,7 +417,7 @@ export function QualifierDemo() {
               ) : (
                 <div className="rounded-2xl border border-amber-400/40 bg-amber-400/[0.07] p-5">
                   <div className="flex items-center gap-2 text-sm font-bold text-amber-200">
-                    <X className="h-5 w-5" aria-hidden="true" /> Not a fit: kept off your calendar
+                    <X className="h-5 w-5" aria-hidden="true" /> Doesn&apos;t meet them: no calendar
                   </div>
                   <p className="mt-2 text-[14px] leading-relaxed" style={{ color: MUTED }}>
                     They are thanked and told what happens next. They never reach your calendar, and they stay a contact in

@@ -1064,7 +1064,7 @@ const TransformationSection: React.FC = () => {
                 Meta Ads, Run For You
               </h3>
               <p className="text-xs md:text-sm max-w-xl leading-relaxed text-neutral-300">
-                We bring you {usd(AGENCY_ENGAGEMENT_LOW)}+ tax planning clients through Meta ads — and we
+                We run the Meta ads that bring tax planning prospects to your calendar — and we
                 make the creative, photo and video, so you never have to film anything or
                 turn yourself into a content creator.
               </p>
@@ -1265,7 +1265,7 @@ const CostOfInactionSection: React.FC<{ showDeadline?: boolean }> = ({
   const painPoints = [
     {
       icon: DollarSign,
-      text: `Every return you file for a client paying 6 figures in tax, without ever raising planning, is an engagement worth ${usd(AGENCY_ENGAGEMENT_LOW)} at the very least — and someone else eventually sells it to them.`,
+      text: `Every return you file for a client paying 6 figures in tax, without ever raising planning, may be a planning engagement left on the table — often priced from ${usd(AGENCY_ENGAGEMENT_LOW)} — and someone else may eventually sell it to them.`,
     },
     {
       icon: Users,
@@ -1386,9 +1386,11 @@ const BookSection: React.FC<{ angle: string }> = ({ angle }) => (
               className="mx-auto mt-3 max-w-4xl text-pretty text-center text-[1.85rem] sm:text-4xl lg:text-[3.25rem]"
               style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif", fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#ffffff' }}
             >
-              One monthly fee.{' '}
+              {/* The brief's heading (2026-11-20), the same as /pitch: the
+                  $10,000 is a minimum credited toward the 10%, not the only fee. */}
+              One agency fee structure.{' '}
               <span className="whitespace-nowrap bg-gradient-to-r from-blue-400 via-violet-400 to-cyan-300 bg-clip-text text-transparent">
-                No setup fee.
+                No separate setup fee.
               </span>
             </h2>
             <p
@@ -1440,14 +1442,15 @@ const ROISection: React.FC = () => {
               budget the firm pays Meta, both: leaving the ads out would
               flatter the multiple. */}
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            Two engagements at {usd(AGENCY_ENGAGEMENT_LOW)} — the{' '}
-            <strong style={{ color: '#ffffff' }}>bottom</strong> of the range, not the middle —
-            is{' '}
+            {/* An illustration, labelled as one (the pitch-deck brief,
+                2026-11-20): what an engagement is worth depends on the
+                firm's own offer, fit and scope. */}
+            Two engagements collected at {usd(AGENCY_ENGAGEMENT_LOW)} is{' '}
             <strong style={{ color: '#ffffff' }}>{usd(AGENCY_ENGAGEMENT_LOW * 2)} a month</strong>{' '}
-            against {usd(AGENCY_RETAINER_MONTHLY)} a month for us, plus at least{' '}
-            {usd(AGENCY_MIN_AD_BUDGET)} in ads you pay Meta directly. Price two at the top of the range
-            instead and it is {usd(AGENCY_ENGAGEMENT_HIGH * 2)}. Everything below is the worst
-            case, and the worst case already pays.
+            against a {usd(AGENCY_RETAINER_MONTHLY)} monthly minimum to us, plus at least{' '}
+            {usd(AGENCY_MIN_AD_BUDGET)} in ads you pay Meta directly. An illustration, not a
+            forecast: what an engagement is worth depends on your firm&apos;s offer, the
+            client&apos;s fit and the scope.
           </p>
         </motion.div>
 
@@ -1461,19 +1464,19 @@ const ROISection: React.FC = () => {
               Icon: ContactRound,
               value: '2',
               label: 'Advisory clients a month',
-              note: 'The floor, not the target.',
+              note: 'An illustration, not a forecast.',
             },
             {
               Icon: DollarSign,
               value: usd(AGENCY_ENGAGEMENT_LOW * 2),
-              label: 'What those two are worth',
-              note: `At ${usd(AGENCY_ENGAGEMENT_LOW)} each — the floor. The ceiling is ${usd(AGENCY_ENGAGEMENT_HIGH)}.`,
+              label: 'What those two would collect',
+              note: `At ${usd(AGENCY_ENGAGEMENT_LOW)} each. Your own fees and scope set the real number.`,
             },
             {
               Icon: TrendingUp,
               value: `${Math.floor((AGENCY_ENGAGEMENT_LOW * 2) / (AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET))}x`,
-              label: 'What it costs you, covered',
-              note: `${usd(AGENCY_RETAINER_MONTHLY)} a month plus at least ${usd(AGENCY_MIN_AD_BUDGET)} in ads, paid to Meta.`,
+              label: 'Collected ÷ base monthly outlay',
+              note: `${usd(AGENCY_RETAINER_MONTHLY)} to us plus at least ${usd(AGENCY_MIN_AD_BUDGET)} in ads, paid to Meta. Before commissions, delivery and other costs; not profit.`,
             },
           ].map(({ Icon, value, label, note }, i) => (
             <motion.div
@@ -1561,20 +1564,20 @@ const ROISection: React.FC = () => {
                   ROI Reality Check
                 </p>
                 <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-200">
-                  A tax planning engagement starts at{' '}
+                  Planning engagements are often priced from{' '}
                   <span className="font-bold text-white">{usd(AGENCY_ENGAGEMENT_LOW)}</span>{' '}
-                  and firms are charging up to{' '}
-                  <span className="font-bold text-white">{usd(AGENCY_ENGAGEMENT_HIGH)}</span>{' '}
-                  for the same work. {usd(AGENCY_ENGAGEMENT_LOW)} is the worst you should expect
-                  to make from one, not the target. And the client who pays it does not shop you
-                  next January — you just saved them more than most of your book pays you all
-                  year. Land{' '}
-                  <span className="font-bold text-white">2 a month</span> at the floor and this
-                  is not an expense, it is the{' '}
+                  to{' '}
+                  <span className="font-bold text-white">{usd(AGENCY_ENGAGEMENT_HIGH)}</span>,
+                  depending on your firm&apos;s established offer, the client&apos;s fit and the
+                  scope. It is not a guaranteed value per appointment. If{' '}
+                  <span className="font-bold text-white">2 a month</span> are collected at{' '}
+                  {usd(AGENCY_ENGAGEMENT_LOW)}, the{' '}
                   <span className="font-bold" style={{ color: '#00D632' }}>
-                    cheapest line on your P&amp;L
-                  </span>
-                  .
+                    {usd(AGENCY_ENGAGEMENT_LOW * 2)}
+                  </span>{' '}
+                  covers the {usd(AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET)} base monthly outlay,
+                  before commissions, delivery and your other costs. Appointment volume, attendance,
+                  sales conversion and collection timing vary.
                 </p>
               </div>
             </div>

@@ -164,7 +164,7 @@ export default function AvatarSection() {
             <span className="block">
               <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300 sm:text-[11px]">No ad fatigue</span>
               <span className="mt-1 block text-lg font-extrabold leading-tight tracking-tight text-white sm:text-xl">
-                Fresh ads every 7 to 14 days, busy season or not.
+                Creative reviewed and refreshed, typically every 7 to 14 days.
               </span>
               <span className="mt-2 block text-[13.5px] leading-relaxed sm:text-sm" style={{ color: MUTED }}>
                 Ads wear out: show people the same one long enough and they stop seeing it. Most agencies rely on you for

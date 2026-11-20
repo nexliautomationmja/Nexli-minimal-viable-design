@@ -99,7 +99,7 @@ export const AD_CREATIVES: AdCreative[] = [
     // MENTION A 7-FIGURE TAX BILL."
     muxPlaybackId: 'veGeNhjfo2R27qULn7SZROLHUXCRJfKGaBo3BZMIZjg',
     primaryText:
-      'His accountant waited until Thanksgiving to mention a seven-figure tax bill. By then the year was written and there was nothing left to do but pay it.',
+      'His accountant waited until Thanksgiving to mention a seven-figure tax bill. Some planning options may already have been missed by then.',
     headline: 'Find out what yours should have told you in June',
     leads: 23,
     costPerLead: 61,
