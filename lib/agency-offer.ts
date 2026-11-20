@@ -54,11 +54,14 @@ export const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 //     /pitch, /math, Candor, the booking FAQ, lib/site, llms and the guides,
 //     with the $150,000 → $5,000 and $80,000 → $0 months. "As if a baby was
 //     looking at it": nobody should leave thinking we take 10% of every sale.
-//   THE VSLs leave the math out (Marcel: "show that real math on the
-//     booking confirmed page only"). Their card says it is not 10% of every
-//     sale and that it is walked through on the call.
-//   THE PREPAY: not on the VSLs, /booking-confirmed-b or /pitch. /math and
-//     Candor may offer it as the way to save.
+//   THE VSLs leave the worked months out (Marcel: "show that real math on
+//     the booking confirmed page only"). Since 2026-11-20 (the pitch-deck
+//     brief) their cards carry the definition and the credit in words: the
+//     $10,000 is credited against the 10%, not added on top, and only net
+//     revenue above $100,000 in a month is invoiced.
+//   THE PREPAY: on /pitch since 2026-11-20, as six $10,000 monthly credits
+//     (see THE PREPAY, AS CREDITS below). Still not on the VSLs or
+//     /booking-confirmed-b. /math and Candor may offer it as the way to save.
 //   POLICY PAGES (/terms, /pricing, /refund-policy, /delivery-policy): all of
 //     it, the performance-pay rule and the prepay included. The card
 //     processor's underwriters match every charge they process against
@@ -113,12 +116,124 @@ export const agencyCompensation = (attributableNetRevenue: number) =>
  */
 export const PERFORMANCE_THRESHOLD = AGENCY_RETAINER_MONTHLY / AGENCY_PERFORMANCE_RATE;
 
+// ── THE MONTHLY CALCULATION, FROM WHAT WAS COLLECTED (2026-11-20) ────────
+// The pitch-deck brief Marcel approved on 2026-11-20 works every example
+// from the money actually collected, so nobody can mistake the fee base for
+// gross fees, or for profit:
+//
+//   agreed, attributable net revenue = collected from the clients the
+//     system brought in − agreed ad spend − agreed commissions
+//   additional invoice = 10% of that − the $10,000 monthly credit, never
+//     below $0
+//
+// The $10,000 is CREDITED against the 10%, never added to it. It is a fee
+// base, not the firm's net profit: payroll, delivery and overhead are not
+// taken off. Which spend and commissions count, and how a client is
+// attributed, is the agreement's to say; no page invents it. A month below
+// zero invoices $0 and creates no carry-forward.
+
+export interface PerformanceMonth {
+  /** What the clients the system brought in paid that month. */
+  collected: number;
+  adSpend: number;
+  commissions: number;
+  /** Agreed, attributable net revenue: collected − ad spend − commissions. */
+  net: number;
+  /** 10% of net, never below $0. */
+  share: number;
+  /** The $10,000 paid at the start of the month, credited against the share. */
+  credit: number;
+  /** Invoiced at the end of the month: the share above the credit, never below $0. */
+  additional: number;
+  /** Net revenue the $10,000 covers: the first $100,000 (or all of it, below that). */
+  covered: number;
+  /** Net revenue above $100,000. The additional invoice is 10% of this. */
+  above: number;
+}
+
+/** One month, worked in whole cents and rounded once, so no example can drift by a cent. */
+export function performanceMonth(collected: number, adSpend = 0, commissions = 0): PerformanceMonth {
+  const net = collected - adSpend - commissions;
+  const shareCents = Math.max(0, Math.round(net * 100 * AGENCY_PERFORMANCE_RATE));
+  const creditCents = AGENCY_RETAINER_MONTHLY * 100;
+  return {
+    collected,
+    adSpend,
+    commissions,
+    net,
+    share: shareCents / 100,
+    credit: AGENCY_RETAINER_MONTHLY,
+    additional: Math.max(0, shareCents - creditCents) / 100,
+    covered: Math.max(0, Math.min(net, PERFORMANCE_THRESHOLD)),
+    above: Math.max(0, net - PERFORMANCE_THRESHOLD),
+  };
+}
+
+/** The brief's quiet month: $90,000 − $5,000 ads − $5,000 commissions = $80,000 → $8,000, inside the credit → $0. */
+export const QUIET_MONTH = performanceMonth(90_000, AGENCY_MIN_AD_BUDGET, 5_000);
+
+/** Exactly on the line: $110,000 − $5,000 − $5,000 = $100,000 → $10,000 → $0. At or below $100,000 net, $0. */
+export const THRESHOLD_MONTH = performanceMonth(110_000, AGENCY_MIN_AD_BUDGET, 5_000);
+
+/** The brief's growth month: $165,000 − $5,000 − $10,000 = $150,000 → $15,000 − $10,000 → $5,000. */
+export const BIG_MONTH = performanceMonth(165_000, AGENCY_MIN_AD_BUDGET, 10_000);
+
+// SAID THE SIMPLE WAY (Marcel, 2026-11-20): "if net attributed revenue is
+// above 100K, then we bill the difference". Exactly: we bill 10% OF the
+// difference. It is the same number as "10% of net, minus the $10,000
+// credit" (10% × net − $10,000 = 10% × (net − $100,000) whenever net is
+// above $100,000), said so nobody has to do the subtraction. Always "10% of
+// the difference", never "the difference" alone, which reads as billing the
+// whole amount over $100,000.
+
+/** The rule in one sentence: the line every page leads with. */
+export const PERFORMANCE_SIMPLE_RULE = `Your ${usd(AGENCY_RETAINER_MONTHLY)} covers the first ${usd(PERFORMANCE_THRESHOLD)} of net attributed revenue each month. Above ${usd(PERFORMANCE_THRESHOLD)}, we bill ${AGENCY_PERFORMANCE_PERCENT} of the difference.`;
+
+/**
+ * What "net attributed revenue" is, under the rule. On /pitch and
+ * /booking-confirmed-b (PerformancePayExplainer). Names the agreement's own
+ * term once.
+ */
+export const PERFORMANCE_DEFINITION = `Net attributed revenue is what the clients the Nexli system brought you paid that month, minus the agreed ad spend and commissions (your agreement calls it agreed, attributable net revenue). Unrelated referrals and unrelated sales are excluded, and it is not your firm's net profit.`;
+
+/** Wherever the $100,000 line is explained: "at or below" (the line itself is $0) and always NET. */
+export const PERFORMANCE_THRESHOLD_LINE = `At or below ${usd(PERFORMANCE_THRESHOLD)} of net attributed revenue in a month, the ${usd(AGENCY_RETAINER_MONTHLY)} is all you pay us.`;
+
+// ── THE PREPAY, AS CREDITS (the 2026-11-20 brief) ────────────────────────
+// $50,000 up front buys SIX $10,000 MONTHLY FEE CREDITS: $60,000 of credit
+// for $50,000. Each prepaid month has the same $10,000 credit and the same
+// $100,000 line as a monthly one. It is NOT $8,333 a month: the credit is
+// never cut to the discounted cash. Additional performance amounts are still
+// invoiced monthly, and advertising is still separate. The monthly option
+// stays primary; this is a payment alternative, not a way out of
+// performance billing. /pitch shows it; the VSLs and /booking-confirmed-b
+// still do not.
+
+/** Each prepaid month's credit: the same $10,000 as a monthly payment. */
+export const PREPAY_MONTHLY_CREDIT = AGENCY_RETAINER_MONTHLY;
+
+/**
+ * Nexli's payments over one six-month term when every month has the same
+ * net revenue, both ways. At $150,000 net: $90,000 monthly, $80,000 prepaid;
+ * the $10,000 saving survives. Arithmetic, not a forecast.
+ */
+export function termAgencyPayments(monthlyNet: number): { monthly: number; prepaid: number; additionalEachMonth: number } {
+  const additionalEachMonth = performanceMonth(monthlyNet).additional;
+  const extra = additionalEachMonth * AGENCY_RETAINER_TERM_MONTHS;
+  return {
+    monthly: AGENCY_RETAINER_MONTHLY * AGENCY_RETAINER_TERM_MONTHS + extra,
+    prepaid: AGENCY_RETAINER_PREPAY + extra,
+    additionalEachMonth,
+  };
+}
+
 /**
  * The big month, Marcel's example (2026-11-19): $150,000 → 10% is $15,000 →
  * $10,000 already paid → a $5,000 invoice at the end of the month. It
- * replaced $120,000 → $2,000 everywhere, the policy pages included.
+ * replaced $120,000 → $2,000 everywhere, the policy pages included. Since
+ * 2026-11-20 it is BIG_MONTH's net, so the worked months and this agree.
  */
-export const PERFORMANCE_EXAMPLE_REVENUE = 150_000;
+export const PERFORMANCE_EXAMPLE_REVENUE = BIG_MONTH.net;
 export const PERFORMANCE_EXAMPLE_TOTAL = agencyCompensation(PERFORMANCE_EXAMPLE_REVENUE);
 export const PERFORMANCE_EXAMPLE_EXTRA = PERFORMANCE_EXAMPLE_TOTAL - AGENCY_RETAINER_MONTHLY;
 
@@ -127,7 +242,7 @@ export const PERFORMANCE_EXAMPLE_EXTRA = PERFORMANCE_EXAMPLE_TOTAL - AGENCY_RETA
  * cost nothing extra: $80,000 → 10% is $8,000, less than the $10,000
  * already paid → nothing more.
  */
-export const PERFORMANCE_QUIET_REVENUE = 80_000;
+export const PERFORMANCE_QUIET_REVENUE = QUIET_MONTH.net;
 /** 10% of the quiet month: $8,000. Not agencyCompensation, which floors at $10,000. */
 export const PERFORMANCE_QUIET_SHARE = Math.round(PERFORMANCE_QUIET_REVENUE * AGENCY_PERFORMANCE_RATE);
 export const PERFORMANCE_QUIET_EXTRA = agencyCompensation(PERFORMANCE_QUIET_REVENUE) - AGENCY_RETAINER_MONTHLY;

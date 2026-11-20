@@ -5,10 +5,12 @@
 // lib/pitch-deck; the pictures in ./mocks; the slide pieces are /math's
 // (components/math/ui), so this deck reads exactly like See the Math.
 //
-// Marcel presents it on the call, so there is no call to action on any
-// slide. The price is on two: pricing, the full pricing block from
-// /booking-confirmed-b (Marcel, 2026-11-19), then the-math. Each slide's
-// <Slide id> is its PITCH_SLIDES id.
+// Marcel presents it on the call, so there is no button or booking link on
+// any slide; the last one asks the decision as questions. The price is on
+// two: pricing, the full pricing block from /booking-confirmed-b (Marcel,
+// 2026-11-19), then the-math, the illustrative economics. Each slide's
+// <Slide id> is its PITCH_SLIDES id. The 2026-11-20 brief's wording rules are
+// in lib/pitch-deck's header.
 // ---------------------------------------------------------------------------
 import React from 'react';
 import {
@@ -16,6 +18,7 @@ import {
   Bot,
   CalendarCheck,
   Check,
+  ClipboardCheck,
   Clapperboard,
   Film,
   Handshake,
@@ -26,6 +29,7 @@ import {
   PenLine,
   PlayCircle,
   Repeat,
+  Rocket,
   ScanSearch,
   Sparkles,
   Users,
@@ -38,17 +42,26 @@ import {
 import { motion } from 'framer-motion';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import MetaLogo from '@/components/icons/MetaLogo';
-import { AGENCY_MIN_AD_BUDGET, AGENCY_PERFORMANCE_PERCENT, AGENCY_RETAINER_MONTHLY } from '@/lib/agency-offer';
-import PerformancePayExplainer from '@/components/booking/PerformancePayExplainer';
+import {
+  AGENCY_MIN_AD_BUDGET,
+  AGENCY_PERFORMANCE_PERCENT,
+  AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_TERM_MONTHS,
+  PERFORMANCE_SIMPLE_RULE,
+  performanceMonth,
+} from '@/lib/agency-offer';
 import PricingBlock from '@/components/booking/PricingBlock';
-import { AD_SPEND, MONTHLY_TOTAL, PLAN_FEE, SCENARIOS, chain, times, usd } from '@/lib/see-the-math';
+import { AD_SPEND, MONTHLY_TOTAL, PLAN_FEE, SCENARIOS, SHOW_RATE, chain, times, usd } from '@/lib/see-the-math';
 import { ShimmerBadge } from '@/components/math/ChainIcons';
 import { Body, Callout, FAINT, GRADIENT_TEXT, HEADING, Heading, MUTED, Panel, Reveal, Slide } from '@/components/math/ui';
 import type { DeckSlide } from '@/components/deck/DeckShell';
 import {
   AVATAR_STUDY,
   CREATIVE_PIPELINE,
+  EVALUATION_STAGES,
+  FIRM_FIT,
   FOLLOW_UP,
+  INSPECT_ITEMS,
   PITCH_AD,
   PITCH_AVATARS,
   PITCH_BUILD_DAYS,
@@ -58,7 +71,7 @@ import {
   PERFORMANCE_THRESHOLD,
   PITCH_HOOKS,
   PITCH_STEPS,
-  PITCH_VALUE_LINE,
+  PITCH_VALUE_NOTE,
   type PitchStepKey,
 } from '@/lib/pitch-deck';
 import {
@@ -116,8 +129,12 @@ function TopSlide() {
       </Reveal>
       <Reveal delay={0.08}>
         <p className="mt-6 max-w-3xl text-base leading-relaxed sm:text-lg lg:text-xl" style={{ color: MUTED }}>
-          Six pieces, built and run for you, each one handing off to the next, and {PITCH_VALUE_LINE}. You take the
-          calls.
+          Six connected pieces, built and run for your firm, to attract and screen business owners and high earners for
+          proactive tax-planning conversations. You take the calls, confirm fit, and sell the engagement.
+        </p>
+        {/* Conditional, and secondary (the brief, 2026-11-20). */}
+        <p className="mt-3 max-w-3xl text-[13px] leading-relaxed sm:text-sm" style={{ color: FAINT }}>
+          {PITCH_VALUE_NOTE}
         </p>
       </Reveal>
 
@@ -147,7 +164,7 @@ function TopSlide() {
       </Reveal>
 
       <Reveal delay={0.28} className="mt-10 flex flex-wrap gap-2.5 lg:mt-12">
-        {[`Built in about ${PITCH_BUILD_DAYS} days`, 'New creative every 7 to 14 days', 'One avatar, one firm', 'Nobody on camera'].map((t) => (
+        {[`Estimated build: about ${PITCH_BUILD_DAYS} days`, 'Creative refreshed, typically every 7–14 days', 'One avatar, one firm', 'Nobody on camera'].map((t) => (
           <span key={t} className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-[13px] font-semibold text-white/80">
             {t}
           </span>
@@ -211,7 +228,9 @@ function PathSlide() {
   );
 }
 
-// ── 3. The ad does the targeting ──────────────────────────────────────────
+// ── 3. The ad ─────────────────────────────────────────────────────────────
+// Creative and testing, not certainty (the brief, 2026-11-20): no claim that
+// Meta puts it "in front of the right owner".
 
 function AdSlide() {
   const reads = [
@@ -222,13 +241,13 @@ function AdSlide() {
   ];
   const flow = [
     { Icon: PenLine, tone: 'blue' as Tone, t: 'What the ad says', d: 'Everything marked on the ad.' },
-    { Icon: ScanSearch, tone: 'violet' as Tone, t: 'Meta reads all of it', d: 'Its system works out who the ad is for from the ad itself.' },
-    { Icon: Users, tone: 'emerald' as Tone, t: 'Shown to the people most likely to respond', d: 'On Facebook and Instagram, to the business owners and high earners who match it.' },
+    { Icon: ScanSearch, tone: 'violet' as Tone, t: 'Meta’s delivery system', d: 'Uses the ad’s content, the campaign settings and the conversion signals we send.' },
+    { Icon: Users, tone: 'emerald' as Tone, t: 'Judged by opportunity quality', d: 'We measure it by the prospects reaching your firm, not by clicks alone.' },
   ];
   return (
     <Slide id="ad">
       <Heading kicker="1 · The ad">
-        The ad does the targeting. <span className={GRADIENT_TEXT}>So we write it for your client.</span>
+        Creative written for <span className={GRADIENT_TEXT}>the clients your firm wants.</span>
       </Heading>
 
       <div className="mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-14">
@@ -275,10 +294,9 @@ function AdSlide() {
           </Reveal>
 
           <Reveal delay={0.32}>
-            <Callout label="The creative is the targeting">
-              The video, the photo and the copy underneath tell Meta who it&apos;s for. Meta&apos;s system scans all of it
-              and puts it in front of the right owner. That&apos;s why every ad we make is written for your ideal client,
-              not for everyone.
+            <Callout label="How we use creative">
+              Creative helps communicate who the offer is for. We test messaging, campaign settings, and conversion signals
+              against the quality of the opportunities reaching your firm.
             </Callout>
           </Reveal>
         </div>
@@ -340,9 +358,9 @@ function IcpSlide() {
       </div>
 
       <Reveal delay={0.36}>
-        <Callout label="Fresh creative, on purpose" tone="amber" className="mt-6 max-w-4xl">
-          Meta tends to favor advertisers who keep feeding it new creative, so we refresh your videos and photos, usually
-          every 7 to 14 days depending on how they perform.
+        <Callout label="A screening signal, not a verdict" tone="amber" className="mt-6 max-w-4xl">
+          Tax liability is an initial screening signal. Your firm confirms the planning opportunity, willingness to
+          invest, and scope during the consultation.
         </Callout>
       </Reveal>
     </Slide>
@@ -374,16 +392,15 @@ function AvatarSlide() {
 
         <div className="space-y-4">
           <Reveal delay={0.16}>
-            <Panel title="We cast your avatar. You don't pick one.">
+            <Panel title="Cast by Nexli, for your firm">
               <Body muted={false} className="lg:text-lg">
-                Meta decides who sees an ad partly from what is in it, and that includes the person on screen. So the face
-                in your ads is chosen for the clients you want to reach, not for taste.
+                Nexli casts the presenter for your firm&apos;s brand and target client profile. You see the creative before
+                launch. Performance is evaluated through actual opportunity quality, not appearance alone.
               </Body>
-              <p className="mt-4 text-[13px] leading-relaxed" style={{ color: MUTED }}>
-                {AVATAR_STUDY.finding}
-              </p>
-              <p className="mt-2 text-[11.5px] leading-relaxed" style={{ color: FAINT }}>
-                Source:{' '}
+              {/* A source note, not a sales argument (the brief): creative can
+                  affect delivery; no face is a promise of results. */}
+              <p className="mt-4 text-[11.5px] leading-relaxed" style={{ color: FAINT }}>
+                {AVATAR_STUDY.finding} Source:{' '}
                 <a href={AVATAR_STUDY.href} target="_blank" rel="noopener noreferrer" className="underline decoration-white/25 underline-offset-2 hover:text-white/70">
                   {AVATAR_STUDY.cite}
                 </a>
@@ -447,16 +464,16 @@ function OneFaceSlide() {
 function VslSlide() {
   const points = [
     {
-      t: 'She teaches the outcome they want',
-      d: 'Paying less tax, legally, with a plan made before the year closes. Explained once, the same way, to every prospect.',
+      t: 'She explains what planning can do',
+      d: 'How a plan made before the year closes may lower what they owe, legally. Explained the same way to every prospect.',
     },
     {
       t: 'Tax planning is the front door',
       d: 'Planning earns the trust. Bookkeeping, payroll and the rest of what you do follow it.',
     },
     {
-      t: 'Nobody books cold',
-      d: 'By the time they reach the questions, they know what the call is for and who it is with.',
+      t: 'Education before the consultation',
+      d: 'The VSL explains the offer and helps prospects understand what the planning conversation covers before booking.',
     },
   ];
   return (
@@ -503,32 +520,32 @@ function QualifierSlide() {
   return (
     <Slide id="qualifier">
       <Heading kicker="4 · The qualifier">
-        Only the right people <span className={GRADIENT_TEXT}>reach your calendar.</span>
+        Prospects who meet your initial screening criteria <span className={GRADIENT_TEXT}>can book.</span>
       </Heading>
       <div className="mt-8 grid items-start gap-8 lg:mt-10 lg:grid-cols-[1fr_minmax(0,26rem)] lg:gap-14">
         <div className="space-y-4">
           <Reveal delay={0.1}>
             <Body muted={false} className="lg:text-lg">
-              Right under the video, a few quick questions sort a real planning prospect from someone who only needs a
-              return filed. It takes them under a minute.
+              Right under the video, a few quick questions help separate likely planning prospects from people who only
+              need a return filed. It takes them under a minute.
             </Body>
           </Reveal>
           <Reveal delay={0.16}>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-emerald-400/35 bg-emerald-400/[0.06] p-4">
                 <div className="flex items-center gap-2 text-sm font-bold text-emerald-300">
-                  <CalendarCheck className="h-4 w-4" aria-hidden="true" /> A fit
+                  <CalendarCheck className="h-4 w-4" aria-hidden="true" /> Meets your criteria
                 </div>
                 <p className="mt-1.5 text-[14px] leading-relaxed" style={{ color: MUTED }}>
-                  Straight to your calendar, with their answers attached.
+                  Can book on your calendar, with their answers attached.
                 </p>
               </div>
               <div className="rounded-2xl border border-amber-400/35 bg-amber-400/[0.06] p-4">
                 <div className="flex items-center gap-2 text-sm font-bold text-amber-200">
-                  <ListFilter className="h-4 w-4" aria-hidden="true" /> Not a fit
+                  <ListFilter className="h-4 w-4" aria-hidden="true" /> Doesn&apos;t meet them
                 </div>
                 <p className="mt-1.5 text-[14px] leading-relaxed" style={{ color: MUTED }}>
-                  Kept off your calendar. They stay a contact in your CRM.
+                  Not offered the calendar. They stay a contact in your CRM.
                 </p>
               </div>
             </div>
@@ -536,7 +553,8 @@ function QualifierSlide() {
           <Reveal delay={0.22}>
             <Callout label="Your questions, your bar">
               These are examples. We set the questions and where the line sits with you: income, the tax they pay, whether
-              there is a real planning opportunity, and anything else that matters to your firm.
+              there may be a planning opportunity, and anything else that matters to your firm. Screening uses
+              prospect-provided information. Final fit and the planning opportunity are confirmed by your firm.
             </Callout>
           </Reveal>
         </div>
@@ -555,7 +573,7 @@ function CalendarSlide() {
     <Slide id="calendar">
       <Heading
         kicker="5 · Your calendar"
-        sub="A qualified prospect picks a time on the same page. It lands on your calendar like any other meeting, with who they are and how they answered."
+        sub="A screened prospect picks a time on the same page. It lands on your calendar like any other meeting, with who they are and how they answered. Booked is not the same as attended or qualified: those come on the call."
       >
         Booked straight <span className={GRADIENT_TEXT}>onto your calendar.</span>
       </Heading>
@@ -674,143 +692,248 @@ function CreativeSlide() {
 
 /**
  * The full pricing, "just like on the booking confirmed page" (Marcel,
- * 2026-11-19): /booking-confirmed-b's own PricingBlock, with the 10% worked
- * out, in its one-screen deck layout. The same component, so the slide and
- * the page cannot disagree.
+ * 2026-11-19): /booking-confirmed-b's own PricingBlock, with the monthly
+ * calculation worked out, in its one-screen deck layout. The same component,
+ * so the slide and the page cannot disagree. Since 2026-11-20 it also shows
+ * the optional prepay (six $10,000 credits), smaller than the monthly
+ * option, so every pricing fact is on one slide (the brief's acceptance
+ * test).
  */
 function PricingSlide() {
   return (
     <Slide id="pricing">
       <Heading kicker="What it costs">
-        One monthly fee. <span className={GRADIENT_TEXT}>No setup fee.</span>
+        One agency fee structure. <span className={GRADIENT_TEXT}>No separate setup fee.</span>
       </Heading>
       <div className="mt-6 lg:mt-8">
-        <PricingBlock deck explainPerformance />
+        <PricingBlock deck explainPerformance prepay />
       </div>
     </Slide>
   );
 }
 
-// ── 13. What it brings in, what it costs ──────────────────────────────────
+// ── 13. Illustrative economics ────────────────────────────────────────────
 
 /**
- * The most valuable part of See the Math on one slide (Marcel, 2026-11-19):
- * new fees a month at each of /math's three paces, against the monthly
- * investment, and where the 10% starts. The numbers are /math's own
- * (lib/see-the-math) so the two decks cannot disagree.
+ * The most valuable part of See the Math on one slide (Marcel, 2026-11-19),
+ * relabelled by the 2026-11-20 brief: illustrative COLLECTED fees for 2, 3
+ * and 5 clients (named by the client count, not "conservative" or "best
+ * case"), their net, the base cash outlay, a low month and the disclosure.
+ * The inputs are /math's own (lib/see-the-math), printed in the footer as
+ * illustrative, not historical. The full monthly calculation is on the
+ * pricing slide; this one carries only its one-line definition.
  */
 function MoneySlide() {
-  const rows = SCENARIOS.map((s) => ({ s, c: chain(s) }));
-  // The scale runs a little past the threshold, so its line sits inside it.
-  const scale = Math.max(PERFORMANCE_THRESHOLD, ...rows.map((r) => r.c.newFees)) * 1.25;
+  const rows = SCENARIOS.map((s) => {
+    const c = chain(s);
+    return { s, c, m: performanceMonth(c.newFees, AD_SPEND, 0) };
+  });
+  const top = rows[rows.length - 1];
+  const scale = Math.max(...rows.map((r) => r.c.newFees)) * 1.12;
   const at = (n: number) => `${(n / scale) * 100}%`;
+  const pct = (n: number) => `${Math.round(n * 100)}%`;
   return (
     <Slide id="the-math">
-      <Heading kicker="The math, on one slide">
-        What it can bring in. <span className={GRADIENT_TEXT}>What it costs you.</span>
+      <Heading kicker="Illustrative economics">
+        What it could bring in. <span className={GRADIENT_TEXT}>What it costs you.</span>
       </Heading>
 
-      <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1.1fr_1fr]">
+      <div className="mt-6 grid gap-5 lg:mt-8 lg:grid-cols-[1.15fr_1fr]">
         <Reveal delay={0.1}>
-          <Panel title="New fees a month, at full pace" className="h-full">
-            <div className="relative">
-              <ul className="relative space-y-4">
-                {rows.map(({ s, c }, i) => (
-                  <li key={s.id} className="flex items-center gap-3">
-                    <span className="w-[7rem] shrink-0 sm:w-[8rem]">
-                      <span className="block text-[13px] font-bold text-white">{s.label}</span>
-                      <span className="block text-[11.5px]" style={{ color: FAINT }}>
-                        {c.clients} clients a month
+          <Panel title="Illustrative monthly collected-fee scenarios" className="h-full">
+            <ul className="space-y-3.5">
+              {rows.map(({ s, c, m }, i) => (
+                <li key={s.id} className="flex items-center gap-3">
+                  <span className="w-[7.5rem] shrink-0 sm:w-[8.5rem]">
+                    <span className="block text-[14px] font-bold text-white">{c.clients} clients</span>
+                    <span className="block text-[11.5px] leading-snug" style={{ color: MUTED }}>
+                      {usd(c.newFees)} collected
+                    </span>
+                    <span className="block text-[11.5px] leading-snug" style={{ color: FAINT }}>
+                      {usd(m.net)} net
+                    </span>
+                  </span>
+                  <span className="relative h-10 flex-1">
+                    {/* The base outlay, drawn in every row's own track so it
+                        lines up with the bars at any width. */}
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -bottom-2 -top-2 z-10 border-l-2 border-amber-400/80"
+                      style={{ left: at(MONTHLY_TOTAL) }}
+                    />
+                    <motion.span
+                      className="absolute inset-y-0 left-0 flex items-center justify-end rounded-lg bg-gradient-to-r from-blue-500/70 to-cyan-400/80 pr-2.5"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: at(c.newFees) }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.9, delay: 0.2 + i * 0.12, ease: 'easeOut' }}
+                    >
+                      <span className="hidden whitespace-nowrap text-[14px] font-black text-white sm:inline">
+                        <AnimatedNumber value={c.newFees} format={(n) => usd(Math.round(n))} animateOnView duration={1000} />
                       </span>
-                      {/* On a phone the bars are too short to hold the figure. */}
-                      <span className="block text-[14px] font-black text-white sm:hidden">{usd(c.newFees)}</span>
-                    </span>
-                    <span className="relative h-11 flex-1">
-                      {/* The two reference lines, drawn in every row's own
-                          track so they line up with the bars at any width;
-                          they reach into the gaps so the rows join up. */}
-                      <span aria-hidden="true" className="pointer-events-none absolute -bottom-2 -top-2 z-10 border-l-2 border-amber-400/80" style={{ left: at(MONTHLY_TOTAL) }} />
-                      <span aria-hidden="true" className="pointer-events-none absolute -bottom-2 -top-2 z-10 border-l-2 border-dashed border-violet-400/80" style={{ left: at(PERFORMANCE_THRESHOLD) }} />
-                      <motion.span
-                        className="absolute inset-y-0 left-0 flex items-center justify-end rounded-lg bg-gradient-to-r from-blue-500/70 to-cyan-400/80 pr-2.5"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: at(c.newFees) }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.9, delay: 0.2 + i * 0.12, ease: 'easeOut' }}
-                      >
-                        <span className="hidden whitespace-nowrap text-[15px] font-black text-white sm:inline">
-                          <AnimatedNumber value={c.newFees} format={usd} animateOnView duration={1000} />
-                        </span>
-                      </motion.span>
-                    </span>
-                    <span className="w-12 shrink-0 rounded-full border border-amber-400/35 bg-amber-400/[0.08] py-0.5 text-center text-[12px] font-bold text-amber-200">
-                      {times(c.multiple)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="mt-5 grid gap-2 text-[12.5px] sm:grid-cols-2">
+                    </motion.span>
+                  </span>
+                  <span className="w-12 shrink-0 rounded-full border border-amber-400/35 bg-amber-400/[0.08] py-0.5 text-center text-[12px] font-bold text-amber-200">
+                    {times(c.multiple)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-5 grid gap-2.5 text-[12px] leading-snug">
               <span className="flex items-start gap-2" style={{ color: MUTED }}>
                 <span className="mt-1.5 h-0.5 w-4 shrink-0 bg-amber-400" aria-hidden="true" />
                 <span>
-                  <strong className="text-white">{usd(MONTHLY_TOTAL)} a month</strong> is your whole investment: our{' '}
-                  {usd(AGENCY_RETAINER_MONTHLY)} plus at least {usd(AGENCY_MIN_AD_BUDGET)} in ads. The amber pills are how
-                  many times over each pace covers it.
+                  <strong className="text-white">{usd(MONTHLY_TOTAL)} base monthly agency-and-ad cash outlay</strong> under the
+                  monthly payment option: {usd(AGENCY_RETAINER_MONTHLY)} to Nexli plus {usd(AGENCY_MIN_AD_BUDGET)} in
+                  advertising. Additional performance fees, larger advertising budgets, commissions, and your own delivery
+                  costs can increase the outlay.
                 </span>
               </span>
               <span className="flex items-start gap-2" style={{ color: MUTED }}>
-                <span className="mt-1.5 w-4 shrink-0 border-t-2 border-dashed border-violet-400" aria-hidden="true" />
+                <span
+                  className="mt-px shrink-0 rounded-full border border-amber-400/35 bg-amber-400/[0.08] px-1.5 text-[10px] font-bold text-amber-200"
+                  aria-hidden="true"
+                >
+                  ×
+                </span>
                 <span>
-                  The {AGENCY_PERFORMANCE_PERCENT} only matters past <strong className="text-white">{usd(PERFORMANCE_THRESHOLD)}</strong>{' '}
-                  a month from the clients our ads bring you.
+                  Amber pills: collected revenue ÷ base agency-and-ad cash outlay. Not profit, ROI or ROAS; they leave out
+                  delivery and every other cost.
                 </span>
               </span>
             </div>
-            <div className="mt-5 rounded-xl border border-emerald-400/30 bg-emerald-400/[0.06] px-4 py-3">
-              <p className="text-[13.5px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.88)' }}>
-                <strong className="font-bold text-emerald-300">Every pace here stays on the {usd(AGENCY_RETAINER_MONTHLY)}.</strong>{' '}
-                Even the best one is at or under {usd(PERFORMANCE_THRESHOLD)} a month, so you would pay{' '}
-                {usd(AGENCY_RETAINER_MONTHLY)} and nothing more.
+            <div className="mt-4 rounded-xl border border-emerald-400/30 bg-emerald-400/[0.06] px-4 py-3">
+              <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.88)' }}>
+                <strong className="font-bold text-emerald-300">Nothing more to pay in any of the three.</strong> All stay under{' '}
+                {usd(PERFORMANCE_THRESHOLD)} of net attributed revenue (the highest is {usd(top.m.net)}). Billing starts above{' '}
+                {usd(PERFORMANCE_THRESHOLD)} net, not above {usd(PERFORMANCE_THRESHOLD)} in gross collected fees.
               </p>
-            </div>
-            {/* What you pay, under the chart it is measured against. */}
-            <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-2.5">
-                <div className="text-[14px] font-bold text-white">{usd(AGENCY_RETAINER_MONTHLY)} at the start of each month</div>
-                <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: MUTED }}>
-                  To us. No setup fee.
-                </p>
-              </div>
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-2.5">
-                <div className="text-[14px] font-bold text-white">Your ad budget, separate</div>
-                <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: MUTED }}>
-                  At least {usd(AGENCY_MIN_AD_BUDGET)} a month, straight to Meta.
-                </p>
-              </div>
             </div>
           </Panel>
         </Reveal>
 
-        {/* The 10%, worked out the same way as /booking-confirmed-b. */}
-        <Reveal delay={0.18} className="h-full">
-          <PerformancePayExplainer compact className="h-full" />
-        </Reveal>
+        <div className="grid content-start gap-4">
+          <Reveal delay={0.16}>
+            <Panel title="The 10%, in one line">
+              <p className="text-[14px] font-semibold leading-relaxed text-white">{PERFORMANCE_SIMPLE_RULE}</p>
+              <p className="mt-1.5 text-[12.5px] leading-snug" style={{ color: MUTED }}>
+                Net attributed revenue = collected from clients the system brought in − agreed ad spend − agreed
+                commissions. It is not your firm&apos;s net profit. Worked through on the pricing slide.
+              </p>
+            </Panel>
+          </Reveal>
+          <Reveal delay={0.22}>
+            <Panel title="A low month">
+              <ul className="space-y-2.5">
+                <li className="flex items-baseline justify-between gap-3">
+                  <span className="text-[13px] leading-snug" style={{ color: MUTED }}>
+                    No engagements collected
+                  </span>
+                  <span className="shrink-0 text-right text-[13px] font-bold text-white">{usd(MONTHLY_TOTAL)} base outlay still paid</span>
+                </li>
+                <li>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-[13px] leading-snug" style={{ color: MUTED }}>
+                      One {usd(PLAN_FEE)} engagement collected
+                    </span>
+                    <span className="shrink-0 text-right text-[13px] font-bold text-white">
+                      {usd(PLAN_FEE - MONTHLY_TOTAL)} after the base outlay
+                    </span>
+                  </div>
+                  <span className="mt-0.5 block text-[11.5px] leading-snug" style={{ color: FAINT }}>
+                    Before commissions, fulfillment, taxes and other costs. Not profit, and not a break-even promise.
+                  </span>
+                </li>
+              </ul>
+            </Panel>
+          </Reveal>
+          <Reveal delay={0.28}>
+            {/* Readable, but not louder than the heading (the brief). */}
+            <Callout label="Illustrations, not promises" tone="amber">
+              <span className="block text-[14px] leading-relaxed">
+                Illustrations, not promises or forecasts. Appointment volume, attendance, qualification, sales conversion,
+                collection timing, and engagement value vary. Launch and testing take time.
+              </span>
+            </Callout>
+          </Reveal>
+        </div>
       </div>
 
-      <Reveal delay={0.3}>
+      <Reveal delay={0.34}>
         <p className="mt-5 max-w-5xl text-[12px] leading-relaxed" style={{ color: FAINT }}>
-          New fees come from See the Math: {usd(AD_SPEND)} a month in ads, a {usd(PLAN_FEE)} average plan, conservative to
-          best case. They are illustrations, not promises. &ldquo;What the clients our ads bring you paid, minus your ad
-          spend and commissions&rdquo; is what your agreement calls agreed, attributable net revenue. Your referrals and
-          other sales stay yours.
+          Assumptions, all illustrative: {usd(PLAN_FEE)} collected per planning engagement within the modeled month,{' '}
+          {usd(AD_SPEND)} in advertising, zero commissions and the standard {usd(AGENCY_RETAINER_MONTHLY)} monthly minimum.
+          Booked calls at {SCENARIOS.map((s) => usd(s.costPerBookedCall)).join(' / ')} each, {pct(SHOW_RATE)} attended and{' '}
+          {SCENARIOS.map((s) => pct(s.closeRate)).join(' / ')} signed: See the Math&apos;s inputs, not historical data. An
+          engagement sold but not yet paid is not counted as collected revenue.
         </p>
       </Reveal>
     </Slide>
   );
 }
 
-// ── 14. Who does what ─────────────────────────────────────────────────────
+// ── 14. What you can inspect before launch ───────────────────────────────
+// The brief's evidence section (2026-11-20): what a firm can see for itself,
+// each labelled for what it is. No results, case studies or testimonials.
+
+const INSPECT_LOOK: Record<string, { Icon: LucideIcon; tone: Tone }> = {
+  creative: { Icon: Film, tone: 'blue' },
+  avatar: { Icon: Sparkles, tone: 'violet' },
+  qualifier: { Icon: ListFilter, tone: 'amber' },
+  calendar: { Icon: CalendarCheck, tone: 'emerald' },
+  'follow-up': { Icon: MessageSquareText, tone: 'cyan' },
+};
+
+function InspectSlide() {
+  return (
+    <Slide id="inspect">
+      <Heading
+        kicker="Before you decide"
+        sub="Everything here is sample work or demonstrated functionality. None of it is a client's acquisition results."
+      >
+        What you can inspect <span className={GRADIENT_TEXT}>before launch.</span>
+      </Heading>
+      <Reveal delay={0.12} className="mt-8 grid gap-3 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3">
+        {INSPECT_ITEMS.map((it) => {
+          const look = INSPECT_LOOK[it.slide] ?? { Icon: Check, tone: 'cyan' as Tone };
+          return (
+            <a
+              key={it.slide}
+              href={`#${it.slide}`}
+              onClick={(e) => goToSlide(e, it.slide)}
+              className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.035] p-4 outline-none transition-colors hover:border-white/25 focus-visible:ring-2 focus-visible:ring-cyan-300 lg:p-5"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <Tile Icon={look.Icon} tone={look.tone} />
+                <ExampleTag>{it.kind}</ExampleTag>
+              </div>
+              <span className="mt-3 text-[15px] font-bold text-white">{it.title}</span>
+              <span className="mt-1 text-[13px] leading-snug" style={{ color: MUTED }}>
+                {it.body}
+              </span>
+              <span className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-cyan-300 group-hover:text-cyan-200">
+                See it <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+            </a>
+          );
+        })}
+        <div className="flex flex-col rounded-2xl border border-emerald-400/30 bg-emerald-400/[0.05] p-4 lg:p-5">
+          <div className="flex items-start justify-between gap-3">
+            <Tile Icon={Check} tone="emerald" />
+            <ExampleTag>Part of the build</ExampleTag>
+          </div>
+          <span className="mt-3 text-[15px] font-bold text-white">Before your budget is spent</span>
+          <span className="mt-1 text-[13px] leading-snug" style={{ color: MUTED }}>
+            You see the ads, the page, the questions and the messages before your ad budget is spent on them, and we check
+            tracking before campaigns go live.
+          </span>
+        </div>
+      </Reveal>
+    </Slide>
+  );
+}
+
+// ── 16. Who does what ─────────────────────────────────────────────────────
 
 function RecapSlide() {
   const nexli: { Icon: LucideIcon; t: string }[] = [
@@ -822,7 +945,7 @@ function RecapSlide() {
     { Icon: Globe, t: 'Your website and client portal' },
   ];
   const you: { Icon: LucideIcon; t: string }[] = [
-    { Icon: CalendarCheck, t: 'Take the calls on your calendar' },
+    { Icon: CalendarCheck, t: 'Take the calls and confirm fit' },
     { Icon: Handshake, t: 'Sell the tax plan' },
     { Icon: Briefcase, t: 'Do the planning, and the work it brings' },
   ];
@@ -869,12 +992,108 @@ function RecapSlide() {
   );
 }
 
+// ── 17. The decision ──────────────────────────────────────────────────────
+// The brief's close (2026-11-20): fit, the agreement, the build, and how the
+// engagement is judged. Asked as questions, no button: Marcel is already on
+// the call, and nothing here invents a destination or a reporting promise.
+
+function CloseSlide() {
+  const steps: { Icon: LucideIcon; tone: Tone; t: string; d: string; list?: string[] }[] = [
+    {
+      Icon: ClipboardCheck,
+      tone: 'cyan',
+      t: 'Confirm fit',
+      d: 'Confirm your planning offer, client profile, delivery capacity, and budget. A firm is a fit with:',
+      list: FIRM_FIT,
+    },
+    {
+      Icon: PenLine,
+      tone: 'violet',
+      t: 'Agree the plan',
+      d: `Review the ${AGENCY_RETAINER_TERM_MONTHS}-month agreement and choose monthly payment or the optional prepaid route.`,
+    },
+    {
+      Icon: Rocket,
+      tone: 'emerald',
+      t: 'Start the build',
+      d: `Complete kickoff, access, and approvals. Nexli builds the system, checks tracking, and prepares campaigns for launch. Estimated build: about ${PITCH_BUILD_DAYS} days, depending on access and approvals.`,
+    },
+  ];
+  return (
+    <Slide id="close">
+      <Heading kicker="The decision">
+        Confirm fit. Agree the plan. <span className={GRADIENT_TEXT}>Start the build.</span>
+      </Heading>
+      <div className="mt-6 grid gap-5 lg:mt-8 lg:grid-cols-[1.25fr_1fr]">
+        <Reveal delay={0.1}>
+          <ol className="space-y-3">
+            {steps.map((st, i) => (
+              <li key={st.t} className="flex gap-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+                <span className="pr-1.5 pt-1.5">
+                  <Tile Icon={st.Icon} tone={st.tone} n={i + 1} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[16px] font-bold text-white">{st.t}</span>
+                  <span className="mt-1 block text-[13.5px] leading-snug" style={{ color: MUTED }}>
+                    {st.d}
+                  </span>
+                  {st.list && (
+                    <ul className="mt-2 grid gap-x-4 gap-y-1 sm:grid-cols-2">
+                      {st.list.map((x) => (
+                        <li key={x} className="flex items-start gap-2 text-[12.5px] leading-snug text-white/85">
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-cyan-300" aria-hidden="true" />
+                          {x}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </Reveal>
+        <div className="grid content-start gap-4">
+          <Reveal delay={0.18}>
+            <Panel title="How the engagement is judged">
+              <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
+                {EVALUATION_STAGES.map((st, i) => (
+                  <li key={st} className="flex items-center gap-1.5">
+                    {i > 0 && <ArrowRight className="h-3.5 w-3.5 text-white/30" aria-hidden="true" />}
+                    <span className="rounded-full border border-white/12 bg-white/[0.05] px-2.5 py-1 text-[12px] font-semibold text-white/90">
+                      {st}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-3 text-[13px] leading-relaxed" style={{ color: MUTED }}>
+                Evaluate booked appointments, attendance, qualification, paid engagements, and agreed, attributable net
+                revenue. Use those stages to identify whether improvements are needed in acquisition, follow-up, screening,
+                or the firm&apos;s sales process.
+              </p>
+            </Panel>
+          </Reveal>
+          <Reveal delay={0.26}>
+            <Callout label="Before you decide" tone="emerald">
+              <span className="block text-[15px] font-semibold leading-relaxed text-white">
+                Does the plan fit your firm&apos;s goals and economics?
+              </span>
+              <span className="mt-1 block text-[15px] font-semibold leading-relaxed text-white">
+                What remains unresolved before you can proceed?
+              </span>
+            </Callout>
+          </Reveal>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
 // ── The deck ──────────────────────────────────────────────────────────────
 
 export const PITCH_SLIDES: DeckSlide[] = [
   { id: 'top', title: 'How a client ends up on your calendar', node: <TopSlide /> },
   { id: 'path', title: 'The system in six pieces', node: <PathSlide /> },
-  { id: 'ad', title: 'The ad does the targeting', node: <AdSlide /> },
+  { id: 'ad', title: 'The ad', node: <AdSlide /> },
   { id: 'icp', title: 'Written for your ideal client', node: <IcpSlide /> },
   { id: 'avatar', title: 'Your AI avatar', node: <AvatarSlide /> },
   { id: 'one-face', title: 'One face, start to finish', node: <OneFaceSlide /> },
@@ -883,7 +1102,9 @@ export const PITCH_SLIDES: DeckSlide[] = [
   { id: 'calendar', title: 'Booked onto your calendar', node: <CalendarSlide /> },
   { id: 'follow-up', title: 'The follow-up', node: <FollowUpSlide /> },
   { id: 'creative', title: 'How we make the creative', node: <CreativeSlide /> },
+  { id: 'inspect', title: 'What you can inspect before launch', node: <InspectSlide /> },
   { id: 'pricing', title: 'What it costs', node: <PricingSlide /> },
-  { id: 'the-math', title: 'What it brings in, what it costs', node: <MoneySlide /> },
+  { id: 'the-math', title: 'Illustrative economics', node: <MoneySlide /> },
   { id: 'recap', title: 'Who does what', node: <RecapSlide /> },
+  { id: 'close', title: 'Confirm fit. Agree the plan. Start the build.', node: <CloseSlide /> },
 ];

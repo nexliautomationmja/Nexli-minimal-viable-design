@@ -6,9 +6,19 @@
 // sales call to walk a CPA firm through exactly what Nexli builds and runs,
 // in the order a tax-planning client meets it: the ad, the AI avatar, the
 // VSL, the qualifier, the calendar, the follow-up, and how the creative is
-// made. Not "we run ads and you pay us". No call to action anywhere: he is
-// already on the call. One slide carries the money (see "The money slide"
-// below); the full model stays on /math.
+// made. Not "we run ads and you pay us". No button or booking link anywhere:
+// he is already on the call. The last slide is the decision ("Confirm fit.
+// Agree the plan. Start the build."), asked as questions, not a button.
+// The pricing and the money slides carry the numbers; the full model stays
+// on /math.
+//
+// THE 2026-11-20 BRIEF (Marcel approved it; "Nexli pitch deck — Claude Code
+// implementation brief"). Same offer, said more carefully: the $10,000 is a
+// credit against the 10%, the fee base is net, the $15,000–$55,000 is
+// conditional on the firm's own offer, targeting and screening are described
+// as what they are (creative and screening, not certainty), the economics are
+// labelled as illustrations, and the deck shows what can be inspected rather
+// than results it does not have.
 //
 // THE DEMO FIRM is Evergreen Tax & Advisory (lib/demo-config), the same
 // fictional firm /booking-confirmed-b uses, so "your firm" has a face.
@@ -19,12 +29,20 @@
 //
 // RULES CARRIED OVER FROM THE REST OF THE SITE:
 //   - every avatar is AI-generated and labelled so; never a real person;
-//   - FIRMS DO NOT CHOOSE THEIR AVATAR; Nexli casts it (Marcel, 2026-11-19),
-//     because who is in an ad changes who Meta delivers it to (AVATAR_STUDY);
+//   - Nexli casts the avatar for the firm's brand and client profile
+//     (Marcel, 2026-11-19); firms do not choose one, but the deck no longer
+//     says "you don't pick one" (the brief). The study is a source note
+//     that creative can affect delivery, not a promise about results;
 //   - one avatar, one firm, while the firm is a client; that is not market
 //     or territory exclusivity, and the firm does not sign off every ad;
-//   - the build is about 21 days; new creative every 7 to 14 days;
-//   - an engagement is worth $15,000 to $55,000; $15,000 is the floor;
+//   - the build is ABOUT 21 days, an estimate that depends on access and
+//     approvals; creative is reviewed and refreshed as needed, typically
+//     every 7 to 14 days, depending on results and the agreed scope;
+//   - a planning engagement MAY be worth $15,000 to $55,000, depending on the
+//     firm's established offer, the client's fit and the scope. Never a value
+//     per appointment, and never Nexli's achieved results (PITCH_VALUE_NOTE);
+//   - booked, attended and qualified are different stages; a booking is
+//     "screened", not "qualified";
 //   - the firm owns what is built except the ad creative, which Nexli keeps.
 // ---------------------------------------------------------------------------
 
@@ -46,18 +64,19 @@ export const PITCH_FIRM = {
   prospect: 'Mike',
 } as const;
 
-export const PITCH_VALUE_LINE = `each one a tax-planning client worth ${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)} an engagement`;
+/** The cover's conditional line (the brief): the range, and what it depends on. */
+export const PITCH_VALUE_NOTE = `Potential planning engagement fees of ${usd(AGENCY_ENGAGEMENT_LOW)}–${usd(AGENCY_ENGAGEMENT_HIGH)} depend on your firm’s established offer, client fit, and scope. They are not a guaranteed value per appointment.`;
 export const PITCH_BUILD_DAYS = AGENCY_LAUNCH_DAYS;
 
 /** The six pieces, in the order the prospect meets them. `slide` is the
  *  slide each one is explained on. */
 export const PITCH_STEPS = [
-  { key: 'ad', slide: 'ad', label: 'The ad', line: 'Meta reads what the ad says and shows it to the people most likely to respond.' },
+  { key: 'ad', slide: 'ad', label: 'The ad', line: 'Creative written for the clients you want, then tested on Meta.' },
   { key: 'avatar', slide: 'avatar', label: 'Your avatar', line: 'An AI presenter, cast for the clients you want, fronts every ad.' },
   { key: 'vsl', slide: 'vsl', label: 'The VSL', line: 'The same face explains tax planning before anyone books.' },
-  { key: 'qualifier', slide: 'qualifier', label: 'The qualifier', line: 'A few questions keep the wrong people off your calendar.' },
-  { key: 'calendar', slide: 'calendar', label: 'Your calendar', line: 'The right people book a tax-planning review, straight onto it.' },
-  { key: 'follow-up', slide: 'follow-up', label: 'Follow-up', line: 'Texts and emails that get them to the call, and frame you as the fix.' },
+  { key: 'qualifier', slide: 'qualifier', label: 'The qualifier', line: 'A few screening questions, set with you, before anyone can book.' },
+  { key: 'calendar', slide: 'calendar', label: 'Your calendar', line: 'Screened prospects book a tax-planning review, straight onto it.' },
+  { key: 'follow-up', slide: 'follow-up', label: 'Follow-up', line: 'Texts and emails that remind them of the call and what it covers.' },
 ] as const;
 
 export type PitchStepKey = (typeof PITCH_STEPS)[number]['key'];
@@ -82,13 +101,14 @@ export const PITCH_AVATARS: PitchAvatar[] = FEATURED_AVATAR_SLUGS.map((slug) => 
 export const PITCH_FACE: PitchAvatar = PITCH_AVATARS[0];
 
 /**
- * Why the firm does not pick (Marcel, 2026-11-19). Said on the page neutrally
- * and with its source. Marcel makes the point in his own words on the call;
- * the page does not put a number or a race example on it.
+ * The source for "creative can affect delivery" (Marcel, 2026-11-19). Since
+ * the brief (2026-11-20) a short source note, not a sales argument: it shows
+ * an ad's content can change who sees it, not that any face brings
+ * high-value clients. Marcel makes the point in his own words on the call.
  */
 export const AVATAR_STUDY = {
   finding:
-    'Researchers at Northeastern University, USC and Upturn ran Facebook ads with identical targeting and changed only the picture, headline and text. That alone changed who the ads were delivered to, by gender and by race.',
+    'Research note: with identical targeting, changing only an ad’s image and text changed who Facebook delivered it to.',
   cite: 'Ali, Sapiezynski, Bogen, Korolova, Mislove and Rieke, “Discrimination through Optimization: How Facebook’s Ad Delivery Can Lead to Skewed Outcomes,” 2019.',
   href: 'https://arxiv.org/abs/1904.02095',
 };
@@ -112,7 +132,7 @@ const creative = (id: string): AdCreative => {
   return c;
 };
 
-/** The ad in the "the ad does the targeting" mock. */
+/** The ad in the ad slide's mock. */
 export const PITCH_AD = creative('overpaid');
 
 /** The hooks on the ICP slide, each with what it does. */
@@ -130,7 +150,7 @@ export const CREATIVE_PIPELINE = [
   { title: 'Your avatar performs it', body: 'Your AI avatar delivers the script. Nobody at your firm gets on camera.' },
   { title: 'The edit', body: 'Captions, motion graphics and sound, built for a feed people scroll with the sound off.' },
   { title: 'Versions', body: 'Several hooks of every angle, cut as 9:16 reels and square feed posts.' },
-  { title: 'Test and refresh', body: 'The angles that book calls get the budget, and new creative goes in every 7 to 14 days.' },
+  { title: 'Review and refresh', body: 'We review performance and refresh concepts as needed, typically every 7–14 days depending on results and the agreed delivery scope.' },
 ];
 
 // ── The qualifier (an example; the real one is set with each firm) ──────
@@ -199,19 +219,19 @@ export const FOLLOW_UP: FollowUpStep[] = [
     when: 'Right after booking',
     channel: 'Text + email',
     title: 'You’re booked',
-    body: `Hi ${PITCH_FIRM.prospect}, you’re booked with ${DEMO_FIRM_NAME} for Thursday at 2:00 PM. On the call we’ll look at where you’re overpaying the IRS and what a plan for this year could keep. Reply CONFIRM to hold your time.`,
+    body: `Hi ${PITCH_FIRM.prospect}, you’re booked with ${DEMO_FIRM_NAME} for Thursday at 2:00 PM. On the call we’ll look at your situation and whether a plan for this year could help. Reply CONFIRM to hold your time.`,
   },
   {
     when: 'The next day',
     channel: 'Email',
     title: 'What to bring',
-    body: 'Last year’s return and a rough idea of this year’s income. That is all we need to show you what you’re leaving on the table.',
+    body: 'Last year’s return and a rough idea of this year’s income. That gives your advisor a starting point for assessing whether proactive planning could help.',
   },
   {
     when: '24 hours before',
     channel: 'Text + email',
     title: 'Tomorrow at 2:00 PM',
-    body: 'Your tax planning review is tomorrow. The moves that lower this year’s bill have to happen before the year closes, which is why we start now.',
+    body: 'Your tax planning review is tomorrow. Many planning moves have to happen before the year closes, which is why we start now.',
   },
   {
     when: '1 hour before',
@@ -226,3 +246,31 @@ export const FOLLOW_UP: FollowUpStep[] = [
     body: `Missed you today, ${PITCH_FIRM.prospect}. This year’s bill doesn’t change itself. Grab a new time: ${PITCH_FIRM.domain}/book`,
   },
 ];
+
+// ── What can be inspected before launch (the brief, 2026-11-20) ─────────
+// The honest credibility bridge: no case study, no results, no
+// testimonials. What a firm can see for itself, each labelled for what it
+// is, with the slide it is on.
+
+export const INSPECT_ITEMS: { slide: string; title: string; body: string; kind: 'Sample work' | 'Demonstrated functionality' }[] = [
+  { slide: 'creative', title: 'Ad creative', body: 'Videos and ad copy we have made, playable in this deck.', kind: 'Sample work' },
+  { slide: 'avatar', title: 'Avatar casting', body: 'The AI presenters we cast from, each labelled AI-generated.', kind: 'Sample work' },
+  { slide: 'qualifier', title: 'The funnel and qualifier', body: 'Answer the screening questions yourself and see both outcomes.', kind: 'Demonstrated functionality' },
+  { slide: 'calendar', title: 'Booking', body: 'How a booking lands on your calendar with the prospect’s answers attached.', kind: 'Demonstrated functionality' },
+  { slide: 'follow-up', title: 'Follow-up', body: 'The texts and emails a booked prospect receives, in order.', kind: 'Sample work' },
+];
+
+// ── Firm fit and the decision (the brief, 2026-11-20) ────────────────────
+// Fit criteria for the FIRM, not a claim that every $1M–$5M firm can afford
+// it. Said on the closing slide, as what to confirm before deciding.
+
+export const FIRM_FIT = [
+  'An existing proactive tax-planning service',
+  'A fee structure that supports planning engagements',
+  'Someone responsible for selling on the calls',
+  'Capacity to deliver the work it brings',
+  'Budget for the agency fee and the advertising',
+];
+
+/** Booked, attended and qualified are different stages (the brief). */
+export const EVALUATION_STAGES = ['Booked', 'Attended', 'Qualified', 'Paid engagement', 'Attributable net revenue'];

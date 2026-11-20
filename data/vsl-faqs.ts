@@ -6,8 +6,10 @@
  * Facts stated here must match lib/site.ts and THE RETAINER in
  * lib/agency-offer.ts (Marcel, 2026-11-19): built for firms doing $1M–$5M+
  * a year (AUDIENCE_REVENUE, 2026-11-20: who we aim for, not a minimum),
- * $10,000 a month with no setup fee plus 10% performance pay (named, not
- * explained: that is for the call), the ad budget paid by the firm directly
+ * a $10,000 monthly minimum with no separate setup fee, credited against a
+ * 10% performance fee on agreed, attributable net revenue (since the
+ * 2026-11-20 pitch-deck brief: credited, never added on top; only net above
+ * $100,000 in a month is invoiced), the ad budget paid by the firm directly
  * to Meta, a six-month initial term that renews for six months at a time,
  * no guarantees offered.
  */
@@ -36,12 +38,12 @@ const WHO = `${AUDIENCE_REVENUE} a year`;
 // retired (see lib/agency-offer.ts). Say what each client is worth instead.
 const whatCounts: VslFaqItem = {
   q: 'What kind of client does the system bring in?',
-  a: `A US-based business owner or high-income individual who matches the advisory criteria we set with you and has asked your firm to contact them about tax planning. Each one is a tax-planning engagement worth ${CLIENT_VALUE} to your firm. Your close rate determines what you bank, and we report every week, so you are never guessing where you stand.`,
+  a: `A US-based business owner or high-income individual who meets the screening criteria we set with you and has asked your firm to contact them about tax planning. Planning engagements are often priced at ${CLIENT_VALUE}, depending on your firm's established offer, the client's fit and the scope; it is not a guaranteed value per appointment. Your close rate determines what you bank, and we report every week, so you are never guessing where you stand.`,
 };
 
 const whatItCosts: VslFaqItem = {
   q: 'What does it cost?',
-  a: `${usd(AGENCY_RETAINER_MONTHLY)} a month for the website, the portal, the funnel and the automations, built and run for you, with no setup fee, plus ${AGENCY_PERFORMANCE_PERCENT} performance pay, only on revenue from the clients our ads bring you (your referrals and your other sales stay yours, and it is never ${AGENCY_PERFORMANCE_PERCENT} of every sale), which we walk you through on the call. Your ad budget is separate: at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card. The initial term is six months, renewing for six months at a time. The math: two planning engagements a month at ${usd(AGENCY_ENGAGEMENT_LOW)}, the bottom of the range, is ${usd(AGENCY_ENGAGEMENT_LOW * 2)} a month against ${usd(AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET)} in our fee and the minimum ads.`,
+  a: `A ${usd(AGENCY_RETAINER_MONTHLY)} monthly minimum for the website, the portal, the funnel and the automations, built and run for you, with no separate setup fee. Your ${usd(AGENCY_RETAINER_MONTHLY)} covers the first ${usd(AGENCY_RETAINER_MONTHLY * 10)} of net attributed revenue each month; above ${usd(AGENCY_RETAINER_MONTHLY * 10)}, we bill ${AGENCY_PERFORMANCE_PERCENT} of the difference. Net attributed revenue is what the clients the system brings you paid that month, minus the agreed ad spend and commissions (your referrals and your other sales stay yours, and it is never ${AGENCY_PERFORMANCE_PERCENT} of every sale). Your ad budget is separate: we recommend at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card. The initial term is six months, renewing for six months at a time. As an illustration, not a forecast: two planning engagements collected in a month at ${usd(AGENCY_ENGAGEMENT_LOW)} is ${usd(AGENCY_ENGAGEMENT_LOW * 2)}, against ${usd(AGENCY_RETAINER_MONTHLY + AGENCY_MIN_AD_BUDGET)} for our minimum and the recommended ads.`,
 };
 
 const whoRunsAds: VslFaqItem = {
@@ -71,7 +73,7 @@ const salesPitch: VslFaqItem = {
 
 const whatYouGet = (angle: string): VslFaqItem => ({
   q: 'What exactly do we get?',
-  a: `Four systems, built and installed for you: a custom website positioned around ${angle}, a branded client portal for invoicing, engagement letters, document collection, and secure messaging, AI automations that capture, qualify, and nurture inquiries around the clock, and a Google review engine that adds 3-5 reviews a month. Then we run campaigns to it so qualified prospects land on your calendar.`,
+  a: `Four systems, built and installed for you: a custom website positioned around ${angle}, a branded client portal for invoicing, engagement letters, document collection, and secure messaging, AI automations that capture, qualify, and nurture inquiries around the clock, and a Google review engine that adds 3-5 reviews a month. Then we run campaigns to it so screened prospects can book onto your calendar.`,
 });
 
 const differentFrom: VslFaqItem = {

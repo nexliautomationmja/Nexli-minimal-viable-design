@@ -5,30 +5,36 @@ import { Check, X } from 'lucide-react';
 import {
   AGENCY_PERFORMANCE_PERCENT,
   AGENCY_RETAINER_MONTHLY,
-  PERFORMANCE_EXAMPLE_EXTRA,
-  PERFORMANCE_EXAMPLE_REVENUE,
-  PERFORMANCE_EXAMPLE_TOTAL,
-  PERFORMANCE_NET_PLAIN,
-  PERFORMANCE_QUIET_EXTRA,
-  PERFORMANCE_QUIET_REVENUE,
-  PERFORMANCE_QUIET_SHARE,
+  BIG_MONTH,
+  PERFORMANCE_DEFINITION,
+  PERFORMANCE_SIMPLE_RULE,
   PERFORMANCE_THRESHOLD,
-  PERFORMANCE_YOURS,
+  PERFORMANCE_THRESHOLD_LINE,
+  QUIET_MONTH,
   usd,
+  type PerformanceMonth,
 } from '@/lib/agency-offer';
 
 /**
- * How the 10% performance pay works, "as if a baby was looking at it"
- * (Marcel, 2026-11-19). On the VSLs and /booking-confirmed-b (inside
- * PricingBlock) and on /pitch's money slide (compact), so the three show
- * the same thing.
+ * How the monthly calculation works, "as if a baby was looking at it"
+ * (Marcel, 2026-11-19). Under the price cards on /booking-confirmed-b and on
+ * /pitch's pricing slide (compact), so the two show the same thing. Not on
+ * the VSLs, whose cards say it in words.
  *
- * THE ONE IDEA IT EXISTS TO GET ACROSS: the 10% is not taken from every
- * sale. It is one number, once a month (Marcel's definition,
- * PERFORMANCE_NET_PLAIN), and the $10,000 already paid counts toward it. Two
- * months side by side make that obvious without a sentence of rules: a
- * quiet one where nothing more is owed, and Marcel's $150,000 one where
- * $5,000 is. Every figure comes from lib/agency-offer.
+ * THE IDEAS IT EXISTS TO GET ACROSS (the pitch-deck brief, 2026-11-20):
+ *   - the fee base is NET: what was collected from the clients the system
+ *     brought in, minus the agreed ad spend and commissions;
+ *   - the $10,000 is a CREDIT against the 10%, never added on top of it;
+ *   - at or below $100,000 net in a month there is no additional invoice;
+ *   - it is not 10% of every sale, and not the firm's net profit.
+ * Two months side by side make it obvious: a quiet one where nothing more is
+ * owed, and a growth one where $5,000 is. Every figure comes from
+ * performanceMonth in lib/agency-offer, the same calculation the tests run.
+ *
+ * SAID THE SIMPLE WAY (Marcel, 2026-11-20): the $10,000 covers the first
+ * $100,000 of net attributed revenue; above that we bill 10% of the
+ * difference. Each month walks it in that order: collected, minus ads and
+ * commissions, the first $100,000 covered, the amount above, 10% of it.
  *
  * Opaque navy, like PricingBlock, so it reads the same on the dark decks and
  * on /booking-confirmed-b's light theme. Colours are set inline because the
@@ -39,14 +45,12 @@ const SURFACE = 'linear-gradient(160deg, #101c33 0%, #0a1020 100%)';
 const MUTED = 'rgba(255,255,255,0.66)';
 const FAINT = 'rgba(255,255,255,0.5)';
 
+/** A deduction, with a real minus sign. */
+const minus = (n: number) => `−${usd(n)}`;
+
 type Month = {
   label: string;
-  revenue: number;
-  share: number;
-  /** The third line: what happens to the $10,000 already paid. */
-  paidLine: string;
-  paidValue: string;
-  result: number;
+  m: PerformanceMonth;
   resultLabel: string;
   note: string;
   tone: 'emerald' | 'amber';
@@ -55,24 +59,16 @@ type Month = {
 const MONTHS: Month[] = [
   {
     label: 'A quiet month',
-    revenue: PERFORMANCE_QUIET_REVENUE,
-    share: PERFORMANCE_QUIET_SHARE,
-    paidLine: 'You already paid',
-    paidValue: usd(AGENCY_RETAINER_MONTHLY),
-    result: PERFORMANCE_QUIET_EXTRA,
-    resultLabel: 'You pay more',
-    note: `${usd(PERFORMANCE_QUIET_SHARE)} is less than the ${usd(AGENCY_RETAINER_MONTHLY)} you already paid. Nothing more to pay.`,
+    m: QUIET_MONTH,
+    resultLabel: 'Billed at the end of the month',
+    note: `Under ${usd(PERFORMANCE_THRESHOLD)}, so your ${usd(AGENCY_RETAINER_MONTHLY)} covers it. Nothing more to pay.`,
     tone: 'emerald',
   },
   {
-    label: 'A big month',
-    revenue: PERFORMANCE_EXAMPLE_REVENUE,
-    share: PERFORMANCE_EXAMPLE_TOTAL,
-    paidLine: 'Minus what you already paid',
-    paidValue: `−${usd(AGENCY_RETAINER_MONTHLY)}`,
-    result: PERFORMANCE_EXAMPLE_EXTRA,
-    resultLabel: 'Invoiced at the end of the month',
-    note: `Only the difference is invoiced. Never ${AGENCY_PERFORMANCE_PERCENT} of each sale.`,
+    label: 'A growth month',
+    m: BIG_MONTH,
+    resultLabel: `${AGENCY_PERFORMANCE_PERCENT} of the difference, billed at month end`,
+    note: `${usd(BIG_MONTH.above)} above ${usd(PERFORMANCE_THRESHOLD)}, so we bill ${AGENCY_PERFORMANCE_PERCENT} of it. Never ${AGENCY_PERFORMANCE_PERCENT} of each sale.`,
     tone: 'amber',
   },
 ];
@@ -82,15 +78,30 @@ const TONE = {
   amber: { border: 'rgba(251,191,36,0.45)', bg: 'rgba(245,158,11,0.12)', text: '#fcd34d', chip: 'border-amber-400/40 bg-amber-400/10 text-amber-200' },
 };
 
-function Row({ label, value, compact, strong }: { label: string; value: string; compact: boolean; strong?: boolean }) {
+function Row({
+  label,
+  value,
+  compact,
+  strong = false,
+  dim = false,
+}: {
+  label: string;
+  value: string;
+  compact: boolean;
+  strong?: boolean;
+  dim?: boolean;
+}) {
   return (
     <div className="flex items-baseline justify-between gap-3">
-      <span className={compact ? 'text-[12.5px] leading-snug' : 'text-[13px] leading-snug sm:text-sm'} style={{ color: MUTED }}>
+      <span
+        className={`${compact ? 'text-[12px]' : 'text-[13px] sm:text-sm'} leading-snug ${strong ? 'font-bold' : ''}`}
+        style={{ color: strong ? '#ffffff' : MUTED }}
+      >
         {label}
       </span>
       <span
-        className={`shrink-0 font-black tracking-tight text-white ${
-          compact ? (strong ? 'text-[20px]' : 'text-[17px]') : strong ? 'text-[1.6rem] sm:text-[1.85rem]' : 'text-xl sm:text-2xl'
+        className={`shrink-0 font-black tracking-tight ${dim ? 'text-white/70' : 'text-white'} ${
+          compact ? (strong ? 'text-[18px]' : 'text-[15px]') : strong ? 'text-[1.45rem] sm:text-[1.65rem]' : 'text-lg sm:text-xl'
         }`}
       >
         {value}
@@ -99,40 +110,48 @@ function Row({ label, value, compact, strong }: { label: string; value: string; 
   );
 }
 
-function MonthCard({ m, compact }: { m: Month; compact: boolean }) {
-  const t = TONE[m.tone];
+function MonthCard({ month, compact }: { month: Month; compact: boolean }) {
+  const t = TONE[month.tone];
+  const { m } = month;
   return (
     <div className={`flex flex-col rounded-2xl border border-white/10 ${compact ? 'p-3' : 'p-4 sm:p-5'}`} style={{ background: 'rgba(0,0,0,0.22)' }}>
       <span className={`self-start rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] ${t.chip}`}>
-        {m.label}
+        {month.label}
       </span>
-      <div className={compact ? 'mt-2.5 space-y-1.5' : 'mt-4 space-y-2.5'}>
-        <div>
-          <Row label="The clients our ads brought you made" value={usd(m.revenue)} compact={compact} strong />
-          <span className="block text-[11.5px] leading-snug" style={{ color: FAINT }}>
-            after your ad spend and commissions
-          </span>
+      <div className={compact ? 'mt-2 space-y-0.5' : 'mt-4 space-y-2'}>
+        {/* Compact (the deck) keeps every row to one line; the definition
+            above spells each term out. */}
+        <Row label={compact ? 'Collected from system clients' : 'Collected from clients the system brought in'} value={usd(m.collected)} compact={compact} />
+        <Row label="Agreed ad spend" value={minus(m.adSpend)} compact={compact} dim />
+        <Row label="Agreed commissions" value={minus(m.commissions)} compact={compact} dim />
+        <div className={`border-t border-white/15 ${compact ? 'pt-1' : 'pt-2'}`}>
+          <Row label="Net attributed revenue" value={usd(m.net)} compact={compact} strong />
         </div>
-        <Row label={`${AGENCY_PERFORMANCE_PERCENT} of that`} value={usd(m.share)} compact={compact} />
-        <Row label={m.paidLine} value={m.paidValue} compact={compact} />
+        <Row
+          label={compact ? `Covered by your ${usd(AGENCY_RETAINER_MONTHLY)}` : `Covered by your ${usd(AGENCY_RETAINER_MONTHLY)} (up to ${usd(PERFORMANCE_THRESHOLD)})`}
+          value={minus(m.covered)}
+          compact={compact}
+          dim
+        />
+        <Row label={`Above ${usd(PERFORMANCE_THRESHOLD)}`} value={usd(m.above)} compact={compact} />
       </div>
       {/* Pushed to the bottom so the two results line up. */}
-      <div className={`mt-auto ${compact ? 'pt-2.5' : 'pt-4'}`}>
+      <div className={`mt-auto ${compact ? 'pt-2' : 'pt-4'}`}>
         <div
-          className={`flex items-center justify-between gap-3 rounded-xl border ${compact ? 'px-3 py-2' : 'px-4 py-3'}`}
+          className={`flex items-center justify-between gap-3 rounded-xl border ${compact ? 'px-3 py-1.5' : 'px-4 py-3'}`}
           style={{ borderColor: t.border, background: t.bg }}
         >
           <span className={`font-bold leading-tight ${compact ? 'text-[12px]' : 'text-[13px] sm:text-sm'}`} style={{ color: t.text }}>
-            {m.resultLabel}
+            {month.resultLabel}
           </span>
-          <span className={`shrink-0 font-black tracking-tight text-white ${compact ? 'text-[22px]' : 'text-[2rem] sm:text-[2.3rem]'}`}>
-            {usd(m.result)}
+          <span className={`shrink-0 font-black tracking-tight text-white ${compact ? 'text-[20px]' : 'text-[2rem] sm:text-[2.3rem]'}`}>
+            {usd(m.additional)}
           </span>
         </div>
       </div>
       {!compact && (
         <span className="mt-2.5 block text-[12.5px] leading-snug" style={{ color: FAINT }}>
-          {m.note}
+          {month.note}
         </span>
       )}
     </div>
@@ -151,12 +170,12 @@ export default function PerformancePayExplainer({
 }) {
   return (
     <div
-      className={`rounded-2xl border ${compact ? 'p-4 sm:p-5' : 'p-5 sm:p-6 lg:p-7'} ${className}`}
+      className={`rounded-2xl border ${compact ? 'p-4' : 'p-5 sm:p-6 lg:p-7'} ${className}`}
       style={{ background: SURFACE, borderColor: 'rgba(251,191,36,0.3)' }}
     >
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300 sm:text-[11px]">
-          How the {AGENCY_PERFORMANCE_PERCENT} works
+          How the monthly calculation works
         </span>
         <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-400/40 bg-rose-500/10 px-2.5 py-1 text-[11px] font-bold text-rose-200 sm:text-xs">
           <X className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
@@ -164,36 +183,29 @@ export default function PerformancePayExplainer({
         </span>
       </div>
 
+      {/* The rule first, in one sentence; what "net attributed revenue" is under it. */}
       <div
-        className={`font-extrabold leading-tight tracking-tight text-white ${compact ? 'mt-2 text-[15px]' : 'mt-3 text-xl sm:text-2xl lg:text-[1.7rem]'}`}
+        className={`font-extrabold leading-tight tracking-tight text-white ${compact ? 'mt-1.5 text-[15px]' : 'mt-3 text-xl sm:text-2xl lg:text-[1.6rem]'}`}
       >
-        One number, once a month.
+        {PERFORMANCE_SIMPLE_RULE}
       </div>
-      <span className={`mt-1.5 block leading-snug ${compact ? 'text-[12px]' : 'text-sm sm:text-[15px]'}`} style={{ color: MUTED }}>
-        <strong className="text-white">{AGENCY_PERFORMANCE_PERCENT}</strong> of {PERFORMANCE_NET_PLAIN}. The{' '}
-        {usd(AGENCY_RETAINER_MONTHLY)} you paid at the start of the month counts toward it.
+      <span className={`block leading-snug ${compact ? 'mt-1.5 text-[12px]' : 'mt-2.5 text-sm sm:text-[15px]'}`} style={{ color: MUTED }}>
+        {PERFORMANCE_DEFINITION}
       </span>
 
       <div className={`grid ${compact ? `mt-3 gap-2.5 ${sideBySide ? 'sm:grid-cols-2' : ''}` : 'mt-5 gap-3 sm:grid-cols-2 sm:gap-4'}`}>
         {MONTHS.map((m) => (
-          <MonthCard key={m.label} m={m} compact={compact} />
+          <MonthCard key={m.label} month={m} compact={compact} />
         ))}
       </div>
 
-      <ul className={`list-none space-y-1.5 p-0 ${compact ? 'mt-3' : 'mt-5'}`}>
-        {[
-          `Only revenue from the clients our ads bring you. ${PERFORMANCE_YOURS}`,
-          `Under ${usd(PERFORMANCE_THRESHOLD)} in a month? The ${usd(AGENCY_RETAINER_MONTHLY)} is all you pay us.`,
-        ].map((line) => (
-          <li
-            key={line}
-            className={`flex items-start gap-2 font-semibold leading-snug text-white ${compact ? 'text-[12px]' : 'text-sm sm:text-[15px]'}`}
-          >
-            <Check className={`shrink-0 text-emerald-400 ${compact ? 'mt-px h-3.5 w-3.5' : 'mt-0.5 h-4 w-4'}`} strokeWidth={3} aria-hidden="true" />
-            <span>{line}</span>
-          </li>
-        ))}
-      </ul>
+      <p
+        className={`flex items-start gap-2 font-semibold leading-snug ${compact ? 'mt-2.5 text-[12px]' : 'mt-5 text-sm sm:text-[15px]'}`}
+        style={{ color: '#ffffff' }}
+      >
+        <Check className={`shrink-0 text-emerald-400 ${compact ? 'mt-px h-3.5 w-3.5' : 'mt-0.5 h-4 w-4'}`} strokeWidth={3} aria-hidden="true" />
+        <span>{PERFORMANCE_THRESHOLD_LINE}</span>
+      </p>
     </div>
   );
 }

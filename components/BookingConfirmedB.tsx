@@ -97,7 +97,7 @@ const TIMELINE = [
     title: 'Campaigns run, your calendar fills',
     // No lead count: that offer is retired (see lib/agency-offer.ts). What
     // the page says is what each client is worth.
-    body: `The ads go live and tax-planning prospects start booking onto your calendar — each one an engagement worth ${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)}. We report every week, so you see the pace rather than waiting to find out.`,
+    body: `The ads go live and screened tax-planning prospects start booking onto your calendar, for engagements often priced from ${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)} depending on your offer, the client's fit and the scope. We report every week, so you see the pace rather than waiting to find out.`,
   },
   {
     Icon: ShieldCheck,
@@ -120,7 +120,7 @@ const INCLUDED = [
   'Secure client messaging and document collection',
   'AI automations for intake, follow-up and reminders',
   'Your own AI avatar, cast for your firm',
-  'New ad creative every 7 to 14 days, made by us',
+  'Ad creative made by us, refreshed typically every 7 to 14 days',
   'Meta campaigns — built, run and reported on',
 ];
 

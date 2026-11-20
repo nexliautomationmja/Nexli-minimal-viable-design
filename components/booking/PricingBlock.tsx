@@ -3,12 +3,13 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
+  ArrowDown,
+  ArrowRight,
   Building2,
   CalendarClock,
   CheckCircle2,
   ChevronRight,
   CircleDollarSign,
-  Megaphone,
   MessagesSquare,
   Percent,
   Plus,
@@ -24,9 +25,12 @@ import {
   AGENCY_MAX_AD_BUDGET,
   AGENCY_MIN_AD_BUDGET,
   AGENCY_PERFORMANCE_PERCENT,
+  AGENCY_PREPAY_SAVING,
   AGENCY_RETAINER_MONTHLY,
+  AGENCY_RETAINER_PREPAY,
   AGENCY_RETAINER_TERM_MONTHS,
-  PERFORMANCE_YOURS,
+  PERFORMANCE_THRESHOLD,
+  PREPAY_MONTHLY_CREDIT,
   usd,
   usdK,
 } from '@/lib/agency-offer';
@@ -42,18 +46,25 @@ import {
  *
  * DRAWN IN /math's LANGUAGE (Marcel, 2026-11-19): not one box with the
  * price in it, but the "How the math works" chain. Three numbered cards
- * with their icon tiles, joined by plus signs, are what the firm pays:
- * the agency fee, the performance pay, its own ad budget. Under them, a
- * small diagram of where that money goes (Nexli, and Meta directly, never
- * through us) and the terms.
+ * with their icon tiles are what the firm pays: the monthly minimum, the
+ * performance fee, its own ad budget. Under them, a small diagram of where
+ * that money goes (Nexli, and Meta directly, never through us) and the
+ * terms.
+ *
+ * NEVER A BARE "$10,000 + 10%" (the pitch-deck brief Marcel approved,
+ * 2026-11-20): it reads as the full 10% on top. Said the simple way (Marcel,
+ * the same day): the $10,000 covers the first $100,000 of net attributed
+ * revenue, and the performance card is "10% of net attributed revenue ABOVE
+ * $100,000". That is the same number as 10% of net minus the $10,000
+ * credit, and a plus before it is the kind the brief allows, because it only
+ * ever means the amount above. On a phone each card has a shorter version
+ * that still says it. (Join's `credit` style is kept for a future use.)
  *
  * THE REAL MATH ON /booking-confirmed-b AND /pitch, NOT THE VSLs (Marcel,
  * 2026-11-19). With `explainPerformance`, PerformancePayExplainer sits under
- * the three cards (beside them on /pitch's `deck` slide):
- * one number a month, not 10% of every sale, a quiet month ($0 more) beside
- * his $150,000 one ($5,000 more). The VSLs leave the math out: their card
- * says it is not 10% of every sale and that it is walked through on the
- * call.
+ * the three cards: the definition, then a quiet month ($0 more) beside a
+ * growth month ($5,000 more), each worked from what was collected. The VSLs
+ * leave the worked months out; their cards carry the definition in words.
  *
  * SHORT ON A PHONE ON THE VSLs (Marcel, 2026-11-20: "the pricing isn't too
  * large to where i have to do too much scrolling to get to the calendar").
@@ -64,8 +75,9 @@ import {
  * are their titles. From `sm` up it is the same as everywhere else.
  * /booking-confirmed-b has no calendar under it and keeps the full block.
  *
- * NO PREPAY ON THE PAGE (same day). The $50,000 six-month prepay exists
- * (AGENCY_RETAINER_PREPAY) but is not shown or offered here.
+ * THE PREPAY ONLY ON /pitch (`prepay`, 2026-11-20). The $50,000 six-month
+ * prepay is six $10,000 monthly credits; the deck shows it under the
+ * monthly option, smaller. The VSLs and /booking-confirmed-b still do not.
  *
  * DARK WHATEVER THE THEME. /booking-confirmed-b follows the site theme, so
  * every surface here is opaque navy rather than /math's translucent glass,
@@ -74,6 +86,8 @@ import {
  */
 
 const SURFACE = 'linear-gradient(160deg, #101c33 0%, #0a1020 100%)';
+/** "six", for the prepay's sentence. */
+const TERM_WORD = AGENCY_RETAINER_TERM_MONTHS === 6 ? 'six' : String(AGENCY_RETAINER_TERM_MONTHS);
 const MUTED = 'rgba(255,255,255,0.62)';
 
 type Tone = 'emerald' | 'amber' | 'blue' | 'cyan';
@@ -86,15 +100,17 @@ const TONES: Record<Tone, { tile: string; text: string; shadow: string; line: st
   cyan: { tile: 'bg-cyan-500/20 border-cyan-500/30', text: 'text-cyan-400', shadow: 'rgba(6,182,212,0.35)', line: '#06B6D4' },
 };
 
-function Tile({ Icon, tone, n }: { Icon: LucideIcon; tone: Tone; n?: number }) {
+/** A tile with a Lucide icon or a brand mark (the ad card uses Meta's, 2026-11-20). Decorative. */
+function Tile({ Icon, tone, n }: { Icon: React.ComponentType<{ className?: string }>; tone: Tone; n?: number }) {
   const t = TONES[tone];
   return (
     <span className="relative inline-flex">
       <span
+        aria-hidden="true"
         className={`flex h-11 w-11 items-center justify-center rounded-xl border ${t.tile}`}
         style={{ filter: `drop-shadow(0 4px 8px ${t.shadow})` }}
       >
-        <Icon className={`h-5 w-5 ${t.text}`} aria-hidden="true" />
+        <Icon className={`h-5 w-5 ${t.text}`} />
       </span>
       {n !== undefined && (
         <span
@@ -127,23 +143,33 @@ const rise = (delay: number) => ({
 });
 
 /**
- * The plus between two cards: beside them on desktop, between them on a
+ * The join between two cards: beside them on desktop, between them on a
  * phone. `tight` (phoneCompact) sits it on the seam between two cards on a
- * phone instead of in a gap of its own.
+ * phone instead of in a gap of its own. `credit` is the join from the
+ * $10,000 to the 10%: an arrow and "credited", never a plus (see the note
+ * above). The cards say it in words too, so it is hidden from screen readers.
  */
-function Join({ tight = false }: { tight?: boolean }) {
+function Join({ tight = false, credit = false }: { tight?: boolean; credit?: boolean }) {
   return (
     <div
       className={`flex items-center justify-center lg:px-2 lg:py-0 ${tight ? 'relative z-10 -my-2.5 sm:my-0 sm:py-1' : 'py-1'}`}
       aria-hidden="true"
     >
-      <span
-        className={`flex items-center justify-center rounded-full border border-white/15 bg-[#0d1526] text-white/60 ${
-          tight ? 'h-7 w-7 sm:h-8 sm:w-8' : 'h-8 w-8'
-        }`}
-      >
-        <Plus className="h-4 w-4" strokeWidth={2.5} />
-      </span>
+      {credit ? (
+        <span className="flex items-center gap-1.5 rounded-full border border-amber-400/45 bg-[#0d1526] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-200 lg:flex-col lg:gap-1 lg:rounded-2xl lg:px-1.5 lg:py-2 lg:text-[9px]">
+          <ArrowDown className="h-3.5 w-3.5 lg:hidden" strokeWidth={2.5} />
+          <ArrowRight className="hidden h-3.5 w-3.5 lg:block" strokeWidth={2.5} />
+          credited
+        </span>
+      ) : (
+        <span
+          className={`flex items-center justify-center rounded-full border border-white/15 bg-[#0d1526] text-white/60 ${
+            tight ? 'h-7 w-7 sm:h-8 sm:w-8' : 'h-8 w-8'
+          }`}
+        >
+          <Plus className="h-4 w-4" strokeWidth={2.5} />
+        </span>
+      )}
     </div>
   );
 }
@@ -182,7 +208,7 @@ function Lane({
       </div>
       <ChevronRight className="-ml-1.5 h-4 w-4 shrink-0" style={{ color }} aria-hidden="true" />
       {/* One width for both, so the two arrows end at the same point. */}
-      <div className="ml-1 flex w-[12.25rem] shrink-0 items-center gap-2.5 rounded-xl border border-white/10 bg-[#0d1526] px-3 py-2.5 sm:w-56 sm:px-4">
+      <div className="ml-1 flex w-[12.75rem] shrink-0 items-center gap-2.5 rounded-xl border border-white/10 bg-[#0d1526] px-3 py-2.5 sm:w-60 sm:px-4">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
           {logo}
         </span>
@@ -203,8 +229,11 @@ export default function PricingBlock({
   explainPerformance = false,
   deck = false,
   phoneCompact = false,
+  prepay = false,
 }: {
   headline?: React.ReactNode;
+  /** /pitch only: the optional $50,000 six-month prepay, as six $10,000 credits. */
+  prepay?: boolean;
   /** The VSLs: kept short on a phone so the calendar under it is close. See the note above. */
   phoneCompact?: boolean;
   /** Show the 10% worked out (PerformancePayExplainer): /booking-confirmed-b and /pitch. */
@@ -218,12 +247,15 @@ export default function PricingBlock({
    */
   deck?: boolean;
 }) {
+  // On the VSLs nothing under the cards works the 10% out, so the card ends
+  // on the one line Marcel never wants missed (2026-11-19).
+  const everySale = explainPerformance ? '' : ` Never ${AGENCY_PERFORMANCE_PERCENT} of every sale.`;
   const parts = [
     {
       n: 1,
       tone: 'emerald' as Tone,
       Icon: CircleDollarSign,
-      label: 'Agency fee',
+      label: 'Monthly minimum',
       value: (
         <AnimatedNumber
           value={AGENCY_RETAINER_MONTHLY}
@@ -232,28 +264,34 @@ export default function PricingBlock({
         />
       ),
       unit: 'a month',
-      note: 'The website, portal, funnel, automations and campaigns, built and run for you.',
+      // The brief's card (2026-11-20), said the simple way (Marcel, same day):
+      // the $10,000 covers the first $100,000 of net attributed revenue.
+      note: `Paid at the beginning of the month. It covers the first ${usd(PERFORMANCE_THRESHOLD)} of net attributed revenue that month. Includes the agreed build and ongoing management. ${AGENCY_RETAINER_TERM_MONTHS}-month initial term.`,
+      noteShort: `Paid at the start of each month. Covers the first ${usd(PERFORMANCE_THRESHOLD)} of net attributed revenue. ${AGENCY_RETAINER_TERM_MONTHS}-month initial term.`,
       highlight: true,
     },
     {
       n: 2,
       tone: 'amber' as Tone,
       Icon: Percent,
-      label: 'Performance pay',
+      label: 'Performance fee',
       value: AGENCY_PERFORMANCE_PERCENT,
-      unit: '',
-      // Only the revenue our ads bring in (Marcel, 2026-11-19): "your
-      // referrals and your other sales stay yours".
-      note: `Only on revenue from the clients our ads bring you. ${PERFORMANCE_YOURS} Never ${AGENCY_PERFORMANCE_PERCENT} of every sale. ${
-        explainPerformance ? 'See exactly how it works below.' : 'We’ll walk you through it on the call.'
-      }`,
+      // "If net attributed revenue is above 100K, we bill the difference"
+      // (Marcel, 2026-11-20): 10% OF the difference. The same number as 10%
+      // of net minus the $10,000 credit, so the plus beside this card is the
+      // allowed kind: it only ever means the amount above the credit.
+      unit: `of net attributed revenue above ${usd(PERFORMANCE_THRESHOLD)}`,
+      note: `Net attributed revenue is what the clients the system brings you paid that month, minus the agreed ad spend and commissions. At or below ${usd(PERFORMANCE_THRESHOLD)}, you pay nothing more. Above it, we bill ${AGENCY_PERFORMANCE_PERCENT} of the difference at the end of the month.${everySale}`,
+      noteShort: `Nothing more until net attributed revenue passes ${usd(PERFORMANCE_THRESHOLD)} in a month. Then we bill ${AGENCY_PERFORMANCE_PERCENT} of the difference.${everySale}`,
       highlight: false,
     },
     {
       n: 3,
       tone: 'blue' as Tone,
-      Icon: Megaphone,
-      label: 'Your ad budget',
+      // Meta's mark, not a bullhorn (Marcel, 2026-11-20): the same logo as
+      // the Meta lane under the cards, because the budget goes to Meta.
+      Icon: MetaLogo,
+      label: 'Advertising, funded separately',
       // The range (Marcel, 2026-11-19). The top end counts up from the
       // bottom as it scrolls in, so the range opens out to $5K–$15K+. The
       // plus is there from the start: $15K is not a cap (2026-11-20).
@@ -275,14 +313,15 @@ export default function PricingBlock({
       // "a month" beside it instead of on a line of its own.
       long: true,
       // $5K–$15K+, "so it doesn't spook them" (Marcel, 2026-11-19), with the
-      // $5,000 minimum as a recommendation and the rest left to the call.
-      note: `We recommend ${usd(AGENCY_MIN_AD_BUDGET)} a month as the minimum, paid straight to Meta on your own card. We’ll talk through your ad spend on the call.`,
+      // $5,000 minimum a recommendation, not a contract term (the brief).
+      note: `Recommended minimum: ${usd(AGENCY_MIN_AD_BUDGET)} per month, paid directly to Meta on your own card. Agreed ad spend is subtracted before net attributed revenue is worked out. It is not part of Nexli’s payment.`,
+      noteShort: `Recommended minimum ${usd(AGENCY_MIN_AD_BUDGET)} a month, paid directly to Meta on your own card. Not part of Nexli’s payment.`,
       highlight: false,
     },
   ];
 
   const terms: { Icon: LucideIcon; title: string; body: string }[] = [
-    { Icon: Wrench, title: 'No setup fee', body: 'Nothing separate to pay for the build.' },
+    { Icon: Wrench, title: 'No separate setup fee', body: 'Nothing separate to pay for the build.' },
     {
       Icon: CalendarClock,
       title: `${AGENCY_RETAINER_TERM_MONTHS}-month initial term`,
@@ -293,7 +332,7 @@ export default function PricingBlock({
       title: 'Walked through on the call',
       body: explainPerformance
         ? 'The agreement, before anything is signed. Nothing here changes.'
-        : 'The agreement and the performance pay, before anything is signed. Nothing here changes.',
+        : 'The agreement and the performance fee, before anything is signed. Nothing here changes.',
     },
   ];
 
@@ -363,7 +402,18 @@ export default function PricingBlock({
                 }`}
                 style={{ color: MUTED }}
               >
-                {p.note}
+                {/* The full card from sm up; the short one on a phone and on
+                    the deck, where the full definition sits right under the
+                    cards (PerformancePayExplainer) and the slide must fit
+                    one screen. */}
+                {deck ? (
+                  p.noteShort
+                ) : (
+                  <>
+                    <span className="sm:hidden">{p.noteShort}</span>
+                    <span className="hidden sm:inline">{p.note}</span>
+                  </>
+                )}
               </span>
             </div>
           </motion.div>
@@ -391,12 +441,14 @@ export default function PricingBlock({
         <div className={`relative flex flex-1 flex-col justify-center ${deck ? 'gap-2.5' : 'gap-4'}`}>
           {/* The fork: one line down from the firm, a lane off each end. */}
           <span aria-hidden="true" className="absolute bottom-[22%] left-0 top-[22%] w-[2px] rounded-full bg-white/15" />
+          {/* The plus here is allowed: it is explicitly only the amount
+              above $100,000 (the brief, 2026-11-20). */}
           <Lane
             tone="emerald"
             logo={<NexliMark className="h-5 w-5" />}
             name="Nexli"
-            amount={`${usd(AGENCY_RETAINER_MONTHLY)} a month`}
-            detail={`+ ${AGENCY_PERFORMANCE_PERCENT} performance pay`}
+            amount={`${usd(AGENCY_RETAINER_MONTHLY)} monthly minimum`}
+            detail={`+ ${AGENCY_PERFORMANCE_PERCENT} of net attributed revenue above ${usd(PERFORMANCE_THRESHOLD)}`}
             delay={0}
           />
           <Lane
@@ -404,7 +456,7 @@ export default function PricingBlock({
             logo={<MetaLogo className="h-5 w-5" />}
             name="Meta"
             amount={`${AGENCY_AD_BUDGET_RANGE} a month`}
-            detail="Your ad budget, your card"
+            detail="Your separately funded advertising budget"
             delay={1.1}
           />
         </div>
@@ -445,17 +497,38 @@ export default function PricingBlock({
     </motion.div>
   );
 
+  // The optional prepay (/pitch): under the monthly option and smaller, a
+  // payment alternative and never "six months all-in" (the brief).
+  const prepayPanel = (
+    <motion.div
+      {...rise(0.32)}
+      className="rounded-2xl border border-white/10 p-4"
+      style={{ background: SURFACE }}
+    >
+      <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-violet-300 sm:text-[11px]">Optional payment route</div>
+      <div className="mt-1.5 text-[15px] font-bold leading-snug text-white">
+        Optional: {usd(AGENCY_RETAINER_PREPAY)} paid upfront for {AGENCY_RETAINER_TERM_MONTHS} months
+      </div>
+      <span className="mt-1 block text-[12.5px] leading-snug" style={{ color: MUTED }}>
+        Receive {TERM_WORD} {usd(PREPAY_MONTHLY_CREDIT)} monthly fee credits, a{' '}
+        {usd(AGENCY_PREPAY_SAVING)} saving versus {TERM_WORD} monthly minimums. The
+        same rule applies each month: above {usd(PERFORMANCE_THRESHOLD)} of net attributed revenue, we bill{' '}
+        {AGENCY_PERFORMANCE_PERCENT} of the difference that month. Advertising is funded separately.
+      </span>
+    </motion.div>
+  );
+
   if (deck) {
     return (
       <div style={OUTFIT}>
         {cards}
-        <div className="mt-4 grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+        <div className="mt-4 grid gap-4 lg:grid-cols-[1.45fr_1fr]">
           <motion.div {...rise(0.12)} className="flex">
             {explainPerformance && <PerformancePayExplainer compact sideBySide className="w-full" />}
           </motion.div>
           <div className="grid content-start gap-4">
             {moneyGoes}
-            {termsPanel}
+            {prepay ? prepayPanel : termsPanel}
           </div>
         </div>
       </div>
