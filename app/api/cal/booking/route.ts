@@ -84,9 +84,13 @@ export async function POST(req: NextRequest) {
 
   const meta = booking.metadata;
   const angle = isVslAngle(meta.angle) ? meta.angle : null;
-  // Cal's own request, so the visitor's IP is unknown here; the user agent
-  // would be Cal's server, which Meta must not get as the visitor's.
+  // Cal's own request, so the visitor's IP is unknown here, and the request's
+  // user agent is Cal's server, which Meta must not get as the visitor's.
+  // The visitor's own comes in the metadata (VslBooking, from 2026-11-20):
+  // Meta needs it for a website event, and the GHL pipeline's QualifiedLead
+  // reads it back from the lead row.
   const ip = "unknown";
+  const userAgent = meta.user_agent || "";
 
   const db = getDb();
   if (!db) {
@@ -117,7 +121,7 @@ export async function POST(req: NextRequest) {
       landing_page: meta.landing_page,
     },
     ip,
-    userAgent: "",
+    userAgent,
     logTag: "Cal Booking",
     sparse: true,
   });
@@ -136,6 +140,8 @@ export async function POST(req: NextRequest) {
       .update(leads)
       .set({
         ...(booking.website ? { websiteUrl: booking.website } : {}),
+        // upsert only writes it on a new row; an existing one gets it here.
+        ...(userAgent ? { userAgent } : {}),
         funnelPath: "agency",
         bookedCallAt: new Date(),
         updatedAt: new Date(),
@@ -155,7 +161,7 @@ export async function POST(req: NextRequest) {
     attendeeTimezone: booking.timeZone,
     angle,
     ip,
-    userAgent: "",
+    userAgent,
     // The ids the pixel used in the browser, so Meta keeps one of each.
     // None for a reschedule: Meta already has this booking and this lead.
     capiEvents: rescheduled

@@ -46,9 +46,13 @@ function hashUserData(raw: CAPIUserData): Record<string, unknown> {
   // PII fields — normalize (trim + lowercase) then SHA-256 hash
   if (raw.em) hashed.em = [sha256(raw.em)];
   if (raw.ph) {
-    // Remove spaces, dashes, parens before hashing
-    const cleaned = raw.ph.replace(/[\s\-()]/g, '');
-    hashed.ph = [sha256(cleaned)];
+    // Meta wants digits only, country code included: no "+", spaces,
+    // dashes or parens (2026-11-20; the "+" Cal and GHL send used to stay
+    // in, so no phone ever matched). A bare 10-digit number is taken as US,
+    // the only market these pages serve.
+    let digits = raw.ph.replace(/\D/g, '');
+    if (digits.length === 10) digits = `1${digits}`;
+    if (digits) hashed.ph = [sha256(digits)];
   }
   if (raw.fn) hashed.fn = [sha256(raw.fn)];
   if (raw.ln) hashed.ln = [sha256(raw.ln)];
@@ -68,12 +72,18 @@ function hashUserData(raw: CAPIUserData): Record<string, unknown> {
 // ---------------------------------------------------------------------------
 
 export async function sendCAPIEvent(
-  event: CAPIEvent
+  event: CAPIEvent,
+  /**
+   * `testEventCode` sends this one event to Events Manager's Test events
+   * tab instead of counting it (the pipeline webhook passes one while it is
+   * being tested). META_TEST_EVENT_CODE does the same for every event.
+   */
+  opts: { testEventCode?: string } = {}
 ): Promise<{ success: boolean; error?: string }> {
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
   const apiVersion = process.env.META_API_VERSION || 'v21.0';
-  const testEventCode = process.env.META_TEST_EVENT_CODE;
+  const testEventCode = opts.testEventCode || process.env.META_TEST_EVENT_CODE;
 
   if (!pixelId || !accessToken) {
     console.warn('[Meta CAPI] Missing PIXEL_ID or ACCESS_TOKEN — skipping event:', event.event_name);

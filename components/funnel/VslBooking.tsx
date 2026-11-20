@@ -91,6 +91,15 @@ export default function VslBooking({ angle }: { angle: string }) {
       ['landing_page', a?.landing_page],
     ];
     for (const [k, v] of fields) if (v) metadata[k] = v;
+    // The visitor's own browser, for Meta (2026-11-20). The booking reaches
+    // the site through Cal's server, so this is the only way the site learns
+    // it, and a website event (Schedule, Lead, and QualifiedLead later from
+    // the GHL pipeline) needs it. Cal caps a value at 500 characters.
+    try {
+      if (navigator.userAgent) metadata.user_agent = navigator.userAgent.slice(0, 500);
+    } catch {
+      /* no navigator: leave it out */
+    }
     setPrepared({ metadata, scheduleEventId, leadEventId, timeZone: describeTimeZone() });
   }, [angle]);
 
