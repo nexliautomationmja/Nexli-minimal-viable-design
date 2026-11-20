@@ -445,7 +445,14 @@ const HeroSection: React.FC<HeroProps> = ({ headline, subheadline, muxPlaybackId
           className="text-[11px] font-bold uppercase tracking-[0.18em] sm:text-xs"
           style={{ color: 'rgba(255,255,255,0.75)' }}
         >
-          For CPA firm owners doing <span style={{ color: '#a3e635' }}>{VSL_AUDIENCE_REVENUE}</span> a year
+          {/* The range in bold (Marcel, 2026-11-20): heavier and a step larger
+              than the rest of the line, with leading-none so the line is no
+              taller and the CTA stays on the first screen. */}
+          For CPA firm owners doing{' '}
+          <span className="text-[13px] font-black leading-none sm:text-[15px]" style={{ color: '#a3e635' }}>
+            {VSL_AUDIENCE_REVENUE}
+          </span>{' '}
+          a year
         </motion.p>
         </div>
 
