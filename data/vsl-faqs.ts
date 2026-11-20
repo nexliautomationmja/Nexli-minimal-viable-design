@@ -4,7 +4,8 @@
  * components/VslFunnelOffer.tsx ({ q, a }) so the JSX stays untouched.
  *
  * Facts stated here must match lib/site.ts and THE RETAINER in
- * lib/agency-offer.ts (Marcel, 2026-11-19): $500K+ per year minimum,
+ * lib/agency-offer.ts (Marcel, 2026-11-19): built for firms doing $1M–$5M+
+ * a year (AUDIENCE_REVENUE, 2026-11-20: who we aim for, not a minimum),
  * $10,000 a month with no setup fee plus 10% performance pay (named, not
  * explained: that is for the call), the ad budget paid by the firm directly
  * to Meta, a six-month initial term that renews for six months at a time,
@@ -18,6 +19,7 @@ import {
   AGENCY_RETAINER_MONTHLY,
   usd,
 } from '../lib/agency-offer';
+import { AUDIENCE_REVENUE } from '../lib/site';
 
 export interface VslFaqItem {
   q: string;
@@ -27,7 +29,8 @@ export interface VslFaqItem {
 /** "$15,000 to $55,000", from the one place the range is set. */
 const CLIENT_VALUE = `${usd(AGENCY_ENGAGEMENT_LOW)} to ${usd(AGENCY_ENGAGEMENT_HIGH)}`;
 
-const MINIMUM = '$500K+ per year (about $40K-$50K a month)';
+/** Who we aim for, not a minimum (Marcel, 2026-11-20). See lib/site. */
+const WHO = `${AUDIENCE_REVENUE} a year`;
 
 // No lead count anywhere in these answers: the "50 in 90 days" target was
 // retired (see lib/agency-offer.ts). Say what each client is worth instead.
@@ -79,7 +82,7 @@ const differentFrom: VslFaqItem = {
 export const advisoryFaq: VslFaqItem[] = [
   {
     q: 'What kind of CPA firms do you work with?',
-    a: `We exclusively partner with established CPA and accounting firms doing ${MINIMUM}, based in the US, that want more advisory clients. If you are a solo practitioner or still building your first client base, this is not the right fit yet.`,
+    a: `We partner with established CPA and accounting firms doing ${WHO}, based in the US, that want more advisory clients. If you are a solo practitioner or still building your first client base, this is not the right fit yet.`,
   },
   whatYouGet('your advisory offer'),
   differentFrom,
@@ -103,7 +106,7 @@ export const advisoryFaq: VslFaqItem[] = [
 export const betterClientsFaq: VslFaqItem[] = [
   {
     q: 'What kind of CPA firms do you work with?',
-    a: `We exclusively partner with established CPA and accounting firms doing ${MINIMUM}, based in the US, that are done competing for the $800 client and want to be positioned for the $8,000 one. If you are a solo practitioner or still building your first client base, this is not the right fit yet.`,
+    a: `We partner with established CPA and accounting firms doing ${WHO}, based in the US, that are done competing for the $800 client and want to be positioned for the $8,000 one. If you are a solo practitioner or still building your first client base, this is not the right fit yet.`,
   },
   {
     q: 'Why not just run ads now?',
@@ -127,7 +130,7 @@ export const betterClientsFaq: VslFaqItem[] = [
 export const offerFaq: VslFaqItem[] = [
   {
     q: 'What kind of firms do you work with?',
-    a: `We exclusively partner with established tax and CPA firms doing ${MINIMUM}, based in the US, that can deliver real tax planning, not just compliance. If you are a solo practitioner or still building your first client base, this is not the right fit yet.`,
+    a: `We partner with established tax and CPA firms doing ${WHO}, based in the US, that can deliver real tax planning, not just compliance. If you are a solo practitioner or still building your first client base, this is not the right fit yet.`,
   },
   {
     q: 'Where do these clients come from?',

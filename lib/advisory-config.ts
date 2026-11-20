@@ -15,6 +15,7 @@
 // ---------------------------------------------------------------------------
 
 import { AGENCY_ENGAGEMENT_LOW } from './agency-offer';
+import { AUDIENCE_REVENUE } from './site';
 
 export const ADVISORY_PRODUCT_ID = 'advisory-pricing';
 export const ADVISORY_PRODUCT_NAME = 'Book of Business Accelerator';
@@ -263,9 +264,10 @@ export const ADVISORY_BOOK_PATH = '/book';
  * a year. The plus is his: "because we will help bigger firms", so a $10M
  * firm does not read itself out. Said in the hero, under every button and
  * in each page's link preview. TARGETING COPY, NOT A GATE: nobody is turned
- * away by it, and MIN_REVENUE in lib/site stays the published minimum.
+ * away by it. Since 2026-11-20 it is what the whole site says
+ * (AUDIENCE_REVENUE in lib/site, where the unpublished $750K floor is noted).
  */
-export const VSL_AUDIENCE_REVENUE = '$1M–$5M+';
+export const VSL_AUDIENCE_REVENUE = AUDIENCE_REVENUE;
 
 export const VSL_ANGLE_AGENCY = 'agency';
 export const VSL_ANGLE_BETTER_CLIENTS = 'better-clients';

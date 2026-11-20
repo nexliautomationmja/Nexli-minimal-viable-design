@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useBooking } from '../QualificationProvider';
+import { AUDIENCE_REVENUE } from '@/lib/site';
 
 interface Props {
   heading: string;
@@ -35,7 +36,7 @@ export default function GuideCta({ heading, body, href, label }: Props) {
         </button>
       </div>
       <p className="mt-6 text-xs text-[var(--text-muted)]">
-        Established CPA firms doing $500K+ a year (about $40K-$50K a month) only. Six-month initial term.
+        Built for established CPA firms doing {AUDIENCE_REVENUE} a year. Six-month initial term.
       </p>
     </aside>
   );

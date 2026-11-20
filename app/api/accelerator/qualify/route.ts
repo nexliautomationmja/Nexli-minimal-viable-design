@@ -51,7 +51,6 @@ export async function POST(req: NextRequest) {
     // and without this there is no way to tell which one earned a
     // conversion.
     contentName: "Accelerator Qualifier",
-    qualifiedEventPrefix: "acq",
     webhookUrl: process.env.GHL_ACCELERATOR_QUALIFY_WEBHOOK_URL,
     webhookEnvName: "GHL_ACCELERATOR_QUALIFY_WEBHOOK_URL",
     webhookSource: "accelerator-qualifier",

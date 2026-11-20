@@ -10,7 +10,7 @@ import {
   KNOWS_ABOUT,
   LEGAL_NAME,
   LOGO_URL,
-  MIN_REVENUE,
+  AUDIENCE_REVENUE,
   OG_IMAGE_URL,
   ORG_DESCRIPTION,
   ORG_ID,
@@ -143,7 +143,7 @@ export function serviceSchema() {
     ],
     audience: {
       '@type': 'BusinessAudience',
-      name: `Established CPA and accounting firms with ${MIN_REVENUE} annual revenue`,
+      name: `Established CPA and accounting firms doing ${AUDIENCE_REVENUE} in annual revenue`,
     },
     areaServed: { '@type': 'Country', name: 'United States' },
     hasOfferCatalog: {

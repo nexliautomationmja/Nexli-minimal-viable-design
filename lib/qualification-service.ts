@@ -55,8 +55,6 @@ export interface QualifierConfig {
   noteHeading: string;
   /** Meta content_name, so the funnels stay separable in Events Manager. */
   contentName: string;
-  /** Prefix for the custom QualifiedLead event id. */
-  qualifiedEventPrefix: string;
   /** Read statically by the caller — see the note in lib/optin-service.ts. */
   webhookUrl: string | undefined;
   webhookEnvName: string;
@@ -411,17 +409,11 @@ export async function recordQualification(req: NextRequest, cfg: QualifierConfig
       }).catch(() => {});
     }
 
-    if (qualified) {
-      sendCAPIEvent({
-        event_name: "QualifiedLead",
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: `${cfg.qualifiedEventPrefix}_${leadId}_${Date.now()}`,
-        action_source: "website",
-        event_source_url: sourceUrl,
-        user_data: userData,
-        custom_data: { ...customData, lead_id: leadId },
-      }).catch(() => {});
-    }
+    // No QualifiedLead here (Marcel, 2026-11-20). It now means one thing:
+    // he moved the person to the qualified stage of the GHL pipeline
+    // (/api/meta/qualified-lead), and the ads optimize on it. A form score
+    // sending it too would blur that. The answers still go as Lead and
+    // CompleteRegistration above.
 
     // ── Inbound webhook (fire and forget) ─────────────────────────────────
     const webhook = cfg.webhookUrl;

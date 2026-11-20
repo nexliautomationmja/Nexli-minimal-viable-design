@@ -47,7 +47,7 @@ import {
   RENEWAL_TERMS,
   usd,
 } from '@/lib/agency-offer';
-import { MIN_REVENUE } from '@/lib/site';
+import { AUDIENCE_REVENUE } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Products & Pricing | Nexli Automation',
@@ -71,7 +71,7 @@ const PRODUCTS: Product[] = [
   {
     name: 'Digital Rainmaker System',
     kind: 'Done-for-you service',
-    summary: `We build and run the system that brings established CPA firms (${MIN_REVENUE} in annual revenue) high-value advisory clients: a premium website, a branded client portal, a sales funnel, AI automations, a Google review engine, and the paid ad campaigns that drive it.`,
+    summary: `We build and run the system that brings established CPA firms (${AUDIENCE_REVENUE} in annual revenue) high-value advisory clients: a premium website, a branded client portal, a sales funnel, AI automations, a Google review engine, and the paid ad campaigns that drive it.`,
     price: usd(AGENCY_RETAINER_MONTHLY),
     per: '/ month',
     priceNote: `The agency minimum. No setup fee. Plus ${AGENCY_PERFORMANCE_PERCENT} performance pay on agreed, attributable net revenue, which is not ${AGENCY_PERFORMANCE_PERCENT} of every sale (set out below). Your ad budget, at least ${usd(AGENCY_MIN_AD_BUDGET)} a month, is separate and paid by you directly to Meta.`,

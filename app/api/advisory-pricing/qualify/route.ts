@@ -45,7 +45,6 @@ export async function POST(req: NextRequest) {
     ghlSource: `${ADVISORY_PRODUCT_NAME} - Qualifier`,
     noteHeading: "Completed the advisory qualifier",
     contentName: "Advisory Qualifier",
-    qualifiedEventPrefix: "aql",
     webhookUrl: process.env.GHL_ADVISORY_QUALIFY_WEBHOOK_URL,
     webhookEnvName: "GHL_ADVISORY_QUALIFY_WEBHOOK_URL",
     webhookSource: "advisory-qualifier",
