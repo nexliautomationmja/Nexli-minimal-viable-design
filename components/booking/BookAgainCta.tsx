@@ -5,15 +5,18 @@
 // (Marcel, 2026-11-16).
 //
 // WHY. Firms that already booked are retargeted back to these pages, many
-// after missing the call. They cleared the qualifier once; making them
-// answer it again is friction that costs bookings. So the button reads the
-// visitor first:
+// after missing the call. So the button reads the visitor first, for its
+// label only:
 //
-//   booked     qualified and booked before   "Pick a new time"   → /book
-//   qualified  qualified, never booked       "Book your call"    → /book
-//   unknown    anyone else                   "See if you qualify" → qualifier
-//                                            + "Already qualified?" → /book,
-//                                            which asks for their email
+//   booked     booked before                 "Pick a new time"
+//   qualified  qualified, never booked       "Book your call"
+//   unknown    anyone else                   "Book a call"
+//
+// Every one goes to REBOOK_PATH, the Better Clients VSL's booking section:
+// the price, then the calendar (Marcel, 2026-11-23). Booking happens there
+// now with no qualifier in front of it, so the unknown visitor no longer
+// gets "See if you qualify" and "Already qualified?" (the qualifier and
+// /book); one button does it.
 //
 // The pages are static, so the state comes from one GET per page load
 // (/api/advisory-pricing/rebook), shared by every copy of the button on the
@@ -34,7 +37,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { ADVISORY_BOOK_PATH, ADVISORY_QUALIFY_PATH } from '@/lib/advisory-config';
+import { REBOOK_PATH } from '@/lib/advisory-config';
 import type { BookingState } from '@/lib/booking-access';
 import { BOOK_GREEN } from './RebookCallButton';
 
@@ -72,29 +75,19 @@ const TAGLINE: Record<BookingState, string> = {
 
 /** Green, like Rebook call at the top of the page (Marcel, 2026-11-16). */
 const primary = `group inline-flex min-w-0 touch-manipulation items-center justify-center gap-1.5 whitespace-nowrap rounded-full ${BOOK_GREEN} px-5 font-bold no-underline shadow-lg transition-[filter] [-webkit-tap-highlight-color:transparent] hover:brightness-105 active:brightness-95`;
-const ghost =
-  'inline-flex shrink-0 touch-manipulation items-center justify-center whitespace-nowrap rounded-full border border-white/15 bg-white/[0.05] px-4 font-semibold text-white/85 no-underline transition-colors [-webkit-tap-highlight-color:transparent] hover:border-white/30 hover:text-white active:bg-white/[0.1]';
 
-/** `grow` is how the primary button fills the row it sits in. */
+const LABEL: Record<BookingState, string> = {
+  booked: 'Pick a new time',
+  qualified: 'Book your call',
+  unknown: 'Book a call',
+};
+
+/** `grow` is how the button fills the row it sits in. */
 function Actions({ state, height, grow }: { state: BookingState; height: string; grow: string }) {
-  const arrow = <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />;
-  if (state === 'unknown') {
-    return (
-      <>
-        <Link href={ADVISORY_BOOK_PATH} prefetch={false} className={`${ghost} ${height} text-[13.5px]`}>
-          Already qualified?
-        </Link>
-        <Link href={ADVISORY_QUALIFY_PATH} prefetch={false} className={`${primary} ${height} ${grow} text-[14px]`}>
-          See if you qualify
-          {arrow}
-        </Link>
-      </>
-    );
-  }
   return (
-    <Link href={ADVISORY_BOOK_PATH} prefetch={false} className={`${primary} ${height} ${grow} text-[14px]`}>
-      {state === 'booked' ? 'Pick a new time' : 'Book your call'}
-      {arrow}
+    <Link href={REBOOK_PATH} prefetch={false} className={`${primary} ${height} ${grow} text-[14px]`}>
+      {LABEL[state]}
+      <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
     </Link>
   );
 }

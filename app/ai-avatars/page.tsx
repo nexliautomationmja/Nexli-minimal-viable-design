@@ -16,7 +16,7 @@ import { socialMeta } from '@/lib/seo';
 import { AI_AVATARS, NEXLI_AVATAR, type AiAvatar } from '@/lib/ai-avatars';
 import { avatarImages } from '@/lib/ai-avatar-images';
 import { AGENCY_FIRM_SPOTS } from '@/lib/agency-offer';
-import { ADVISORY_PATH } from '@/lib/advisory-config';
+import { RETARGET_VSL_PATH } from '@/lib/advisory-config';
 import AvatarDeck from '@/components/ai-avatars/AvatarDeck';
 import type { CardAvatar } from '@/components/ai-avatars/AvatarCard';
 
@@ -50,7 +50,7 @@ export default function AiAvatarsPage() {
       daniela={withPortrait(NEXLI_AVATAR)}
       library={AI_AVATARS.map(withPortrait)}
       firmSpots={WORDS[AGENCY_FIRM_SPOTS] ?? String(AGENCY_FIRM_SPOTS)}
-      ctaHref={ADVISORY_PATH}
+      ctaHref={RETARGET_VSL_PATH}
     />
   );
 }

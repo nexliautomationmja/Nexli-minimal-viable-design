@@ -4,10 +4,11 @@
 //
 // The sticky button at the bottom (BookAgainCta) reads the visitor first and
 // changes its label. This one does not: it says the same thing to everyone,
-// so it is on screen from the first paint, and it always goes to /book. That
-// page sorts them out: the calendar for a browser we recognise, the
-// email-you-qualified-with step otherwise, and the qualifier for a firm that
-// never qualified.
+// so it is on screen from the first paint. Both go to REBOOK_PATH, the
+// Better Clients VSL's booking section: the price, then the calendar
+// (Marcel, 2026-11-23). Until then they went to /book, which sorted
+// visitors by whether they had qualified; the VSL calendar asks nobody to
+// qualify first.
 //
 // Green so it reads apart from the blue buttons that move through the page
 // (Meet the cast, the slide arrows). The sticky booking button at the bottom
@@ -16,7 +17,7 @@
 // ---------------------------------------------------------------------------
 import Link from 'next/link';
 import { CalendarClock } from 'lucide-react';
-import { ADVISORY_BOOK_PATH } from '@/lib/advisory-config';
+import { REBOOK_PATH } from '@/lib/advisory-config';
 
 /** The booking green, shared with the sticky button (BookAgainCta). */
 export const BOOK_GREEN = 'bg-gradient-to-r from-emerald-500 to-green-400 text-[#03231a] shadow-emerald-500/20';
@@ -39,7 +40,7 @@ export default function RebookCallButton({
   className?: string;
 }) {
   return (
-    <Link href={ADVISORY_BOOK_PATH} prefetch={false} className={`${BASE} ${SIZE[size]} ${className}`}>
+    <Link href={REBOOK_PATH} prefetch={false} className={`${BASE} ${SIZE[size]} ${className}`}>
       <CalendarClock
         className={`h-4 w-4 shrink-0 ${size === 'sm' ? 'hidden sm:block' : ''}`}
         aria-hidden="true"

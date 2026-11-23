@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>AI, or you on camera?</title>
+</head>
+<!--
+  BROADCAST: the AI avatar email (Marcel, 2026-11-23). One send to
+  subscribers who qualified, to take them to /ai-avatars and from there to
+  a booked call.
+
+  THE ARGUMENT, in Marcel's words: a lot of agencies fail their clients
+  because the client has to run a business AND keep feeding the agency
+  content to make the ads with. Nexli casts the firm an AI avatar instead,
+  so the whole system launches sooner and we can test far more creative,
+  without asking the owner to spend hours on camera.
+
+  EVERY PROMISE HERE IS ONE /ai-avatars ALREADY MAKES (lib/ai-avatars,
+  components/ai-avatars/AvatarDeck). Change them together:
+    - one avatar, one firm: no other client's ads use it while they are
+      with us;
+    - Nexli CASTS the avatar from the firm's market and the clients it
+      wants. The firm does not pick from a menu, so never say "choose";
+    - every avatar is AI-generated, and is never described as a real
+      person or a member of the firm's staff;
+    - creative refreshed typically every 7 to 14 days;
+    - the build is estimated at about 21 days (/pitch);
+    - three firms at a time (AGENCY_FIRM_SPOTS in lib/agency-offer).
+
+  A BROADCAST, NOT A WORKFLOW EMAIL, so the merge tags are {{contact.*}}.
+  There is no inbound webhook behind this one.
+
+  DANIELA'S VIDEO PREVIEW leads (Marcel, 2026-11-23: her video's frame,
+  or a preview of it, above the fold to click). public/email/ai-avatars/
+  daniela-video.gif is 2.5 seconds of her video on /ai-avatars
+  (DANIELA_PAGE_VIDEO in lib/ai-avatars, from second 2, 8 frames a
+  second, looping) with the play button, "AI AVATAR" and the length drawn
+  on every frame. Its first frame is the page's own poster frame, so
+  Outlook on Windows, which shows a GIF's first frame only, still gets the
+  right picture. About 1.5 MB: a richer palette doubled the size, a
+  thinner one made her skin blotchy. It links to /ai-avatars#watch, the
+  video itself. If her video is replaced, rebuild it.
+
+  THE FACES are JPG copies in public/email/ai-avatars/, not the site's
+  WebP portraits: Outlook on Windows does not show WebP, and CPA firms
+  live in Outlook. They load from nexli.net, so they only appear once that
+  folder is deployed.
+
+  PASTE INTO A CODE / CUSTOM HTML BLOCK IN GHL, NOT THE RICH-TEXT BODY.
+  Tables and inline styles only.
+-->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0f1c; color: #ffffff;">
+
+  <!-- Preheader: inbox preview text, hidden in the body. -->
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    Most agencies need you on camera before their ads can work. We built ours so you never are.
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0a0f1c;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%;">
+
+          <!-- Logo -->
+          <tr>
+            <td style="padding: 0 0 28px 0; text-align: center;">
+              <img src="https://www.nexli.net/logos/nexli-logo-white-wordmark@2x.png" alt="NEXLI" width="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto; border: 0;" />
+            </td>
+          </tr>
+
+          <!-- ===================== DANIELA'S VIDEO =====================
+               A moving preview of her video on /ai-avatars, with the play
+               button baked into every frame (email clients cannot lay one
+               over an image). Both it and the line under it go to #watch,
+               which lands on the video itself, on a phone too. -->
+          <tr>
+            <td align="center" style="padding: 0 0 14px 0;">
+              <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars#watch" target="_blank" style="text-decoration: none;"><img src="https://www.nexli.net/email/ai-avatars/daniela-video.gif" alt="Play: Daniela, Nexli&rsquo;s own AI avatar, on why your firm needs one (45 seconds)" width="280" style="display: block; width: 280px; max-width: 100%; height: auto; border: 0; border-radius: 16px;" /></a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding: 0 0 36px 0;">
+              <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #8b94a3; text-align: center;">
+                <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars#watch" target="_blank" style="color: #22d3ee; font-weight: 700; text-decoration: none;">&#9654;&#xFE0E;&nbsp; Watch Daniela</a>, Nexli&rsquo;s own AI avatar, on why your firm needs one. <span style="white-space: nowrap;">45 sec</span>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 0 22px 0;">
+              <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #22d3ee;">AI, or you on camera?</p>
+              <h1 style="margin: 0; font-size: 31px; line-height: 1.18; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+                Most agencies need you to make their ads work.
+              </h1>
+            </td>
+          </tr>
+
+          <!-- The problem -->
+          <tr>
+            <td style="padding: 0 0 26px 0;">
+              <p style="margin: 0 0 16px 0; font-size: 17px; line-height: 1.65; color: #b4bcc8;">
+                Hi {{contact.first_name}},
+              </p>
+              <p style="margin: 0 0 16px 0; font-size: 17px; line-height: 1.65; color: #b4bcc8;">
+                Here is where a lot of agency relationships go wrong. You hire them to bring in clients, and within a week they are asking you for content: scripts to read, videos to film, &ldquo;just twenty minutes on camera&rdquo; that turns into an afternoon.
+              </p>
+              <p style="margin: 0 0 16px 0; font-size: 17px; line-height: 1.65; color: #b4bcc8;">
+                You are running a firm, so the filming slips. The ads run on whatever you managed to record, the same few videos wear out, and the results stall. Then the conversation turns to why you have not sent more content.
+              </p>
+              <p style="margin: 0; font-size: 17px; line-height: 1.65; color: #ffffff; font-weight: 700;">
+                Their whole system depends on the one person with the least spare time: you.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ===================== THE COMPARISON ===================== -->
+          <tr>
+            <td style="padding: 0 0 34px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #121826; border: 1px solid #1f2a3d; border-radius: 14px;">
+                <tr>
+                  <td width="50%" valign="top" style="padding: 18px 12px 10px 18px; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #8b94a3;">Most agencies</td>
+                  <td width="50%" valign="top" style="padding: 18px 18px 10px 12px; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #22d3ee;">With your AI avatar</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 12px 10px 18px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #8b94a3;">&#10007;&nbsp; You film every ad yourself</td>
+                  <td valign="top" style="padding: 10px 18px 10px 12px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #ffffff;"><span style="color: #22d3ee;">&#10003;</span>&nbsp; No filming days, ever</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 12px 10px 18px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #8b94a3;">&#10007;&nbsp; New ads wait on new takes from you</td>
+                  <td valign="top" style="padding: 10px 18px 10px 12px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #ffffff;"><span style="color: #22d3ee;">&#10003;</span>&nbsp; New creative typically every 7 to 14 days, without your time</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 12px 10px 18px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #8b94a3;">&#10007;&nbsp; The ads go quiet when tax season starts</td>
+                  <td valign="top" style="padding: 10px 18px 10px 12px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #ffffff;"><span style="color: #22d3ee;">&#10003;</span>&nbsp; The same face shows up every week, all year</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 12px 18px 18px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #8b94a3;">&#10007;&nbsp; Launch waits on your calendar</td>
+                  <td valign="top" style="padding: 10px 18px 18px 12px; border-top: 1px solid #1f2a3d; font-size: 15px; line-height: 1.5; color: #ffffff;"><span style="color: #22d3ee;">&#10003;</span>&nbsp; Launch runs on ours</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- What we do instead -->
+          <tr>
+            <td style="padding: 0 0 22px 0;">
+              <p style="margin: 0 0 12px 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #22d3ee;">What we do instead</p>
+              <p style="margin: 0; font-size: 17px; line-height: 1.65; color: #b4bcc8;">
+                We cast an AI-generated presenter for your firm: <strong style="color: #ffffff;">your avatar.</strong> It fronts every ad you run, and while you are with us, no other client&rsquo;s ads use it. We write the scripts, make the ads and run the campaigns. Nobody at your firm goes on camera.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ===================== THE FACES ===================== -->
+          <tr>
+            <td style="padding: 0 0 34px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td width="25%" align="center" valign="top" style="padding: 0 4px;">
+                    <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars" target="_blank" style="text-decoration: none;"><img src="https://www.nexli.net/email/ai-avatars/abbey.jpg" alt="Abbey, an AI avatar" width="132" style="display: block; width: 100%; max-width: 132px; height: auto; border: 0; border-radius: 12px;" /></a>
+                    <p style="margin: 8px 0 0 0; font-size: 13px; font-weight: 700; color: #ffffff;">Abbey</p>
+                  </td>
+                  <td width="25%" align="center" valign="top" style="padding: 0 4px;">
+                    <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars" target="_blank" style="text-decoration: none;"><img src="https://www.nexli.net/email/ai-avatars/jasmine.jpg" alt="Jasmine, an AI avatar" width="132" style="display: block; width: 100%; max-width: 132px; height: auto; border: 0; border-radius: 12px;" /></a>
+                    <p style="margin: 8px 0 0 0; font-size: 13px; font-weight: 700; color: #ffffff;">Jasmine</p>
+                  </td>
+                  <td width="25%" align="center" valign="top" style="padding: 0 4px;">
+                    <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars" target="_blank" style="text-decoration: none;"><img src="https://www.nexli.net/email/ai-avatars/donna.jpg" alt="Donna, an AI avatar" width="132" style="display: block; width: 100%; max-width: 132px; height: auto; border: 0; border-radius: 12px;" /></a>
+                    <p style="margin: 8px 0 0 0; font-size: 13px; font-weight: 700; color: #ffffff;">Donna</p>
+                  </td>
+                  <td width="25%" align="center" valign="top" style="padding: 0 4px;">
+                    <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars" target="_blank" style="text-decoration: none;"><img src="https://www.nexli.net/email/ai-avatars/sofia.jpg" alt="Sofia, an AI avatar" width="132" style="display: block; width: 100%; max-width: 132px; height: auto; border: 0; border-radius: 12px;" /></a>
+                    <p style="margin: 8px 0 0 0; font-size: 13px; font-weight: 700; color: #ffffff;">Sofia</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4" style="padding: 14px 0 0 0;">
+                    <p style="margin: 0; font-size: 13px; line-height: 1.55; color: #8b94a3; text-align: center;">
+                      A few of the faces we cast from. Every one is <span style="white-space: nowrap;">AI-generated.</span><br />
+                      We choose yours from where your firm is and the clients you want to reach.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ===================== WHY IT MATTERS ===================== -->
+          <tr>
+            <td style="padding: 0 0 12px 0;">
+              <p style="margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #22d3ee;">Why it matters</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 0 34px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td width="40" valign="top" style="padding: 2px 0 20px 0; font-size: 22px; font-weight: 800; line-height: 1.2; color: #22d3ee;">1</td>
+                  <td valign="top" style="padding: 0 0 20px 0;">
+                    <p style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; line-height: 1.4; color: #ffffff;">You launch sooner.</p>
+                    <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">Nothing waits for a filming day, so the whole system, the website, the funnel, the follow-up and the ads, gets built on our timeline instead of your calendar. The build is estimated at about 21 days.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40" valign="top" style="padding: 2px 0 20px 0; font-size: 22px; font-weight: 800; line-height: 1.2; color: #22d3ee;">2</td>
+                  <td valign="top" style="padding: 0 0 20px 0;">
+                    <p style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; line-height: 1.4; color: #ffffff;">We can test far more creative.</p>
+                    <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">A new hook or a new angle doesn&rsquo;t need a new take from you. So we test more versions than filming ever allows, keep what brings in the right clients, and drop what doesn&rsquo;t.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40" valign="top" style="padding: 2px 0 0 0; font-size: 22px; font-weight: 800; line-height: 1.2; color: #22d3ee;">3</td>
+                  <td valign="top" style="padding: 0;">
+                    <p style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; line-height: 1.4; color: #ffffff;">Your firm becomes recognizable.</p>
+                    <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b4bcc8;">One face in every ad, so your market starts to know your firm by it, instead of lumping you in with every other firm running the same agency&rsquo;s ads.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ===================== PRIMARY CTA ===================== -->
+          <tr>
+            <td style="padding: 0 0 32px 0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #0b1d2e; border: 1px solid #1e6f8f; border-radius: 16px; padding: 26px 24px;">
+                    <p style="margin: 0 0 6px 0; font-size: 21px; line-height: 1.35; font-weight: 800; color: #ffffff;">Meet the avatars.</p>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #b4bcc8;">See the faces, how we cast them and why each one is yours alone. Then book a call if you want one working for your firm.</p>
+
+                    <!-- Padding lives on the table cell, never on the link:
+                         an editor that strips display:inline-block leaves
+                         padding on an inline link doing nothing. -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                      <tr>
+                        <td align="center" bgcolor="#2563eb" style="background-color: #2563eb; background-image: linear-gradient(90deg, #2563eb 0%, #0891b2 100%); border-radius: 999px; padding: 20px 44px; mso-padding-alt: 20px 44px; line-height: 1.2;">
+                          <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars" target="_blank" style="font-size: 17px; font-weight: 800; color: #ffffff !important; text-decoration: none !important; line-height: 1.2; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;"><span style="color: #ffffff !important; text-decoration: none !important;">Meet the avatars&nbsp;&rarr;</span></a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Closing -->
+          <tr>
+            <td style="padding: 0 0 24px 0;">
+              <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">
+                We work with three firms at a time, so your ads are never one of dozens.
+              </p>
+              <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b4bcc8;">&mdash; Marcel</p>
+            </td>
+          </tr>
+
+          <!-- P.S. -->
+          <tr>
+            <td style="padding: 0 0 30px 0;">
+              <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #8b94a3;">
+                <strong style="color: #b4bcc8;">P.S.</strong> If you&rsquo;re on the fence about AI in your marketing, that&rsquo;s a fair place to be. The page has each avatar&rsquo;s own intro video, so you can judge for yourself how they come across.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top: 1px solid #1c2433; padding: 24px 0 0 0; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                Nexli Automation &middot; <a href="https://www.nexli.net/ai-avatars?utm_source=nexli-email&amp;utm_medium=email&amp;utm_campaign=ai-avatars" target="_blank" style="color: #22d3ee; text-decoration: none;">nexli.net/ai-avatars</a>
+              </p>
+              <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7686;">
+                You are receiving this because you asked whether your firm is a fit.<br />
+                {{location.full_address}}<br />
+                <a href="{{unsubscribe_link}}" style="color: #6b7686; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
