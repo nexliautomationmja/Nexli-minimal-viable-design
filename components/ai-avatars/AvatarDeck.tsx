@@ -123,6 +123,9 @@ const DECK_CSS = `
 }
 `;
 
+/** Daniela's video on the cover: /ai-avatars#watch. */
+const WATCH_ANCHOR = 'watch';
+
 const pad = (n: number) => String(n).padStart(2, '0');
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -134,10 +137,24 @@ const GRADIENT_WRAP = GRADIENT_TEXT.replace('lg:whitespace-nowrap', '').trim();
 // ── Slides ─────────────────────────────────────────────────────────────────
 
 /** Daniela explaining the page. Click to play, with sound: it is the pitch,
- *  not a background loop. */
+ *  not a background loop.
+ *
+ *  id="watch" is where the AI avatar email's video preview links
+ *  (email-templates/broadcast-ai-avatars.html, Marcel 2026-11-23): on a
+ *  phone the cover stacks and the video sits under the headline, so the
+ *  link lands on her instead. The scroll margin clears the fixed logo.
+ *
+ *  Arriving at #watch also starts her video (Marcel, 2026-11-23: they
+ *  clicked a play button in the email). With sound when the browser
+ *  allows it, otherwise muted with "Tap for sound" (AvatarPlayer). Anyone
+ *  else still clicks play. The player is client-only, so reading the hash
+ *  in the first render changes no server markup. */
 function ExplainerCard({ video }: { video: NonNullable<typeof DANIELA_PAGE_VIDEO> }) {
+  const [fromEmail] = useState(
+    () => typeof window !== 'undefined' && window.location.hash === `#${WATCH_ANCHOR}`,
+  );
   return (
-    <div className="relative">
+    <div id={WATCH_ANCHOR} className="relative scroll-mt-24">
       <div
         aria-hidden="true"
         className="absolute -inset-8 rounded-full"
@@ -149,6 +166,7 @@ function ExplainerCard({ video }: { video: NonNullable<typeof DANIELA_PAGE_VIDEO
           playbackId={video.playbackId}
           thumbnailTime={video.posterTime}
           name="Daniela, AI avatars explained"
+          autoPlay={fromEmail}
         />
         <AiBadge className="pointer-events-none absolute left-3 top-3" />
       </div>

@@ -241,13 +241,35 @@ export const ADVISORY_THANK_YOU_PATH = '/advisory-pricing/BOBA-thank-you';
 export const ADVISORY_QUALIFY_PATH = '/agency/qualify';
 
 /**
- * The calendar for a firm that already qualified, without the qualifier
- * (Marcel, 2026-11-16). The sticky button on /math, /candor and /ai-avatars
- * sends qualified firms here, and it is the link for GHL's no-show and
- * retargeting messages: it shows the calendar to a browser we recognise and
- * asks anyone else for the email they qualified with. See app/book.
+ * The link in GHL's no-show and retargeting messages. Since 2026-11-23 it
+ * only redirects to REBOOK_PATH (app/book), query string kept. It was the
+ * qualified-firms-only calendar from 2026-11-16: the calendar for a browser
+ * we recognised, the email they qualified with for anyone else.
  */
 export const ADVISORY_BOOK_PATH = '/book';
+
+/**
+ * The VSL that the pages firms are retargeted to send them on to (Marcel,
+ * 2026-11-23): /ai-avatars and each avatar's page ("See how the system
+ * works"), /candor, /math and /book.
+ *
+ * BETTER CLIENTS, not Acquisition: these pages argue that a firm that looks
+ * like every other firm gets priced like one (/ai-avatars), and they walk
+ * through the economics of planning clients (/math, Candor). That is the
+ * Better Clients argument. Acquisition argues referrals against a channel.
+ */
+export const RETARGET_VSL_PATH = '/better-clients';
+
+/**
+ * Where every booking button on those pages goes, the green "Rebook call"
+ * at the top and the sticky bar at the bottom, and Candor's booking link:
+ * straight to the VSL's #book section, the price with the calendar under
+ * it, because booking now happens there with no qualifier in front of it.
+ *
+ * '#book' is BOOK_ANCHOR in components/VslFunnel, spelled out here so this
+ * file stays free of client components.
+ */
+export const REBOOK_PATH = `${RETARGET_VSL_PATH}#book`;
 
 /**
  * The `angle` each page appends to its CTA, and the only thing that carries

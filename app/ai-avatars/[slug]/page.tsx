@@ -23,7 +23,7 @@ import { ArrowLeft, ArrowRight, Play } from 'lucide-react';
 import { socialMeta } from '@/lib/seo';
 import { AI_AVATARS, NAMED_AVATARS, NEXLI_AVATAR, avatarAlt, avatarBySlug, libraryHref } from '@/lib/ai-avatars';
 import { avatarImages } from '@/lib/ai-avatar-images';
-import { ADVISORY_PATH } from '@/lib/advisory-config';
+import { RETARGET_VSL_PATH } from '@/lib/advisory-config';
 import FunnelLogo from '@/components/FunnelLogo';
 import AvatarGallery from '@/components/ai-avatars/AvatarGallery';
 import AvatarPlayer from '@/components/ai-avatars/AvatarPlayer';
@@ -225,7 +225,7 @@ export default async function AiAvatarPage({ params }: Props) {
             Browse the library
           </Link>
           <Link
-            href={ADVISORY_PATH}
+            href={RETARGET_VSL_PATH}
             className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white no-underline shadow-xl shadow-blue-600/25"
           >
             See how the system works
