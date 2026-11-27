@@ -18,8 +18,10 @@
 // the page (app/roas-calculator/roas-client.tsx), which keeps undo history.
 // ---------------------------------------------------------------------------
 import React, { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
-import { Check, ClipboardCopy, Download, Redo2, RotateCcw, Sigma, Undo2, Upload } from 'lucide-react';
+import { Check, ClipboardCopy, Download, LayoutGrid, Redo2, RotateCcw, Rows3, Sigma, Undo2, Upload } from 'lucide-react';
+import { EditorSheet, MobileBenchmarks, MobileCalc } from './mobile';
 import {
   addr,
   benchmarkSheet,
@@ -68,8 +70,9 @@ interface Editing {
   r: number;
   c: number;
   text: string;
-  /** Where the caret is: in the cell, or up in the formula bar. */
-  from: 'cell' | 'bar';
+  /** Where the caret is: in the cell, up in the formula bar, or in the
+   *  phone's bottom-sheet editor. */
+  from: 'cell' | 'bar' | 'sheet';
 }
 
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
@@ -156,6 +159,7 @@ export default function Workbook({
   canUndo,
   canRedo,
   onLoad,
+  lastModel = 'b2c',
 }: {
   tab: Tab;
   onTab: (t: Tab) => void;
@@ -167,6 +171,8 @@ export default function Workbook({
   canRedo: boolean;
   /** Load a scenario grid into a calculator tab and switch to it. */
   onLoad: (model: Model, grid: Grid) => void;
+  /** The calculator tab last shown, so Benchmarks opens on its side on a phone. */
+  lastModel?: Model;
 }) {
   const model: Model | null = tab === 'benchmarks' ? null : tab;
   const sheet: Sheet = useMemo(() => (model ? calcSheet(all[model]) : benchmarkSheet()), [model, all]);
@@ -180,6 +186,14 @@ export default function Workbook({
   const gridRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const tabPill = useId();
+  const tabPillMobile = useId();
+  // The phone editor is portalled to <body>: an ancestor with a transform
+  // (the page's entrance animation) would otherwise trap position: fixed.
+  const [portalReady, setPortalReady] = useState(false);
+  useEffect(() => setPortalReady(true), []);
+  const mobileSel = useId();
+  /** Phones get the sheet re-laid to fit (./mobile.tsx); "Grid" shows the real one. */
+  const [mobileView, setMobileView] = useState<'compact' | 'grid'>('compact');
 
   // No flash on first paint or on a tab switch: only on a value changing.
   useEffect(() => {
@@ -295,9 +309,12 @@ export default function Workbook({
       setNote({ text: 'Type a number, or arithmetic like =200*1.1' });
     }
     const at = { r: editing.r, c: editing.c };
+    const from = editing.from;
     setEditing(null);
     if (move) select({ r: at.r + move.r, c: at.c + move.c });
-    gridRef.current?.focus({ preventScroll: true });
+    // The phone editor has no grid to return to (and focusing it would drop
+    // the keyboard between Prev / Next).
+    if (from !== 'sheet') gridRef.current?.focus({ preventScroll: true });
   };
 
   // ── Clipboard ──
@@ -441,7 +458,7 @@ export default function Workbook({
     // A tap on an input cell on a phone opens it straight away (there's no
     // keyboard to type over it with); a click on a selected one does too.
     if (!e.shiftKey && (e.pointerType !== 'mouse' || same) && sheet.cells[addr(p.r, p.c)]?.kind === 'input') {
-      startEdit(p, null);
+      startEdit(p, null, e.pointerType === 'mouse' ? 'cell' : 'sheet');
       return;
     }
     if (e.pointerType === 'mouse') dragging.current = true;
@@ -452,6 +469,37 @@ export default function Workbook({
     const p = posFromEvent(e);
     if (p && (p.r !== focus.r || p.c !== focus.c)) setFocus(p);
   };
+
+  // ── Phone: tap to select, tap a blue cell to edit, step through inputs ──
+  const inputOrder = useMemo(() => {
+    const out: Pos[] = [];
+    for (let r = 0; r < sheet.rows; r++)
+      for (let c = 0; c < sheet.cols; c++) if (sheet.cells[addr(r, c)]?.kind === 'input') out.push({ r, c });
+    return out;
+  }, [sheet]);
+
+  const onMobileTap = (r: number, c: number) => {
+    if (editing) commit(editing.text, null);
+    select({ r, c });
+    if (sheet.cells[addr(r, c)]?.kind === 'input') startEdit({ r, c }, null, 'sheet');
+  };
+
+  const stepEdit = (dir: -1 | 1) => {
+    if (!editing) return;
+    const i = inputOrder.findIndex((p) => p.r === editing.r && p.c === editing.c);
+    const next = inputOrder[(i + dir + inputOrder.length) % inputOrder.length];
+    commit(editing.text, null);
+    select(next);
+    startEdit(next, null, 'sheet');
+  };
+
+  const editTitle = (() => {
+    if (!editing) return '';
+    const label = sheet.cells[addr(editing.r, 0)]?.text ?? '';
+    const head = model && editing.r >= 6 && editing.r <= 9 ? sheet.cells[addr(5, editing.c)]?.text : undefined;
+    return head ? `${label} · ${head}` : label;
+  })();
+  const editPos = editing ? inputOrder.findIndex((p) => p.r === editing.r && p.c === editing.c) + 1 : 0;
 
   // ── Toolbar actions ──
   const download = () => {
@@ -501,10 +549,10 @@ export default function Workbook({
         : focusCell?.text ?? '';
 
   const editRect = editing ? rect(editing.r, editing.c, editing.r, editing.c) : null;
-  const tabs: { id: Tab; label: string }[] = [
-    { id: 'b2c', label: 'B2C - ROAS Calculator' },
-    { id: 'b2b', label: 'B2B - ROAS Calculator' },
-    { id: 'benchmarks', label: 'Benchmarks' },
+  const tabs: { id: Tab; label: string; short: string }[] = [
+    { id: 'b2c', label: 'B2C - ROAS Calculator', short: 'B2C' },
+    { id: 'b2b', label: 'B2B - ROAS Calculator', short: 'B2B' },
+    { id: 'benchmarks', label: 'Benchmarks', short: 'Benchmarks' },
   ];
 
   const toolBtn =
@@ -512,8 +560,49 @@ export default function Workbook({
 
   return (
     <div className="overflow-hidden rounded-[calc(1.5rem-1.5px)]">
+      {/* ── Phone: the sheet tabs live on top, where a thumb finds them,
+            not under an 18-row grid. ── */}
+      <div className="flex items-center gap-2 border-b border-white/10 px-3 py-2.5 sm:hidden">
+        <div role="tablist" aria-label="Sheets" className="grid min-w-0 flex-1 grid-cols-[1fr_1fr_1.45fr] gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1">
+          {tabs.map((t) => {
+            const on = t.id === tab;
+            return (
+              <button
+                key={t.id}
+                role="tab"
+                type="button"
+                aria-selected={on}
+                onClick={() => onTab(t.id)}
+                className={`relative rounded-lg py-2 text-[13px] font-bold transition-colors ${on ? 'text-white' : 'text-white/55'}`}
+              >
+                {on && (
+                  <motion.span
+                    layoutId={tabPillMobile}
+                    className="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg shadow-blue-500/25"
+                    transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <span className="relative">{t.short}</span>
+              </button>
+            );
+          })}
+        </div>
+        <button
+          type="button"
+          onClick={() => setMobileView((v) => (v === 'compact' ? 'grid' : 'compact'))}
+          aria-pressed={mobileView === 'grid'}
+          aria-label={mobileView === 'grid' ? 'Show the phone layout' : 'Show the full grid'}
+          className={`flex h-[42px] shrink-0 items-center gap-1.5 rounded-xl border px-2.5 text-[12px] font-bold transition-colors ${
+            mobileView === 'grid' ? 'border-cyan-400/40 bg-cyan-400/10 text-cyan-100' : 'border-white/10 bg-white/[0.04] text-white/70'
+          }`}
+        >
+          {mobileView === 'grid' ? <Rows3 className="h-4 w-4" aria-hidden="true" /> : <LayoutGrid className="h-4 w-4" aria-hidden="true" />}
+          {mobileView === 'grid' ? 'Fit' : 'Grid'}
+        </button>
+      </div>
+
       {/* ── Toolbar ── */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-3 py-2.5 sm:px-4">
+      <div className="flex items-center gap-2 border-b border-white/10 px-3 py-2.5 sm:flex-wrap sm:px-4">
         <button type="button" className={toolBtn} onClick={onUndo} disabled={!canUndo} aria-label="Undo" title="Undo (Ctrl+Z)">
           <Undo2 className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -524,7 +613,7 @@ export default function Workbook({
 
         {model ? (
           <>
-            <label className="relative">
+            <label className="relative min-w-0 flex-1 sm:flex-none">
               <span className="sr-only">Load a benchmark into this sheet</span>
               <select
                 value=""
@@ -537,7 +626,7 @@ export default function Workbook({
                     setNote({ text: `Loaded ${v === 'default' ? 'the sheet’s default numbers' : 'the benchmark'} into B7:D10`, ok: true });
                   }
                 }}
-                className={`${toolBtn} cursor-pointer appearance-none pr-7 [&>option]:bg-slate-900`}
+                className={`${toolBtn} w-full cursor-pointer appearance-none truncate pr-7 [&>option]:bg-slate-900`}
               >
                 <option value="">Load benchmark…</option>
                 <option value="default">Sheet default</option>
@@ -565,7 +654,7 @@ export default function Workbook({
         ) : (
           <button
             type="button"
-            className={`${toolBtn} ${block ? 'border-cyan-400/40 bg-cyan-400/10 text-cyan-100' : ''}`}
+            className={`${toolBtn} ${block ? 'border-cyan-400/40 bg-cyan-400/10 text-cyan-100' : ''} ${mobileView === 'compact' ? 'max-sm:hidden' : 'max-sm:min-w-0 max-sm:flex-1 max-sm:truncate'}`}
             disabled={!block || !blockGrid}
             onClick={() => block && blockGrid && onLoad(block.model, blockGrid)}
           >
@@ -575,7 +664,7 @@ export default function Workbook({
         )}
 
         <div className="ml-auto flex items-center gap-2">
-          <button type="button" className={toolBtn} onClick={copySheet} title="Copy the sheet with its formulas">
+          <button type="button" className={`${toolBtn} max-sm:hidden`} onClick={copySheet} title="Copy the sheet with its formulas">
             <ClipboardCopy className="h-4 w-4" aria-hidden="true" />
             <span className="hidden md:inline">Copy sheet</span>
           </button>
@@ -619,8 +708,26 @@ export default function Workbook({
         />
       </div>
 
+      {/* ── Phone layout ── */}
+      <div className={mobileView === 'compact' ? 'sm:hidden' : 'hidden'}>
+        {model ? (
+          <MobileCalc sheet={sheet} focusAddr={focusAddr} refs={refs} flash={flash} selId={mobileSel} onTap={onMobileTap} />
+        ) : (
+          <MobileBenchmarks
+            sheet={sheet}
+            focusAddr={focusAddr}
+            refs={refs}
+            flash={flash}
+            selId={mobileSel}
+            onTap={onMobileTap}
+            onLoad={onLoad}
+            initialSide={lastModel}
+          />
+        )}
+      </div>
+
       {/* ── Grid ── */}
-      <div ref={scrollRef} className="overflow-x-auto overscroll-x-contain">
+      <div ref={scrollRef} className={`overflow-x-auto overscroll-x-contain ${mobileView === 'compact' ? 'max-sm:hidden' : ''}`}>
         <div
           ref={gridRef}
           role="grid"
@@ -754,7 +861,7 @@ export default function Workbook({
 
       {/* ── Status bar + sheet tabs ── */}
       <div className="flex flex-col-reverse gap-2 border-t border-white/10 bg-black/20 px-2 py-2 sm:flex-row sm:items-center sm:justify-between sm:px-3">
-        <div role="tablist" aria-label="Sheets" className="flex gap-1 overflow-x-auto">
+        <div role="tablist" aria-label="Sheets" className="flex gap-1 overflow-x-auto max-sm:hidden">
           {tabs.map((t) => {
             const on = t.id === tab;
             return (
@@ -807,6 +914,24 @@ export default function Workbook({
             )}
         </div>
       </div>
+
+      {portalReady &&
+        createPortal(
+          <EditorSheet
+            open={editing?.from === 'sheet'}
+            address={editing ? addr(editing.r, editing.c) : ''}
+            title={editTitle}
+            explain={editing ? sheet.cells[addr(editing.r, editing.c)]?.explain : undefined}
+            cell={editing ? sheet.cells[addr(editing.r, editing.c)] : undefined}
+            text={editing?.text ?? ''}
+            onText={(t) => editing && setEditing({ ...editing, text: t })}
+            onDone={() => editing && commit(editing.text, null)}
+            onCancel={() => setEditing(null)}
+            onStep={stepEdit}
+            position={`${editPos} of ${inputOrder.length}`}
+          />,
+          document.body,
+        )}
     </div>
   );
 }
