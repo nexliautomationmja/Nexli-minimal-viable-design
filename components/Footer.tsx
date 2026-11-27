@@ -10,7 +10,8 @@ import PolicyLinks from './legal/PolicyLinks';
 import { useIsFirmSite } from '../lib/use-is-firm-site';
 
 // Routes where the footer should be completely hidden (dedicated funnels).
-const HIDDEN_FOOTER_ROUTES = ['/vslfunnel', '/profit-calculator'];
+// /roas-calculator carries its own footer (disclaimer + one CTA).
+const HIDDEN_FOOTER_ROUTES = ['/vslfunnel', '/profit-calculator', '/roas-calculator'];
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();

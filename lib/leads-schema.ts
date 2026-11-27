@@ -47,7 +47,7 @@ export const leads = pgTable(
     disqualifyReason: text("disqualify_reason"),
 
     // Source tracking
-    formSource: text("form_source"), // 'qualification-gate' | 'free-guide' | 'audit' | 'revenue-calc' | 'roadmap' | 'advisory-qualifier' | 'vsl-booking' (older rows: 'foundation', 'foundation-preview')
+    formSource: text("form_source"), // 'qualification-gate' | 'free-guide' | 'audit' | 'revenue-calc' | 'roadmap' | 'advisory-qualifier' | 'vsl-booking' | 'roas-calc' (older rows: 'foundation', 'foundation-preview')
 
     // Attribution (from cookies/localStorage)
     fbclid: text("fbclid"),

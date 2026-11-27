@@ -102,6 +102,7 @@ export function buildLlmsTxt(): string {
   lines.push(`- [Contact](${url('/contact')}): Address, phone and email.`);
   lines.push(`- [Free guide](${url('/accelerator')}): The Book of Business Accelerator, a free guide to finding advisory clients in a firm's existing book.`);
   lines.push(`- [Revenue calculator](${url('/revenuecalc')}): Estimate revenue impact of advisory clients.`);
+  lines.push(`- [ROAS calculator](${url('/roas-calculator')}): Best, average and worst case return on ad spend for B2B and B2C funnels, with benchmarks by funnel type.`);
   lines.push(`- [Full text of all guides](${url('/llms-full.txt')})`);
   lines.push('');
 
