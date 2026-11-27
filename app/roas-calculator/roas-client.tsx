@@ -437,10 +437,14 @@ export default function RoasCalculator() {
                 canUndo={hist.past.length > 0}
                 canRedo={hist.future.length > 0}
                 onLoad={load}
+                lastModel={model}
               />
             </RimCard>
           </motion.div>
 
+          <div className="mt-3 text-center text-[12px] leading-relaxed text-white/45 sm:hidden">
+            Tap a <span className="font-semibold text-sky-200">blue cell</span> to change it. Tap a result to see its formula.
+          </div>
           <div className="mt-4 hidden flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-white/45 md:flex">
             <Keyboard className="h-4 w-4 text-white/35" aria-hidden="true" />
             {SHORTCUTS.map(([k, v]) => (
